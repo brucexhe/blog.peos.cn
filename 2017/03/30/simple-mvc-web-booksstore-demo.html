@@ -1,0 +1,1169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>[转]一步步打造一个简单的 MVC 网站 – BooksStore（简单易懂） | Bruce's Blog</title> 
+<meta name="description" content="简介">
+<meta name="keywords" content="MVC">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2017 年 3 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td><a href="/2017/03/01" aria-label="2017年3月1日 发布的文章">1</a></td><td><a href="/2017/03/02" aria-label="2017年3月2日 发布的文章">2</a></td><td>3</td><td>4</td><td>5</td>
+	</tr>
+	<tr>
+		<td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td><a href="/2017/03/11" aria-label="2017年3月11日 发布的文章">11</a></td><td>12</td>
+	</tr>
+	<tr>
+		<td>13</td><td>14</td><td>15</td><td><a href="/2017/03/16" aria-label="2017年3月16日 发布的文章">16</a></td><td>17</td><td>18</td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td>21</td><td>22</td><td><a href="/2017/03/23" aria-label="2017年3月23日 发布的文章">23</a></td><td>24</td><td>25</td><td>26</td>
+	</tr>
+	<tr>
+		<td>27</td><td><a href="/2017/03/28" aria-label="2017年3月28日 发布的文章">28</a></td><td><a href="/2017/03/29" aria-label="2017年3月29日 发布的文章">29</a></td><td><a href="/2017/03/30" aria-label="2017年3月30日 发布的文章">30</a></td><td>31</td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2017/02">« 2 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2017/04">4 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#7dfbd0;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#c0ac51;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#f2c989;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#c3b3e0;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#6bd7a0;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#17f0d4;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#dc533d;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#41b87f;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#1144ac;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#b395ab;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#a89334;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#b3fb7d;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#3d0810;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#997deb;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#81c474;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#f7be62;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#a9ad0d;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#de12db;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#c46ba6;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#cfb0fc;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#7b4ddb;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#190488;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#2cc233;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#802616;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#e049d9;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#f8fb50;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#a888f2;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#a55375;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#3c3cf8;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#787f88;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#f76c55;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#b3fb8b;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#199684;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#2df462;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#2b11a5;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#b084;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#185b7d;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#5cf48c;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#950d67;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#9e3ac8;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#37c78a;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#df8261;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#6d01bc;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#c66940;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#347637;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">[转]一步步打造一个简单的 MVC 网站 – BooksStore（简单易懂）</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2017-03-30 11:19</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2017/03/30/simple-mvc-web-booksstore-demo.html#comments">评论(1)</a></span>
+			 <span class="article_view grayline">阅读(<span>1,229</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<h2>简介</h2>
+<p>主要功能与知识点如下：</p>
+<p>分类、产品浏览、购物车、结算、CRUD（增删改查） 管理、发邮件、分页、模型绑定、认证过滤器和单元测试等。</p>
+<p>【备注】项目使用 VS2015 + C#6 进行开发，有问题请发表在留言区哦，还有，页面长得比较丑，请见谅。</p>
+<p> </p>
+<h2>目录</h2>
+<ul>
+<li>创建项目架构</li>
+<li>创建域模型实体</li>
+<li>创建单元测试</li>
+<li>创建控制器与视图</li>
+<li>创建分页</li>
+<li>加入样式</li>
+</ul>
+<p> </p>
+<h2>一、创建项目架构</h2>
+<p>1.新建一个解决方案“BooksStore”，并添加以下项目：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329173741295-1938071591.png" alt=""></p>
+<p> </p>
+<div>     BooksStore.Domain：类库，存放域模型和逻辑，使用 EF；</div>
+<div>     BooksStore.WebUI：Web <span class="wp_keywordlink_affiliate"><a href="/tag/mvc" title="View all posts in MVC" target="_blank">MVC</a></span> 应用程序，存放视图和控制器，充当显示层，使用了 Ninject 作为 DI 容器；</div>
+<div>     BoosStore.UnitTest：单元测试，对上述两个项目进行测试。</div>
+<p> </p>
+<p>Web <span class="wp_keywordlink_affiliate"><a href="/tag/mvc" title="View all posts in MVC" target="_blank">MVC</a></span> 为一个空的 MVC 项目：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329173708451-1593910685.png" alt=""></p>
+<p> </p>
+<p>2.添加项目引用（需要使用 NuGet）：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329175349404-1070085916.png" alt="">  <img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329175354108-1789315321.png" alt="">  <img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329175400170-1484145247.png" alt=""></p>
+<p>这是不同项目需要引用的类库和项目</p>
+<p> </p>
+<div>　　3.设置 DI 容器</div>
+<div>     我们通过 Ninject ，创建一个自定义的工厂，一个名为 NinjectControllerFactory 的类继承 DefaultControllerFactory（默认的控制器工厂）。你也可以在里面添加自定义的代码，改变 MVC 框架的默认行为。</div>
+<div>
+<p> <img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329175625436-1406672963.png" alt=""> 　　AddBindings() 添加绑定方法，先留空。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    public class NinjectControllerFactory : DefaultControllerFactory
+    {
+        private readonly IKernel _kernel;
+
+        public NinjectControllerFactory()
+        {
+            _kernel = new StandardKernel();
+            AddBindings();
+        }
+
+        protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
+        {
+            return controllerType == null
+                ? null
+                : (IController) _kernel.Get(controllerType);
+        }
+
+        /// &lt;summary&gt;
+        /// 添加绑定
+        /// &lt;/summary&gt;
+        private void AddBindings()
+        {
+            
+        }
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+</div>
+<div>　　4.并且在 Global.asax 中加入一行代码，告诉 MVC 用新建的类来创建控制器对象。</div>
+<div class="cnblogs_code">
+<pre>ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());</pre>
+</div>
+<div class="cnblogs_code">
+<p><img decoding="async" id="code_img_opened_474975cb-32f9-4ff3-9e22-999168c189b7" class="code_img_opened" src="/wp-content/uploads/2017/03/ExpandedBlockStart.gif" alt=""></p>
+<div id="cnblogs_code_open_474975cb-32f9-4ff3-9e22-999168c189b7" class="cnblogs_code_hide">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    public class MvcApplication : System.Web.HttpApplication
+    {
+        protected void Application_Start()
+        {
+            AreaRegistration.RegisterAllAreas();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
+        }
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+</div>
+<p> </p>
+<h2>二、创建域模型实体</h2>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329175927779-945278454.png" alt=""></p>
+<div>     1.在图中位置创建一个名为 Book 的实体类。</div>
+<div>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    public class Book
+    {
+        /// &lt;summary&gt;
+        /// 标识
+        /// &lt;/summary&gt;
+        public int Id { get; set; }
+
+        /// &lt;summary&gt;
+        /// 名称
+        /// &lt;/summary&gt;
+        public string Name { get; set; }
+
+        /// &lt;summary&gt;
+        /// 描述
+        /// &lt;/summary&gt;
+        public string Description { get; set; }
+
+        /// &lt;summary&gt;
+        /// 价格
+        /// &lt;/summary&gt;
+        public decimal Price { get; set; }
+
+        /// &lt;summary&gt;
+        /// 分类
+        /// &lt;/summary&gt;
+        public string Category { get; set; }
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+</div>
+<p> </p>
+<p>有了实体之后，我们应该创建一个“库”对该实体进行操作，而这种持久化逻辑操作也应该和域模型是进行隔离的。</p>
+<p>2.先定义一个接口 IbookRepository，在根目录创建一个名为 Abstract 的文件夹，顾名思义就是应该放置一些抽象的类，如接口。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329180216389-386735690.png" alt=""></p>
+<div class="cnblogs_code">
+<pre>    public interface IBookRepository
+    {
+        IQueryable&lt;Book&gt; Books { get; }
+    }</pre>
+</div>
+<p>我们通过该接口就可以得到对应类的相关信息，而不需要去管该数据如何存储，以及存储的位置，这就是存储库模式的本质。</p>
+<p> </p>
+<p>3.接下来，我们就需要对数据库进行操作了，我们使用简单的 EF（ORM 对象关系模型） 去对数据库进行操作，所以需要自己通过 Nuget 下载 EF 的类库。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329180259639-1029685325.png" alt=""></p>
+<p> </p>
+<p>4.因为之前定义了接口类，接下来就应该定义实现该接口的类了</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329180321873-1104588857.png" alt=""></p>
+<p> </p>
+<p>安装完之后，再次建立一个名为 Concrete 的文件夹，存放实例。</p>
+<p>在里面创建一个 EfDbContext 的类，派生于 DbContext，该类会为用户要使用的数据库中的每个表自动的定义一个属性。该属性名为 Books，指定了表名，DbSet&lt;Book&gt; 表示为 Book 实体的表模型，Book 对象相当于 Books 表中的行（记录）。</p>
+<div class="cnblogs_code">
+<pre>    public class EfDbContext : DbContext
+    {
+        public DbSet&lt;Book&gt; Books { get; set; }
+    }</pre>
+</div>
+<p> </p>
+<p>再创建一个 EfBookRepository 存储库类，它实现 IBookRepository 接口，使用了上文创建的 EfDbContext 上下文对象，包含了具体的方法定义。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    public class EfBookRepository : IBookRepository
+    {
+        private readonly EfDbContext _context = new EfDbContext();
+
+        public IQueryable&lt;Book&gt; Books =&gt; _context.Books;
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>5.现在只差在数据库新建一张表了。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>CREATE TABLE Book
+(
+     Id INT IDENTITY PRIMARY KEY,
+     Name NVARCHAR(100),
+     Description NVARCHAR(MAX),
+     Price DECIMAL,
+     Category NVARCHAR(50)
+)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p>并插入测试数据：</p>
+<div class="cnblogs_code">
+<p><img decoding="async" id="code_img_opened_0d795f1f-d5df-4138-b68e-58dbec4848da" class="code_img_opened" src="/wp-content/uploads/2017/03/ExpandedBlockStart.gif" alt=""></p>
+<div id="cnblogs_code_open_0d795f1f-d5df-4138-b68e-58dbec4848da" class="cnblogs_code_hide">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>INSERT INTO dbo.Book
+        ( 
+          Name ,
+          Description ,
+          Price ,
+          Category
+        )
+VALUES  ( 
+          N'C#从入门到精通' , -- Name - nvarchar(100)
+          N'好书-C#从入门到精通' , -- Description - nvarchar(max)
+          50 , -- Price - decimal
+          N'.NET'  -- Category - nvarchar(50)
+        )
+
+INSERT INTO dbo.Book
+        ( 
+          Name ,
+          Description ,
+          Price ,
+          Category
+        )
+VALUES  ( 
+          N'ASP.NET从入门到精通' , -- Name - nvarchar(100)
+          N'好书-ASP.NET从入门到精通' , -- Description - nvarchar(max)
+          60 , -- Price - decimal
+          N'.NET'  -- Category - nvarchar(50)
+        )
+
+INSERT INTO dbo.Book
+        ( 
+          Name ,
+          Description ,
+          Price ,
+          Category
+        )
+VALUES  ( 
+          N'多线程从入门到精通' , -- Name - nvarchar(100)
+          N'好书-多线程从入门到精通' , -- Description - nvarchar(max)
+          65 , -- Price - decimal
+          N'.NET'  -- Category - nvarchar(50)
+        )
+
+INSERT INTO dbo.Book
+        ( 
+          Name ,
+          Description ,
+          Price ,
+          Category
+        )
+VALUES  ( 
+          N'java从入门到放弃' , -- Name - nvarchar(100)
+          N'好书-java从入门到放弃' , -- Description - nvarchar(max)
+          65 , -- Price - decimal
+          N'java'  -- Category - nvarchar(50)
+        )
+
+INSERT INTO dbo.Book
+        ( 
+          Name ,
+          Description ,
+          Price ,
+          Category
+        )
+VALUES  ( 
+          N'sql从入门到放弃' , -- Name - nvarchar(100)
+          N'好书-sql从入门到放弃' , -- Description - nvarchar(max)
+          45 , -- Price - decimal
+          N'sql'  -- Category - nvarchar(50)
+        )
+
+INSERT INTO dbo.Book
+        ( 
+          Name ,
+          Description ,
+          Price ,
+          Category
+        )
+VALUES  ( 
+          N'sql从入门到出家' , -- Name - nvarchar(100)
+          N'好书-sql从入门到出家' , -- Description - nvarchar(max)
+          45 , -- Price - decimal
+          N'sql'  -- Category - nvarchar(50)
+        )
+
+INSERT INTO dbo.Book
+        ( 
+          Name ,
+          Description ,
+          Price ,
+          Category
+        )
+VALUES  ( 
+          N'php从入门到出家' , -- Name - nvarchar(100)
+          N'好书-php从入门到出家' , -- Description - nvarchar(max)
+          45 , -- Price - decimal
+          N'php'  -- Category - nvarchar(50)
+        )</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+</div>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329180640154-1616787204.png" alt=""></p>
+<p> </p>
+<p>因为我希望表名为 Book，而不是 Books，所以我在之前的 Book 类上加上特性 [Table("Book")] ：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329231454858-498961868.png" alt=""></p>
+<p> </p>
+<h2>三、创建单元测试</h2>
+<p>1.做完预热操作后，你可能想立即以界面的的方式进行显示，别急，先用单元测试检查一下我们对数据库的操作是否正常，通过对数据进行简单的读取，检查下连接是否成功。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329181005639-2104437648.png" alt=""></p>
+<p> </p>
+<p>2.单元测试也需要引入 ef 类库（Nuget）。</p>
+<p>3.安装完之后会生成一个 app.config 配置文件，需要额外添加一行连接字符串（在后续的 Web UI 项目里，也需要加上这条信息，不然会提示对应的错误信息）。</p>
+<div class="cnblogs_code">
+<pre>  &lt;connectionStrings&gt;
+    &lt;add name="EfDbContext" connectionString="server=.;database=TestDb;uid=sa;pwd=123" providerName="System.Data.SqlClient"/&gt;
+  &lt;/connectionStrings&gt;</pre>
+</div>
+<p> </p>
+<p>4.当所有前置工作都准备好了的时候，就应该填写测试方法了，因为我插入了 7 条数据，这里我就判断一下从数据库读取出的行数是否为 7 ：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>        [TestMethod]
+        public void BooksCountTest()
+        {
+            var bookRepository=new EfBookRepository();
+            var books = bookRepository.Books;
+
+            Assert.AreEqual(books.Count(),7);
+        }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>5.在该方法体的内部单击右键，你可以看到一个“运行测试”的选项，这时你可以尝试单击它：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329181154561-1710476573.png" alt=""></p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329181239826-114581920.png" alt=""></p>
+<p>从这个符号可以看到，是成功了！</p>
+<p>接下来，我们要正式从页面显示我们想要的信息了。</p>
+<p> </p>
+<h2>四、创建控制器与视图</h2>
+<p>1.先新建一个空的控制器：BookController：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329181357983-218555934.png" alt=""></p>
+<p> </p>
+<p>2.需要我们自定义一个 Details 方法，用于后续与界面进行交互。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    public class BookController : Controller
+    {
+        private readonly IBookRepository _bookRepository;
+
+        public BookController(IBookRepository bookRepository)
+        {
+            _bookRepository = bookRepository;
+        }
+
+        /// &lt;summary&gt;
+        /// 详情
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public ActionResult Details()
+        {
+            return View(_bookRepository.Books);
+        }
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>3.接下来，要创建一个视图 View 了。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329172307029-1981011777.png" alt=""></p>
+<p> </p>
+<p>4.将 Details.cshtml 的内容替换为下面的：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>@model IEnumerable&lt;Wen.BooksStore.Domain.Entities.Book&gt;
+
+@{
+    ViewBag.Title = "Books";
+}
+
+
+@foreach (var item in Model)
+{
+    &lt;div&gt;
+        &lt;h3&gt;@item.Name&lt;/h3&gt;
+        @item.Description
+        &lt;h4&gt;@item.Price.ToString("C")&lt;/h4&gt;
+        &lt;br /&gt;
+        &lt;hr /&gt;
+    &lt;/div&gt;
+}</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>5.改下默认的路由机制，让他默认跳转到该页面。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329173005608-1548117601.png" alt=""></p>
+<p> </p>
+<p>6.还有一点需要注意的是，因为我们使用了 Ninject 容器，并且需要对控制器中的构造函数中的参数 IBookRepository 进行解析，告诉他将使用哪个对象对该接口进行服务，也就是需要修改之前的 AddBindings 方法：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329232315967-856743438.png" alt=""></p>
+<p> </p>
+<p>7.运行的效果大致如下（因为加了点 CSS 样式，所以显示的效果可能有些许不同），结果是一致的。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329173223186-837081287.png" alt=""></p>
+<p> </p>
+<h2>五、创建分页</h2>
+<p>1.在 Models 文件夹新增一个 PagingInfo.cs 分页信息类。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329204917389-1982152652.png" alt=""></p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    /// &lt;summary&gt;
+    /// 分页信息
+    /// &lt;/summary&gt;
+    public class PagingInfo
+    {
+        /// &lt;summary&gt;
+        /// 总数
+        /// &lt;/summary&gt;
+        public int TotalItems { get; set; }
+
+        /// &lt;summary&gt;
+        /// 页容量
+        /// &lt;/summary&gt;
+        public int PageSize { get; set; }
+
+        /// &lt;summary&gt;
+        /// 当前页
+        /// &lt;/summary&gt;
+        public int PageIndex { get; set; }
+
+        /// &lt;summary&gt;
+        /// 总页数
+        /// &lt;/summary&gt;
+        public int TotalPages =&gt; (int)Math.Ceiling((decimal)TotalItems / PageSize);
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>2.新增一个 HtmlHelpers 文件夹存放一个基于 Html 帮助类的扩展方法：</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329205128951-1743094047.png" alt=""></p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    public static class PagingHelper
+    {
+        /// &lt;summary&gt;
+        /// 分页
+        /// &lt;/summary&gt;
+        /// &lt;param name="helper"&gt;&lt;/param&gt;
+        /// &lt;param name="pagingInfo"&gt;&lt;/param&gt;
+        /// &lt;param name="func"&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public static MvcHtmlString PageLinks(this HtmlHelper helper, PagingInfo pagingInfo, Func&lt;int, string&gt; func)
+        {
+            var sb = new StringBuilder();
+            for (var i = 1; i &lt;= pagingInfo.TotalPages; i++)
+            {
+                //创建 &lt;a&gt; 标签
+                var tagBuilder = new TagBuilder("a");
+                //添加特性
+                tagBuilder.MergeAttribute("href", func(i));
+                //添加值
+                tagBuilder.InnerHtml = i.ToString();
+
+                if (i == pagingInfo.PageIndex)
+                {
+                    tagBuilder.AddCssClass("selected");
+                }
+
+                sb.Append(tagBuilder);
+            }
+
+            return MvcHtmlString.Create(sb.ToString());
+        }
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>3.添加完毕后需要在配置文件内加入该命名空间</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329205535358-1305378758.png" alt=""></p>
+<p> </p>
+<p>4.现在要重新修改 BookController.cs 控制器内的的代码，并添加新的视图模型类 BookDetailsViewModels.cs，让它继承之前的分页类。</p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329205832717-316829624.png" alt=""></p>
+<div class="cnblogs_code">
+<pre>    public class BookDetailsViewModels : PagingInfo
+    {
+        public IEnumerable&lt;Book&gt; Books { get; set; }
+    }</pre>
+</div>
+<p>修改后的控制器代码：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>    public class BookController : Controller
+    {
+        private readonly IBookRepository _bookRepository;
+        public int PageSize = 5;
+
+        public BookController(IBookRepository bookRepository)
+        {
+            _bookRepository = bookRepository;
+        }
+
+        /// &lt;summary&gt;
+        /// 详情
+        /// &lt;/summary&gt;
+        /// &lt;param name="pageIndex"&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public ActionResult Details(int pageIndex = 1)
+        {
+            var model = new BookDetailsViewModels()
+            {
+                Books = _bookRepository.Books.OrderBy(x =&gt; x.Id).Skip((pageIndex - 1) * PageSize).Take(PageSize),
+                PageSize = PageSize,
+                PageIndex = pageIndex,
+                TotalItems = _bookRepository.Books.Count()
+            };
+
+            return View(model);
+        }
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>5.修改视图模型后，对应的视图页也需要修改</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>@model Wen.BooksStore.WebUI.Models.BookDetailsViewModels
+
+@{
+    ViewBag.Title = "Books";
+}
+
+
+@foreach (var item in Model.Books)
+{
+    &lt;div&gt;
+        &lt;h3&gt;@item.Name&lt;/h3&gt;
+        @item.Description
+        &lt;h4&gt;@item.Price.ToString("C")&lt;/h4&gt;
+        &lt;br /&gt;
+        &lt;hr /&gt;
+    &lt;/div&gt;
+}
+
+&lt;div class="pager"&gt;
+    @Html.PageLinks(Model, x =&gt; Url.Action("Details", new { pageIndex = x }))
+&lt;/div&gt;</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<h2>六、加入样式</h2>
+<p>1.页面的样式简单的设计为 3 大板块，顶部为标题，左侧边栏为分类，主模块将显示具体内容。</p>
+<p>我们现在要在 Views 文件夹下创建一个文件 _ViewStart.cshtml，再创建一个 Shared 的文件夹和文件 _Layout.cshtml。<br>
+<img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329210917717-1085258201.png" alt=""></p>
+<p> </p>
+<p>2._Layout.cshtml 这是布局页，当代码执行到 @RenderBody() 时，就会负责将之前 Details.cshtml 的内容进行渲染：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>&lt;!DOCTYPE html&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta name="viewport" content="width=device-width" /&gt;
+    &lt;title&gt;@ViewBag.Title&lt;/title&gt;
+    &lt;link href="~/Contents/Site.css" rel="stylesheet" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="header"&gt;
+        &lt;div class="title"&gt;图书商城&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id="sideBar"&gt;分类&lt;/div&gt;
+    &lt;div id="content"&gt;
+        @RenderBody()
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p>_ViewStart.cshtml 该文件表示默认的布局页为该视图文件：</p>
+<div class="cnblogs_code">
+<pre>@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}</pre>
+</div>
+<p> </p>
+<p>3.网站的根目录下也要添加一个名为 Contents 的文件夹，用于存放 CSS。</p>
+<div class="cnblogs_code">
+<p><img decoding="async" id="code_img_opened_355bbd74-f87b-46ad-8ad9-279ce9067634" class="code_img_opened" src="/wp-content/uploads/2017/03/ExpandedBlockStart.gif" alt=""></p>
+<div id="cnblogs_code_open_355bbd74-f87b-46ad-8ad9-279ce9067634" class="cnblogs_code_hide">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+<pre>body {
+}
+
+#header, #content, #sideBar {
+    display: block;
+}
+
+#header {
+    background-color: green;
+    border-bottom: 2px solid #111;
+    color: White;
+}
+
+#header, .title {
+    font-size: 1.5em;
+    padding: .5em;
+}
+
+#sideBar {
+    float: left;
+    width: 8em;
+    padding: .3em;
+}
+
+#content {
+    border-left: 2px solid gray;
+    margin-left: 10em;
+    padding: 1em;
+}
+
+.pager {
+    text-align: right;
+    padding: .5em 0 0 0;
+    margin-top: 1em;
+}
+
+    .pager A {
+        font-size: 1.1em;
+        color: #666;
+        padding: 0 .4em 0 .4em;
+    }
+
+        .pager A:hover {
+            background-color: Silver;
+        }
+
+        .pager A.selected {
+            background-color: #353535;
+            color: White;
+        }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2017/03/copycode.gif" alt="复制代码"></span></div>
+</div>
+</div>
+<p> </p>
+<p><img decoding="async" src="/wp-content/uploads/2017/03/711762-20170329211618592-999643341.png" alt=""></p>
+<p>现在，分页也已经有了效果，基本界面就出来了。</p>
+<p> </p>
+<p>本系列的 GitHub地址：https://github.com/liqingwen2015/Wen.BooksStore</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/mvc" rel="tag">MVC</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2017/03/29/c-webbrowser-tab.html" rel="prev">C# webBrowser tab</a><br>【下篇】<a href="/2017/03/30/sso-base-oauth2.html" rel="next">单点登录实现——基于OAuth2.0协议的接入方案</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2017/12/22/windows2008r2-asp-net-mvc.html">windows2008r2部署mvc</a></li><li> · <a href="/2016/05/27/%E6%9F%A5%E7%9C%8Bmvc-entityvalidationerrors%E8%AF%A6%E7%BB%86%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF.html">查看MVC EntityValidationErrors详细错误信息</a></li><li> · <a href="/2016/05/09/vs2015%E6%B2%A1%E6%9C%89mvc.html">vs2015没有MVC</a></li><li> · <a href="/2014/09/09/asp-net-mvc4-0-%E5%AE%89%E8%A3%85%E5%8C%85.html">asp.net mvc4.0 安装包</a></li><li> · <a href="/2012/06/07/asp-net-mvc%E7%9A%84filter%E8%BF%87%E8%99%91%E5%99%A8%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3.html">ASP.NET MVC的Filter过虑器使用示例详解</a></li><li> · <a href="/2012/05/31/%E6%80%8E%E4%B9%88%E5%88%86%E7%A6%BBasp-net-mvc%E9%A1%B9%E7%9B%AE.html">怎么分离ASP.NET MVC项目</a></li><li> · <a href="/2012/05/28/asp-net-mvc-%E7%BC%93%E5%AD%98%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B.html">ASP.NET MVC 缓存使用示例</a></li><li> · <a href="/2012/05/20/mvc%E5%AE%9E%E7%8E%B0%E6%8D%A2%E8%82%A4%E5%8A%9F%E8%83%BD.html">ASP.NET Mvc实现换肤功能</a></li><li> · <a href="/2012/05/07/asp-net-mvc3-%E7%AE%80%E5%8D%95%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0sql%E4%BE%9D%E8%B5%96.html">asp.net mvc3 简单缓存实现sql依赖</a></li><li> · <a href="/2012/03/30/%E5%BE%AE%E8%BD%AF%E5%BC%80%E6%BA%90asp-net-mvc.html">微软开源ASP.NET MVC</a></li><li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2017年03月30日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2017/03/30/simple-mvc-web-booksstore-demo.html" rel="bookmark" title="本文固定链接 /2017/03/30/simple-mvc-web-booksstore-demo.html">[转]一步步打造一个简单的 MVC 网站 – BooksStore（简单易懂） | Bruce's Blog</a><a href="#" onclick="copy_code('/2017/03/30/simple-mvc-web-booksstore-demo.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+<!-- 引用 -->	
+	<div class="tab_comment">
+		<h2 id="comments">[转]一步步打造一个简单的 MVC 网站 – BooksStore（简单易懂）：目前有1 条留言</h2>	
+	</div>
+	<ol class="commentlist">   <li class="comment even thread-even depth-1" id="comment-32251">
+   <div id="div-comment-32251">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo avatar-default" height="32" width="32" decoding="async">			</div>
+			<strong>好看电影推荐请猛戳我</strong> :
+			<span class="datetime">2017年03月30日上午 11:21</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2017/03/30/simple-mvc-web-booksstore-demo.html?replytocom=32251#respond" data-commentid="32251" data-postid="4219" data-belowelement="div-comment-32251" data-respondelement="respond" data-replyto="回复给 好看电影推荐请猛戳我" aria-label="回复给 好看电影推荐请猛戳我">回复</a></span>
+		</div>
+				<p>简单易懂</p>
+	<div class="clear"></div>
+  </div>
+</li></ol>
+
+	<div class="navigation_c">
+		<div class="previous"></div>
+	</div>
+
+ 		<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/03/30/simple-mvc-web-booksstore-demo.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4219" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="46be46f3c6"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="145"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.073 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:46 -->

@@ -1,0 +1,593 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>512M内存apache进行优化配置（work模式） | Bruce's Blog</title> 
+<meta name="description" content="512M内存apache进行优化配置（work模式）">
+<meta name="keywords" content="512M,Apache,Linux,work">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2015 年 1 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td>1</td><td>2</td><td>3</td><td><a href="/2015/01/04" aria-label="2015年1月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td>5</td><td>6</td><td>7</td><td>8</td><td><a href="/2015/01/09" aria-label="2015年1月9日 发布的文章">9</a></td><td>10</td><td><a href="/2015/01/11" aria-label="2015年1月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td>12</td><td>13</td><td>14</td><td><a href="/2015/01/15" aria-label="2015年1月15日 发布的文章">15</a></td><td>16</td><td><a href="/2015/01/17" aria-label="2015年1月17日 发布的文章">17</a></td><td>18</td>
+	</tr>
+	<tr>
+		<td>19</td><td>20</td><td>21</td><td><a href="/2015/01/22" aria-label="2015年1月22日 发布的文章">22</a></td><td>23</td><td>24</td><td>25</td>
+	</tr>
+	<tr>
+		<td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2014/12">« 12 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2015/02">2 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#c855b5;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#c23f;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#92b6e0;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#fda16f;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#8803a7;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#9b963d;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#cbc887;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#66bcbc;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#efb24d;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#cd99e;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#df8397;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#b0ae4f;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#a771;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#8a14d3;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#31e2ff;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#b875f4;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#7ad220;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#93a8e5;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#89d37f;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#40d229;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#b5ea23;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#c3431c;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#f3c84a;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#c9ac20;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#c00552;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#7876ce;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#cd6e34;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#cb44be;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#5ebfc1;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#99fa1f;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#7804df;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#503885;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#7f97ed;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#ccf0f;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#9e5b0f;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#64944f;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#53316d;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#d97acc;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#f4b289;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#cde10e;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#423698;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#d19bba;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#9e7c8c;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#86ce9e;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#1d1780;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/linux" rel="category tag">LINUX</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">512M内存apache进行优化配置（work模式）</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2015-01-04 18:37</span>
+			<span class="category">  <a href="/category/linux" rel="category tag">LINUX</a></span>
+			<span class="article_comment"><a href="/2015/01/04/512m%E5%86%85%E5%AD%98apache%E8%BF%9B%E8%A1%8C%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE%EF%BC%88work%E6%A8%A1%E5%BC%8F%EF%BC%89.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,940</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p style="margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; background: #fbfbfb;"><span style="color: #252525; font-family: 新宋体, 'courier new', courier, monospace;"><span style="font-size: 14px; line-height: 23.7999992370605px;"><span class="wp_keywordlink_affiliate"><a href="/tag/512m" title="View all posts in 512M" target="_blank">512M</a></span>内存apache进行优化配置（<span class="wp_keywordlink_affiliate"><a href="/tag/work" title="View all posts in work" target="_blank">work</a></span>模式）</span></span></p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">本文是对<span class="wp_keywordlink_affiliate"><a href="/tag/512m" title="View all posts in 512M" target="_blank">512M</a></span> 内存并装有apache的vps进行优化，请不要跟我说装nginx就强多了，确实如此，但是你这样说的话，这篇文章就没什么意义了，哈哈。那么进入正题吧！</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">操作系统(linux)：CentOS 5.5 32位（并不是我说这个比较好，只是Cents我用得比较熟练）</p>
+<ul style="font-size: 14px; margin: 0px 0px 10px 3.5em; padding: 0px; border: 0px; outline: 0px; vertical-align: top; list-style-position: initial; list-style-image: initial; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">
+<li style="margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; line-height: 29.3999996185303px; background: transparent;">内存：512M</li>
+<li style="margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; line-height: 29.3999996185303px; background: transparent;">cpu：1G(1000MHz，vps实际有没有这个数，很难说)</li>
+<li style="margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; line-height: 29.3999996185303px; background: transparent;">apache：2.2(建议低版本的，升级到高版本，毕竟旧版有很多问题，且性能也是高版本好点)</li>
+</ul>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">运行的主要是PHP程序，其他的不多说了，与本文关系不大。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">首先，如题所说，本文所说的优化是针对apache 2.2以上版本，及使用perfork MPM模式的。perfork是apache在linux下默认安装下的模式，如果使用apache作为服务器的放在，还是使用perfork模式比较好，<span class="wp_keywordlink_affiliate"><a href="/tag/work" title="View all posts in work" target="_blank">work</a></span>er模式下对php某些功能并不支持。如果你使用的是win系统或都没有使有和perfork，那么下面可以选择不看或抱着学习的态度看看咯。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">以下内容均属于博主自己的见解，实际测试请根据你的服务器，程序及其他因素按需处理。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">一般情况下，我们需要优化apache就是因为apache占用大量的内存，导致vps当机，因为perfork是多进程处理的，每个进程都会点用一定的内存数量。所以限制httpd进程的数量，从而达到优化apache的作用。影响单个httpd进程的内存大小，主要都是加载模块，至少什么模块是合适的，我也很难说，因为这个是按由你的需要而定的。网上有些人说，绝大部分都会用不上的模块列出来，我认为这个是有很大的误导作用，因为绝大部分人中，也许你就是其中一个。将有用的模块屏蔽掉，最坏的情况，就是重启apache出错，或部分功能无法使用。所以我也不会列出什么最少模块加载方案什么的。所以，我只会说出一些参考。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">apache(perfork)下的模块加载，并不是模块加载列表，没有的模块并不是屏蔽掉了，只是我也不清楚它的实际作用。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">一、对于apache2.2，模块名有cache的一般都是有用的，因为有不少的这类模板都是2.1以上的apache才支持的，所以这类的模块不会是无缘无缘而存在的。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">二、很有可能或必用到的模块有：</p>
+<pre style="font-size: 13px; margin: 8px auto; padding: 4px; border: 1px dashed #cccccc; outline: 0px; vertical-align: top; font-family: Tahoma, Geneva, sans-serif; color: #009900; width: 612px; line-height: 19.5px; word-wrap: break-word; overflow: auto; background: #fdfddf;">LoadModule auth_basic_module modules/mod_auth_basic.so
+  LoadModule authn_file_module modules/mod_authn_file.so
+  LoadModule include_module modules/mod_include.so
+  LoadModule log_config_module modules/mod_log_config.so
+  LoadModule expires_module modules/mod_expires.so
+  LoadModule deflate_module modules/mod_deflate.so
+  LoadModule headers_module modules/mod_headers.so
+  LoadModule setenvif_module modules/mod_setenvif.so
+  LoadModule mime_module modules/mod_mime.so
+  LoadModule autoindex_module modules/mod_autoindex.so
+  LoadModule negotiation_module modules/mod_negotiation.so
+  LoadModule dir_module modules/mod_dir.so
+  LoadModule alias_module modules/mod_alias.so
+  LoadModule rewrite_module modules/mod_rewrite.so</pre>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">三、我粗略点了一下apache里面的模块约在50+以，要从中选择人人都适用的模块加载列表是不可能的，至少cgi模块我是不会用，但不排除你不会用。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">模块加载这一块就说到这里，这个大家多百度，多用自然会识别出一些有用模块并渐渐屏蔽不使用的模块。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">接下来，就是最为重要的perfork配置，也是困扰了我很久的问题，尽管参数就那么6个，那是却足以让你的vps当机。先列出需要修改的参数，修改位于httpd.conf的文件里面</p>
+<pre style="font-size: 13px; margin: 8px auto; padding: 4px; border: 1px dashed #cccccc; outline: 0px; vertical-align: top; font-family: Tahoma, Geneva, sans-serif; color: #009900; width: 612px; line-height: 19.5px; word-wrap: break-word; overflow: auto; background: #fdfddf;">Timeout 30
+KeepAlive On
+MaxKeepAliveRequests 80
+KeepAliveTimeout 15
+&lt;IfModule prefork.c&gt;
+ServerLimit 150
+StartServers      5
+MinSpareServers   5
+MaxSpareServers   10
+MaxClients       150
+MaxRequestsPerChild 4000
+&lt;/IfModule&gt;</pre>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">上面的代码就是要修改的，实际上我们是要修改perfork里在的参数，之所以将Timeout,KeepAlive等也写出来，是因为这个也是影响apache性能的。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">Timeout是一个连接多少时间后断开，这个参数设置在30-60是一般的php程序都是适用的，至少要运行一些要占用大量时间的php程序，那么适当调高也是可以的，但请不要太高，否则会影响apache性能，本次优化我们使用30就很足够了。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">MaxKeepAliveRequests 是一个连接最大的请求量，对于页面有较多的图片等元素，可以适当调高一点，对于一般的网页设置在80-120是足够的，我们就设置为100，如果设置太高会导致httpd长时间不能退出释放内存的。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">KeepAliveTimeout 是当用户处理一次连接时，如果在该参数的时间内还有请求则会继续执行，不需要重新创建新的连接，直到达到MaxKeepAliveRequests的最大值才会退出。对于perfork模式下的，有人认为是将KeepAlive Off会比较好，但是对于绝大多数的网站都会不多不少有些图片元素，所以将该项打开，并将KeepTimeOut设置在2-5秒，不但有效提高服务器性能，也能加快页面打开速度。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">接下来，就是正式进入perfork的参数设置了，不想服务器运行一会就内存占满的得看看哦。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">首先是参数ServerLimit就是服务器最大支持同时连接的客户端，该值将决定下面参数MaxClient可以设定的值的范围。ServerLimit实际上只是起到一个限制的作用，并没有实际有作用，也许有，我就不知道了。实际上起到作用的是，MaxClient参数，但这个值又受ServerLimit的限制，等下会讲。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">另三个参数StartServers，MinSpareServers，MaxSpareServers，为什么将这三个参数一起说呢，因为这三个数是联系在一起的。这三个数都是决定空闲进程数量，StartServers应该范围就是MinSpareServers和MaxSpareServers之间。否则，apache会自动将该值还原到两都之间，所以不要浪费不必要的资源。按照perfork默认的配置，这三个参数分别为：5，5，10。但是对于只有512M内存的vps来说，我认为还是有过大的负载。因此，我认为在这里应该退一步，将这三个参数设置为4，4，10，看起来和上面5，5，10并没有什么不同，最大值还是10，但在实际使用中4，4，10释放的内存速度会明显比5，5，10快很多。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">接下来就是MaxClient最大支持多少客户端在同一时间连接服务器，简单说就是最大并发数支持，这个没有特别需要说的。对于512M的vps你也别想你的站能承受百万PV，使用默认的150已是超出负载的了。一般将ServerLimit和MaxClient设为一样值即可。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">最后就是MaxRequestsPerChild参数，一个进程在处理多少次之后退出，设置为0则是无限次，也就是说不会退出，那么httpd进程也不会退出。那么，你就等着你的vps当机重启去吧。对于这个参数，我粗略地搜索了一下，不少人推荐在1000次，也有100次的。据我的测试，对于内存只有512M的vps来说，该值设置在500以上都会很快占满内存，但不至少于当机。而观察得知，一但内存占满，cpu的使用率几乎变为0了。由此可知，当机了那什么都干不了了，还不如消耗多一点cpu资源避免，提高稳定性。所以，我最后的决定是将该值定义在30-40之间。这样设定后，可以看出，内存释放速度得到很大的提升，但也可以看到cpu也在频繁上下跳动。这样设置，即使内存占满，也能在最短时间恢复正常。</p>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">所以对于512MB的vps，apache(perfork模式)最后的优方配置为：</p>
+<pre style="font-size: 13px; margin: 8px auto; padding: 4px; border: 1px dashed #cccccc; outline: 0px; vertical-align: top; font-family: Tahoma, Geneva, sans-serif; color: #009900; width: 612px; line-height: 19.5px; word-wrap: break-word; overflow: auto; background: #fdfddf;">Timeout 30
+KeepAlive On
+MaxKeepAliveRequests 100
+KeepAliveTimeout 2
+&lt;IfModule prefork.c&gt;
+ServerLimit 150
+StartServers      4
+MinSpareServers   4
+MaxSpareServers   10
+MaxClients       150
+MaxRequestsPerChild 40
+&lt;/IfModule&gt;</pre>
+<p style="font-size: 14px; margin: 20px 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; word-wrap: break-word; text-indent: 2em; color: #252525; font-family: 新宋体, 'courier new', courier, monospace; line-height: 23.7999992370605px; background: #fbfbfb;">这样，我们的配置基本完成，进行负载测试即可。负载测试，我们使用ab测试，先声明一点，是用你本地的虚拟机去测试服务器上的一个静态页面，而不是在服务器上测试。之前，我就是这样做，因为网速一样，效果都是比较好的，但别人都是不同网速的，所以服务器上测试是不准备的。</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/512m" rel="tag">512M</a>, <a href="/tag/apache" rel="tag">Apache</a>, <a href="/tag/linux-2" rel="tag">Linux</a>, <a href="/tag/work" rel="tag">work</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2014/12/28/%E4%B8%8D%E7%94%A8%E7%BF%BB%E5%A2%99%E4%BD%BF%E7%94%A8google%E6%90%9C%E7%B4%A2.html" rel="prev">不用翻墙使用Google搜索</a><br>【下篇】<a href="/2015/01/09/%E4%BD%95%E4%BB%A5%E7%AC%99%E7%AE%AB%E9%BB%98-%E7%94%B5%E8%A7%86%E5%89%A7-%E7%99%BE%E5%BA%A6%E4%BA%91-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98-%E7%99%BE%E5%BA%A6%E4%BA%91%E7%BD%91%E7%9B%98%E4%B8%8B.html" rel="next">何以笙箫默 电视剧 – 百度云 百度网盘 百度云网盘下载</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2014/11/30/apache-ab-test.html">使用Apache的ab工具进行压力测试</a></li><li> · <a href="/2014/11/26/%E8%A7%A3%E5%86%B3apache%E9%95%BF%E6%97%B6%E9%97%B4%E5%8D%A0%E7%94%A8%E5%86%85%E5%AD%98%E5%A4%A7%E7%9A%84%E9%97%AE%E9%A2%98.html">解决Apache长时间占用内存大的问题</a></li><li> · <a href="/2014/11/26/apache-%E7%9A%84-maxrequestsperchild-%E4%B8%8E-keepalive.html">apache 的 MaxRequestsPerChild 与 keepalive</a></li><li> · <a href="/2013/06/14/apache%E7%A6%81%E6%AD%A2ip%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE.html">apache禁止IP直接访问</a></li><li> · <a href="/2013/06/14/apache-namevirtualhost-80-has-no-virtualhosts.html">Apache NameVirtualHost *:80 has no VirtualHosts</a></li><li> · <a href="/2025/03/31/linux-mv.html">linux无法删除和修改乱码文件名</a></li><li> · <a href="/2025/03/19/nginx-service.html">nginx开机启动脚本 nginx.service</a></li><li> · <a href="/2025/03/15/codium-server.html">codium-server.service</a></li><li> · <a href="/2025/03/06/windows-ssh-wsl.html">windows下利用wsl+sshpass 自动发布脚本</a></li><li> · <a href="/2025/02/28/single-server-rolling-hot-upgrade.html">单台服务器应用不中断服务热部署滚动更新方案</a></li><li> · <a href="/2025/02/28/code-server.html">docker安装code-server</a></li><li> · <a href="/2025/02/28/centos8.html">centos8安装源</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2015年01月04日发表在<a href="/category/linux" rel="category tag">LINUX</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2015/01/04/512m%E5%86%85%E5%AD%98apache%E8%BF%9B%E8%A1%8C%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE%EF%BC%88work%E6%A8%A1%E5%BC%8F%EF%BC%89.html" rel="bookmark" title="本文固定链接 /2015/01/04/512m%e5%86%85%e5%ad%98apache%e8%bf%9b%e8%a1%8c%e4%bc%98%e5%8c%96%e9%85%8d%e7%bd%ae%ef%bc%88work%e6%a8%a1%e5%bc%8f%ef%bc%89.html">512M内存apache进行优化配置（work模式） | Bruce's Blog</a><a href="#" onclick="copy_code('/2015/01/04/512m%e5%86%85%e5%ad%98apache%e8%bf%9b%e8%a1%8c%e4%bc%98%e5%8c%96%e9%85%8d%e7%bd%ae%ef%bc%88work%e6%a8%a1%e5%bc%8f%ef%bc%89.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2015/01/04/512m%E5%86%85%E5%AD%98apache%E8%BF%9B%E8%A1%8C%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE%EF%BC%88work%E6%A8%A1%E5%BC%8F%EF%BC%89.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="3538" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="27eb1cb972"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="234"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.064 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:48:18 -->

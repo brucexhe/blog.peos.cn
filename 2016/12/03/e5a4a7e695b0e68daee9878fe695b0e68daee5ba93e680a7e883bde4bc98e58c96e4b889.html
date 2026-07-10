@@ -1,0 +1,1438 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>大数据量数据库性能优化(三) | Bruce's Blog</title> 
+<meta name="description" content="大数据量数据库性能优化(三) - 数据库访问性能优化">
+<meta name="keywords" content="大数据量,数据库性能优化">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2016 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td>1</td><td>2</td><td><a href="/2016/12/03" aria-label="2016年12月3日 发布的文章">3</a></td><td>4</td>
+	</tr>
+	<tr>
+		<td>5</td><td>6</td><td>7</td><td>8</td><td><a href="/2016/12/09" aria-label="2016年12月9日 发布的文章">9</a></td><td>10</td><td>11</td>
+	</tr>
+	<tr>
+		<td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td>
+	</tr>
+	<tr>
+		<td>19</td><td>20</td><td>21</td><td>22</td><td><a href="/2016/12/23" aria-label="2016年12月23日 发布的文章">23</a></td><td>24</td><td>25</td>
+	</tr>
+	<tr>
+		<td><a href="/2016/12/26" aria-label="2016年12月26日 发布的文章">26</a></td><td><a href="/2016/12/27" aria-label="2016年12月27日 发布的文章">27</a></td><td><a href="/2016/12/28" aria-label="2016年12月28日 发布的文章">28</a></td><td>29</td><td>30</td><td>31</td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2016/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2017/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#5be97;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#d4ee16;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#a16c01;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#2c011c;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#1bcbd5;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#16ef15;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#ed38c6;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#e9f200;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#406898;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#c08943;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#31411f;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#ae5a62;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#3500ad;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#d53d1d;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#89b379;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#e0301d;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#22b0be;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#eb3032;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#da3845;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#705915;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#cb41dd;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#3325ed;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#5bc3e6;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#100c24;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#4e3290;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#33cbca;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#3d7b4b;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#d5fa12;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#40e3dc;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#6fcd66;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#ad8de7;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#8656b9;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#c6b36f;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#5cf770;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#ab5711;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#91e8ac;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#b43bf5;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#9039ae;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#776319;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#349eda;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#c78b0f;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#bdab76;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#2b1681;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#b448c3;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#657f9f;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/sql-server" rel="category tag">SQL Server</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">大数据量数据库性能优化(三)</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2016-12-03 13:31</span>
+			<span class="category">  <a href="/category/sql-server" rel="category tag">SQL Server</a></span>
+			<span class="article_comment"><a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%89.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>1,747</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<h1><strong><span class="wp_keywordlink_affiliate"><a href="/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F" title="View all posts in 大数据量" target="_blank">大数据量</a></span><span class="wp_keywordlink_affiliate"><a href="/tag/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96" title="View all posts in 数据库性能优化" target="_blank">数据库性能优化</a></span>(三) - 数据库访问性能优化</strong></h1>
+<p>特别说明：</p>
+<p>1、  本文只是面对数据库应用开发的程序员，不适合专业DBA，DBA在<span class="wp_keywordlink_affiliate"><a href="/tag/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96" title="View all posts in 数据库性能优化" target="_blank">数据库性能优化</a></span>方面需要了解更多的知识；</p>
+<p>2、  本文许多示例及概念是基于Oracle数据库描述，对于其它关系型数据库也可以参考，但许多观点不适合于KV数据库或内存数据库或者是基于SSD技术的数据库；</p>
+<p>3、  本文未深入数据库优化中最核心的执行计划分析技术。</p>
+<p> </p>
+<p>读者对像：</p>
+<p>开发人员：如果你是做数据库开发，那本文的内容非常适合，因为本文是从程序员的角度来谈数据库性能优化。</p>
+<p>架构师：如果你已经是数据库应用的架构师，那本文的知识你应该清楚90%，否则你可能是一个喜欢折腾的架构师。</p>
+<p>DBA（数据库管理员）：大型数据库优化的知识非常复杂，本文只是从程序员的角度来谈性能优化，DBA除了需要了解这些知识外，还需要深入数据库的内部体系架构来解决问题。</p>
+<p> </p>
+<p>在网上有很多文章介绍数据库优化知识，但是大部份文章只是对某个一个方面进行说明，而对于我们程序员来说这种介绍并不能很好的掌握优化知识，因为很多介绍只是对一些特定的场景优化的，所以反而有时会产生误导或让程序员感觉不明白其中的奥妙而对数据库优化感觉很神秘。</p>
+<p>很多程序员总是问如何学习数据库优化，有没有好的教材之类的问题。在书店也看到了许多数据库优化的专业书籍，但是感觉更多是面向DBA或者是PL/SQL开发方面的知识，个人感觉不太适合普通程序员。而要想做到数据库优化的高手，不是花几周，几个月就能达到的，这并不是因为数据库优化有多高深，而是因为要做好优化一方面需要有非常好的技术功底，对操作系统、存储硬件网络、数据库原理等方面有比较扎实的基础知识，另一方面是需要花大量时间对特定的数据库进行实践测试与总结。</p>
+<p>作为一个程序员，我们也许不清楚线上正式的服务器硬件配置，我们不可能像DBA那样专业的对数据库进行各种实践测试与总结，但我们都应该非常了解我们SQL的业务逻辑，我们清楚SQL中访问表及字段的数据情况，我们其实只关心我们的SQL是否能尽快返回结果。那程序员如何利用已知的知识进行数据库优化？如何能快速定位SQL性能问题并找到正确的优化方向？</p>
+<p>面对这些问题，笔者总结了一些面向程序员的基本优化法则，本文将结合实例来坦述数据库开发的优化知识。</p>
+<p>要正确的优化SQL，我们需要快速定位能性的瓶颈点，也就是说快速找到我们SQL主要的开销在哪里？而大多数情况性能最慢的设备会是瓶颈点，如下载时网络速度可能会是瓶颈点，本地复制文件时硬盘可能会是瓶颈点，为什么这些一般的工作我们能快速确认瓶颈点呢，因为我们对这些慢速设备的性能数据有一些基本的认识，如网络带宽是2Mbps，硬盘是每分钟7200转等等。因此，为了快速找到SQL的性能瓶颈点，我们也需要了解我们计算机系统的硬件基本性能指标，下图展示的当前主流计算机性能指标数据。</p>
+<p><strong><img decoding="async" src="/wp-content/uploads/2016/12/0_1291636622rnbL.gif" alt=""><br>
+</strong></p>
+<p>从图上可以看到基本上每种设备都有两个指标：</p>
+<p>延时（响应时间）：表示硬件的突发处理能力；</p>
+<p>带宽（吞吐量）：代表硬件持续处理能力。</p>
+<p> </p>
+<p>从上图可以看出，计算机系统硬件性能从高到代依次为：</p>
+<p>CPU——Cache(L1-L2-L3)——内存——SSD硬盘——网络——硬盘</p>
+<p>由于SSD硬盘还处于快速发展阶段，所以本文的内容不涉及SSD相关应用系统。</p>
+<p>根据数据库知识，我们可以列出每种硬件主要的工作内容：</p>
+<p>CPU及内存：缓存数据访问、比较、排序、事务检测、SQL解析、函数或逻辑运算；</p>
+<p>网络：结果数据传输、SQL请求、远程数据库访问（dblink）；</p>
+<p>硬盘：数据访问、数据写入、日志记录、<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F" title="View all posts in 大数据量" target="_blank">大数据量</a></span>排序、大表连接。</p>
+<p> </p>
+<p>根据当前计算机硬件的基本性能指标及其在数据库中主要操作内容，可以整理出如下图所示的性能基本优化法则：</p>
+<p><strong><img decoding="async" src="/wp-content/uploads/2016/12/0_12916372042dJ3.gif" alt=""><br>
+</strong></p>
+<p>这个优化法则归纳为5个层次：</p>
+<p>1、  减少数据访问（减少磁盘访问）</p>
+<p>2、  返回更少数据（减少网络传输或磁盘访问）</p>
+<p>3、  减少交互次数（减少网络传输）</p>
+<p>4、  减少服务器CPU开销（减少CPU及内存开销）</p>
+<p>5、  利用更多资源（增加资源）</p>
+<p> </p>
+<p>由于每一层优化法则都是解决其对应硬件的性能问题，所以带来的性能提升比例也不一样。传统数据库系统设计是也是尽可能对低速设备提供优化方法，因此针对低速设备问题的可优化手段也更多，优化成本也更低。我们任何一个SQL的性能优化都应该按这个规则由上到下来诊断问题并提出解决方案，而不应该首先想到的是增加资源解决问题。</p>
+<p>以下是每个优化法则层级对应优化效果及成本经验参考：</p>
+<p> </p>
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="189"><strong>优化法则</strong></td>
+<td valign="top" width="189"><strong>性能提升效果</strong></td>
+<td valign="top" width="101"><strong>优化成本</strong></td>
+</tr>
+<tr>
+<td valign="top" width="189">减少数据访问</td>
+<td valign="top" width="189">1~1000</td>
+<td valign="top" width="101">低</td>
+</tr>
+<tr>
+<td valign="top" width="189">返回更少数据</td>
+<td valign="top" width="189">1~100</td>
+<td valign="top" width="101">低</td>
+</tr>
+<tr>
+<td valign="top" width="189">减少交互次数</td>
+<td valign="top" width="189">1~20</td>
+<td valign="top" width="101">低</td>
+</tr>
+<tr>
+<td valign="top" width="189">减少服务器CPU开销</td>
+<td valign="top" width="189">1~5</td>
+<td valign="top" width="101">低</td>
+</tr>
+<tr>
+<td valign="top" width="189">利用更多资源</td>
+<td valign="top" width="189">@~10</td>
+<td valign="top" width="101">高</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p>接下来，我们针对5种优化法则列举常用的优化手段并结合实例分析。</p>
+<p> </p>
+<p>接下来，我们针对5种优化法则列举常用的优化手段并结合实例分析。</p>
+<p> </p>
+<h1>二、oracle数据库两个基本概念</h1>
+<p>数据块是数据库中数据在磁盘中存储的最小单位，也是一次IO访问的最小单位，一个数据块通常可以存储多条记录，数据块大小是DBA在创建数据库或表空间时指定，可指定为2K、4K、8K、16K或32K字节。下图是一个Oracle数据库典型的物理结构，一个数据库可以包括多个数据文件，一个数据文件内又包含多个数据块；</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/12/0_1291636632fz7h.gif" alt=""></p>
+<p>ROWID是每条记录在数据库中的唯一标识，通过ROWID可以直接定位记录到对应的文件号及数据块位置。ROWID内容包括文件号、对像号、数据块号、记录槽号，如下图所示：</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/12/0_1291636638QCqG.gif" alt=""></p>
+<p><strong>三、数据库访问优化法则详解</strong></p>
+<h2>减少数据访问</h2>
+<h3>创建并使用正确的索引</h3>
+<p>数据库索引的原理非常简单，但在复杂的表中真正能正确使用索引的人很少，即使是专业的DBA也不一定能完全做到最优。</p>
+<p>索引会大大增加表记录的DML(INSERT,UPDATE,DELETE)开销，正确的索引可以让性能提升100，1000倍以上，不合理的索引也可能会让性能下降100倍，因此在一个表中创建什么样的索引需要平衡各种业务需求。</p>
+<p>索引常见问题：</p>
+<p><strong>索引有哪些种类？</strong></p>
+<p>常见的索引有B-TREE索引、位图索引、全文索引，位图索引一般用于数据仓库应用，全文索引由于使用较少，这里不深入介绍。B-TREE索引包括很多扩展类型，如组合索引、反向索引、函数索引等等，以下是B-TREE索引的简单介绍：</p>
+<p>B-TREE索引也称为平衡树索引(Balance Tree)，它是一种按字段排好序的树形目录结构，主要用于提升查询性能和唯一约束支持。B-TREE索引的内容包括根节点、分支节点、叶子节点。</p>
+<p><strong>叶子节点内容：</strong>索引字段内容+表记录ROWID</p>
+<p><strong>根节点，分支节点内容：</strong>当一个数据块中不能放下所有索引字段数据时，就会形成树形的根节点或分支节点，根节点与分支节点保存了索引树的顺序及各层级间的引用关系。</p>
+<p>一个普通的BTREE索引结构示意图如下所示：<br>
+<img decoding="async" src="/wp-content/uploads/2016/12/0_1291636647TTAA.gif" alt=""></p>
+<p>如果我们把一个表的内容认为是一本字典，那索引就相当于字典的目录，如下图所示：</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/12/0_12916366512rkn.gif" alt=""></p>
+<p><img decoding="async" src="/wp-content/uploads/2016/12/0_129163667068Da.gif" alt=""></p>
+<p>图中是一个字典按部首+笔划数的目录，相当于给字典建了一个按部首+笔划的组合索引。</p>
+<p>一个表中可以建多个索引，就如一本字典可以建多个目录一样（按拼音、笔划、部首等等）。</p>
+<p>一个索引也可以由多个字段组成，称为组合索引，如上图就是一个按部首+笔划的组合目录。</p>
+<p><strong>SQL什么条件会使用索引？</strong></p>
+<p>当字段上建有索引时，通常以下情况会使用索引：</p>
+<p>INDEX_COLUMN = ?</p>
+<p>INDEX_COLUMN &gt; ?</p>
+<p>INDEX_COLUMN &gt;= ?</p>
+<p>INDEX_COLUMN &lt; ?</p>
+<p>INDEX_COLUMN &lt;= ?</p>
+<p>INDEX_COLUMN between ? and ?</p>
+<p>INDEX_COLUMN in (?,?,...,?)</p>
+<p>INDEX_COLUMN like ?||'%'（后导模糊查询）</p>
+<p>T1. INDEX_COLUMN=T2. COLUMN1（两个表通过索引字段关联）</p>
+<p> </p>
+<p><strong>SQL什么条件不会使用索引？</strong></p>
+<p> </p>
+<p> </p>
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="234"><strong>查询条件</strong></td>
+<td valign="top" width="280"><strong>不能使用索引原因</strong></td>
+</tr>
+<tr>
+<td valign="top" width="234">INDEX_COLUMN &lt;&gt; ?
+<p>INDEX_COLUMN not in (?,?,...,?)</p></td>
+<td valign="top" width="280">不等于操作不能使用索引</td>
+</tr>
+<tr>
+<td valign="top" width="234">function(INDEX_COLUMN) = ?
+<p>INDEX_COLUMN + 1 = ?</p>
+<p>INDEX_COLUMN || 'a' = ?</p></td>
+<td valign="top" width="280">经过普通运算或函数运算后的索引字段不能使用索引</td>
+</tr>
+<tr>
+<td valign="top" width="234">INDEX_COLUMN like '%'||?
+<p>INDEX_COLUMN like '%'||?||'%'</p></td>
+<td valign="top" width="280">含前导模糊查询的Like语法不能使用索引</td>
+</tr>
+<tr>
+<td valign="top" width="234">INDEX_COLUMN is null</td>
+<td valign="top" width="280">B-TREE索引里不保存字段为NULL值记录，因此IS NULL不能使用索引</td>
+</tr>
+<tr>
+<td valign="top" width="234">NUMBER_INDEX_COLUMN='12345'
+<p>CHAR_INDEX_COLUMN=12345</p></td>
+<td valign="top" width="280">Oracle在做数值比较时需要将两边的数据转换成同一种数据类型，如果两边数据类型不同时会对字段值隐式转换，相当于加了一层函数处理，所以不能使用索引。</td>
+</tr>
+<tr>
+<td valign="top" width="234">a.INDEX_COLUMN=a.COLUMN_1</td>
+<td valign="top" width="280">给索引查询的值应是已知数据，不能是未知字段值。</td>
+</tr>
+<tr>
+<td colspan="2" valign="top" width="514">注：
+<p>经过函数运算字段的字段要使用可以使用函数索引，这种需求建议与DBA沟通。</p>
+<p>有时候我们会使用多个字段的组合索引，如果查询条件中第一个字段不能使用索引，那整个查询也不能使用索引</p>
+<p>如：我们company表建了一个id+name的组合索引，以下SQL是不能使用索引的</p>
+<p>Select * from company where name=?</p>
+<p>Oracle9i后引入了一种index skip scan的索引方式来解决类似的问题，但是通过index skip scan提高性能的条件比较特殊，使用不好反而性能会更差。</p>
+<p> </p></td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p><strong>我们一般在什么字段上建索引？</strong></p>
+<p>这是一个非常复杂的话题，需要对业务及数据充分分析后再能得出结果。主键及外键通常都要有索引，其它需要建索引的字段应满足以下条件：</p>
+<p>1、字段出现在查询条件中，并且查询条件可以使用索引；</p>
+<p>2、语句执行频率高，一天会有几千次以上；</p>
+<p>3、通过字段条件可筛选的记录集很小，<strong>那数据筛选比例是多少才适合？</strong></p>
+<p>这个没有固定值，需要根据表数据量来评估，以下是经验公式，可用于快速评估：</p>
+<p><strong>小表(记录数小于10000行的表)：筛选比例&lt;10%；</strong></p>
+<p><strong>大表：(筛选返回记录数)&lt;(表总记录数*单条记录长度)/10000/16</strong></p>
+<p><strong>      单条记录长度≈字段平均内容长度之和+字段数*2</strong></p>
+<p> </p>
+<p>以下是一些字段是否需要建B-TREE索引的经验分类：</p>
+<p> </p>
+<p> </p>
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="81"><strong> </strong></td>
+<td valign="top" width="78"><strong>字段类型</strong></td>
+<td valign="top" width="409"><strong>常见字段名</strong></td>
+</tr>
+<tr>
+<td rowspan="3" valign="top" width="81">需要建索引的字段</td>
+<td valign="top" width="78">主键</td>
+<td valign="top" width="409">ID,PK</td>
+</tr>
+<tr>
+<td valign="top" width="78">外键</td>
+<td valign="top" width="409">PRODUCT_ID,COMPANY_ID,MEMBER_ID,ORDER_ID,TRADE_ID,PAY_ID</td>
+</tr>
+<tr>
+<td valign="top" width="78">有对像或身份标识意义字段</td>
+<td valign="top" width="409">HASH_CODE,USERNAME,IDCARD_NO,EMAIL,TEL_NO,IM_NO</td>
+</tr>
+<tr>
+<td rowspan="8" valign="top" width="81">索引慎用字段,需要进行数据分布及使用场景详细评估</td>
+<td valign="top" width="78">日期</td>
+<td valign="top" width="409">GMT_CREATE,GMT_MODIFIED</td>
+</tr>
+<tr>
+<td valign="top" width="78">年月</td>
+<td valign="top" width="409">YEAR,MONTH</td>
+</tr>
+<tr>
+<td valign="top" width="78">状态标志</td>
+<td valign="top" width="409">PRODUCT_STATUS,ORDER_STATUS,IS_DELETE,VIP_FLAG</td>
+</tr>
+<tr>
+<td valign="top" width="78">类型</td>
+<td valign="top" width="409">ORDER_TYPE,IMAGE_TYPE,GENDER,CURRENCY_TYPE</td>
+</tr>
+<tr>
+<td valign="top" width="78">区域</td>
+<td valign="top" width="409">COUNTRY,PROVINCE,CITY</td>
+</tr>
+<tr>
+<td valign="top" width="78">操作人员</td>
+<td valign="top" width="409">CREATOR,AUDITOR</td>
+</tr>
+<tr>
+<td valign="top" width="78">数值</td>
+<td valign="top" width="409">LEVEL,AMOUNT,SCORE</td>
+</tr>
+<tr>
+<td valign="top" width="78">长字符</td>
+<td valign="top" width="409">ADDRESS,COMPANY_NAME,SUMMARY,SUBJECT</td>
+</tr>
+<tr>
+<td rowspan="2" valign="top" width="81">不适合建索引的字段</td>
+<td valign="top" width="78">描述备注</td>
+<td valign="top" width="409">DESCRIPTION,REMARK,MEMO,DETAIL</td>
+</tr>
+<tr>
+<td valign="top" width="78">大字段</td>
+<td valign="top" width="409">FILE_CONTENT,EMAIL_CONTENT</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p> </p>
+<p><strong>如何知道SQL是否使用了正确的索引？</strong></p>
+<p>简单SQL可以根据索引使用语法规则判断，复杂的SQL不好办，判断SQL的响应时间是一种策略，但是这会受到数据量、主机负载及缓存等因素的影响，有时数据全在缓存里，可能全表访问的时间比索引访问时间还少。要准确知道索引是否正确使用，需要到数据库中查看SQL真实的执行计划，这个话题比较复杂，详见SQL执行计划专题介绍。</p>
+<p> </p>
+<p><strong>索引对DML(INSERT,UPDATE,DELETE)附加的开销有多少？</strong></p>
+<p>这个没有固定的比例，与每个表记录的大小及索引字段大小密切相关，以下是一个普通表测试数据，仅供参考：</p>
+<p>索引对于Insert性能降低56%</p>
+<p>索引对于Update性能降低47%</p>
+<p>索引对于Delete性能降低29%</p>
+<p>因此对于写IO压力比较大的系统，表的索引需要仔细评估必要性，另外索引也会占用一定的存储空间。</p>
+<p> </p>
+<h3>1.2、只通过索引访问数据</h3>
+<p>有些时候，我们只是访问表中的几个字段，并且字段内容较少，我们可以为这几个字段单独建立一个组合索引，这样就可以直接只通过访问索引就能得到数据，一般索引占用的磁盘空间比表小很多，所以这种方式可以大大减少磁盘IO开销。</p>
+<p>如：select id,name from company where type='2';</p>
+<p>如果这个SQL经常使用，我们可以在type,id,name上创建组合索引</p>
+<p>create index my_comb_index on company(type,id,name);</p>
+<p>有了这个组合索引后，SQL就可以直接通过my_comb_index索引返回数据，不需要访问company表。</p>
+<p>还是拿字典举例：有一个需求，需要查询一本汉语字典中所有汉字的个数，如果我们的字典没有目录索引，那我们只能从字典内容里一个一个字计数，最后返回结果。如果我们有一个拼音目录，那就可以只访问拼音目录的汉字进行计数。如果一本字典有1000页，拼音目录有20页，那我们的数据访问成本相当于全表访问的50分之一。</p>
+<p><strong>切记，性能优化是无止境的，当性能可以满足需求时即可，不要过度优化。</strong>在实际数据库中我们不可能把每个SQL请求的字段都建在索引里，所以这种只通过索引访问数据的方法一般只用于核心应用，也就是那种对核心表访问量最高且查询字段数据量很少的查询。</p>
+<h3>1.3、优化SQL执行计划</h3>
+<p>SQL执行计划是关系型数据库最核心的技术之一，它表示SQL执行时的数据访问算法。由于业务需求越来越复杂，表数据量也越来越大，程序员越来越懒惰，SQL也需要支持非常复杂的业务逻辑，但SQL的性能还需要提高，因此，优秀的关系型数据库除了需要支持复杂的SQL语法及更多函数外，还需要有一套优秀的算法库来提高SQL性能。</p>
+<p>目前ORACLE有SQL执行计划的算法约300种，而且一直在增加，所以SQL执行计划是一个非常复杂的课题，一个普通DBA能掌握50种就很不错了，就算是资深DBA也不可能把每个执行计划的算法描述清楚。虽然有这么多种算法，但并不表示我们无法优化执行计划，因为我们常用的SQL执行计划算法也就十几个，如果一个程序员能把这十几个算法搞清楚，那就掌握了80%的SQL执行计划调优知识。</p>
+<p>由于篇幅的原因，SQL执行计划需要专题介绍，在这里就不多说了。</p>
+<p> </p>
+<h2>2、返回更少的数据</h2>
+<h3>2.1、数据分页处理</h3>
+<p>一般数据分页方式有：</p>
+<h4>2.1.1、客户端(应用程序或浏览器)分页</h4>
+<p>将数据从应用服务器全部下载到本地应用程序或浏览器，在应用程序或浏览器内部通过本地代码进行分页处理</p>
+<p>优点：编码简单，减少客户端与应用服务器网络交互次数</p>
+<p>缺点：首次交互时间长，占用客户端内存</p>
+<p>适应场景：客户端与应用服务器网络延时较大，但要求后续操作流畅，如手机GPRS，超远程访问（跨国）等等。</p>
+<h4>2.1.2、应用服务器分页</h4>
+<p>将数据从数据库服务器全部下载到应用服务器，在应用服务器内部再进行数据筛选。以下是一个应用服务器端Java程序分页的示例：</p>
+<p>List list=executeQuery(“select * from employee order by id”);</p>
+<p>Int count= list.size();</p>
+<p>List subList= list.subList(10, 20);</p>
+<p> </p>
+<p>优点：编码简单，只需要一次SQL交互，总数据与分页数据差不多时性能较好。</p>
+<p>缺点：总数据量较多时性能较差。</p>
+<p>适应场景：数据库系统不支持分页处理，数据量较小并且可控。</p>
+<p> </p>
+<h4>2.1.3、数据库SQL分页</h4>
+<p>采用数据库SQL分页需要两次SQL完成</p>
+<p>一个SQL计算总数量</p>
+<p>一个SQL返回分页后的数据</p>
+<p>优点：性能好</p>
+<p>缺点：编码复杂，各种数据库语法不同，需要两次SQL交互。</p>
+<p> </p>
+<p>oracle数据库一般采用rownum来进行分页，常用分页语法有如下两种：</p>
+<p> </p>
+<p><strong>直接通过rownum分页：</strong></p>
+<p>select * from (</p>
+<p>select a.*,rownum rn from</p>
+<p>(select * from product a where company_id=? order by status) a</p>
+<p>where rownum&lt;=20)</p>
+<p>where rn&gt;10;</p>
+<p>数据访问开销=索引IO+索引全部记录结果对应的表数据IO</p>
+<p> </p>
+<p><strong>采用rowid分页语法</strong></p>
+<p>优化原理是通过纯索引找出分页记录的ROWID，再通过ROWID回表返回数据，要求内层查询和排序字段全在索引里。</p>
+<p>create index myindex on product(company_id,status);</p>
+<p> </p>
+<p>select b.* from (</p>
+<p>select * from (</p>
+<p>select a.*,rownum rn from</p>
+<p>(select rowid rid,status from product a where company_id=? order by status) a</p>
+<p>where rownum&lt;=20)</p>
+<p>where rn&gt;10) a, product b</p>
+<p>where a.rid=b.rowid;</p>
+<p>数据访问开销=索引IO+索引分页结果对应的表数据IO</p>
+<p> </p>
+<p>实例：</p>
+<p>一个公司产品有1000条记录，要分页取其中20个产品，假设访问公司索引需要50个IO，2条记录需要1个表数据IO。</p>
+<p>那么按第一种ROWNUM分页写法，需要550(50+1000/2)个IO，按第二种ROWID分页写法，只需要60个IO(50+20/2);</p>
+<p> </p>
+<h3>2.2、只返回需要的字段</h3>
+<p>通过去除不必要的返回字段可以提高性能，例：</p>
+<p>调整前：select * from product where company_id=?;</p>
+<p>调整后：select id,name from product where company_id=?;</p>
+<p> </p>
+<p>优点：</p>
+<p>1、减少数据在网络上传输开销</p>
+<p>2、减少服务器数据处理开销</p>
+<p>3、减少客户端内存占用</p>
+<p>4、字段变更时提前发现问题，减少程序BUG</p>
+<p>5、如果访问的所有字段刚好在一个索引里面，则可以使用纯索引访问提高性能。</p>
+<p>缺点：增加编码工作量</p>
+<p>由于会增加一些编码工作量，所以一般需求通过开发规范来要求程序员这么做，否则等项目上线后再整改工作量更大。</p>
+<p>如果你的查询表中有大字段或内容较多的字段，如备注信息、文件内容等等，那在查询表时一定要注意这方面的问题，否则可能会带来严重的性能问题。如果表经常要查询并且请求大内容字段的概率很低，我们可以采用分表处理，将一个大表分拆成两个一对一的关系表，将不常用的大内容字段放在一张单独的表中。如一张存储上传文件的表：</p>
+<p>T_FILE（ID,FILE_NAME,FILE_SIZE,FILE_TYPE,FILE_CONTENT）</p>
+<p>我们可以分拆成两张一对一的关系表：</p>
+<p>T_FILE（ID,FILE_NAME,FILE_SIZE,FILE_TYPE）</p>
+<p>T_FILECONTENT（ID, FILE_CONTENT）</p>
+<p>通过这种分拆，可以大大提少T_FILE表的单条记录及总大小，这样在查询T_FILE时性能会更好，当需要查询FILE_CONTENT字段内容时再访问T_FILECONTENT表。</p>
+<p> </p>
+<h2>3、减少交互次数</h2>
+<h3>3.1、batch DML</h3>
+<p>数据库访问框架一般都提供了批量提交的接口，jdbc支持batch的提交处理方法，当你一次性要往一个表中插入1000万条数据时，如果采用普通的executeUpdate处理，那么和服务器交互次数为1000万次，按每秒钟可以向数据库服务器提交10000次估算，要完成所有工作需要1000秒。如果采用批量提交模式，1000条提交一次，那么和服务器交互次数为1万次，交互次数大大减少。采用batch操作一般不会减少很多数据库服务器的物理IO，但是会大大减少客户端与服务端的交互次数，从而减少了多次发起的网络延时开销，同时也会降低数据库的CPU开销。</p>
+<p> </p>
+<p>假设要向一个普通表插入1000万数据，每条记录大小为1K字节，表上没有任何索引，客户端与数据库服务器网络是100Mbps，以下是根据现在一般计算机能力估算的各种batch大小性能对比值：</p>
+<p> </p>
+<p> </p>
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="158">　单位：ms</td>
+<td valign="top" width="76">No batch</td>
+<td valign="top" width="76">Batch=10</td>
+<td valign="top" width="76">Batch=100</td>
+<td valign="top" width="85">Batch=1000</td>
+<td valign="top" width="98">Batch=10000</td>
+</tr>
+<tr>
+<td valign="top" width="158">服务器事务处理时间</td>
+<td valign="top" width="76">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="76">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="76">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="85">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="98">
+<p align="right">0.1</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="158">服务器IO处理时间</td>
+<td valign="top" width="76">
+<p align="right">0.02</p>
+</td>
+<td valign="top" width="76">
+<p align="right">0.2</p>
+</td>
+<td valign="top" width="76">
+<p align="right">2</p>
+</td>
+<td valign="top" width="85">
+<p align="right">20</p>
+</td>
+<td valign="top" width="98">
+<p align="right">200</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="158">网络交互发起时间</td>
+<td valign="top" width="76">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="76">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="76">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="85">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="98">
+<p align="right">0.1</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="158">网络数据传输时间</td>
+<td valign="top" width="76">
+<p align="right">0.01</p>
+</td>
+<td valign="top" width="76">
+<p align="right">0.1</p>
+</td>
+<td valign="top" width="76">
+<p align="right">1</p>
+</td>
+<td valign="top" width="85">
+<p align="right">10</p>
+</td>
+<td valign="top" width="98">
+<p align="right">100</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="158">小计</td>
+<td valign="top" width="76">
+<p align="right">0.23</p>
+</td>
+<td valign="top" width="76">
+<p align="right">0.5</p>
+</td>
+<td valign="top" width="76">
+<p align="right">3.2</p>
+</td>
+<td valign="top" width="85">
+<p align="right">30.2</p>
+</td>
+<td valign="top" width="98">
+<p align="right">300.2</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="158">平均每条记录处理时间</td>
+<td width="76">
+<p align="right">0.23</p>
+</td>
+<td width="76">
+<p align="right">0.05</p>
+</td>
+<td width="76">
+<p align="right">0.032</p>
+</td>
+<td width="85">
+<p align="right">0.0302</p>
+</td>
+<td width="98">
+<p align="right">0.03002</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p> </p>
+<p>从上可以看出，Insert操作加大Batch可以对性能提高近8倍性能，一般根据主键的Update或Delete操作也可能提高2-3倍性能，但不如Insert明显，因为Update及Delete操作可能有比较大的开销在物理IO访问。以上仅是理论计算值，实际情况需要根据具体环境测量。</p>
+<p> </p>
+<h3>3.2、In List</h3>
+<p>很多时候我们需要按一些ID查询数据库记录，我们可以采用一个ID一个请求发给数据库，如下所示：</p>
+<p>for :var in ids[] do begin</p>
+<p>select * from mytable where id=:var;</p>
+<p>end;</p>
+<p> </p>
+<p>我们也可以做一个小的优化， 如下所示，用ID INLIST的这种方式写SQL：</p>
+<p>select * from mytable where id in(:id1,id2,...,idn);</p>
+<p> </p>
+<p>通过这样处理可以大大减少SQL请求的数量，从而提高性能。那如果有10000个ID，那是不是全部放在一条SQL里处理呢？答案肯定是否定的。首先大部份数据库都会有SQL长度和IN里个数的限制，如<strong>ORACLE的IN里就不允许超过1000个值</strong>。</p>
+<p>另外当前数据库一般都是采用基于成本的优化规则，当IN数量达到一定值时有可能改变SQL执行计划，从索引访问变成全表访问，这将使性能急剧变化。随着SQL中IN的里面的值个数增加，SQL的执行计划会更复杂，占用的内存将会变大，这将会增加服务器CPU及内存成本。</p>
+<p>评估在IN里面一次放多少个值还需要考虑应用服务器本地内存的开销，有并发访问时要计算本地数据使用周期内的并发上限，否则可能会导致内存溢出。</p>
+<p>综合考虑，一般IN里面的值个数超过20个以后性能基本没什么太大变化，也特别说明不要超过100，超过后可能会引起执行计划的不稳定性及增加数据库CPU及内存成本，这个需要专业DBA评估。</p>
+<p> </p>
+<h3>3.3、设置Fetch Size</h3>
+<p>当我们采用select从数据库查询数据时，数据默认并不是一条一条返回给客户端的，也不是一次全部返回客户端的，而是根据客户端fetch_size参数处理，每次只返回fetch_size条记录，当客户端游标遍历到尾部时再从服务端取数据，直到最后全部传送完成。所以如果我们要从服务端一次取大量数据时，可以加大fetch_size，这样可以减少结果数据传输的交互次数及服务器数据准备时间，提高性能。</p>
+<p> </p>
+<p>以下是jdbc测试的代码，采用本地数据库，表缓存在数据库CACHE中，因此没有网络连接及磁盘IO开销，客户端只遍历游标，不做任何处理，这样更能体现fetch参数的影响：</p>
+<p>String vsql ="select * from t_employee";</p>
+<p align="left">PreparedStatement pstmt = conn.prepareStatement(vsql,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);</p>
+<p>pstmt.setFetchSize(1000);</p>
+<p>ResultSet rs = pstmt.executeQuery(vsql);</p>
+<p>int cnt = rs.getMetaData().getColumnCount();</p>
+<p>Object o;</p>
+<p>while (rs.next()) {</p>
+<p>for (int i = 1; i &lt;= cnt; i++) {</p>
+<p>o = rs.getObject(i);</p>
+<p>}</p>
+<p>}</p>
+<p> </p>
+<p>测试示例中的employee表有100000条记录，每条记录平均长度135字节</p>
+<p> </p>
+<p>以下是测试结果，对每种fetchsize测试5次再取平均值：</p>
+<p> </p>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td width="128">
+<p align="left">fetchsize</p>
+</td>
+<td width="194">
+<p align="left"> elapse_time（s）</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">1</p>
+</td>
+<td width="194">
+<p align="right">20.516</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">2</p>
+</td>
+<td width="194">
+<p align="right">11.34</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">4</p>
+</td>
+<td width="194">
+<p align="right">6.894</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">8</p>
+</td>
+<td width="194">
+<p align="right">4.65</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">16</p>
+</td>
+<td width="194">
+<p align="right">3.584</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">32</p>
+</td>
+<td width="194">
+<p align="right">2.865</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">64</p>
+</td>
+<td width="194">
+<p align="right">2.656</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right"><strong>128</strong></p>
+</td>
+<td width="194">
+<p align="right"><strong>2.44</strong></p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">256</p>
+</td>
+<td width="194">
+<p align="right">2.765</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">512</p>
+</td>
+<td width="194">
+<p align="right">3.075</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">1024</p>
+</td>
+<td width="194">
+<p align="right">2.862</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">2048</p>
+</td>
+<td width="194">
+<p align="right">2.722</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">4096</p>
+</td>
+<td width="194">
+<p align="right">2.681</p>
+</td>
+</tr>
+<tr>
+<td width="128">
+<p align="right">8192</p>
+</td>
+<td width="194">
+<p align="right">2.715</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p><img decoding="async" src="/wp-content/uploads/2016/12/0_1291636674fm6c.gif" alt=""></p>
+<p>Oracle jdbc fetchsize默认值为10，由上测试可以看出fetchsize对性能影响还是比较大的，但是当fetchsize大于100时就基本上没有影响了。fetchsize并不会存在一个最优的固定值，因为整体性能与记录集大小及硬件平台有关。根据测试结果建议当一次性要取大量数据时这个值设置为100左右，不要小于40。注意，fetchsize不能设置太大，如果一次取出的数据大于JVM的内存会导致内存溢出，所以建议不要超过1000，太大了也没什么性能提高，反而可能会增加内存溢出的危险。</p>
+<p>注：图中fetchsize在128以后会有一些小的波动，这并不是测试误差，而是由于resultset填充到具体对像时间不同的原因，由于resultset已经到本地内存里了，所以估计是由于CPU的L1,L2 Cache命中率变化造成，由于变化不大，所以笔者也未深入分析原因。</p>
+<p> </p>
+<p>iBatis的SqlMapping配置文件可以对每个SQL语句指定fetchsize大小，如下所示：</p>
+<p> </p>
+<p>&lt;select id="getAllProduct" resultMap="HashMap"<strong> fetchSize="1000"</strong>&gt;</p>
+<p>select * from employee</p>
+<p>&lt;/select&gt;</p>
+<p> </p>
+<h3>3.4、使用存储过程</h3>
+<p>大型数据库一般都支持存储过程，合理的利用存储过程也可以提高系统性能。如你有一个业务需要将A表的数据做一些加工然后更新到B表中，但是又不可能一条SQL完成，这时你需要如下3步操作：</p>
+<p>a：将A表数据全部取出到客户端；</p>
+<p>b：计算出要更新的数据；</p>
+<p>c：将计算结果更新到B表。</p>
+<p> </p>
+<p>如果采用存储过程你可以将整个业务逻辑封装在存储过程里，然后在客户端直接调用存储过程处理，这样可以减少网络交互的成本。</p>
+<p>当然，存储过程也并不是十全十美，存储过程有以下缺点：</p>
+<p>a、不可移植性，每种数据库的内部编程语法都不太相同，当你的系统需要兼容多种数据库时最好不要用存储过程。</p>
+<p>b、学习成本高，DBA一般都擅长写存储过程，但并不是每个程序员都能写好存储过程，除非你的团队有较多的开发人员熟悉写存储过程，否则后期系统维护会产生问题。</p>
+<p>c、业务逻辑多处存在，采用存储过程后也就意味着你的系统有一些业务逻辑不是在应用程序里处理，这种架构会增加一些系统维护和调试成本。</p>
+<p>d、存储过程和常用应用程序语言不一样，它支持的函数及语法有可能不能满足需求，有些逻辑就只能通过应用程序处理。</p>
+<p>e、如果存储过程中有复杂运算的话，会增加一些数据库服务端的处理成本，对于集中式数据库可能会导致系统可扩展性问题。</p>
+<p>f、为了提高性能，数据库会把存储过程代码编译成中间运行代码(类似于java的class文件)，所以更像静态语言。当存储过程引用的对像(表、视图等等)结构改变后，存储过程需要重新编译才能生效，在24*7高并发应用场景，一般都是在线变更结构的，所以在变更的瞬间要同时编译存储过程，这可能会导致数据库瞬间压力上升引起故障(Oracle数据库就存在这样的问题)。</p>
+<p> </p>
+<p>个人观点：普通业务逻辑尽量不要使用存储过程，定时性的ETL任务或报表统计函数可以根据团队资源情况采用存储过程处理。</p>
+<p> </p>
+<h3>3.5、优化业务逻辑</h3>
+<p>要通过优化业务逻辑来提高性能是比较困难的，这需要程序员对所访问的数据及业务流程非常清楚。</p>
+<p>举一个案例：</p>
+<p>某移动公司推出优惠套参，活动对像为VIP会员并且2010年1，2，3月平均话费20元以上的客户。</p>
+<p>那我们的检测逻辑为：</p>
+<p>select avg(money) as avg_money from bill where phone_no='13988888888' and date between '201001' and '201003';</p>
+<p>select vip_flag from member where phone_no='13988888888';</p>
+<p>if avg_money&gt;20 and vip_flag=true then</p>
+<p>begin</p>
+<p>执行套参();</p>
+<p>end;</p>
+<p> </p>
+<p>如果我们修改业务逻辑为:</p>
+<p>select avg(money) as  avg_money from bill where phone_no='13988888888' and date between '201001' and '201003';</p>
+<p>if avg_money&gt;20 then</p>
+<p>begin</p>
+<p>select vip_flag from member where phone_no='13988888888';</p>
+<p>if vip_flag=true then</p>
+<p>begin</p>
+<p>执行套参();</p>
+<p>end;</p>
+<p>end;</p>
+<p>通过这样可以减少一些判断vip_flag的开销，平均话费20元以下的用户就不需要再检测是否VIP了。</p>
+<p> </p>
+<p>如果程序员分析业务，VIP会员比例为1%，平均话费20元以上的用户比例为90%，那我们改成如下：</p>
+<p>select vip_flag from member where phone_no='13988888888';</p>
+<p>if vip_flag=true then</p>
+<p>begin</p>
+<p>select avg(money) as avg_money from bill where phone_no='13988888888' and date between '201001' and '201003';</p>
+<p>if avg_money&gt;20 then</p>
+<p>begin</p>
+<p>执行套参();</p>
+<p>end;</p>
+<p>end;</p>
+<p>这样就只有1%的VIP会员才会做检测平均话费，最终大大减少了SQL的交互次数。</p>
+<p> </p>
+<p>以上只是一个简单的示例，实际的业务总是比这复杂得多，所以一般只是高级程序员更容易做出优化的逻辑，但是我们需要有这样一种成本优化的意识。</p>
+<p> </p>
+<h3>3.6、使用ResultSet游标处理记录</h3>
+<p>现在大部分Java框架都是通过jdbc从数据库取出数据，然后装载到一个list里再处理，list里可能是业务Object，也可能是hashmap。</p>
+<p>由于JVM内存一般都小于4G，所以不可能一次通过sql把大量数据装载到list里。为了完成功能，很多程序员喜欢采用分页的方法处理，如一次从数据库取1000条记录，通过多次循环搞定，保证不会引起JVM Out of memory问题。</p>
+<p> </p>
+<p>以下是实现此功能的代码示例，t_employee表有10万条记录，设置分页大小为1000：</p>
+<p> </p>
+<p>d1 = Calendar.getInstance().getTime();</p>
+<p>vsql = "select count(*) cnt from t_employee";</p>
+<p>pstmt = conn.prepareStatement(vsql);</p>
+<p>ResultSet rs = pstmt.executeQuery();</p>
+<p>Integer cnt = 0;</p>
+<p>while (rs.next()) {</p>
+<p>cnt = rs.getInt("cnt");</p>
+<p>}</p>
+<p>Integer lastid=0;</p>
+<p>Integer pagesize=1000;</p>
+<p>System.out.println("cnt:" + cnt);</p>
+<p>String vsql = "select count(*) cnt from t_employee";</p>
+<p>PreparedStatement pstmt = conn.prepareStatement(vsql);</p>
+<p>ResultSet rs = pstmt.executeQuery();</p>
+<p>Integer cnt = 0;</p>
+<p>while (rs.next()) {</p>
+<p>cnt = rs.getInt("cnt");</p>
+<p>}</p>
+<p>Integer lastid = 0;</p>
+<p>Integer pagesize = 1000;</p>
+<p>System.out.println("cnt:" + cnt);</p>
+<p>for (int i = 0; i &lt;= cnt / pagesize; i++) {</p>
+<p>vsql = "select * from (select * from t_employee where id&gt;? order by id) where rownum&lt;=?";</p>
+<p>pstmt = conn.prepareStatement(vsql);</p>
+<p>pstmt.setFetchSize(1000);</p>
+<p>pstmt.setInt(1, lastid);</p>
+<p>pstmt.setInt(2, pagesize);</p>
+<p>rs = pstmt.executeQuery();</p>
+<p>int col_cnt = rs.getMetaData().getColumnCount();</p>
+<p>Object o;</p>
+<p>while (rs.next()) {</p>
+<p>for (int j = 1; j &lt;= col_cnt; j++) {</p>
+<p>o = rs.getObject(j);</p>
+<p>}</p>
+<p>lastid = rs.getInt("id");</p>
+<p>}</p>
+<p>rs.close();</p>
+<p>pstmt.close();</p>
+<p>}</p>
+<p> </p>
+<p>以上代码实际执行时间为6.516秒</p>
+<p> </p>
+<p>很多持久层框架为了尽量让程序员使用方便，封装了jdbc通过statement执行数据返回到resultset的细节，导致程序员会想采用分页的方式处理问题。实际上如果我们采用jdbc原始的resultset游标处理记录，在resultset循环读取的过程中处理记录，这样就可以一次从数据库取出所有记录。显著提高性能。</p>
+<p>这里需要注意的是，采用resultset游标处理记录时，应该将游标的打开方式设置为FORWARD_READONLY模式(ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY)，否则会把结果缓存在JVM里，造成JVM Out of memory问题。</p>
+<p> </p>
+<p>代码示例：</p>
+<p> </p>
+<p>String vsql ="select * from t_employee";</p>
+<p align="left">PreparedStatement pstmt = conn.prepareStatement(vsql,ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);</p>
+<p>pstmt.setFetchSize(100);</p>
+<p>ResultSet rs = pstmt.executeQuery(vsql);</p>
+<p>int col_cnt = rs.getMetaData().getColumnCount();</p>
+<p>Object o;</p>
+<p>while (rs.next()) {</p>
+<p>for (int j = 1; j &lt;= col_cnt; j++) {</p>
+<p>o = rs.getObject(j);</p>
+<p>}</p>
+<p>}</p>
+<p>调整后的代码实际执行时间为3.156秒</p>
+<p> </p>
+<p>从测试结果可以看出性能提高了1倍多，如果采用分页模式数据库每次还需发生磁盘IO的话那性能可以提高更多。</p>
+<p>iBatis等持久层框架考虑到会有这种需求，所以也有相应的解决方案，在iBatis里我们不能采用queryForList的方法，而应用该采用queryWithRowHandler加回调事件的方式处理，如下所示：</p>
+<p> </p>
+<p align="left">MyRowHandler myrh=<strong>new</strong> MyRowHandler();</p>
+<p align="left"><em>sqlmap</em>.queryWithRowHandler("getAllEmployee", myrh);</p>
+<p> </p>
+<p align="left"><strong>class</strong> MyRowHandler <strong>implements</strong> RowHandler {</p>
+<p align="left">    <strong>public void</strong> handleRow(Object o) {</p>
+<p align="left">       //todo something</p>
+<p align="left">    }</p>
+<p>}</p>
+<p> </p>
+<p>iBatis的queryWithRowHandler很好的封装了resultset遍历的事件处理，效果及性能与resultset遍历一样，也不会产生JVM内存溢出。</p>
+<p> </p>
+<h2>4、减少数据库服务器CPU运算</h2>
+<h3>4.1、使用绑定变量</h3>
+<p>绑定变量是指SQL中对变化的值采用变量参数的形式提交，而不是在SQL中直接拼写对应的值。</p>
+<p>非绑定变量写法：Select * from employee where id=1234567</p>
+<p>绑定变量写法：</p>
+<p>Select * from employee where id=?</p>
+<p>Preparestatement.setInt(1,1234567)</p>
+<p> </p>
+<p>Java中Preparestatement就是为处理绑定变量提供的对像，绑定变量有以下优点：</p>
+<p>1、防止SQL注入</p>
+<p>2、提高SQL可读性</p>
+<p>3、提高SQL解析性能，不使用绑定变更我们一般称为硬解析，使用绑定变量我们称为软解析。</p>
+<p>第1和第2点很好理解，做编码的人应该都清楚，这里不详细说明。关于第3点，到底能提高多少性能呢，下面举一个例子说明：</p>
+<p> </p>
+<p>假设有这个这样的一个数据库主机：</p>
+<p>2个4核CPU</p>
+<p>100块磁盘，每个磁盘支持IOPS为160</p>
+<p>业务应用的SQL如下：</p>
+<p>select * from table where pk=?</p>
+<p>这个SQL平均4个IO（3个索引IO+1个数据IO）</p>
+<p>IO缓存命中率75%（索引全在内存中，数据需要访问磁盘）</p>
+<p>SQL硬解析CPU消耗：1ms  （常用经验值）</p>
+<p>SQL软解析CPU消耗：0.02ms（常用经验值）</p>
+<p> </p>
+<p>假设CPU每核性能是线性增长，访问内存Cache中的IO时间忽略，要求计算系统对如上应用采用硬解析与采用软解析支持的每秒最大并发数：</p>
+<p> </p>
+<p> </p>
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="140">是否使用绑定变量</td>
+<td valign="top" width="239">CPU支持最大并发数</td>
+<td valign="top" width="189">磁盘IO支持最大并发数</td>
+</tr>
+<tr>
+<td valign="top" width="140">不使用</td>
+<td valign="top" width="239">2*4*1000=<strong>8000</strong></td>
+<td valign="top" width="189">100*160=<strong>16000</strong></td>
+</tr>
+<tr>
+<td valign="top" width="140">使用</td>
+<td valign="top" width="239">2*4*1000/0.02=<strong>400000</strong></td>
+<td valign="top" width="189">100*160=<strong>16000</strong></td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p> </p>
+<p>从以上计算可以看出，不使用绑定变量的系统当并发达到8000时会在CPU上产生瓶颈，当使用绑定变量的系统当并行达到16000时会在磁盘IO上产生瓶颈。所以如果你的系统CPU有瓶颈时请先检查是否存在大量的硬解析操作。</p>
+<p> </p>
+<p>使用绑定变量为何会提高SQL解析性能，这个需要从数据库SQL执行原理说明，一条SQL在Oracle数据库中的执行过程如下图所示：</p>
+<p> </p>
+<p><img decoding="async" src="/wp-content/uploads/2016/12/0_1291636679Op5Z.gif" alt=""></p>
+<p>当一条SQL发送给数据库服务器后，系统首先会将SQL字符串进行hash运算，得到hash值后再从服务器内存里的SQL缓存区中进行检索，如果有相同的SQL字符，并且确认是同一逻辑的SQL语句，则从共享池缓存中取出SQL对应的执行计划，根据执行计划读取数据并返回结果给客户端。</p>
+<p>如果在共享池中未发现相同的SQL则根据SQL逻辑生成一条新的执行计划并保存在SQL缓存区中，然后根据执行计划读取数据并返回结果给客户端。</p>
+<p>为了更快的检索SQL是否在缓存区中，首先进行的是SQL字符串hash值对比，如果未找到则认为没有缓存，如果存在再进行下一步的准确对比，所以要命中SQL缓存区应保证SQL字符是完全一致，中间有大小写或空格都会认为是不同的SQL。</p>
+<p>如果我们不采用绑定变量，采用字符串拼接的模式生成SQL,那么每条SQL都会产生执行计划，这样会导致共享池耗尽，缓存命中率也很低。</p>
+<p> </p>
+<p>一些不使用绑定变量的场景：</p>
+<p>a、数据仓库应用，这种应用一般并发不高，但是每个SQL执行时间很长，SQL解析的时间相比SQL执行时间比较小，绑定变量对性能提高不明显。数据仓库一般都是内部分析应用，所以也不太会发生SQL注入的安全问题。</p>
+<p>b、数据分布不均匀的特殊逻辑，如产品表，记录有1亿，有一产品状态字段，上面建有索引，有审核中，审核通过，审核未通过3种状态，其中审核通过9500万，审核中1万，审核不通过499万。</p>
+<p>要做这样一个查询：</p>
+<p>select count(*) from product where status=?</p>
+<p>采用绑定变量的话，那么只会有一个执行计划，如果走索引访问，那么对于审核中查询很快，对审核通过和审核不通过会很慢；如果不走索引，那么对于审核中与审核通过和审核不通过时间基本一样；</p>
+<p>对于这种情况应该不使用绑定变量，而直接采用字符拼接的方式生成SQL，这样可以为每个SQL生成不同的执行计划，如下所示。</p>
+<p>select count(*) from product where status='approved'; //不使用索引</p>
+<p>select count(*) from product where status='tbd'; //不使用索引</p>
+<p><strong>select count(*) from product where status='auditing';//使用索引</strong></p>
+<p> </p>
+<h3>4.2、合理使用排序</h3>
+<p>Oracle的排序算法一直在优化，但是总体时间复杂度约等于nLog(n)。普通OLTP系统排序操作一般都是在内存里进行的，对于数据库来说是一种CPU的消耗，曾在PC机做过测试，单核普通CPU在1秒钟可以完成100万条记录的全内存排序操作，所以说由于现在CPU的性能增强，对于普通的几十条或上百条记录排序对系统的影响也不会很大。但是当你的记录集增加到上万条以上时，你需要注意是否一定要这么做了，大记录集排序不仅增加了CPU开销，而且可能会由于内存不足发生硬盘排序的现象，当发生硬盘排序时性能会急剧下降，这种需求需要与DBA沟通再决定，取决于你的需求和数据，所以只有你自己最清楚，而不要被别人说排序很慢就吓倒。</p>
+<p>以下列出了可能会发生排序操作的SQL语法：</p>
+<p>Order by</p>
+<p>Group by</p>
+<p>Distinct</p>
+<p>Exists子查询</p>
+<p>Not Exists子查询</p>
+<p>In子查询</p>
+<p>Not In子查询</p>
+<p>Union（并集），Union All也是一种并集操作，但是不会发生排序，如果你确认两个数据集不需要执行去除重复数据操作，那请使用Union All 代替Union。</p>
+<p>Minus（差集）</p>
+<p>Intersect（交集）</p>
+<p>Create Index</p>
+<p>Merge Join，这是一种两个表连接的内部算法，执行时会把两个表先排序好再连接，应用于两个大表连接的操作。如果你的两个表连接的条件都是等值运算，那可以采用Hash Join来提高性能，因为Hash Join使用Hash 运算来代替排序的操作。具体原理及设置参考SQL执行计划优化专题。</p>
+<p> </p>
+<h3>4.3、减少比较操作</h3>
+<p>我们SQL的业务逻辑经常会包含一些比较操作，如a=b，a&lt;b之类的操作，对于这些比较操作数据库都体现得很好，但是如果有以下操作，我们需要保持警惕：</p>
+<p><strong>Like模糊查询，如下所示：</strong></p>
+<p>a like ‘%abc%’</p>
+<p> </p>
+<p>Like模糊查询对于数据库来说不是很擅长，特别是你需要模糊检查的记录有上万条以上时，性能比较糟糕，这种情况一般可以采用专用Search或者采用全文索引方案来提高性能。</p>
+<p><strong>不能使用索引定位的大量In List，如下所示：</strong></p>
+<p>a in (:1,:2,:3,…,:n)   ----n&gt;20</p>
+<p>如果这里的a字段不能通过索引比较，那数据库会将字段与in里面的每个值都进行比较运算，如果记录数有上万以上，会明显感觉到SQL的CPU开销加大，这个情况有两种解决方式：</p>
+<p>a、  将in列表里面的数据放入一张中间小表，采用两个表Hash Join关联的方式处理；</p>
+<p>b、  采用<strong>str2varList</strong>方法将字段串列表转换一个临时表处理，关于<strong>str2varList</strong>方法可以在网上直接查询，这里不详细介绍。</p>
+<p> </p>
+<p>以上两种解决方案都需要与中间表Hash Join的方式才能提高性能，如果采用了Nested Loop的连接方式性能会更差。</p>
+<p>如果发现我们的系统IO没问题但是CPU负载很高，就有可能是上面的原因，这种情况不太常见，如果遇到了最好能和DBA沟通并确认准确的原因。</p>
+<p> </p>
+<h3>4.4、大量复杂运算在客户端处理</h3>
+<p>什么是复杂运算，一般我认为是一秒钟CPU只能做10万次以内的运算。如含小数的对数及指数运算、三角函数、3DES及BASE64数据加密算法等等。</p>
+<p>如果有大量这类函数运算，尽量放在客户端处理，一般CPU每秒中也只能处理1万-10万次这样的函数运算，放在数据库内不利于高并发处理。</p>
+<p> </p>
+<h2>5、利用更多的资源</h2>
+<h3>5.1、客户端多进程并行访问</h3>
+<p>多进程并行访问是指在客户端创建多个进程(线程)，每个进程建立一个与数据库的连接，然后同时向数据库提交访问请求。当数据库主机资源有空闲时，我们可以采用客户端多进程并行访问的方法来提高性能。如果数据库主机已经很忙时，采用多进程并行访问性能不会提高，反而可能会更慢。所以使用这种方式最好与DBA或系统管理员进行沟通后再决定是否采用。</p>
+<p> </p>
+<p>例如：</p>
+<p>我们有10000个产品ID，现在需要根据ID取出产品的详细信息，如果单线程访问，按每个IO要5ms计算，忽略主机CPU运算及网络传输时间，我们需要50s才能完成任务。如果采用5个并行访问，每个进程访问2000个ID，那么10s就有可能完成任务。</p>
+<p>那是不是并行数越多越好呢，开1000个并行是否只要50ms就搞定，答案肯定是否定的，当并行数超过服务器主机资源的上限时性能就不会再提高，如果再增加反而会增加主机的进程间调度成本和进程冲突机率。</p>
+<p> </p>
+<p>以下是一些如何设置并行数的基本建议：</p>
+<p>如果瓶颈在服务器主机，但是主机还有空闲资源，那么最大并行数取主机CPU核数和主机提供数据服务的磁盘数两个参数中的最小值，同时要保证主机有资源做其它任务。</p>
+<p>如果瓶颈在客户端处理，但是客户端还有空闲资源，那建议不要增加SQL的并行，而是用一个进程取回数据后在客户端起多个进程处理即可，进程数根据客户端CPU核数计算。</p>
+<p>如果瓶颈在客户端网络，那建议做数据压缩或者增加多个客户端，采用map reduce的架构处理。</p>
+<p>如果瓶颈在服务器网络，那需要增加服务器的网络带宽或者在服务端将数据压缩后再处理了。</p>
+<p> </p>
+<h3>5.2、数据库并行处理</h3>
+<p>数据库并行处理是指客户端一条SQL的请求，数据库内部自动分解成多个进程并行处理，如下图所示：</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/12/0_1291636683c2zz.gif" alt=""></p>
+<p>并不是所有的SQL都可以使用并行处理，一般只有对表或索引进行全部访问时才可以使用并行。数据库表默认是不打开并行访问，所以需要指定SQL并行的提示，如下所示：</p>
+<p>select <strong>/*+parallel(a,4)*/ </strong>* from employee;</p>
+<p> </p>
+<p>并行的优点：</p>
+<p>使用多进程处理，充分利用数据库主机资源（CPU,IO），提高性能。</p>
+<p>并行的缺点：</p>
+<p>1、单个会话占用大量资源，影响其它会话，所以只适合在主机负载低时期使用；</p>
+<p>2、只能采用直接IO访问，不能利用缓存数据，所以执行前会触发将脏缓存数据写入磁盘操作。</p>
+<p> </p>
+<p>注：</p>
+<p>1、并行处理在OLTP类系统中慎用，使用不当会导致一个会话把主机资源全部占用，而正常事务得不到及时响应，所以一般只是用于数据仓库平台。</p>
+<p>2、一般对于百万级记录以下的小表采用并行访问性能并不能提高，反而可能会让性能更差。</p>
+<p>参考文章：http://www.cnblogs.com/easypass/archive/2010/12/08/1900127.html</p>
+<p>http://www.cnblogs.com/yunfeifei/p/3850440.html</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F" rel="tag">大数据量</a>, <a href="/tag/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96" rel="tag">数据库性能优化</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BA%8C.html" rel="prev">大数据量数据库性能优化(二)</a><br>【下篇】<a href="/2016/12/03/mysql-%E5%AF%B9%E4%BA%8E%E5%8D%83%E4%B8%87%E7%BA%A7%E7%9A%84%E5%A4%A7%E8%A1%A8%E8%A6%81%E6%80%8E%E4%B9%88%E4%BC%98%E5%8C%96.html" rel="next">[转]MySQL 对于千万级的大表要怎么优化?</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BA%8C.html">大数据量数据库性能优化(二)</a></li><li> · <a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%80.html">大数据量数据库性能优化(一)</a></li><li> · <a href="/2020/05/08/log-or-data.html">数据库先写日志还是先写数据？</a></li><li> · <a href="/2018/01/29/interview1.html">数据库 面试记录（面试题）</a></li><li> · <a href="/2018/01/08/sql-server-lock.html">记一次sql server数据库死锁的解决过程</a></li><li> · <a href="/2017/09/14/sql-server-auto-backup.html">SQL Server数据库定时自动备份并自动删除旧的备份</a></li><li> · <a href="/2017/07/27/%E4%BD%BF%E7%94%A8sqlcmd%E8%BF%98%E5%8E%9F%E5%A4%A7%E6%96%87%E4%BB%B6.html">使用sqlcmd还原大文件</a></li><li> · <a href="/2017/06/21/sql%E6%AF%8F%E4%B8%AA%E7%94%A8%E6%88%B7%E5%8F%961%E6%9D%A1%E8%AE%B0%E5%BD%95.html">SQL每个用户取1条记录</a></li><li> · <a href="/2017/06/12/mssql%E4%B8%ADdatetime%E8%BD%ACunix%E6%97%B6%E9%97%B4%E6%88%B3.html">MSSQL中datetime转unix时间戳</a></li><li> · <a href="/2017/01/06/sql-server-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0.html">SQL Server 字符串函数</a></li><li> · <a href="/2017/01/06/clear-sqlserver2014-log.html">SQLServer2014删除log文件和清空日志的方案</a></li><li> · <a href="/2016/12/09/sql%E5%8E%BB%E6%8E%89%E5%9B%9E%E8%BD%A6%E7%AD%89asccii%E5%AD%97%E7%AC%A6.html">sql去掉回车等ASCCII字符</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2016年12月03日发表在<a href="/category/sql-server" rel="category tag">SQL Server</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%89.html" rel="bookmark" title="本文固定链接 /2016/12/03/%e5%a4%a7%e6%95%b0%e6%8d%ae%e9%87%8f%e6%95%b0%e6%8d%ae%e5%ba%93%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96%e4%b8%89.html">大数据量数据库性能优化(三) | Bruce's Blog</a><a href="#" onclick="copy_code('/2016/12/03/%e5%a4%a7%e6%95%b0%e6%8d%ae%e9%87%8f%e6%95%b0%e6%8d%ae%e5%ba%93%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96%e4%b8%89.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%89.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4095" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="9c3d8698f3"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="19"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.073 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:52 -->

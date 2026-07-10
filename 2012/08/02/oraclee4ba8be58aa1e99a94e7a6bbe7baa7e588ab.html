@@ -1,0 +1,830 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>ORACLE事务隔离级别 | Bruce's Blog</title> 
+<meta name="description" content="在进行本文之前，先给大家复习一下什么是事务：">
+<meta name="keywords" content="Oracle,事务">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 8 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td><a href="/2012/08/02" aria-label="2012年8月2日 发布的文章">2</a></td><td><a href="/2012/08/03" aria-label="2012年8月3日 发布的文章">3</a></td><td>4</td><td>5</td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/06" aria-label="2012年8月6日 发布的文章">6</a></td><td>7</td><td><a href="/2012/08/08" aria-label="2012年8月8日 发布的文章">8</a></td><td>9</td><td><a href="/2012/08/10" aria-label="2012年8月10日 发布的文章">10</a></td><td>11</td><td><a href="/2012/08/12" aria-label="2012年8月12日 发布的文章">12</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/13" aria-label="2012年8月13日 发布的文章">13</a></td><td>14</td><td><a href="/2012/08/15" aria-label="2012年8月15日 发布的文章">15</a></td><td><a href="/2012/08/16" aria-label="2012年8月16日 发布的文章">16</a></td><td><a href="/2012/08/17" aria-label="2012年8月17日 发布的文章">17</a></td><td><a href="/2012/08/18" aria-label="2012年8月18日 发布的文章">18</a></td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td><a href="/2012/08/21" aria-label="2012年8月21日 发布的文章">21</a></td><td>22</td><td><a href="/2012/08/23" aria-label="2012年8月23日 发布的文章">23</a></td><td><a href="/2012/08/24" aria-label="2012年8月24日 发布的文章">24</a></td><td>25</td><td><a href="/2012/08/26" aria-label="2012年8月26日 发布的文章">26</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/27" aria-label="2012年8月27日 发布的文章">27</a></td><td>28</td><td><a href="/2012/08/29" aria-label="2012年8月29日 发布的文章">29</a></td><td>30</td><td><a href="/2012/08/31" aria-label="2012年8月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/07">« 7 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/09">9 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#b64a06;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#243011;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#2eedb2;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#e869d;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#847bd5;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#3cd2ae;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#2480d4;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#121d29;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#61a8b5;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#b1e48e;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#8d2436;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#3b15b;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#23e784;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#20acb7;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#34556f;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#b32506;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#b792e2;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#52d2e6;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#75f8d4;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#c6ca8b;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#e50613;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#5869ca;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#45b83e;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#51c9ad;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#82d8cc;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#50c8f6;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#dc48a5;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#eb9487;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#ea7335;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#fb2ab0;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#6e9ab1;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#29a96b;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#f5ae2a;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#2c37a3;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#476376;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#235aa2;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#c3f5db;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#b39269;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#c21062;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#20f8bb;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#cbc0e3;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#9c78e6;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#a7fb76;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#66add3;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#6b505f;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/oracle" rel="category tag">Oracle</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">ORACLE事务隔离级别</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-08-02 09:32</span>
+			<span class="category">  <a href="/category/oracle" rel="category tag">Oracle</a></span>
+			<span class="article_comment"><a href="/2012/08/02/oracle%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>3,078</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p><strong>在进行本文之前，先给大家复习一下什么是<span class="wp_keywordlink_affiliate"><a href="/tag/%E4%BA%8B%E5%8A%A1" title="View all posts in 事务" target="_blank">事务</a></span>：</strong></p>
+<p>一、什么是<span class="wp_keywordlink_affiliate"><a href="/tag/%E4%BA%8B%E5%8A%A1" title="View all posts in 事务" target="_blank">事务</a></span><br>
+事务用于保证数据的一致性，它由一组相关的dml语句组成，该组的dml语句要么全部成功，要们全部失败。<br>
+如：网上转帐就是典型的要用事务来处理，用以保证数据的一致性。</p>
+<p> </p>
+<p>二、事务和锁<br>
+当执行事务操作时，<span class="wp_keywordlink_affiliate"><a href="/tag/oracle" title="View all posts in Oracle" target="_blank">Oracle</a></span>会在被作用的表上加锁，防止其他用户改表。</p>
+<p>三、提交事务<br>
+在执行使用commit语句可以提交事务，当执行了commit语句后，会确认事务的变化，结束事务，删除保存点，释放锁。当使用commit语句结束事务之后，其他会话将可以查看到事务变化后的新数据。</p>
+<p>四、回退事务<br>
+在介绍回退事务前，我们先介绍一下保存点（savepoint）的概念和作用，保存点是事务中的一点，用于取消部分事务，当结束事务时，会自动的删除该事务所定义的所有保存点。当执行rollback时，通过制定保存点可以回退到指定的点。<br>
+1、设置保存点<br>
+sql&gt; savepoint a;<br>
+2、回滚部分事务<br>
+sql&gt;rollback to a;<br>
+3、回滚全部事务<br>
+sql&gt;rollback;</p>
+<p>五、只读事务<br>
+只读事务是指只允许执行查询的操作，而不允许执行任何其他dml操作的事务，使用只读事务可以确保用户只能取得某时间点的数据。<br>
+设置只读事务：<br>
+sql&gt;set transaction read only;</p>
+<p><strong> 好了，ORACLE事务隔离级别，正文开始：</strong></p>
+<p>本示例文档演示SQL SERVER，ORACLE下不同事务隔离级别的区别，以及两种数据库本身的特点<br>
+为了模拟并发环境，SQL SERVER在SMO程序中打开两个查询窗口即可。oracle可以用两个sql *plus程序连接到相同数据库来模拟<br>
+SQL SERVER、ORACLE中两个并发用户用事务1，事务2简称。<br>
+所有测试例子，都以最初测试表脚本运行后状态为基准。<br>
+在下列例子中，set transaction isolation level语句会改变会话的隔离级别，直到会话结束。故测试完毕需要改回默认级别。<br>
+最后，但并不是最不重要。以下的演示和相关解释，都是基于易于理解的原则来的，实际的情况可能更复杂，但对开发人员来说，理解如此程度的简化模型已经足够了。</p>
+<p> </p>
+<p>测试表脚本：<br>
+SQL SERVER<br>
+CREATE TABLE [Customer](<br>
+[CustID] [int] NOT NULL,<br>
+[Fname] [nvarchar](20),<br>
+[Lname] [nvarchar](20),<br>
+[Address] [nvarchar](50),<br>
+[City] [nvarchar](20),<br>
+[State] [nchar](2) DEFAULT ('CA'),<br>
+[Zip] [nchar](5) NOT NULL,<br>
+[Phone] [nchar](10)<br>
+)<br>
+insert into customer values(1, 'Gary', 'Mckee', '111 Main', 'Palm Springs', 'CA', 94312, 7605551212)<br>
+insert into customer values(2, 'Tom', 'Smith', '609 Geogia', 'Fresno' 'JP', 33045, 5105551212)<br>
+insert into customer values(3, 'Jams', 'bond', 'ST Geogie 21', 'Washington', 'NY', 20331, 4405551864)</p>
+<p>ORACLE<br>
+CREATE TABLE Customer(<br>
+CustID int NOT NULL,<br>
+Fname nvarchar2(20),<br>
+Lname nvarchar2(20),<br>
+Address nvarchar2(50),<br>
+City nvarchar2(20),<br>
+State nchar(2) DEFAULT 'CA',<br>
+Zip nchar(5) NOT NULL,<br>
+Phone nchar(10)<br>
+);<br>
+insert into customer values(1, 'Gary', 'Mckee', '111 Main', 'Palm Springs', 'CA', 94312, 7605551212);<br>
+insert into customer values(2, 'Tom', 'Smith', '609 Geogia', 'Fresno', 'JP', 33045, 5105551212);<br>
+insert into customer values(3, 'Jams', 'bond', 'ST Geogie 21', 'Washington', 'NY', 20331, 4405551864);</p>
+<p> </p>
+<p><strong>1. Sqlserver与oracle单条语句处理对比</strong><br>
+SQL SERVER单条语句默认自动提交，即单条语句自动作为一个事务处理；而oracle的原则是尽量延后提交，除非遇到显式提交命令或者DDL语句。<br>
+SQL SERVER<br>
+打开事务1:<br>
+运行：select * from customer<br>
+可以看到表有3条记录<br>
+运行：insert into customer values(4, 'Hello', 'world', 'paradise road 01', 'heaven', 'XY', 00001, 1234564321)<br>
+转到事务2：<br>
+运行：select * from customer<br>
+可以看到事务1中刚插入的custid为4的记录。</p>
+<p>ORACLE<br>
+打开事务1，运行：<br>
+select * from customer;<br>
+可以看到表有3条记录，运行：<br>
+insert into customer values(4, 'Hello', 'world', 'paradise road 01', 'heaven', 'XY', 00001, 1234564321);<br>
+转到事务2，运行：<br>
+select * from customer;<br>
+能看到的还是3条记录，事务1中刚插入的一条记录未自动提交，看不到。<br>
+转到事务1，运行：<br>
+commit;<br>
+转到事务2，运行：<br>
+select * from customer;<br>
+现在能看到4条记录了。<br>
+<strong>2. 丢失更新</strong><br>
+Sqlserver完全兼容ANSI 92标准定义的4个隔离级别。它的默认隔离级别是提交读（read committed），在该级别下，可能会有丢失更新的问题。<span class="wp_keywordlink_affiliate"><a href="/tag/oracle" title="View all posts in Oracle" target="_blank">Oracle</a></span>的默认情形也一样。故不再重复。<br>
+SQL SERVER<br>
+打开事务1运行：<br>
+set transaction isolation level read committed<br>
+begin tran<br>
+select * from customer  --看到3条记录<br>
+现在切换到事务2，此时事务1还未结束。在事务2中运行：<br>
+set transaction isolation level read committed<br>
+begin tran<br>
+select * from customer  --看到3条记录，和事务1中相同<br>
+现在假设事务1事务继续运行，修改数据并提交：<br>
+update customer set state = 'TK' where CustID = 3<br>
+commit<br>
+回到事务2，事务2根据先前查询到的结果修改数据：<br>
+update customer set Zip = 99999 where state = 'NY'<br>
+commit<br>
+结果因为事务1已经修改了事务2的where条件数据，事务2未成功修改数据（其实准确的说应该算是幻象读引起的更新失败。不过若满足条件的记录数多的话，事务2的update可能更新比预期的数量少的记录数，也可算"丢失"了部分本应完成的更新。个人认为只要明白实际上发生了什么即可，不必过分追究字眼）。丢失更新还可能有别的情形，比如事务2也是<br>
+update customer set state = 'KO' where CustID = 3<br>
+两个事务都结束后，事务2的结果反映到数据库中，但事务1的更新丢失了，事务2也不知道自己覆盖了事务1的更新。<br>
+<strong>3．脏读演示<br>
+</strong>sqlserver的默认隔离级别是提交读（read committed），当手工将其改为未提交读时，事务可以读取其它事务没提交的数据；oracle由于自身特殊实现机制，可以理解为自身基础的隔离级别就是可重复读（与ANSI标准还是有区别的，后面例子会说明）。<br>
+SQL SERVER<br>
+打开事务1，运行：<br>
+begin tran<br>
+select * from customer<br>
+update customer set state = 'TN' where CustID = 3<br>
+转到事务2，运行：<br>
+set transaction isolation level read uncommitted<br>
+begin tran<br>
+select * from customer<br>
+此时看到的数据是事务1已经更新但还未提交的（3号记录state值TN）。而如果事务1发觉数据处理有误，转到事务1，进行回滚：<br>
+Rollback<br>
+此时事务2如根据刚读取的数据进一步处理，会造成错误。它读取的数据并未更新到数据库，是"脏"的。</p>
+<p>ORACLE<br>
+ANSI定义未提交读（read uncommitted）级别本意不是为了故意引入错误，而是提供一种可能的最大并发程度级别，即一个事务的数据更新不影响其它事务的读取。<span class="wp_keywordlink_affiliate"><a href="/tag/oracle" title="View all posts in Oracle" target="_blank">Oracle</a></span>从内核层面实现了更新数据不阻塞读。可以说它提供未提交读级别的兼容，但没有脏读问题。（详情参考对应PPT文档）故oracle没有手工设置read uncommitted级别的语句。<br>
+<strong>4．不可重复读<br>
+</strong>Sql server的默认级别没有脏读问题，但存在不可重复读问题。Oracle默认级别也是提交读，不过它因为自身特殊机制，在语句一级不存在不可重复读问题。也就是说当运行时间较长的查询时，查询结果是与查询开始时刻一致的（即使查询过程中其它事务修改了要查询的数据），而SQL SERVER就存在问题（sql server 2005新特性提供了可选的语句一级一致性支持，叫做行版本机制，实际上可以说是照着oracle的多版本来的，大体原理差不多）。<br>
+由于语句一级的事务一致性难以演示，下面例子是事务一级，提交读隔离级别下发生的不可重复读现象：<br>
+SQL SERVER<br>
+打开事务1，运行：<br>
+set transaction isolation level read committed<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+可以得到1条记录，这个时候事务2中运行：<br>
+set transaction isolation level read committed<br>
+begin tran<br>
+update Customer set state = 'JP' where state = 'CA'<br>
+commit<br>
+事务2插入一条记录并提交。回到事务1，事务1继续运行，此时它再次相同的查询，并借此作进一步修改，却发现读取到的数据发生了变化。<br>
+select * from customer where State = 'CA'<br>
+--2次读取不一致，之后的数据处理应该取消。否则不正确<br>
+update Customer set city = 'garden' where state = 'CA'<br>
+commit<br>
+读取未能获得记录。也就是说在同一事务中两次相同的查询获得了不同的结果，产生读取不可重复现象。</p>
+<p>ORACLE<br>
+尽管oracle在默认隔离级别下提供了语句级的事务读一致性，但在事务级仍然是会出现不可重复读现象。和sql server一样，故不再重复。<br>
+<strong>5．幻像读</strong><br>
+当sqlserver的隔离级别设置为可重复读（repeatable read），可以解决上面例子出现的问题。其内部是通过事务期间保持读锁来实现的。<br>
+SQL SERVER<br>
+开始事务1，修改事务级别为可重复读，执行：<br>
+set transaction isolation level repeatable read<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+和上例一样得到1条记录，这个时候事务2中运行：<br>
+set transaction isolation level repeatable read<br>
+begin tran<br>
+update Customer set state = 'JP' where state = 'CA'<br>
+commit<br>
+会发现事务2一直等待，并不结束。返回事务1，运行：<br>
+select * from customer where State = 'CA'  --2次读取结果一致<br>
+update Customer set city = 'garden' where state = 'CA'<br>
+commit<br>
+事务2成功结束后，再返回事务1，发现事务1也完成了。通过锁机制阻塞其它事务的修改，保持了事务期间读取的一致性。然而，如果是插入数据，则还是会出现问题：<br>
+开始事务1，修改事务级别为可重复读，执行：<br>
+set transaction isolation level repeatable read<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+得到1条记录，这个时候事务2中运行：<br>
+set transaction isolation level repeatable read<br>
+begin tran<br>
+insert into customer values(4, 'hellow', 'world', 'paradise 001', 'garden', 'CA', 00000, 1119995555)<br>
+commit<br>
+发现事务2立刻提交并正常结束了。返回事务1，运行：<br>
+select * from customer where State = 'CA'<br>
+会发现得到了2条记录。这种现象就叫做幻像读。</p>
+<p>ORACLE<br>
+由于自身特殊的机制，oracle没有提供一致读隔离级别的选项，想要获得一致读的效果，实际上需要将事务提升到串行化等级，即serializable。<br>
+<strong>6.串行化级别不同数据库实现</strong><br>
+在这个级别，可以认为事务中的数据无论何时都是一致的，此级别使它显得好像没有其它用户在修改数据，数据库在事务开始时候被"冻结"（至少，对于本事务涉及的数据如此）。然而在不同数据库中，其实现机制也不同。<br>
+SQL SERVER<br>
+开始事务1，运行：<br>
+set transaction isolation level serializable<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+会得到1条记录，这时事务2开始运行：<br>
+set transaction isolation level serializable<br>
+begin tran<br>
+insert into customer values(4, 'hellow', 'world', 'paradise 001', 'garden', 'CA', 00000, 1119995555)<br>
+commit<br>
+会发现事务2挂起，它在等待事务1结束。回到事务1，继续：<br>
+select * from customer where State = 'CA'<br>
+update Customer set city = 'garden' where state = 'CA'<br>
+commit<br>
+在片刻的等待以后，事务1得到类似以以下格式消息：<br>
+消息1205，级别13，状态56，第1 行<br>
+事务(进程ID 51)与另一个进程被死锁在锁资源上，并且已被选作死锁牺牲品。请重新运行该事务。<br>
+而事务2更新了数据并正常结束。这是因为两个事务都设置成了串行化级别，当遇到冲突时候，sql server根据一定的规则选择牺牲掉其中一个事务，来保证事务的串行性。上面的例子，如果将事务2的隔离级别改为提交读，那么事务2会等待事务1完成，之后自己正常完成（因为事务2没有串行需求，不会有死锁）。</p>
+<p>ORACLE<br>
+在oracle中，通过多版本，可以在一定程度上避免死锁。<br>
+开始事务1，运行：<br>
+set transaction isolation level serializable;<br>
+select * from customer where State = 'CA'; --set tran语句隐式开始事务<br>
+得到1条记录，然后事务2开始运行：<br>
+set transaction isolation level serializable;<br>
+insert into customer values(4, 'hellow', 'world', 'paradise 001', 'garden', 'CA', 00000, 1119995555);<br>
+commit;<br>
+可以发现事务2立刻完成，没有阻塞。回到事务1继续：<br>
+select * from customer where State = 'CA';<br>
+update Customer set city = 'garden' where state = 'CA';<br>
+commit;<br>
+事务1中的第二次查询和事务开始时刻一致，就好像事务2已经完成的提交不存在。事务最终正常更新完毕，并保持了"事务开始"时刻的数据一致性。<br>
+然而，如果事务1，2修改同样的数据行，也会有错误，<br>
+开始事务1，运行：<br>
+set transaction isolation level serializable;<br>
+select * from customer where State = 'CA'; --set tran语句隐式开始事务<br>
+得到1条记录，然后事务2开始运行：<br>
+set transaction isolation level serializable;<br>
+update customer set state = 'KO' where state = 'CA';<br>
+commit;<br>
+可以发现事务2立刻完成，没有阻塞。回到事务1继续：<br>
+select * from customer where State = 'CA';<br>
+update Customer set city = 'garden' where state = 'CA';<br>
+commit;<br>
+出现错误信息：<br>
+第 1 行出现错误:<br>
+ORA-08177: 无法连续访问此事务处理<br>
+总的来说，oracle利用多版本的方式实现串行化级别更少造成死锁，除非两个事务修改了相同的数据行，一般也不会造成冲突。</p>
+<p> </p>
+<p><strong>7．不同隔离级别的相互影响</strong><br>
+前面的例子基本都是两个相同隔离级别事务的情况。如果不同隔离级别的事务发生冲突，会有什么不同吗？实际上，对于一个事务来说，其它事务的隔离级别对它来说是未知的，更进一步，甚至数据库中有没有其它事务，有多少事务也不知道。影响事务访问数据就两方面因素：该事务自身的隔离级别，该事务要访问的数据上面锁的状态。<br>
+SQL SERVER<br>
+开始事务1，运行：<br>
+set transaction isolation level serializable<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+事务1的查询获得1条记录，转到事务2，运行：<br>
+set transaction isolation level read uncommitted<br>
+begin tran<br>
+select * from customer<br>
+事务2查询获得3条记录，回到事务1，运行：<br>
+update Customer set city = 'garden' where state = 'CA'<br>
+切换到事务2，运行：<br>
+select * from customer<br>
+update customer set state = 'KO' where state = 'CA'<br>
+commit;<br>
+因为事务2隔离级别为未提交读，因此事务1中刚作的修改可以立刻从查询看到，即使事务1还未结束。进一步的update因为事务1对记录加了独占锁，因此事务2挂起。回到事务1将其提交：<br>
+Commit<br>
+事务1正常结束，独占锁释放，从而让事务2得以继续修改数据，并最终完成。</p>
+<p>ORACLE<br>
+Oracle数据库的隔离级别设置语句只有read committed和serializable（read only暂不讨论），加上其特殊锁机制，不同隔离级别事务间的影响除了上例（例6）中两个都为serializable的情况，其它都可视为互不阻塞。</p>
+<p> </p>
+<p><strong>8．页锁与行锁（限sql server）</strong><br>
+Sql server的锁可以到行一级。然而它又存在自动的锁定扩大，锁定转换。因此存在一些意想不到的情况。下面是演示：<br>
+开始事务1，运行：<br>
+set transaction isolation level read committed<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+update Customer set city = 'garden' where state = 'CA'<br>
+理论上来说，在提交读级别下，上面的update语句只是在state值为CA的数据行上加了独占锁，表中其它数据应该可以被其它事务更新，然而，如下事务2开始：<br>
+set transaction isolation level read committed<br>
+begin tran<br>
+select * from customer<br>
+update customer set state = 'KO' where state = 'JP'<br>
+commit<br>
+发现事务2陷入阻塞状态。尽管它们更新的不是同一条记录。回到事务1，运行：<br>
+Commit<br>
+事务1结束后事务2才继续运行至结束。<br>
+如果我们在表上加入索引，如下：<br>
+CREATE NONCLUSTERED INDEX [idx_state] ON [dbo].[Customer] ( [State])<br>
+再重复上面的步骤，会发现阻塞不再存在。<br>
+PS：这种现象应该和数据库默认加锁参数/机制有关，应该可以调整，但目前手中没有进一步资料。故仅罗列了现象。</p>
+<p>ORACLE<br>
+Oracle在数据一级只有一种数据行上的锁，因此不存在sql server中这些问题。</p>
+<p> </p>
+<p><strong>9．Set transaction语句的作用周期</strong><br>
+前面所有的例子，都是在会话窗口中进行的演示。一旦使用了set transaction语句，会影响整个会话。除非再显式改变隔离级别，否则将保持到会话结束。例如：<br>
+开始事务1，假设会话一开始处于SQL SERVER的默认隔离级别（read committed）：<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+select * from sys.dm_tran_locks<br>
+系统视图sys.dm_tran_locks可以查看当前的加锁情况，到目前位置，只有数据库级的锁。继续运行：<br>
+set transaction isolation level repeatable read<br>
+select * from customer where State = 'CA'<br>
+select * from sys.dm_tran_locks<br>
+commit<br>
+接下来的语句改变了隔离级别到可重复读，接下来的查询，会看到行级锁的记录。在上面事务提交后，运行：<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+select * from sys.dm_tran_locks<br>
+commit<br>
+仍然会从视图sys.dm_tran_locks看到行级锁记录。整个会话期间都受到影响。</p>
+<p>但是，如果调用存储过程，函数，则过程/函数中事务隔离级别的改变并不会对调用环境造成影响。可以通过以下例子说明，首先，创建一个存储过程脚本：<br>
+CREATE PROCEDURE [dbo].[test_tran_level]<br>
+AS<br>
+BEGIN<br>
+BEGIN TRAN<br>
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ<br>
+SELECT * FROM CUSTOMER<br>
+UPDATE CUSTOMER SET STATE = 'SS' WHERE CustID = 3<br>
+SELECT * FROM sys.dm_tran_locks<br>
+COMMIT<br>
+END<br>
+然后，在会话窗口调用该过程，会话窗口当前隔离级别为默认的提交读：<br>
+Exec test_tran_level<br>
+运行的结果可以看到读取锁信息，再在会话中运行：<br>
+begin tran<br>
+select * from customer where State = 'CA'<br>
+select * from sys.dm_tran_locks<br>
+commit<br>
+视图sys.dm_tran_locks并未有读锁的记录，说明事务隔离级别仍然是提交读。</p>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/oracle" rel="tag">Oracle</a>, <a href="/tag/%E4%BA%8B%E5%8A%A1" rel="tag">事务</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/07/31/%E7%99%BB%E9%99%86%E4%B9%8B%E6%97%A5-720p-%E9%AB%98%E6%B8%85-bt-%E4%B8%8B%E8%BD%BD.html" rel="prev">登陆之日  720p 高清 BT 下载</a><br>【下篇】<a href="/2012/08/02/sqlserver%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%BC%93%E5%86%B2%E5%8C%BA%E8%AF%A6%E8%A7%A3.html" rel="next">SQLServer数据页缓冲区详解</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2020/05/08/log-or-data.html">数据库先写日志还是先写数据？</a></li><li> · <a href="/2017/12/05/missing-partition-or-subpartition-keyword.html">missing PARTITION or SUBPARTITION keyword</a></li><li> · <a href="/2017/11/10/linq2db-oracle.html">Linq2db.Oracle使用详解</a></li><li> · <a href="/2017/10/25/oracle%E4%BF%AE%E6%94%B9%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B.html">oracle修改字段类型</a></li><li> · <a href="/2017/10/09/oracle-long-connect-close-connect.html">[已解决]Oracle数据库长时间空闲后自动断开的解决办法</a></li><li> · <a href="/2017/08/10/plsql-no-database.html">plsql 安装后database下拉没有东西</a></li><li> · <a href="/2017/07/28/oracle64%E4%BD%8D%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85%E7%89%88-instant-client-v11-2-0-3-064-bit.html">oracle64位客户端安装版 Instant Client v11.2.0.3.0(64-bit)</a></li><li> · <a href="/2013/09/21/sql-server%E4%B8%AD%E6%97%A5%E5%BF%97%E7%9A%84%E7%9A%84%E4%BD%9C%E7%94%A8.html">SQL Server中日志的的作用</a></li><li> · <a href="/2013/04/27/oracle%E5%BF%98%E8%AE%B0%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81.html">oracle忘记用户名密码</a></li><li> · <a href="/2013/03/18/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AF%94%E8%BE%83.html">数据库比较</a></li><li> · <a href="/2012/12/22/oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3.html">oracle数据类型详解</a></li><li> · <a href="/2012/08/06/oracle%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0%E7%9A%84%E5%B9%B6%E8%A1%8C%E4%BC%98%E5%8C%96.html">ORACLE海量数据更新的并行优化</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年08月02日发表在<a href="/category/oracle" rel="category tag">Oracle</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/08/02/oracle%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.html" rel="bookmark" title="本文固定链接 /2012/08/02/oracle%e4%ba%8b%e5%8a%a1%e9%9a%94%e7%a6%bb%e7%ba%a7%e5%88%ab.html">ORACLE事务隔离级别 | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/08/02/oracle%e4%ba%8b%e5%8a%a1%e9%9a%94%e7%a6%bb%e7%ba%a7%e5%88%ab.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/08/02/oracle%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2407" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="840598b0cc"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="138"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.061 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:05 -->

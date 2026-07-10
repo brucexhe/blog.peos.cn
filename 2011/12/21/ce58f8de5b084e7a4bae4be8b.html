@@ -1,0 +1,1082 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>C#反射示例 | Bruce's Blog</title> 
+<meta name="description" content=" 一、基本概念">
+<meta name="keywords" content="C#反射,C#反射示例,什么是反射">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2011/12/01" aria-label="2011年12月1日 发布的文章">1</a></td><td><a href="/2011/12/02" aria-label="2011年12月2日 发布的文章">2</a></td><td><a href="/2011/12/03" aria-label="2011年12月3日 发布的文章">3</a></td><td><a href="/2011/12/04" aria-label="2011年12月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/05" aria-label="2011年12月5日 发布的文章">5</a></td><td><a href="/2011/12/06" aria-label="2011年12月6日 发布的文章">6</a></td><td><a href="/2011/12/07" aria-label="2011年12月7日 发布的文章">7</a></td><td><a href="/2011/12/08" aria-label="2011年12月8日 发布的文章">8</a></td><td><a href="/2011/12/09" aria-label="2011年12月9日 发布的文章">9</a></td><td><a href="/2011/12/10" aria-label="2011年12月10日 发布的文章">10</a></td><td><a href="/2011/12/11" aria-label="2011年12月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/12" aria-label="2011年12月12日 发布的文章">12</a></td><td><a href="/2011/12/13" aria-label="2011年12月13日 发布的文章">13</a></td><td><a href="/2011/12/14" aria-label="2011年12月14日 发布的文章">14</a></td><td><a href="/2011/12/15" aria-label="2011年12月15日 发布的文章">15</a></td><td><a href="/2011/12/16" aria-label="2011年12月16日 发布的文章">16</a></td><td><a href="/2011/12/17" aria-label="2011年12月17日 发布的文章">17</a></td><td><a href="/2011/12/18" aria-label="2011年12月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/19" aria-label="2011年12月19日 发布的文章">19</a></td><td><a href="/2011/12/20" aria-label="2011年12月20日 发布的文章">20</a></td><td><a href="/2011/12/21" aria-label="2011年12月21日 发布的文章">21</a></td><td><a href="/2011/12/22" aria-label="2011年12月22日 发布的文章">22</a></td><td><a href="/2011/12/23" aria-label="2011年12月23日 发布的文章">23</a></td><td><a href="/2011/12/24" aria-label="2011年12月24日 发布的文章">24</a></td><td><a href="/2011/12/25" aria-label="2011年12月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/26" aria-label="2011年12月26日 发布的文章">26</a></td><td><a href="/2011/12/27" aria-label="2011年12月27日 发布的文章">27</a></td><td><a href="/2011/12/28" aria-label="2011年12月28日 发布的文章">28</a></td><td><a href="/2011/12/29" aria-label="2011年12月29日 发布的文章">29</a></td><td><a href="/2011/12/30" aria-label="2011年12月30日 发布的文章">30</a></td><td><a href="/2011/12/31" aria-label="2011年12月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2011/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#51ef8a;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#1f7a16;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#ab1a05;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#12041a;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#659c14;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#de3fe7;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#771120;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#b66ac1;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#8792c2;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#c70c0f;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#b37a6;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#ede371;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#b72a5f;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#4b918d;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#ee5123;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#e58bef;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#1cc74a;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#299959;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#f2c9f4;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#9d2ced;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#5032aa;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#b675e0;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#e38d03;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#71d57c;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#9ebd58;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#9b848a;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#adad42;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#3f2e67;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#197648;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#7303a4;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#ab1b5c;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#ba2e87;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#bf5a48;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#efcffa;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#9574d7;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#c4a542;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#b2a6f3;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#9c79eb;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#c93039;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#7f690d;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#3e9716;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#534c60;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#b0f726;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#33774;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#5caf0a;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">C#反射示例</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-12-21 19:39</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2011/12/21/c%E5%8F%8D%E5%B0%84%E7%A4%BA%E4%BE%8B.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,535</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div>
+<p> 一、基本概念</p>
+<p>反射：反射是一个运行库类型发现的过程。 通过反射可以得到一个给定程序集所包含的所有类型的列表，这个列表包括给定类型中定义的方法、字段、属性和事件。也可以动态的发现一组给定类支持的借口、方法的参数和其他相关信息如基类、命名空间、数据清单等。</p>
+<p>二、命名空间</p>
+<p>1.System.Reflection命名空间内的各类型</p>
+<p>（1）Assembly    通过它可以加载、了解和操纵一个程序集</p>
+<p>(2) AssemblyName 通过它可以找到大量隐藏在程序集的身份中的信息，如版本信息、区域信息等</p>
+<p>(3) EventInfo  事件的信息</p>
+<p>(4) FieldInfo  字段的信息</p>
+<p>(5) MethodInfo  方法的信息</p>
+<p>(6) ParameterInfo  参数的信息</p>
+<p>(7）PropertyInfo  属性的信息</p>
+<p>(8) MemberInfo  是抽象基类，为  EventInfo、FieldInfo 、MethodInfo、PropertyInfo等类型定义了公共的行为。</p>
+<p>(9) Module 用来访问带有多文件程序集的给定模块</p>
+<p>2.System.Type类</p>
+<p>System.Type支持的成员可以分为这样几类</p>
+<p>(1) Is***   用来检查一个类型的元数据，如IsAbstract、IsClass、IsValueType等等</p>
+<p>(2) Get*** 用来从类型得到指定项目，如GetEvent()得到类型的一个指定的事件（EventInfo）。 另外，这些方法都有一个单数版本和一个复数版本。如GetEvent()对应有一个复数版             本GetEvents()， 该方法返回一个相关的EventInfo数组</p>
+<p>(3) FindMembers()   根据查询条件返回一个MemberInfo类型的数组</p>
+<p>(4)GetType()  该静态方法根据一个字符串名称返回一个Type实例</p>
+<p>(5)InvokeMember()  对给定项目进行晚期绑定</p>
+<p>3.得到一个Type类型实例的三种方法(因为Type是一个抽象类，所以不能直接使用new关键字创建一个Type对象)</p>
+<p>(1) 使用System.Object.GetType()</p>
+<p>e.g:    Person pe=new Person();  //---------定义pe为person类的一个对象</p>
+<p>Type t=pe.GetType();</p>
+<p>(2)使用System.Type.GetType()静态方法,参数为类型的完全限定名</p>
+<p>e.g:     Type t=Type.GetType("Entity.Person");</p>
+<p>该方法被重载，允许指定两个布尔类型的参数，一个用来控制当前类型不能找到时是否抛出异常，</p>
+<p>另一个用来指示是否区分字符串大小写</p>
+<p>Type t=Type.GetType("Entity.Person",false,true);</p>
+<p>注意到传入的字符串并没有包含类型所在的程序集信息，此时该类型便被认为是定义在当前执行的程序集中的。</p>
+<p>要得到一个外部私有程序集的类型元数据时，字符串参数必须使用类型完全限定名加上类型所在程序集的友好名字</p>
+<p>e.g:  Type t=Type.GetType("Entity.Person","Entity");//------"Entity"即为类型所在程序集的友好名字</p>
+<p>嵌套类型：传入的字符串可以指定一个+标记来表示一个嵌套类型，如希望得到一个嵌套在person类中的枚举类型City的类型信息，</p>
+<p>则可以这样  e.g:   Type t=Type.GetType("Entity.person+City");</p>
+<p>(3) 使用typeof运算符         e.g:   Type  t=typeof(person);</p>
+<p>三种方法的比较：使用第一种方法必须先建立一个实例，而后两种方法不必先建立实例。</p>
+<p>但使用typeof运算符仍然需要知道类型的编译时信息，而使用System.Type.GetType()静态方法</p>
+<p>不需要知道类型的编译时信息，所以是首选方法。</p>
+<p>下面是一个实例，简单的运用了前面介绍的知识，实现了对一个Type对象的反射，包括反射其所有可见字段、方法、属性、事件。反射类型的基本属性。并将其中一个方法的详细信息列了出来</p>
+<p>【源代码】</p>
+<p>1using System;</p>
+<p>2using System.Collections.Generic;</p>
+<p>3using System.Linq;</p>
+<p>4using System.Text;</p>
+<p>5using System.Reflection;</p>
+<p>6</p>
+<p>7using System.Collections; //--------要实现IEnumerable接口则必须制定该命名空间</p>
+<p>10namespace Exercise</p>
+<p>11{</p>
+<p>12    public class BasePerson //-------------假设一个基类,定义了一个公共方法和一个私有方法</p>
+<p>13    {</p>
+<p>14        public void BasePublic()</p>
+<p>15        {</p>
+<p>16        }</p>
+<p>18        private void BasePrivate()</p>
+<p>19        {</p>
+<p>20        }</p>
+<p>21</p>
+<p>22    };</p>
+<p>23</p>
+<p>24</p>
+<p>25    //Person类实现了接口IEnumerable,使得类中定义的Array数组能够使用foreach枚举</p>
+<p>26    public class Person :BasePerson, IEnumerable</p>
+<p>27    {</p>
+<p>28        private string name = "林田惠"; //---姓名</p>
+<p>29        public  int age=20;     //---年龄</p>
+<p>30</p>
+<p>31        Array children=null;//---子女数组</p>
+<p>32</p>
+<p>33        Person()</p>
+<p>34        {</p>
+<p>35        }</p>
+<p> </p>
+<p>37        Person(string a,int b)</p>
+<p>38        {</p>
+<p>39            Name = a;</p>
+<p>40            Age = b;</p>
+<p>41        }</p>
+<p>44        public string Name</p>
+<p>45        {</p>
+<p>46            get { return name; }</p>
+<p>47            set { }</p>
+<p>48        }</p>
+<p>50        public int Age</p>
+<p>51        {</p>
+<p>52            get { return age; }</p>
+<p>53            set { }</p>
+<p>54        }</p>
+<p>56        public void AddAge()//---自增一岁的方法</p>
+<p>57        {</p>
+<p>58             Age+=1;</p>
+<p>59        }</p>
+<p>62        public delegate void PersonNameHandler(string x);</p>
+<p>63        public event PersonNameHandler OnChangeName; //------定义了一个改变姓名的事件</p>
+<p>65        public void ChangeName(string nam)//---改名的方法</p>
+<p>66        {</p>
+<p>67            Name = nam;</p>
+<p>68        }</p>
+<p>70        public void  ChangeNameAndAddAge(string name,int age)//具有两个参数的方法，用来演示反射具体方法的详细情况</p>
+<p>71        {</p>
+<p>72            this.Name = name;</p>
+<p>73            this.Age += age;</p>
+<p>74        }</p>
+<p>76        public IEnumerator GetEnumerator()//---实现接口</p>
+<p>77        {</p>
+<p>78            return children.GetEnumerator();</p>
+<p>79        }</p>
+<p>81    }</p>
+<p>85    public class Program</p>
+<p>86    {</p>
+<p>89        构建自定义元数据查看器#region 构建自定义元数据查看器</p>
+<p>91        //-------------显示传入类型拥有的方法名称</p>
+<p>92        public static void ListMethods(Type t)</p>
+<p>93        {</p>
+<p>94            Console.WriteLine("\n该类型的所有方法:");</p>
+<p>95            MethodInfo[] mi = t.GetMethods();</p>
+<p>96            foreach (MethodInfo  m in mi)</p>
+<p>97            {</p>
+<p>98                Console.WriteLine("\t方法名：{0}",m.Name);</p>
+<p>99            }</p>
+<p>100        }</p>
+<p>103        //-------------显示一个方法的所有参数信息</p>
+<p>104        public static void ListParameters(MethodInfo m)</p>
+<p>105        {</p>
+<p>106            ParameterInfo[] pi = m.GetParameters();</p>
+<p>107            foreach (ParameterInfo  p in pi)</p>
+<p>108            {</p>
+<p>109                Console.WriteLine("参数名：{0}\t参数类型：{1}",p.Name,p.ParameterType);</p>
+<p>110            }</p>
+<p>111        }</p>
+<p>114        //-------------显示一个特定方法的详细情况</p>
+<p>115        public static void ListMethodDetail(Type t, string MethodName)</p>
+<p>116        {</p>
+<p>117            MethodInfo m = t.GetMethod(MethodName);</p>
+<p>118            Console.WriteLine("\n显示方法详情\n方法名称:{0}", MethodName);</p>
+<p>119            Console.WriteLine("方法返回值类型:{0}", m.ReturnType.FullName);</p>
+<p>120            ListParameters(m);</p>
+<p>122        }</p>
+<p>124        //------------显示传入类型拥有的字段名称</p>
+<p>125        public static void ListFields(Type t)</p>
+<p>126        {</p>
+<p>127            Console.WriteLine("\n该类型的所有字段:");</p>
+<p>128            FieldInfo [] fi = t.GetFields();</p>
+<p>129            foreach (FieldInfo f in fi )</p>
+<p>130            {</p>
+<p>131                Console.WriteLine("\t字段名：{0}", f.Name);</p>
+<p>132            }</p>
+<p>133        }</p>
+<p>135        //------------显示传入类型拥有的属性名称</p>
+<p>136        public static void ListProperties(Type t)</p>
+<p>137        {</p>
+<p>138            Console.WriteLine("\n该类型的所有属性:");</p>
+<p>139            PropertyInfo[] pi = t.GetProperties();</p>
+<p>140            foreach (PropertyInfo  p in pi)</p>
+<p>141            {</p>
+<p>142                Console.WriteLine("\t属性名：{0}", p.Name);</p>
+<p>143            }</p>
+<p>144        }</p>
+<p>147        //------------显示传入类型拥有的基类名称</p>
+<p>148        public static void ListInterFaces(Type t)</p>
+<p>149        {</p>
+<p>150            Console.WriteLine("\n该类型的所实现的接口:");</p>
+<p>151            Type[] ii = t.GetInterfaces();  //-----------对GetInterfaces()的调用返回一个 Type类型 的数组(说明其实接口也是一种类型)</p>
+<p>152            foreach (Type  p in ii)</p>
+<p>153            {</p>
+<p>154                Console.WriteLine("\t接口名：{0}", p.Name);</p>
+<p>155            }</p>
+<p>156        }</p>
+<p>157</p>
+<p>158        //------------显示传入类型拥有的属性名称</p>
+<p>159        public static void ListEvents(Type t)</p>
+<p>160        {</p>
+<p>161            Console.WriteLine("\n该类型的所有事件名：");</p>
+<p>162            EventInfo [] ei = t.GetEvents();</p>
+<p>163            foreach (EventInfo e in ei )</p>
+<p>164            {</p>
+<p>165                Console.WriteLine("\n事件名：{0}", e.Name);</p>
+<p>166            }</p>
+<p>167        }</p>
+<p>169        //------------各种其他信息</p>
+<p>170        public static void ListOtherInfo(Type t)</p>
+<p>171        {</p>
+<p>172            Console.WriteLine("基类名称：{0}",t.BaseType);</p>
+<p>173            Console.WriteLine("基类的基类的名称：{0}", t.BaseType.BaseType);</p>
+<p>174            Console.WriteLine("是一个类吗？：{0}", t.IsClass);</p>
+<p>175            Console.WriteLine("是一个抽象类吗？：{0}", t.IsAbstract);</p>
+<p>176        }</p>
+<p>179    #endregion</p>
+<p>181        public static void Main(string[] args)</p>
+<p>182        {</p>
+<p>184            Console.WriteLine("----------------------------------------------------------------");</p>
+<p>186            Type t = Type.GetType("Exercise.Person");//-------Person类的完全限定名为"Exercise.Person"</p>
+<p>188            ListOtherInfo(t);//反射其他一些信息</p>
+<p>189            ListFields(t);//反射字段</p>
+<p>190            ListProperties(t);//反射属性</p>
+<p>191            ListInterFaces(t);//反射接口</p>
+<p>192            ListEvents(t);//反射事件</p>
+<p>193            ListMethodDetail(t, "ChangeNameAndAddAge");//反射一个特定方法的详细信息</p>
+<p>194            ListMethods(t);//反射方法</p>
+<p>197            Console.ReadLine();</p>
+<p>198        }</p>
+<p>199    }</p>
+<p>200}</p>
+<p>【实现效果】</p>
+<p>【总结】结合源代码和运行效果，总结如下</p>
+<p>1.Name属性在编译后成为了get_Name()和set_Name()两个独立的方法</p>
+<p>2.OnChangeName事件的注册(+=)和取消注册(-=)分别成为了add_ OnChangeName ()和remove_ OnChangeName方法</p>
+<p>3.私有(private)字段name 没有被打印出来</p>
+<p>4.基类的基类System.Object的成员GetType()和Equals()也被打印了出来，基类的共有方法也被打印出来</p>
+<p>为了更好的控制显示我们所想要的信息，下面简单介绍一下FindMembers() 方法。</p>
+<p>MemberInfo[] mi = t.FindMembers(                   //【 FindMembers 】</p>
+<p>MemberTypes.Method,             //【说明查找的成员类型为 Method】</p>
+<p>BindingFlags.Public |</p>
+<p>BindingFlags.Static |</p>
+<p>BindingFlags.NonPublic |        //【位屏蔽】</p>
+<p>BindingFlags.Instance |</p>
+<p>BindingFlags.DeclaredOnly,</p>
+<p>Type.FilterName,         //【执行比较的委托】</p>
+<p>);</p>
+<p>将上例的ListMethods方法改为</p>
+<p>public static void ListMethods(Type t)</p>
+<p>{</p>
+<p>Console.WriteLine(""n该类型的所有方法:");</p>
+<p>MemberInfo[] mi = t.FindMembers(      //【 FindMembers 】</p>
+<p>MemberTypes.Method,             //【说明查找的成员类型为 Method】</p>
+<p>BindingFlags.Public |</p>
+<p>BindingFlags.Static |</p>
+<p>BindingFlags.NonPublic |        //【位屏蔽】</p>
+<p>BindingFlags.Instance |</p>
+<p>BindingFlags.DeclaredOnly,</p>
+<p>Type.FilterName,         //【执行比较的委托】</p>
+<p>"*"</p>
+<p>);</p>
+<p>foreach (MethodInfo m in mi)</p>
+<p>{</p>
+<p>Console.WriteLine(""t方法名：{0}", m.Name);</p>
+<p>}</p>
+<p>}</p>
+<p>Type.FilterName 返回一个MemberFilter类型的委托，它说明按照方法名称进行过滤，最后一个参数“*”，说明返回所有名称(如果使用“Get*”，则会返回所有以Get开头的方法)</p>
+<p>现在的输出如下:</p>
+<p>可以看到，所有继承而来的方法都没有显示。。</p>
+<p>通过以上实例可以看到System.Reflection命名空间和System.Type类允许我们反射Type实例的大量信息。</p>
+<p>然而，对于当前创建的这个实例有一个很大的限制——仅仅能访问当前的程序集，所以接下来要讨论：</p>
+<p>如何能使应用程序加载并反射在运行时并不知道的程序集？</p>
+<p>1.动态加载程序集</p>
+<p>在很多时候我们需要在运行时以编程的方式动态载入程序集，即使那些程序集没有记录在程序清单中。</p>
+<p>按需加载外部程序集的操作被称为动态加载</p>
+<p>System.Reflection提供了一个名为Assembly的类，使用它我们可以：</p>
+<p>（1）动态加载程序集并找到关于程序集自身的属性</p>
+<p>（2）动态加载私有或共享程序集</p>
+<p>（3）加载任意位置的程序集</p>
+<p>从本质上说，Assembly类提供的方法（尤其是Load（）和LoadFrom()）使得我们可以用编程的方</p>
+<p>式提供和客户端.config文件中同样的信息</p>
+<p>下面通过一个实例来演示如何通过一个程序集的友好名称来动态加载一个程序集，并打印出其所</p>
+<p>包含的每个类、接口、委托等等信息。</p>
+<p>【源代码】</p>
+<p>using System;</p>
+<p>using System.Collections.Generic;</p>
+<p>using System.Linq;</p>
+<p>using System.Text;</p>
+<p>using System.Reflection;</p>
+<p>namespace ActiveLoad</p>
+<p>{</p>
+<p>class Program</p>
+<p>{</p>
+<p>//------------定义用来打印程序集中详细情况的函数</p>
+<p>static void ListAllTypes(Assembly asm)</p>
+<p>{</p>
+<p>Console.WriteLine("程序集名称:{0}", asm.FullName);</p>
+<p>Type[] types = asm.GetTypes();</p>
+<p> </p>
+<p>foreach (Type  t in types)</p>
+<p>{</p>
+<p>Console.WriteLine("\n类型：{0}\t名称：{1}", t, t.Name);</p>
+<p>}</p>
+<p>}</p>
+<p>static void Main(string[] args)</p>
+<p>{</p>
+<p>Assembly asm = Assembly.Load("Exercise");//--------根据程序集的友好名称动态加载程序集,ActiveLoad项目必须添加对Exercise项目的引用</p>
+<p>//ListAllTypes(asm);</p>
+<p>asm = Assembly.Load("LINDERMAN.Entity");</p>
+<p>ListAllTypes(asm);</p>
+<p>Console.ReadLine();</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p>【运行效果】</p>
+<p>注意：1.ActiveLoad项目必须添加对Exercise项目的引用</p>
+<p>2.静态方法Assembly.Load方法仅仅传入了一个要加载到内存的程序集的友好名称，因此如果想</p>
+<p>反射Exercise.dll，则需要把Exercise.dll文件复制到ActiveLoad应用程序的"Bin"Debug目录，</p>
+<p>然后再来运行这个程序。【此时仍需先在项目中手动添加对Exercise.dll的引用：</p>
+<p>添加引用-&gt;浏览-&gt;ActiveLoad项目的bin文件夹..添加】</p>
+<p>3.如果希望让ActiveLoad更加灵活，可以使用Assembly.LoadFrom方法。此时只要在想查看的程序</p>
+<p>集前面加上一个绝对路径。</p>
+<p>2.晚期绑定</p>
+<p>晚期绑定是一种创建一个给定类型的实例并在运行时调用其成员而不需要在编译时知道它存在的一种技术，对于程序的可扩展性来说非常重要。</p>
+<p>要介绍晚期绑定技术，首先必须介绍一下System.Activator类。</p>
+<p>System.Activator类除了继承自Object的方法外，其本身只定义了几个成员方法，而且其中大多数都与.net远程处理有关</p>
+<p>为了建立一个晚期绑定类型的实例，当前我们只需关注Activator.CreateInstance()方法。</p>
+<p>CreateInstance()方法经历过多次重载，其中最简单的变化是带有一个有效的Type对象，描述希望动态分配的实体。</p>
+<p>该方法将返回一个基本的Object类型而不是一个强类型——并不是我们所传入的类型。</p>
+<p>在Exercise.person类内加入打印个人信息的函数</p>
+<p>public void DisplayInfo()</p>
+<p>{</p>
+<p>Console.WriteLine("姓名：{0},年龄：{1}",this.Name,this.Age);</p>
+<p>}</p>
+<p>下面新建一个LataBinding项目，通过晚期绑定来建立一个Exercise.person类的实例，并调用DisplayInfo()</p>
+<p>【源代码】</p>
+<p>class Program</p>
+<p>{</p>
+<p>static void Main(string[] args)</p>
+<p>{</p>
+<p>Assembly asm = Assembly.Load("Exercise");</p>
+<p>Type man = asm.GetType("Exercise.person");</p>
+<p>object Man = Activator.CreateInstance(man);//-------返回一个object类型而不是Exercise.person类型</p>
+<p>}</p>
+<p>}</p>
+<p>得到的实例Man是一个Object类型而不是一个Exercise.person类型。且不能通过显示转换来解决问题，因为程序并不知道Exercise.person是什么</p>
+<p>注意：晚期绑定的重点是建立编译时未知的对象的实例</p>
+<p>下面通过反射来实现打印属性的工作:</p>
+<p>首先，使用Type.GetMethod方法</p>
+<p>修改源代码如下：</p>
+<p>class Program</p>
+<p>{</p>
+<p>static void Main(string[] args)</p>
+<p>{</p>
+<p>Assembly asm = Assembly.Load("Exercise");</p>
+<p>Type man = asm.GetType("Exercise.Person");//--------注意大小写</p>
+<p>object Man = Activator.CreateInstance(man);//-------返回一个object类型而不是Exercise.person类型</p>
+<p>MethodInfo mi = man.GetMethod("DisplayInfo");</p>
+<p>mi.Invoke(Man, null);</p>
+<p>Console.ReadLine();</p>
+<p>}</p>
+<p>}</p>
+<p>其中Invoke方法含有两个参数，第一为Object类型，表示调用方法所依赖的实例对象；第二个参数为数组类型，表示调用方法或构造函数所使用的参数，当赋值为NULL时表示调用无参方法。</p>
+<p>运行效果</p>
+<p>下面再演示一个调用有参数方法的实例：</p>
+<p>调用Exercise.person的ChangeNameAndAddAge方法</p>
+<p>using System;</p>
+<p>using System.Collections.Generic;</p>
+<p>using System.Linq;</p>
+<p>using System.Text;</p>
+<p>using System.Reflection;</p>
+<p>namespace LateBinding</p>
+<p>{</p>
+<p>class Program</p>
+<p>{</p>
+<p>static void Main(string[] args)</p>
+<p>{</p>
+<p>Assembly asm = Assembly.Load("Exercise");</p>
+<p>Type man = asm.GetType("Exercise.Person");//--------注意大小写</p>
+<p>object Man = Activator.CreateInstance(man);//-------返回一个object类型而不是Exercise.person类型</p>
+<p>MethodInfo  mi = man.GetMethod("DisplayInfo");</p>
+<p>mi.Invoke(Man, null);</p>
+<p>mi = man.GetMethod("ChangeNameAndAddAge");</p>
+<p>object[] par = new object[2];</p>
+<p>par[0] = "林田惠改名了";</p>
+<p>par[1]=10;</p>
+<p>mi.Invoke(Man, par);//--------执行了改名并增长岁数的方法</p>
+<p>mi = man.GetMethod("DisplayInfo");</p>
+<p>mi.Invoke(Man, null);//-----改名后再显示个人信息</p>
+<p>Console.ReadLine();</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p>3.特性编程</p>
+<p>特性就是用于类型（比如类、接口、结构）、成员（比如属性、方法）、程序集或模块的代码注解。</p>
+<p>.NET程序员可以使用特性把更多的元数据嵌入到程序集中，用来修饰类型的行为。</p>
+<p>当在代码中应用特性时，如果它们没有被另一个软件显式的反射，那么嵌入的元数据基本没什么作用。反之，嵌入程序集中的元数据介绍将被忽略不计，而并无害处。</p>
+<p>特性的使用者：1..NET Framework SDK中的许多工具都需要查找各种特性，C#编译器本身就要在编译周期中寻找各种特性是否存在。</p>
+<p>2.除了开发工具，在.NET基类库中的许多方法也被设定为要反射指定的特性</p>
+<p>3..NET CLR也巡查某些特性是否存在</p>
+<p>4.用户可以构建反射自定义的特性和.NET基类库中的特性的应用程序。</p>
+<p>C#预定义特性的简单介绍</p>
+<p>[CLSCompliant] 强制被注解项遵从CLS</p>
+<p>[DllImport] 允许.NET代码调用任意非托管的C或C++基类库，包括操作系统中的API</p>
+<p>[Obsolete] 标记一个不用的类或成员</p>
+<p>[Serializable] 标记一个类或结构可以被“序列化”</p>
+<p>[NonSerialized] 指定类或结构中的某个字段不能在序列化过程中被持久化</p>
+<p>[WebMethod] 标记一个方法可以通过HTTP请求调用，并且通知CLR将方法的返回值序列化为XML</p>
+<p>注意：1.一个特性只能被应用在紧接下来的对象，例如</p>
+<p>[Serializable]</p>
+<p>public class Person</p>
+<p>{</p>
+<p>[NonSerialized]</p>
+<p>public float salary;</p>
+<p>public bool sex;</p>
+<p>public string[] hobbit;</p>
+<p>}</p>
+<p>在该类中不能被序列化的仅是salary，而由于实体类中注释有[Serializable]，所以其他字段都可以被序列化</p>
+<p>2.一个项可以被加上多种特性，如下：</p>
+<p>[Serializable,</p>
+<p>Obsolete("这个类已经过时了，请用更新的版本")]</p>
+<p>public class Person</p>
+<p>{</p>
+<p>public float salary;</p>
+<p>}</p>
+<p>或者这样</p>
+<p>[Serializable]</p>
+<p>[Obsolete("这个类已经过时了，请用更新的版本")]</p>
+<p>public class Person</p>
+<p>{</p>
+<p>public float salary;</p>
+<p>}</p>
+<p>3.可以为特性指定构造参数</p>
+<p>当给特性提供构造参数时，直到该特性被其他类型或外部工具反射后，特性才被分配大内存中，定义在特性级的字符串数据只是作为元数据介绍被存储在程序集中。</p>
+<p>也就是说，直到被其他代理反射，特性才发挥使用。</p>
+<p>4.C#特性的简化符号</p>
+<p>当名称转换时，所有.NET特性，包括自己建立的自定义特性都将加上一个Attribute得后缀，但是为简化使用过程，C#语言不需要输入Attribute后缀。</p>
+<p>也即，       [SerializableAttribute]</p>
+<p>public class Person</p>
+<p>{</p>
+<p>……</p>
+<p>和 [Serializable]</p>
+<p>public class Person</p>
+<p>{</p>
+<p>效果是一样的。</p>
+<p>自定义特性</p>
+<p>（1）构建自定义特性</p>
+<p>构建自定义特性的第一步是建立一个新的派生自System.Attribute的类，考虑到安全原因，把所有自定义特性都设计成密封的是一个好习惯</p>
+<p>为Person类设计一个特性类如下</p>
+<p>public sealed class personAttribute : System.Attribute</p>
+<p>{</p>
+<p>private string _PersonData;//---定义一个私有字段</p>
+<p>public personAttribute()</p>
+<p>{</p>
+<p>}</p>
+<p>public personAttribute(string Data)//---带参数构造函数</p>
+<p>{</p>
+<p>}</p>
+<p>public String PersonData//---维护私有字段的属性</p>
+<p>{</p>
+<p>get { return _PersonData; }</p>
+<p>set { _PersonData = value; }</p>
+<p>}</p>
+<p>}</p>
+<p>（2）使用自定义特性</p>
+<p>使用自定义特性有两种方法</p>
+<p>1.位置参数：使用自定义特性类的构造函数来为其所维护的私有字段赋值</p>
+<p>如：   [Exercise.Program.personAttribute("这是在使用位置参数通过构造函数赋值")]</p>
+<p>public class Person :BasePerson, IEnumerable</p>
+<p>{</p>
+<p>private string name = "林田惠"; //---姓名</p>
+<p>public int age=20;     //---年龄</p>
+<p>2.命名参数：使用自定义特性的属性成员来为其所维护的私有字段赋值</p>
+<p>如：   [Exercise.Program.personAttribute(PersonData="这是在使用位置参数通过构造函数赋值")]</p>
+<p>public class Person :BasePerson, IEnumerable</p>
+<p>{</p>
+<p>private string name = "林田惠"; //---姓名</p>
+<p>public int age=20;     //---年龄</p>
+<p>限制特性的使用</p>
+<p>默认情况下自定义特性可以被应用在代码中几乎所有的方面(方法、类、属性等)。</p>
+<p>有时希望限定自定义特性的应用范围，则需要在自定义特性的定义中应用[AttributeUsage]特性，[AttributeUsage]特性支持任意AttributeTargets枚举值的组合</p>
+<p>例如，我们希望将刚刚定义的特性变成只可应用于类或结构，不能重复应用于一个项，且不能被应用于继承项，则可如下修改定义：</p>
+<p>[AttributeUsage(AttributeTargets.Class|AttributeTargets.Struct,</p>
+<p>AllowMultiple=false,Inherited=false)]</p>
+<p>public sealed class personAttribute : System.Attribute</p>
+<p>{</p>
+<p>private string _PersonData;//---定义一个私有字段</p>
+<p>public personAttribute()</p>
+<p>实例运用</p>
+<p>实例一 使用早期绑定反射特性</p>
+<p>如果希望使用早期绑定，则相应的特性需要客户应用程序在编译时定义</p>
+<p>在Exercise命名空间下定义一个属性，将其设为可重复应用于同一个项上，代码如下</p>
+<p>namespace Exercise</p>
+<p>{</p>
+<p>[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct,</p>
+<p>AllowMultiple = true, Inherited = false)]</p>
+<p>public sealed class personDataAttribute : System.Attribute</p>
+<p>{</p>
+<p>private string _PersonData;//---定义一个私有字段</p>
+<p>public personDataAttribute()</p>
+<p>{</p>
+<p>}</p>
+<p>public personDataAttribute(string Data)//---带参数构造函数</p>
+<p>{</p>
+<p>_PersonData = Data;</p>
+<p>}</p>
+<p>public String PersonData//---维护私有字段的属性</p>
+<p>{</p>
+<p>get { return _PersonData; }</p>
+<p>set { _PersonData = value; }</p>
+<p>}</p>
+<p>}</p>
+<p>在Person类的定义上应用三个personDataAttribute属性如下：</p>
+<p>[personData("这是第一个personData特性")]</p>
+<p>[personData("这是第二个personData特性")]</p>
+<p>[personData(PersonData = "这是第三个personData特性")]</p>
+<p>public class Person :BasePerson, IEnumerable</p>
+<p>{</p>
+<p>private string name = "林田惠"; //---姓名</p>
+<p>public int age=20;     //---年龄</p>
+<p>Array children=null;//---子女数组</p>
+<p>public Person()</p>
+<p>{</p>
+<p>设置Exercise项目为启动项，在Exercise命名空间下，修改Main函数如下</p>
+<p>public static void Main(string[] args)</p>
+<p>{</p>
+<p>/*      演示使用早期绑定反射特性           */</p>
+<p>Type t = typeof(Person);</p>
+<p>Object[] customAtts = t.GetCustomAttributes(false);//---false代表不搜索继承链</p>
+<p>foreach (personDataAttribute pda in customAtts)</p>
+<p>{</p>
+<p>Console.WriteLine("应用了一个personDataAttribute特性，其中personData={0}",pda.PersonData);</p>
+<p>}</p>
+<p>Console.ReadLine();</p>
+<p>}</p>
+<p>运行效果如下：</p>
+<p>几点说明：1.Type.GetCustmeAttributes()方法返回一个对象数组，表示了应用到Type代表的成员上的所有特性，包含一个bool参数，指示是否扩展搜索到继承链。</p>
+<p>2.该例子中之所以能够使用personDataAttribute特性来对Person类进行描述，是因为在Exercise程序集中personDataAttribute类被定义为公共成员。</p>
+<p>3.一个困惑：我在给Person类添加属性时是按照1、2、3的顺序，可代码运行显示的顺序却是2、1、3.。。不知道为什么，还等高手来解答。。。</p>
+<p>实例二 使用晚期绑定反射特性</p>
+<p>1.先为Exercise程序集生成dll文件（我用的是VS2008）：在解决方案资源管理器中右击Exercise项目-&gt;属性-&gt;应用程序-&gt;输出类型-&gt;类库</p>
+<p>2.将Exercise.dll文件复制到LateBinding项目的Bin"Debug文件夹下</p>
+<p>3. 将LateBinding项目的Main函数修改如下：</p>
+<p>static void Main(string[] args)</p>
+<p>{</p>
+<p>/*         以下代码演示晚期绑定反射特性         */</p>
+<p>//----加载程序集</p>
+<p>Assembly asmb = Assembly.Load("Exercise");</p>
+<p>//----得到Exercise.personDataAttribute的类型信息</p>
+<p>Type PersonAttr = asmb.GetType("Exercise.personDataAttribute");</p>
+<p>//----得到personData属性的类型信息</p>
+<p>PropertyInfo proPersonData = PersonAttr.GetProperty("PersonData");</p>
+<p>//----得到程序集中的所有类型</p>
+<p>Type []types = asmb.GetTypes();</p>
+<p>foreach (Type t in types)</p>
+<p>{</p>
+<p>object[] cusAttrs = t.GetCustomAttributes(PersonAttr,false);</p>
+<p>foreach (object o in cusAttrs)</p>
+<p>{</p>
+<p>Console.WriteLine("特性名称：{0}"t特性值:{1}"n", t.Name, proPersonData.GetValue(o,null));</p>
+<p>}</p>
+<p>}</p>
+<p>Console.ReadLine();</p>
+<p>}</p>
+<p>运行效果：</p>
+<p>说明：一个方法：PropertyInfo.GetValue   用索引化属性的可选索引值返回该属性的值。</p>
+<p>public virtual Object GetValue(</p>
+<p>Object obj,</p>
+<p>Object[] index</p>
+<p>)</p>
+<p>参数</p>
+<p>obj</p>
+<p>类型：System.Object</p>
+<p>将返回其属性值的对象。</p>
+<p>index</p>
+<p>类型：System.Object[]</p>
+<p>索引化属性的可选索引值。对于非索引化属性，此值应为 null 引用。</p>
+<p>返回值</p>
+<p>类型：System.Object</p>
+<p>obj 参数的属性值。</p>
+<p>若要使用 GetValue 方法，请先获取类 Type。从 Type 获取 PropertyInfo。从 PropertyInfo 使用 GetValue 方法</p>
+<p>对于<span class="wp_keywordlink_affiliate"><a href="/tag/c%E5%8F%8D%E5%B0%84" title="View all posts in C#反射" target="_blank">C#反射</a></span>的基础知识，本文由两点未涉及：1.反射共享程序集   2.程序集级别和模块级别特性。</p>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/c%E5%8F%8D%E5%B0%84" rel="tag">C#反射</a>, <a href="/tag/c%E5%8F%8D%E5%B0%84%E7%A4%BA%E4%BE%8B" rel="tag">C#反射示例</a>, <a href="/tag/%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%B0%84" rel="tag">什么是反射</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/12/21/%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E5%8F%8D%E5%B0%84%EF%BC%9F.html" rel="prev">什么是泛型反射？</a><br>【下篇】<a href="/2011/12/21/%E7%A6%81%E7%94%A8wordpress-3-3%E8%8D%89%E7%A8%BF.html" rel="next">禁用WordPress 3.3草稿</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2011/06/04/c%E5%8F%8D%E5%B0%84.html">C#反射</a></li><li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li><li> · <a href="/2024/09/12/fix-net-blazor-child-component-not-refresh.html">解决.NET Blazor子组件不刷新问题</a></li><li> · <a href="/2024/09/10/net8-microsoft-aspnetcore.html">.NET8如何在普通类库中引用 Microsoft.AspNetCore</a></li><li> · <a href="/2024/06/27/net8-mysql-ssl-error.html">.NET8 Mysql SSL error</a></li><li> · <a href="/2024/06/25/asp-net-core-razor-unicode.html">ASP.NET Core MVC的Razor视图渲染中文乱码的问题</a></li><li> · <a href="/2022/02/23/netcore-life-circle.html">.NETCORE 依赖注入服务生命周期</a></li><li> · <a href="/2022/02/16/asp-net-zero-mysql.html">asp.net zero改mysql</a></li><li> · <a href="/2022/02/16/net5.html">.NET5面试汇总</a></li><li> · <a href="/2021/05/26/convert-zero-datetime.html">.Net连接Mysql数据库的Convert Zero Datetime日期问题</a></li><li> · <a href="/2020/09/30/vue-message-notification.html">vue使用element-ui中的Message 、MessageBox 、Notification</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年12月21日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/12/21/c%E5%8F%8D%E5%B0%84%E7%A4%BA%E4%BE%8B.html" rel="bookmark" title="本文固定链接 /2011/12/21/c%e5%8f%8d%e5%b0%84%e7%a4%ba%e4%be%8b.html">C#反射示例 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/12/21/c%e5%8f%8d%e5%b0%84%e7%a4%ba%e4%be%8b.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/12/21/c%E5%8F%8D%E5%B0%84%E7%A4%BA%E4%BE%8B.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="1008" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="80595e4d95"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="77"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.068 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:07 -->

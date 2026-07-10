@@ -1,0 +1,1065 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>Java基础问题13个，你都会哪些？ | Bruce's Blog</title> 
+<meta name="description" content="大家好，我是 V 哥。今天看了阿里云开发者社区关于 Java 的灵魂拷问，一线大厂在用 Java 时，都会考虑哪些问题呢，对于工作多年，又没有大厂经历的小伙伴不妨看看，V 哥总结的这13个为什么，你都会哪些？先赞后看，绝不摆烂。">
+<meta name="keywords" content="JAVA,java基础">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2024 年 11 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="4" class="pad"> </td><td>1</td><td>2</td><td>3</td>
+	</tr>
+	<tr>
+		<td><a href="/2024/11/04" aria-label="2024年11月4日 发布的文章">4</a></td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+	</tr>
+	<tr>
+		<td>11</td><td>12</td><td><a href="/2024/11/13" aria-label="2024年11月13日 发布的文章">13</a></td><td>14</td><td>15</td><td>16</td><td>17</td>
+	</tr>
+	<tr>
+		<td>18</td><td><a href="/2024/11/19" aria-label="2024年11月19日 发布的文章">19</a></td><td><a href="/2024/11/20" aria-label="2024年11月20日 发布的文章">20</a></td><td><a href="/2024/11/21" aria-label="2024年11月21日 发布的文章">21</a></td><td><a href="/2024/11/22" aria-label="2024年11月22日 发布的文章">22</a></td><td><a href="/2024/11/23" aria-label="2024年11月23日 发布的文章">23</a></td><td>24</td>
+	</tr>
+	<tr>
+		<td><a href="/2024/11/25" aria-label="2024年11月25日 发布的文章">25</a></td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2024/10">« 10 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2024/12">12 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#4f8cc2;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#ae84ce;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#6f5a5a;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#67f42e;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#700c0c;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#2baa70;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#2cbab7;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#13f1d;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#bc2d19;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#e0454d;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#6ead8d;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#f0a81d;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#fd401c;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#7bfc93;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#34097a;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#cf0e3f;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#701ac4;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#bb2d5a;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#e85e7e;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#d5b0e2;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#ed749f;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#d10e95;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#cb6294;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#e82aba;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#993b1e;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#c9b2bd;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#9f81da;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#4c7cd2;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#f37f99;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#6b410;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#f92ff7;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#3ffef6;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#ed83d0;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#ecc6e1;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#e965d4;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#3c8280;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#1893c;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#6de788;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#cab701;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#9cba1b;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#a2a46b;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#90bfd1;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#6deb60;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#5699a7;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#b077ac;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/java" rel="category tag">JAVA</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">Java基础问题13个，你都会哪些？</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2024-11-13 14:08</span>
+			<span class="category">  <a href="/category/java" rel="category tag">JAVA</a></span>
+			<span class="article_comment"><a href="/2024/11/13/java-13.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>340</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<blockquote><p>大家好，我是 V 哥。今天看了阿里云开发者社区关于 Java 的灵魂拷问，一线大厂在用 Java 时，都会考虑哪些问题呢，对于工作多年，又没有大厂经历的小伙伴不妨看看，V 哥总结的这13个为什么，你都会哪些？先赞后看，绝不摆烂。</p></blockquote>
+<h2 id="1-为什么禁止使用-bigdecimal-的-equals-方法做等值比较">1. 为什么禁止使用 BigDecimal 的 equals 方法做等值比较？</h2>
+<p><code>BigDecimal</code> 的 <code>equals</code> 方法在等值比较时存在一些问题，通常不建议直接使用它来判断数值的相等性。下面是主要原因以及推荐的替代方案：</p>
+<h3 id="1-equals-方法比较严格包含了精度和符号的比较">1. <code>equals</code> 方法比较严格，包含了精度和符号的比较</h3>
+<p><code>BigDecimal.equals</code> 不仅比较数值本身，还会比较精度和符号。例如，<code>BigDecimal</code> 的 <code>equals</code> 方法会认为 <code>1.0</code> 和 <code>1.00</code> 是不同的值，因为它们的 <code>scale</code> 不同（即小数位数不同）。例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;1.0&quot;&lt;/span&gt;);
+&lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;1.00&quot;&lt;/span&gt;);
+
+System.out.println(a.equals(b)); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出 false&lt;/span&gt;
+</code></pre>
+<p>尽管 <code>1.0</code> 和 <code>1.00</code> 数值上是相等的，但 <code>equals</code> 方法会因为精度不同返回 <code>false</code>。</p>
+<h3 id="2-equals-方法会区分正负零">2. <code>equals</code> 方法会区分正负零</h3>
+<p>在 <code>BigDecimal</code> 中，正零 (<code>0.0</code>) 和负零 (<code>-0.0</code>) 是不相等的，而使用 <code>equals</code> 会导致 <code>0.0</code> 和 <code>-0.0</code> 被视为不相等。例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;zero1&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;0.0&quot;&lt;/span&gt;);
+&lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;zero2&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;-0.0&quot;&lt;/span&gt;);
+
+System.out.println(zero1.equals(zero2)); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出 false&lt;/span&gt;
+</code></pre>
+<p>这可能会导致误判，因为在大多数业务逻辑中，我们认为 <code>0.0</code> 和 <code>-0.0</code> 是等值的。</p>
+<h3 id="推荐的替代方案使用-compareto-方法">推荐的替代方案：使用 <code>compareTo</code> 方法</h3>
+<p>为了避免这些问题，建议使用 <code>BigDecimal.compareTo</code> 方法。<code>compareTo</code> 方法仅比较数值的大小，不关注精度和符号。因此，在需要判断两个 <code>BigDecimal</code> 是否等值时，使用 <code>compareTo</code> 更为合理：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;1.0&quot;&lt;/span&gt;);
+&lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;1.00&quot;&lt;/span&gt;);
+
+System.out.println(a.compareTo(b) == &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出 true&lt;/span&gt;
+</code></pre>
+<p>在这种情况下，<code>1.0</code> 和 <code>1.00</code> 被视为相等，即使它们的精度不同，<code>compareTo</code> 也会返回 <code>0</code>。</p>
+<h3 id="小结">小结</h3>
+<ul>
+<li><strong>不要使用 <code>equals</code> 方法</strong>：它会考虑精度和符号，容易导致误判。</li>
+<li><strong>推荐使用 <code>compareTo</code> 方法</strong>：只比较数值，忽略精度和正负零的差异，可以实现更符合业务需求的等值比较。</li>
+</ul>
+<h2 id="2-为什么禁止使用double直接构造bigdecimal">2. 为什么禁止使用double直接构造BigDecimal？</h2>
+<p>在使用 <code>BigDecimal</code> 时，不建议直接使用 <code>double</code> 作为构造参数。这是因为 <code>double</code> 类型在 Java 中的表示是基于二进制浮点数的，会引入精度误差，从而导致不准确的结果。例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;0.1&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;bd&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(d);
+System.out.println(bd); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出 0.1000000000000000055511151231257827021181583404541015625&lt;/span&gt;
+</code></pre>
+<h3 id="原因解析">原因解析</h3>
+<ol>
+<li><strong>二进制浮点数的精度问题</strong><br>
+<code>double</code> 使用 IEEE 754 标准表示小数，在二进制系统中，像 <code>0.1</code> 这样的小数无法精确表示，导致它在存储时会变成一个近似值。这个近似值会直接传递给 <code>BigDecimal</code> 的构造方法，从而生成带有误差的 <code>BigDecimal</code> 值。</li>
+<li><strong>结果不准确，影响业务计算</strong><br>
+在一些金融计算或其他对精度要求高的场景中，直接使用 <code>double</code> 构造 <code>BigDecimal</code> 会带来潜在的误差积累，从而影响最终的结果。例如，在多次计算或累加时，误差可能不断放大。</li>
+</ol>
+<h3 id="推荐的替代方案">推荐的替代方案</h3>
+<ul>
+<li><strong>使用字符串或精确值构造 <code>BigDecimal</code></strong><br>
+通过传入字符串形式的数字，可以避免精度误差，因为字符串构造器不会引入任何二进制的近似计算。</li>
+</ul>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">  &lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;bd&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;BigDecimal&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;0.1&quot;&lt;/span&gt;);
+  System.out.println(bd); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出 0.1&lt;/span&gt;
+</code></pre>
+<ul>
+<li><strong>使用 <code>BigDecimal.valueOf(double)</code> 方法</strong><br>
+另一个安全的方式是使用 <code>BigDecimal.valueOf(double)</code>，该方法会将 <code>double</code> 转换为 <code>String</code> 表示，然后构造 <code>BigDecimal</code>，从而避免精度损失。</li>
+</ul>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">  &lt;span class=&quot;hljs-type&quot;&gt;BigDecimal&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;bd&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; BigDecimal.valueOf(&lt;span class=&quot;hljs-number&quot;&gt;0.1&lt;/span&gt;);
+  System.out.println(bd); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出 0.1&lt;/span&gt;
+</code></pre>
+<h3 id="小结-1">小结</h3>
+<ul>
+<li><strong>避免直接使用 <code>double</code> 构造 <code>BigDecimal</code></strong>，以免引入二进制浮点数的精度误差。</li>
+<li><strong>优先使用字符串构造器</strong>，或使用 <code>BigDecimal.valueOf(double)</code> 以确保精度。</li>
+</ul>
+<h2 id="3-为什么禁止使用-apache-beanutils-进行属性的-copy-">3. 为什么禁止使用 Apache Beanutils 进行属性的 copy ？</h2>
+<p><code>Apache BeanUtils</code> 是一个早期用于 Java Bean 属性复制的工具库，但在现代 Java 开发中通常不推荐使用它来进行属性的拷贝，尤其在性能敏感的场景中。原因主要包括以下几点：</p>
+<h3 id="1-性能问题">1. <strong>性能问题</strong></h3>
+<p><code>Apache BeanUtils.copyProperties()</code> 使用了大量的反射操作，且每次拷贝都需要对字段、方法进行查找和反射调用。反射机制虽然灵活，但性能较低，尤其是在大量对象或频繁拷贝的场景中，会产生显著的性能瓶颈。</p>
+<p>相比之下，<code>Spring BeanUtils</code> 或 <code>Apache Commons Lang</code> 的 <code>FieldUtils</code> 等工具经过优化，使用了更高效的方式进行属性复制。在性能要求较高的场合，<code>MapStruct</code> 或 <code>Dozer</code> 等编译期代码生成的方式则可以完全避免运行时反射。</p>
+<h3 id="2-类型转换问题">2. <strong>类型转换问题</strong></h3>
+<p><code>BeanUtils.copyProperties</code> 在属性类型不匹配时会隐式地进行类型转换。例如，将 <code>String</code> 类型的 <code>"123"</code> 转换为 <code>Integer</code>，如果转换失败，会抛出异常。这种隐式转换在处理数据时，可能带来不易察觉的错误，而且并不总是适合应用场景。</p>
+<p>在精确的属性复制需求下，通常希望类型不匹配时直接跳过拷贝，或明确抛出错误，而不是隐式转换。例如，<code>Spring BeanUtils.copyProperties</code> 不会进行隐式转换，适合严格的属性匹配场景。</p>
+<h3 id="3-潜在的安全问题">3. <strong>潜在的安全问题</strong></h3>
+<p><code>Apache BeanUtils</code> 的 <code>PropertyUtils</code> 组件在执行反射操作时存在一定的安全隐患。历史上，<code>BeanUtils</code> 的 <code>PropertyUtils</code> 曾有安全漏洞，使恶意用户可以通过精心构造的输入利用反射机制执行系统命令或加载恶意类。尽管这些漏洞在现代版本中已得到修复，但该库的架构和实现仍较为陈旧，难以应对更高的安全需求。</p>
+<h3 id="4-缺乏对嵌套对象的深拷贝支持">4. <strong>缺乏对嵌套对象的深拷贝支持</strong></h3>
+<p><code>BeanUtils.copyProperties</code> 仅支持浅拷贝，即只能复制对象的一级属性，无法递归地对嵌套对象进行复制。如果对象包含了复杂的嵌套结构，使用 <code>BeanUtils.copyProperties</code> 很容易出现意外行为或数据丢失。像 <code>MapStruct</code> 或 <code>Dozer</code> 这样的工具则提供对嵌套对象的深层复制能力，更适合复杂对象的深度拷贝需求。</p>
+<h3 id="推荐的替代方案-1">推荐的替代方案</h3>
+<ol>
+<li><strong>Spring <code>BeanUtils.copyProperties()</code></strong><br>
+Spring 的 <code>BeanUtils.copyProperties()</code> 提供了更优的性能和更好的类型安全性。它不做类型转换，且提供了方便的过滤器用于选择性拷贝属性。</li>
+<li><strong>MapStruct</strong><br>
+<code>MapStruct</code> 是基于注解的对象映射框架，支持编译期生成代码，完全避免了反射的性能开销，且支持复杂对象、嵌套属性的深度拷贝，是性能要求较高的首选。</li>
+<li><strong>Dozer</strong><br>
+<code>Dozer</code> 支持更灵活的映射配置和深拷贝，适合对象结构复杂的情况。它可以处理嵌套属性映射、类型转换，且具有较好的自定义能力。</li>
+</ol>
+<h3 id="小结-2">小结</h3>
+<p><code>Apache BeanUtils.copyProperties</code> 不适合现代 Java 开发的性能、安全性和灵活性要求，推荐使用更高效、安全、灵活的框架（如 Spring <code>BeanUtils</code>、<code>MapStruct</code> 等）来代替。</p>
+<h2 id="4-为什么要求日期格式化时必须有使用-y-表示年而不能用-y-">4. 为什么要求日期格式化时必须有使用 y 表示年，而不能用 Y ？</h2>
+<p>在日期格式化中，必须使用 <code>y</code> 而不是 <code>Y</code> 来表示年份，这是因为 <code>y</code> 和 <code>Y</code> 在 Java 和其他日期格式化工具中代表不同的含义：</p>
+<ol>
+<li><strong><code>y</code> 表示日历年（Calendar Year）</strong><br>
+<code>y</code> 是标准的表示年份的字符，表示的是通常意义上的公历年，比如 <code>2024</code> 表示的就是这一年的年份。使用 <code>y</code> 时，日期格式化工具会准确地格式化出对应的年份数值：</li>
+</ol>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">   &lt;span class=&quot;hljs-type&quot;&gt;SimpleDateFormat&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;sdf&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;SimpleDateFormat&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;yyyy-MM-dd&quot;&lt;/span&gt;);
+   System.out.println(sdf.format(&lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Date&lt;/span&gt;())); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出: 2024-11-10&lt;/span&gt;
+</code></pre>
+<ol start="2">
+<li><strong><code>Y</code> 表示星期年（Week Year）</strong><br>
+<code>Y</code> 表示的是“星期年”或称“ISO周年”（ISO week-numbering year），它是一种基于ISO周数的年份表示方式。这种表示法根据每年的第一个星期一所在的周来计算年份，如果某天属于新一年的第一个完整星期，则会归为新年的星期年。
+<p>例如，如果某年的最后几天在下一年开始的第一个星期中，它们可能会被归入下一年的 <code>week year</code>。同理，如果新年的前几天在上一年的最后一个完整星期内，这些天的星期年可能会归属上一年。这在日期和时间处理中可能导致意外的年份差异。</p></li>
+</ol>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">   &lt;span class=&quot;hljs-type&quot;&gt;SimpleDateFormat&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;sdf&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;SimpleDateFormat&lt;/span&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;YYYY-MM-dd&quot;&lt;/span&gt;);
+   System.out.println(sdf.format(&lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Date&lt;/span&gt;())); &lt;span class=&quot;hljs-comment&quot;&gt;// 可能输出与实际年份不同的值&lt;/span&gt;
+</code></pre>
+<h3 id="使用-y-的潜在问题">使用 <code>Y</code> 的潜在问题</h3>
+<p>使用 <code>Y</code> 表示年份会引发一些日期计算的错误，因为它依赖于周数的计算方式，不是每次都与实际的公历年份一致。例如：</p>
+<ul>
+<li>2024年12月31日会被视作 <code>2025</code> 的 <code>week year</code>，导致使用 <code>YYYY</code> 格式化时得到 <code>2025-12-31</code>。</li>
+<li>在跨年计算或特定日期逻辑中使用 <code>Y</code> 表示年份可能会出现错误，因为 <code>week year</code> 与通常理解的日历年并不总是相符。</li>
+</ul>
+<h3 id="什么时候使用-y">什么时候使用 <code>Y</code></h3>
+<p><code>Y</code> 一般仅用于需要符合 ISO 8601 标准的日期格式，特别是包含 ISO 周数（如“2024-W01-1”表示2024年的第一个星期一）的情况，而在一般情况下，我们都应使用 <code>y</code> 来表示日历年份。</p>
+<h3 id="小结-3">小结</h3>
+<ul>
+<li><strong>使用 <code>y</code> 来表示常规年份</strong>，避免日期格式化错误。</li>
+<li><strong>避免使用 <code>Y</code> 来表示年份</strong>，除非确实需要按照 ISO 周年的格式来解析和显示年份。</li>
+</ul>
+<h2 id="5-为什么使用三目运算符时必需要注意类型对齐">5. 为什么使用三目运算符时必需要注意类型对齐？</h2>
+<p>在使用三目运算符时，类型对齐非常重要，因为三目运算符的两个分支会被类型推断成一个共同的类型。若两者类型不同，Java 编译器会进行类型提升或自动转换，这可能导致意外的类型变化和潜在的错误。以下是需要注意的原因和细节：</p>
+<h3 id="1-三目运算符会自动进行类型提升">1. 三目运算符会自动进行类型提升</h3>
+<p>三目运算符的返回值类型是根据 <code>true</code> 和 <code>false</code> 分支的类型推断出来的。为了得到一致的结果，Java 会自动将不同的类型提升为更高精度的类型。例如，若一个分支返回 <code>int</code> 而另一个分支返回 <code>double</code>，Java 会将 <code>int</code> 提升为 <code>double</code>：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;5&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;10.5&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; (x &amp;gt; &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;) ? x : y; &lt;span class=&quot;hljs-comment&quot;&gt;// 返回 double 类型&lt;/span&gt;
+System.out.println(result); &lt;span class=&quot;hljs-comment&quot;&gt;// 输出 5.0&lt;/span&gt;
+</code></pre>
+<p>这里返回值 <code>5</code> 被提升为 <code>5.0</code>。虽然代码在这个例子中不会出错，但在某些情况下，这种自动提升会导致意外的精度损失或类型不匹配的问题。</p>
+<h3 id="2-自动拆箱和装箱可能引发-nullpointerexception">2. 自动拆箱和装箱可能引发 <code>NullPointerException</code></h3>
+<p>在 Java 中，基本类型和包装类型的对齐需要特别小心。三目运算符会尝试将包装类型和基本类型对齐成相同类型，这会导致自动装箱和拆箱，如果某个分支为 <code>null</code> 且需要拆箱，可能会引发 <code>NullPointerException</code>：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;Integer&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-literal&quot;&gt;null&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;10&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; (a != &lt;span class=&quot;hljs-literal&quot;&gt;null&lt;/span&gt;) ? a : b; &lt;span class=&quot;hljs-comment&quot;&gt;// 如果 a 为 null，结果会发生自动拆箱，引发 NullPointerException&lt;/span&gt;
+</code></pre>
+<p>由于 <code>a</code> 为 <code>null</code>，Java 会尝试将其拆箱为 <code>int</code>，从而抛出 <code>NullPointerException</code>。为避免这种情况，可以确保类型对齐，或避免对可能为 <code>null</code> 的对象进行拆箱。</p>
+<h3 id="3-返回值类型不一致可能导致编译错误">3. 返回值类型不一致可能导致编译错误</h3>
+<p>如果三目运算符的两种返回类型无法被编译器自动转换为一个兼容类型，代码会直接报错。例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;5&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;&quot;10&quot;&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; (x &amp;gt; &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;) ? x : y; &lt;span class=&quot;hljs-comment&quot;&gt;// 编译错误：int 和 String 不兼容&lt;/span&gt;
+</code></pre>
+<p>在这种情况下，<code>int</code> 和 <code>String</code> 无法被提升到相同类型，因此会引发编译错误。若确实希望返回不同类型的值，可以手动指定共同的超类型，例如将结果定义为 <code>Object</code> 类型：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; (x &amp;gt; &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;) ? Integer.valueOf(x) : y; &lt;span class=&quot;hljs-comment&quot;&gt;// 这里 result 为 Object&lt;/span&gt;
+</code></pre>
+<h3 id="4-类型对齐可以提升代码的可读性">4. 类型对齐可以提升代码的可读性</h3>
+<p>保持三目运算符返回的类型一致，能让代码更加清晰，便于理解和维护。类型对齐可以避免类型转换和自动提升带来的混乱，使代码更容易预测和理解：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; (condition) ? &lt;span class=&quot;hljs-number&quot;&gt;1.0&lt;/span&gt; : &lt;span class=&quot;hljs-number&quot;&gt;0.0&lt;/span&gt;; &lt;span class=&quot;hljs-comment&quot;&gt;// 返回 double&lt;/span&gt;
+</code></pre>
+<h3 id="小结-4">小结</h3>
+<ul>
+<li><strong>保持类型一致性</strong>，确保 <code>true</code> 和 <code>false</code> 分支的类型相同，避免意外的类型提升。</li>
+<li><strong>小心自动装箱和拆箱</strong>，避免 <code>null</code> 参与三目运算符计算。</li>
+<li><strong>在返回不同类型时选择合适的公共类型</strong>，如使用 <code>Object</code> 或显式转换。</li>
+</ul>
+<h2 id="6-为什么建议初始化-hashmap-的容量大小">6. 为什么建议初始化 HashMap 的容量大小？</h2>
+<p>初始化 <code>HashMap</code> 的容量大小是为了提高性能和减少内存浪费。通过设置合适的初始容量，可以减少 <code>HashMap</code> 的扩容次数，提高程序运行效率。以下是详细原因和建议：</p>
+<h3 id="1-减少扩容次数提高性能">1. 减少扩容次数，提高性能</h3>
+<p><code>HashMap</code> 默认的初始容量为 16，当超过负载因子阈值（默认是 0.75，即达到容量的 75%）时，<code>HashMap</code> 会自动进行扩容操作，将容量扩大为原来的两倍。扩容涉及到重新计算哈希并将数据重新分布到新的桶中，这个过程非常耗时，尤其在元素较多时，扩容会显著影响性能。</p>
+<p>通过设置合适的初始容量，可以避免或减少扩容操作，提高 <code>HashMap</code> 的存取效率。</p>
+<h3 id="2-节省内存避免不必要的内存开销">2. 节省内存，避免不必要的内存开销</h3>
+<p>如果预计要存储大量数据但没有指定容量，<code>HashMap</code> 可能会多次扩容，每次扩容会分配新的内存空间，并将原有数据复制到新空间中，造成内存浪费。如果在创建 <code>HashMap</code> 时能合理估算其容量，则可以一次性分配足够的空间，从而避免重复分配内存带来的资源浪费。</p>
+<h3 id="3-避免扩容带来的线程安全问题">3. 避免扩容带来的线程安全问题</h3>
+<p>在并发环境下，频繁扩容可能导致线程不安全，即使是 <code>ConcurrentHashMap</code> 也不能完全避免扩容带来的性能和一致性问题。初始化合适的容量可以减少并发环境下扩容带来的风险。</p>
+<h3 id="如何估算合适的容量">如何估算合适的容量</h3>
+<ol>
+<li><strong>预估数据量</strong>：如果预计 <code>HashMap</code> 将存储 <code>n</code> 个元素，可以将初始容量设置为 <code>(n / 0.75)</code>，再向上取整为最接近的 2 的幂次方。</li>
+</ol>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">   &lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;initialCapacity&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; (&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt;) Math.ceil(n / &lt;span class=&quot;hljs-number&quot;&gt;0.75&lt;/span&gt;);
+   Map&amp;lt;String, String&amp;gt; map = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;HashMap&lt;/span&gt;&amp;lt;&amp;gt;(initialCapacity);
+</code></pre>
+<ol start="2">
+<li><strong>取 2 的幂次方</strong>：<code>HashMap</code> 的容量总是以 2 的幂次方增长，因为在进行哈希运算时，可以高效利用按位与操作来计算哈希桶索引。因此，初始容量设为 2 的幂次方会使哈希分布更均匀。</li>
+</ol>
+<h3 id="示例代码">示例代码</h3>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;expectedSize&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;1000&lt;/span&gt;; &lt;span class=&quot;hljs-comment&quot;&gt;// 预估需要存储的键值对数量&lt;/span&gt;
+&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;initialCapacity&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; (&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt;) Math.ceil(expectedSize / &lt;span class=&quot;hljs-number&quot;&gt;0.75&lt;/span&gt;);
+HashMap&amp;lt;String, Integer&amp;gt; map = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;HashMap&lt;/span&gt;&amp;lt;&amp;gt;(initialCapacity);
+</code></pre>
+<h3 id="小结-5">小结</h3>
+<p>初始化 <code>HashMap</code> 的容量大小有以下好处：</p>
+<ul>
+<li><strong>提高性能</strong>：减少扩容次数，优化存取效率。</li>
+<li><strong>节省内存</strong>：避免多次扩容引起的内存浪费。</li>
+<li><strong>提升线程安全</strong>：在并发环境下减少扩容带来的线程不安全风险。</li>
+</ul>
+<p>合理初始化 <code>HashMap</code> 容量对于高性能应用尤为重要，尤其在存储大量数据时可以显著提升程序的运行效率。</p>
+<h2 id="7-为什么禁止使用-executors-创建线程池">7. 为什么禁止使用 Executors 创建线程池？</h2>
+<p>在 Java 中创建线程池时，不推荐直接使用 <code>Executors</code> 提供的快捷方法（例如 <code>Executors.newFixedThreadPool()</code>、<code>Executors.newCachedThreadPool()</code> 等），而推荐使用 <code>ThreadPoolExecutor</code> 构造方法来手动配置线程池。这种做法主要是为了避免 <code>Executors</code> 创建线程池时隐藏的风险，确保线程池配置符合需求。具体原因如下：</p>
+<h3 id="1-不透明的任务队列长度导致oom风险">1. <strong>不透明的任务队列长度导致OOM风险</strong></h3>
+<ul>
+<li><strong><code>newFixedThreadPool()</code> 和 <code>newSingleThreadExecutor()</code></strong> 使用的是<strong>无界队列</strong> <code>LinkedBlockingQueue</code>。无界队列可以存放无限数量的任务，一旦任务量非常大，队列会迅速占用大量内存，导致 <strong>OutOfMemoryError</strong>（OOM）。</li>
+<li><strong><code>newCachedThreadPool()</code></strong> 使用的是 <strong>SynchronousQueue</strong>，该队列没有存储任务的能力，每个任务到来时必须立即有一个空闲线程来处理任务，否则将创建一个新线程。当任务到达速度超过线程销毁速度时，线程数量会快速增加，导致 <strong>OOM</strong>。</li>
+</ul>
+<h3 id="2-线程数无法控制导致资源耗尽">2. <strong>线程数无法控制，导致资源耗尽</strong></h3>
+<p>在 <code>newCachedThreadPool()</code> 创建的线程池中，线程数没有上限，短时间内大量请求会导致线程数暴增，耗尽系统资源。<code>newFixedThreadPool()</code> 和 <code>newSingleThreadExecutor()</code> 虽然限制了核心线程数，但未限制任务队列长度，依然可能耗尽内存。</p>
+<p>在业务需求不确定或任务激增的场景下，建议明确限制线程池的最大线程数和队列长度，以更好地控制系统资源的使用，避免因线程数无法控制导致的性能问题。</p>
+<h3 id="3-缺乏合理的拒绝策略控制">3. <strong>缺乏合理的拒绝策略控制</strong></h3>
+<ul>
+<li><code>Executors</code> 创建的线程池默认使用 <code>AbortPolicy</code> 拒绝策略，即当线程池达到饱和时会抛出 <code>RejectedExecutionException</code> 异常。</li>
+<li>不同的业务场景可能需要不同的拒绝策略，例如可以使用 <code>CallerRunsPolicy</code>（让提交任务的线程执行任务）或 <code>DiscardOldestPolicy</code>（丢弃最旧的任务）来平衡任务处理。</li>
+</ul>
+<p>手动创建 <code>ThreadPoolExecutor</code> 时，可以指定适合业务需求的拒绝策略，从而更灵活地处理线程池满载的情况，避免异常或系统性能下降。</p>
+<h3 id="4-灵活配置核心参数">4. <strong>灵活配置核心参数</strong></h3>
+<p>使用 <code>ThreadPoolExecutor</code> 的构造方法可以手动设置以下参数，以便根据业务需求灵活配置线程池：</p>
+<ul>
+<li><strong>corePoolSize</strong>：核心线程数，避免空闲线程被频繁销毁和重建。</li>
+<li><strong>maximumPoolSize</strong>：最大线程数，控制线程池能使用的最大资源。</li>
+<li><strong>keepAliveTime</strong>：非核心线程的存活时间，适合控制线程销毁频率。</li>
+<li><strong>workQueue</strong>：任务队列类型和长度，便于管理任务积压的情况。</li>
+</ul>
+<p>这些参数的合理配置可以有效平衡线程池的性能、资源占用和任务处理能力，避免使用默认配置时不符合需求的情况。</p>
+<h3 id="推荐的线程池创建方式">推荐的线程池创建方式</h3>
+<p>建议直接使用 <code>ThreadPoolExecutor</code> 构造方法配置线程池，例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;corePoolSize&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;10&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;maximumPoolSize&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;20&lt;/span&gt;;
+&lt;span class=&quot;hljs-type&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;keepAliveTime&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;60L&lt;/span&gt;;
+BlockingQueue&amp;lt;Runnable&amp;gt; workQueue = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayBlockingQueue&lt;/span&gt;&amp;lt;&amp;gt;(&lt;span class=&quot;hljs-number&quot;&gt;100&lt;/span&gt;);
+
+&lt;span class=&quot;hljs-type&quot;&gt;ThreadPoolExecutor&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;executor&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ThreadPoolExecutor&lt;/span&gt;(
+    corePoolSize,
+    maximumPoolSize,
+    keepAliveTime,
+    TimeUnit.SECONDS,
+    workQueue,
+    &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ThreadPoolExecutor&lt;/span&gt;.CallerRunsPolicy()  &lt;span class=&quot;hljs-comment&quot;&gt;// 拒绝策略&lt;/span&gt;
+);
+</code></pre>
+<h3 id="小结-6">小结</h3>
+<p>使用 <code>Executors</code> 创建线程池会带来不易察觉的风险，可能导致系统资源耗尽或任务堆积，手动配置 <code>ThreadPoolExecutor</code> 可以更好地控制线程池的行为，使其符合实际业务需求和资源限制。因此，为了系统的健壮性和可控性，建议避免使用 <code>Executors</code> 快捷方法来创建线程池。</p>
+<h2 id="8-为什么要求谨慎使用-arraylist-中的-sublist-方法">8. 为什么要求谨慎使用 ArrayList 中的 subList 方法？</h2>
+<p>在使用 <code>ArrayList</code> 的 <code>subList</code> 方法时需要谨慎，因为它有一些潜在的陷阱，容易导致意外的错误和难以排查的异常。以下是 <code>subList</code> 需要小心使用的原因和注意事项：</p>
+<h3 id="1-sublist-返回的是视图而不是独立副本">1. <code>subList</code> 返回的是视图，而不是独立副本</h3>
+<p><code>ArrayList</code> 的 <code>subList</code> 方法返回的是原列表的一部分视图（<code>view</code>），而不是一个独立的副本。对 <code>subList</code> 的修改会直接影响原列表，反之亦然：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">ArrayList&amp;lt;Integer&amp;gt; list = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayList&lt;/span&gt;&amp;lt;&amp;gt;(Arrays.asList(&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;5&lt;/span&gt;));
+List&amp;lt;Integer&amp;gt; subList = list.subList(&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;);
+subList.set(&lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;10&lt;/span&gt;); &lt;span class=&quot;hljs-comment&quot;&gt;// 修改 subList&lt;/span&gt;
+System.out.println(list); &lt;span class=&quot;hljs-comment&quot;&gt;// 原列表也受到影响：[1, 10, 3, 4, 5]&lt;/span&gt;
+</code></pre>
+<p>这种共享视图的机制在某些场景中可能引发意外的修改，导致数据被意外改变，从而影响到原始数据结构的完整性和正确性。</p>
+<h3 id="2-sublist-的结构性修改限制">2. <code>subList</code> 的结构性修改限制</h3>
+<p>当对 <code>ArrayList</code> 本身（而非 <code>subList</code> 视图）进行结构性修改（<code>add</code>、<code>remove</code> 等改变列表大小的操作）后，再操作 <code>subList</code> 会导致 <code>ConcurrentModificationException</code> 异常。这是因为 <code>subList</code> 和原 <code>ArrayList</code> 之间共享结构性修改的状态，一旦其中一个发生修改，另一方就会失效：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">ArrayList&amp;lt;Integer&amp;gt; list = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayList&lt;/span&gt;&amp;lt;&amp;gt;(Arrays.asList(&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;5&lt;/span&gt;));
+List&amp;lt;Integer&amp;gt; subList = list.subList(&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;);
+list.add(&lt;span class=&quot;hljs-number&quot;&gt;6&lt;/span&gt;); &lt;span class=&quot;hljs-comment&quot;&gt;// 修改原列表的结构&lt;/span&gt;
+subList.get(&lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;); &lt;span class=&quot;hljs-comment&quot;&gt;// 抛出 ConcurrentModificationException&lt;/span&gt;
+</code></pre>
+<p>这种限制意味着 <code>subList</code> 不适合在列表频繁变化的场景中使用，否则很容易引发并发修改异常。</p>
+<h3 id="3-sublist-和-arraylist-的-removeall-等操作可能导致错误">3. <code>subList</code> 和 <code>ArrayList</code> 的 removeAll 等操作可能导致错误</h3>
+<p><code>subList</code> 生成的视图列表可能会在批量删除操作中出现问题，例如调用 <code>removeAll</code> 方法时，<code>subList</code> 的行为不一致或发生异常。对于 <code>ArrayList</code> 的 <code>subList</code>，一些批量修改方法（如 <code>removeAll</code>、<code>retainAll</code>）可能会在删除视图元素后，导致 <code>ArrayList</code> 产生不可预料的状态，甚至引发 <code>IndexOutOfBoundsException</code> 等异常。</p>
+<h3 id="4-推荐的安全使用方式">4. 推荐的安全使用方式</h3>
+<p>如果需要一个独立的子列表，可以通过 <code>new ArrayList&lt;&gt;(originalList.subList(start, end))</code> 来创建一个子列表的副本，从而避免 <code>subList</code> 的共享视图问题：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">ArrayList&amp;lt;Integer&amp;gt; list = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayList&lt;/span&gt;&amp;lt;&amp;gt;(Arrays.asList(&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;2&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;5&lt;/span&gt;));
+ArrayList&amp;lt;Integer&amp;gt; subListCopy = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayList&lt;/span&gt;&amp;lt;&amp;gt;(list.subList(&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;)); &lt;span class=&quot;hljs-comment&quot;&gt;// 创建副本&lt;/span&gt;
+list.add(&lt;span class=&quot;hljs-number&quot;&gt;6&lt;/span&gt;); &lt;span class=&quot;hljs-comment&quot;&gt;// 修改原列表&lt;/span&gt;
+subListCopy.get(&lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;); &lt;span class=&quot;hljs-comment&quot;&gt;// 安全，不会受到影响&lt;/span&gt;
+</code></pre>
+<h3 id="小结-7">小结</h3>
+<p>使用 <code>ArrayList</code> 的 <code>subList</code> 方法需要注意以下几点：</p>
+<ul>
+<li><strong>视图机制</strong>：<code>subList</code> 只是原列表的视图，修改其中一个会影响另一个。</li>
+<li><strong>结构性修改限制</strong>：结构性修改原列表后再访问 <code>subList</code> 会抛出 <code>ConcurrentModificationException</code>。</li>
+<li><strong>批量操作问题</strong>：<code>subList</code> 的批量操作可能引发不可预料的错误。</li>
+<li><strong>建议创建副本</strong>：如需独立操作子列表，最好创建 <code>subList</code> 的副本以避免潜在问题。</li>
+</ul>
+<p>谨慎使用 <code>subList</code> 可以避免意外的错误，提高代码的健壮性。</p>
+<h2 id="9-为什么禁止在-foreach-循环里进行元素的-removeadd-操作">9. 为什么禁止在 foreach 循环里进行元素的 remove/add 操作？</h2>
+<p>在 Java 中，禁止在 <code>foreach</code> 循环中进行元素的 <code>remove</code> 或 <code>add</code> 操作，主要是因为这种操作可能导致 <code>ConcurrentModificationException</code> 异常，或者导致循环行为不符合预期。具体原因如下：</p>
+<h3 id="1-concurrentmodificationexception-异常">1. <strong><code>ConcurrentModificationException</code> 异常</strong></h3>
+<p>当你在 <code>foreach</code> 循环中直接修改集合（例如 <code>remove</code> 或 <code>add</code> 元素），会导致并发修改问题。<code>foreach</code> 循环底层使用了集合的 <code>Iterator</code> 来遍历元素。大多数集合类（如 <code>ArrayList</code>、<code>HashSet</code> 等）都会维护一个 <code>modCount</code> 计数器，表示集合的结构变更次数。当你在遍历时修改集合的结构（如删除或添加元素），<code>modCount</code> 会发生变化，而 <code>Iterator</code> 会检测到这种结构性修改，从而抛出 <code>ConcurrentModificationException</code> 异常，防止程序在多线程环境中出现意外行为。</p>
+<p>例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">List&amp;lt;String&amp;gt; list = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayList&lt;/span&gt;&amp;lt;&amp;gt;(Arrays.asList(&lt;span class=&quot;hljs-string&quot;&gt;&quot;a&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;b&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;c&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;d&quot;&lt;/span&gt;));
+&lt;span class=&quot;hljs-keyword&quot;&gt;for&lt;/span&gt; (String s : list) {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;if&lt;/span&gt; (s.equals(&lt;span class=&quot;hljs-string&quot;&gt;&quot;b&quot;&lt;/span&gt;)) {
+        list.remove(s);  &lt;span class=&quot;hljs-comment&quot;&gt;// 会抛出 ConcurrentModificationException&lt;/span&gt;
+    }
+}
+</code></pre>
+<p>在上面的代码中，<code>foreach</code> 循环遍历 <code>list</code> 时，如果删除了元素 <code>b</code>，它会修改 <code>list</code> 的结构，从而导致 <code>Iterator</code> 检测到并发修改，抛出异常。</p>
+<h3 id="2-不可预测的行为">2. <strong>不可预测的行为</strong></h3>
+<p>即使没有抛出 <code>ConcurrentModificationException</code>，在 <code>foreach</code> 循环中修改集合也会导致不可预测的行为。例如，<code>remove</code> 或 <code>add</code> 操作会改变集合的大小和内容，可能会影响迭代的顺序或导致遗漏某些元素，甚至造成死循环或跳过某些元素。</p>
+<p>例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">List&amp;lt;String&amp;gt; list = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayList&lt;/span&gt;&amp;lt;&amp;gt;(Arrays.asList(&lt;span class=&quot;hljs-string&quot;&gt;&quot;a&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;b&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;c&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;d&quot;&lt;/span&gt;));
+&lt;span class=&quot;hljs-keyword&quot;&gt;for&lt;/span&gt; (String s : list) {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;if&lt;/span&gt; (s.equals(&lt;span class=&quot;hljs-string&quot;&gt;&quot;b&quot;&lt;/span&gt;)) {
+        list.add(&lt;span class=&quot;hljs-string&quot;&gt;&quot;e&quot;&lt;/span&gt;);  &lt;span class=&quot;hljs-comment&quot;&gt;// 修改集合的大小&lt;/span&gt;
+    }
+    System.out.println(s);
+}
+</code></pre>
+<p>在这个例子中，<code>add</code> 操作会向 <code>list</code> 中添加一个新元素 <code>"e"</code>，从而修改了集合的结构。因为 <code>foreach</code> 循环的内部实现使用了迭代器，它可能不会考虑到修改后的新元素，导致输出顺序或遍历结果与预期不同。</p>
+<h3 id="3-迭代器的-remove-方法">3. <strong>迭代器的 <code>remove()</code> 方法</strong></h3>
+<p>如果需要在循环中删除元素，推荐使用 <code>Iterator</code> 显式地进行删除操作。<code>Iterator</code> 提供了一个安全的 <code>remove()</code> 方法，可以在遍历时安全地删除元素，而不会引发 <code>ConcurrentModificationException</code>。</p>
+<p>例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">List&amp;lt;String&amp;gt; list = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;ArrayList&lt;/span&gt;&amp;lt;&amp;gt;(Arrays.asList(&lt;span class=&quot;hljs-string&quot;&gt;&quot;a&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;b&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;c&quot;&lt;/span&gt;, &lt;span class=&quot;hljs-string&quot;&gt;&quot;d&quot;&lt;/span&gt;));
+Iterator&amp;lt;String&amp;gt; iterator = list.iterator();
+&lt;span class=&quot;hljs-keyword&quot;&gt;while&lt;/span&gt; (iterator.hasNext()) {
+    &lt;span class=&quot;hljs-type&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; iterator.next();
+    &lt;span class=&quot;hljs-keyword&quot;&gt;if&lt;/span&gt; (s.equals(&lt;span class=&quot;hljs-string&quot;&gt;&quot;b&quot;&lt;/span&gt;)) {
+        iterator.remove();  &lt;span class=&quot;hljs-comment&quot;&gt;// 使用 Iterator 的 remove() 方法&lt;/span&gt;
+    }
+}
+</code></pre>
+<p>使用 <code>Iterator.remove()</code> 可以安全地在遍历时删除元素，而不会抛出并发修改异常。</p>
+<h3 id="小结-8">小结</h3>
+<p>在 <code>foreach</code> 循环中直接进行 <code>remove</code> 或 <code>add</code> 操作是不安全的，主要有以下原因：</p>
+<ul>
+<li><strong><code>ConcurrentModificationException</code></strong>：直接修改集合会触发迭代器的并发修改检测，导致异常。</li>
+<li><strong>不可预测的行为</strong>：修改集合的结构可能导致元素遗漏、顺序错乱或程序逻辑出错。</li>
+<li><strong>使用 <code>Iterator</code> 替代</strong>：使用 <code>Iterator</code> 的 <code>remove()</code> 方法可以避免这些问题，实现安全的元素删除操作。</li>
+</ul>
+<p>因此，正确的做法是使用 <code>Iterator</code> 显式地处理元素的删除或修改，而不是直接在 <code>foreach</code> 循环中进行修改。</p>
+<h2 id="10-为什么禁止工程师直接使用日志系统-log4jlogback-中的-api-">10. 为什么禁止工程师直接使用日志系统 (Log4j、Logback) 中的 API ？</h2>
+<p>在很多工程实践中，<strong>禁止工程师直接使用日志系统（如 Log4j、Logback）中的 API</strong>，主要是出于以下几个原因：</p>
+<h3 id="1-日志配置与实现的分离">1. <strong>日志配置与实现的分离</strong></h3>
+<p>直接使用日志系统的 API 可能会导致日志记录逻辑与应用的业务逻辑紧密耦合，使得日志配置和实现的分离变得困难。现代的日志框架（如 Log4j、Logback）允许通过外部配置文件（如 <code>log4j.xml</code> 或 <code>logback.xml</code>）灵活配置日志级别、输出格式、输出位置等，而不是硬编码到应用代码中。直接使用日志 API 会导致日志的配置与业务代码绑定在一起，不易修改和维护。</p>
+<p><strong>建议的做法</strong>：通过使用日志框架的日志抽象接口（如 <code>org.slf4j.Logger</code>）来记录日志，而不是直接依赖具体的日志实现。这种方式提供了更大的灵活性，日志实现可以在运行时通过配置文件更换而无需修改代码。</p>
+<h3 id="2-灵活性与可扩展性问题">2. <strong>灵活性与可扩展性问题</strong></h3>
+<p>如果工程师直接使用日志库的 API，项目在需要切换日志框架（比如从 Log4j 转换到 Logback 或其他框架）时，需要修改大量的代码，增加了系统的耦合度和维护难度。另一方面，使用日志抽象层（如 SLF4J）可以避免这一问题，因为 SLF4J 是一个日志抽象层，底层可以切换具体的日志实现而无需改变业务代码。</p>
+<p><strong>示例</strong>：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-comment&quot;&gt;// 不推荐：直接使用 Log4j 的 API&lt;/span&gt;
+&lt;span class=&quot;hljs-keyword&quot;&gt;import&lt;/span&gt; org.apache.log4j.Logger;
+&lt;span class=&quot;hljs-type&quot;&gt;Logger&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;logger&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; Logger.getLogger(MyClass.class);
+logger.info(&lt;span class=&quot;hljs-string&quot;&gt;&quot;This is a log message&quot;&lt;/span&gt;);
+
+&lt;span class=&quot;hljs-comment&quot;&gt;// 推荐：通过 SLF4J 接口来记录日志&lt;/span&gt;
+&lt;span class=&quot;hljs-keyword&quot;&gt;import&lt;/span&gt; org.slf4j.Logger;
+&lt;span class=&quot;hljs-keyword&quot;&gt;import&lt;/span&gt; org.slf4j.LoggerFactory;
+&lt;span class=&quot;hljs-type&quot;&gt;Logger&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;logger&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; LoggerFactory.getLogger(MyClass.class);
+logger.info(&lt;span class=&quot;hljs-string&quot;&gt;&quot;This is a log message&quot;&lt;/span&gt;);
+</code></pre>
+<p>使用 SLF4J 可以在不同的环境中灵活切换日志实现，而无需修改代码。</p>
+<h3 id="3-日志记录与调试不一致">3. <strong>日志记录与调试不一致</strong></h3>
+<p>如果工程师直接使用日志框架的 API，可能会在日志记录时不遵循一致的日志策略。例如，日志的级别、格式、日志输出的内容等可能不统一，导致日志信息混乱、不易追踪。通过统一的日志抽象接口（如 SLF4J）和规范的日志记录策略（通过 AOP 或日志框架自带的特性）可以保持日志的一致性和规范性。</p>
+<p><strong>最佳实践</strong>：</p>
+<ul>
+<li>通过统一的日志管理类或工具类来封装日志记录方法，确保所有日志记录都遵循统一的格式和规范。</li>
+<li>在日志中统一使用适当的日志级别（如 <code>DEBUG</code>、<code>INFO</code>、<code>WARN</code>、<code>ERROR</code>）和标准格式。</li>
+</ul>
+<h3 id="4-日志的性能影响">4. <strong>日志的性能影响</strong></h3>
+<p>日志记录可能对应用的性能产生一定的影响，尤其是在日志记录过于频繁或日志输出内容过多的情况下。通过直接使用日志框架的 API，可能无法灵活控制日志输出的频率、内容或过滤策略，从而造成性能问题。很多日志框架（如 Log4j 和 Logback）提供了高级的配置选项，如异步日志、日志缓存等特性，可以显著提高性能。</p>
+<p><strong>推荐做法</strong>：</p>
+<ul>
+<li>使用日志框架提供的异步日志功能来提高性能。</li>
+<li>配置适当的日志级别，避免在生产环境中输出过多的调试信息。</li>
+</ul>
+<h3 id="5-日志管理的统一性与规范">5. <strong>日志管理的统一性与规范</strong></h3>
+<p>在团队开发中，直接使用日志框架的 API 会导致不同开发人员在不同模块中记录日志时不遵循统一规范，导致日志格式不统一、信息不一致，甚至产生重复的日志记录。通过日志管理工具类或封装类，可以确保所有开发人员遵循统一的日志记录策略。</p>
+<p><strong>示例</strong>：</p>
+<ul>
+<li>创建一个统一的 <code>LoggerFactory</code> 工厂类来生成日志记录对象。</li>
+<li>统一定义日志级别和输出格式，确保日志输出一致。</li>
+</ul>
+<h3 id="小结-9">小结</h3>
+<p>禁止工程师直接使用日志系统（如 Log4j、Logback）中的 API，主要是为了：</p>
+<ol>
+<li><strong>解耦日志实现与业务逻辑</strong>：通过使用日志抽象层（如 SLF4J），可以更轻松地切换日志框架，避免硬编码。</li>
+<li><strong>提高灵活性与可维护性</strong>：避免在应用中重复使用框架 API，提高日志配置的灵活性和一致性。</li>
+<li><strong>规范日志记录行为</strong>：通过封装日志记录，确保日志级别、格式和内容的统一，增强可读性和可追踪性。</li>
+<li><strong>优化性能</strong>：通过配置日志框架的高级功能（如异步日志），提高日志系统的性能，减少对应用的影响。</li>
+<li><strong>统一日志管理</strong>：避免团队成员在不同模块中使用不一致的日志记录方式，确保日志输出的标准化。</li>
+</ol>
+<p>最好的做法是通过日志抽象层（如 SLF4J）进行日志记录，同时通过日志管理工具类进行统一的配置和调用，确保日志的高效、规范和灵活性。</p>
+<h2 id="11-为什么建议开发者谨慎使用继承">11. 为什么建议开发者谨慎使用继承？</h2>
+<p>在面向对象编程（OOP）中，<strong>继承</strong>是一种常见的代码复用方式，它允许一个类继承另一个类的属性和行为。然而，虽然继承可以提高代码的复用性，但过度或不当使用继承可能会导致代码的复杂性增加，进而带来一些潜在的问题。因此，建议开发者在使用继承时要谨慎，以下是一些关键原因：</p>
+<h3 id="1-增加了类之间的耦合性">1. <strong>增加了类之间的耦合性</strong></h3>
+<p>继承会导致子类和父类之间形成紧密的耦合关系。子类依赖于父类的实现，这意味着如果父类发生变化，可能会影响到所有继承自该父类的子类，导致修改和维护变得更加困难。这种紧密耦合关系也限制了子类的灵活性，因为它必须遵循父类的接口和实现。</p>
+<p><strong>例子</strong>：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Animal&lt;/span&gt; {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;hljs-title function_&quot;&gt;eat&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; {
+        System.out.println(&lt;span class=&quot;hljs-string&quot;&gt;&quot;Animal is eating&quot;&lt;/span&gt;);
+    }
+}
+
+&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Dog&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Animal&lt;/span&gt; {
+    &lt;span class=&quot;hljs-meta&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;hljs-title function_&quot;&gt;eat&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; {
+        System.out.println(&lt;span class=&quot;hljs-string&quot;&gt;&quot;Dog is eating&quot;&lt;/span&gt;);
+    }
+}
+</code></pre>
+<p>如果父类 <code>Animal</code> 做了改动（如修改 <code>eat()</code> 方法的实现），<code>Dog</code> 类也会受到影响。这样的耦合会增加后期维护的复杂度。</p>
+<h3 id="2-破坏了封装性encapsulation">2. <strong>破坏了封装性（Encapsulation）</strong></h3>
+<p>继承可能破坏封装性，因为子类可以直接访问父类的成员（字段和方法），尤其是当父类成员被设置为 <code>protected</code> 或 <code>public</code> 时。这种情况可能导致子类暴露不应被外界访问的细节，破坏了数据的封装性。</p>
+<p><strong>例子</strong>：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Vehicle&lt;/span&gt; {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; speed;
+}
+
+&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Car&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Vehicle&lt;/span&gt; {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;hljs-title function_&quot;&gt;accelerate&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; {
+        speed += &lt;span class=&quot;hljs-number&quot;&gt;10&lt;/span&gt;; &lt;span class=&quot;hljs-comment&quot;&gt;// 直接访问父类的 protected 字段&lt;/span&gt;
+    }
+}
+</code></pre>
+<p>在这种情况下，<code>Car</code> 类直接访问了父类 <code>Vehicle</code> 的 <code>speed</code> 字段，而不是通过公共接口来修改它，导致封装性降低。</p>
+<h3 id="3-继承可能会导致类的层次结构不合理">3. <strong>继承可能会导致类的层次结构不合理</strong></h3>
+<p>继承往往会导致不合理的类层次结构，特别是在试图通过继承来表达“是一个”（<code>is-a</code>）关系时，实际情况可能并不符合这种逻辑。滥用继承可能会使类之间的关系变得复杂和不直观，导致代码结构混乱。</p>
+<p><strong>例子</strong>：<br>
+假设我们有一个 <code>Car</code> 类和一个 <code>Truck</code> 类，都继承自 <code>Vehicle</code> 类。如果 <code>Car</code> 和 <code>Truck</code> 共享很多方法和属性，这样的设计可能是合适的。但是，如果 <code>Car</code> 和 <code>Truck</code> 之间差异很大，仅通过继承来构建它们的关系，可能会导致继承层次过于复杂，代码阅读和理解变得困难。</p>
+<h3 id="4-继承可能导致不易发现的错误">4. <strong>继承可能导致不易发现的错误</strong></h3>
+<p>由于子类继承了父类的行为，任何对父类的修改都有可能影响到子类的行为。更糟糕的是，错误或不一致的修改可能在父类中发生，而这些错误可能不会立即暴露出来，直到程序运行到某个特定的地方，才会显现出错误。</p>
+<p><strong>例子</strong>：<br>
+假设你修改了父类的某个方法，但忘记更新或调整子类中相应的重写方法，这可能会导致难以发现的错误。</p>
+<h3 id="5-继承限制了灵活性不可重用性问题">5. <strong>继承限制了灵活性（不可重用性问题）</strong></h3>
+<p>继承创建了一个父类与子类之间的固定关系，这意味着如果你想在一个完全不同的上下文中重用一个类，你可能不能通过继承来实现。在某些情况下，组合比继承更为灵活，允许你将多个行为组合到一个类中，而不是通过继承来强行构建类的层次结构。</p>
+<p><strong>例子</strong>：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-comment&quot;&gt;// 组合而非继承&lt;/span&gt;
+&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Engine&lt;/span&gt; {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;hljs-title function_&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; {
+        System.out.println(&lt;span class=&quot;hljs-string&quot;&gt;&quot;Engine started&quot;&lt;/span&gt;);
+    }
+}
+
+&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Car&lt;/span&gt; {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;hljs-type&quot;&gt;Engine&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;engine&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Engine&lt;/span&gt;(); &lt;span class=&quot;hljs-comment&quot;&gt;// 通过组合来使用 Engine&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;hljs-title function_&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; {
+        engine.start();
+    }
+}
+</code></pre>
+<p>通过组合，可以灵活地使用不同的组件，而不需要继承整个类。这样做的优点是更具扩展性和灵活性。</p>
+<h3 id="6-继承限制了方法的重用可维护性差">6. <strong>继承限制了方法的重用（可维护性差）</strong></h3>
+<p>如果你过度依赖继承，你的代码会容易受到父类实现的限制，难以灵活地添加新功能或进行扩展。例如，在继承链中添加新的功能可能会导致一大堆方法的修改和重写，而不通过继承，可以更轻松地将功能作为独立模块来重用。</p>
+<h3 id="7-使用接口和组合更优">7. <strong>使用接口和组合更优</strong></h3>
+<p>相比继承，<strong>接口（Interface）</strong> 和 <strong>组合（Composition）</strong> 更符合面向对象设计的原则。接口允许类只暴露所需的功能，而不暴露实现细节，组合则允许你将多个不同的行为组合在一起，使得系统更加灵活和可扩展。通过接口和组合，可以避免继承的许多问题。</p>
+<p><strong>推荐设计模式</strong>：</p>
+<ul>
+<li><strong>策略模式（Strategy Pattern）</strong>：通过接口和组合来替代继承。</li>
+<li><strong>装饰器模式（Decorator Pattern）</strong>：使用组合和代理来扩展行为，而非通过继承。</li>
+</ul>
+<h3 id="小结-10">小结</h3>
+<p>尽管继承是面向对象编程中的一个重要特性，但滥用继承可能带来许多问题，特别是在以下几个方面：</p>
+<ul>
+<li>增加类之间的耦合，降低灵活性；</li>
+<li>破坏封装性，暴露不应访问的内部实现；</li>
+<li>可能导致类层次结构复杂，增加理解和维护的难度；</li>
+<li>限制代码的重用和扩展性。</li>
+</ul>
+<p>因此，<strong>推荐优先使用组合而非继承</strong>，并尽可能使用接口来实现灵活的扩展。如果必须使用继承，确保它能够清晰地表达“是一个”的关系，并避免过深的继承层次。</p>
+<h2 id="12-为什么禁止开发人员修改-serialversionuid-字段的值">12. 为什么禁止开发人员修改 serialVersionUID 字段的值？</h2>
+<p><code>serialVersionUID</code> 是 Java 中用来标识序列化版本的一个静态字段。它的作用是确保在反序列化时，JVM 可以验证序列化的类与当前类的兼容性，以避免版本不兼容导致的错误。尽管 <code>serialVersionUID</code> 可以由开发人员手动定义，<strong>禁止开发人员修改 <code>serialVersionUID</code> 字段的值</strong> 的原因如下：</p>
+<h3 id="1-序列化与反序列化兼容性">1. <strong>序列化与反序列化兼容性</strong></h3>
+<p><code>serialVersionUID</code> 的主要作用是保证在序列化和反序列化过程中，类的版本兼容性。它是用来标识类的版本的，如果序列化和反序列化过程中使用的类的 <code>serialVersionUID</code> 不匹配，就会抛出 <code>InvalidClassException</code>。</p>
+<ul>
+<li><strong>不匹配的 <code>serialVersionUID</code></strong> 会导致序列化的数据与当前类不兼容，导致反序列化失败。</li>
+<li><strong>修改 <code>serialVersionUID</code></strong> 的值会改变类的版本标识，导致已序列化的数据在反序列化时不能成功读取，特别是在类结构发生改变（例如添加或删除字段）时。</li>
+</ul>
+<p><strong>例如：</strong></p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-comment&quot;&gt;// 类的第一次版本&lt;/span&gt;
+&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;MyClass&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Serializable&lt;/span&gt; {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;hljs-type&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;serialVersionUID&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;1L&lt;/span&gt;;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; String name;
+    &lt;span class=&quot;hljs-comment&quot;&gt;// 其他字段和方法&lt;/span&gt;
+}
+
+&lt;span class=&quot;hljs-comment&quot;&gt;// 类的第二次修改版本&lt;/span&gt;
+&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;MyClass&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;hljs-title class_&quot;&gt;Serializable&lt;/span&gt; {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;hljs-type&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;serialVersionUID&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;2L&lt;/span&gt;;  &lt;span class=&quot;hljs-comment&quot;&gt;// 修改了 serialVersionUID&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; String name;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;hljs-type&quot;&gt;int&lt;/span&gt; age;  &lt;span class=&quot;hljs-comment&quot;&gt;// 新增字段&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;// 其他字段和方法&lt;/span&gt;
+}
+</code></pre>
+<p>如果修改了 <code>serialVersionUID</code>，而之前序列化的数据是使用版本 1 的类进行序列化的，反序列化时会因为 <code>serialVersionUID</code> 不匹配而导致失败。</p>
+<h3 id="2-避免不必要的版本冲突">2. <strong>避免不必要的版本冲突</strong></h3>
+<p>Java 会根据类的字段、方法等信息自动生成 <code>serialVersionUID</code>，这个值是基于类的结构计算出来的。如果开发人员修改了 <code>serialVersionUID</code>，可能会破坏 Java 自动生成的版本控制机制，从而导致版本控制不一致，增加了维护复杂性。</p>
+<p>如果手动修改 <code>serialVersionUID</code>，容易出现以下几种问题：</p>
+<ul>
+<li>由于类结构没有变化，修改 <code>serialVersionUID</code> 可能会导致已序列化的数据无法恢复。</li>
+<li>如果不同的开发人员修改了 <code>serialVersionUID</code>，可能会在不同的机器或系统间引起序列化不一致。</li>
+</ul>
+<h3 id="3-影响序列化兼容性">3. <strong>影响序列化兼容性</strong></h3>
+<p>Java 提供了两种主要的兼容性规则：</p>
+<ul>
+<li><strong>兼容性向前</strong>：如果类的字段或方法发生改变，但没有改变 <code>serialVersionUID</code>，则反序列化是可以工作的。</li>
+<li><strong>兼容性向后</strong>：如果你修改了类的结构（如字段变动、方法签名改变等），并且保持相同的 <code>serialVersionUID</code>，反序列化仍然可以工作。</li>
+</ul>
+<p>如果不小心修改了 <code>serialVersionUID</code>，可能导致以下情况：</p>
+<ul>
+<li><strong>向前兼容性</strong>：新版本的类不能兼容老版本的对象，导致反序列化失败。</li>
+<li><strong>向后兼容性</strong>：老版本的类无法反序列化新版本的对象。</li>
+</ul>
+<h3 id="4-自动生成-vs-手动指定">4. <strong>自动生成 vs 手动指定</strong></h3>
+<ul>
+<li><strong>自动生成的 <code>serialVersionUID</code></strong>：Java 会根据类的结构自动生成 <code>serialVersionUID</code>，这样如果类的结构发生变化，<code>serialVersionUID</code> 会自动变化，确保不兼容的版本之间不会出现意外的反序列化行为。</li>
+<li><strong>手动指定 <code>serialVersionUID</code></strong>：手动修改 <code>serialVersionUID</code> 可能导致版本控制不一致，特别是在多人开发、分布式部署的环境中，容易出现反序列化失败的问题。</li>
+</ul>
+<h3 id="5-避免非预期的反序列化问题">5. <strong>避免非预期的反序列化问题</strong></h3>
+<p>手动修改 <code>serialVersionUID</code> 可能会导致数据丢失或反序列化时抛出异常。例如，如果开发人员错误地修改了 <code>serialVersionUID</code>，系统在尝试反序列化时可能会因为 <code>serialVersionUID</code> 不匹配而无法成功加载对象，导致异常的发生。</p>
+<h3 id="小结-11">小结</h3>
+<p><strong>禁止开发人员修改 <code>serialVersionUID</code> 字段的值，主要是为了：</strong></p>
+<ul>
+<li><strong>确保序列化与反序列化的兼容性</strong>，避免版本不匹配导致反序列化失败。</li>
+<li><strong>避免不必要的版本冲突和数据丢失</strong>，特别是在类结构修改时。</li>
+<li><strong>保持 Java 自动管理 <code>serialVersionUID</code> 的优势</strong>，保证类的版本一致性和可维护性。</li>
+</ul>
+<p>如果确实需要修改 <code>serialVersionUID</code>，应确保修改后的版本与已经序列化的数据兼容，并遵循合理的版本管理策略。</p>
+<h2 id="13-为什么禁止开发人员使用-issuccess-作为变量名">13. 为什么禁止开发人员使用 isSuccess 作为变量名？</h2>
+<p>禁止开发人员使用 <code>isSuccess</code> 作为变量名，主要是为了遵循更好的编程规范和提高代码的可读性、可维护性。这个变量名问题的核心在于其容易引起歧义和混淆。具体原因如下：</p>
+<h3 id="1-不符合布尔值命名约定">1. <strong>不符合布尔值命名约定</strong></h3>
+<p>在 Java 中，通常使用 <code>is</code> 或 <code>has</code> 开头的变量名来表示布尔值（<code>boolean</code> 类型）。这类命名通常遵循特定的语义约定，表示某个条件是否成立。例如：</p>
+<ul>
+<li><code>isEnabled</code> 表示某个功能是否启用；</li>
+<li><code>hasPermission</code> 表示是否有权限。</li>
+</ul>
+<p><strong>问题</strong>：</p>
+<ul>
+<li><code>isSuccess</code> 看起来像一个布尔值（<code>boolean</code> 类型），但它实际上可能并不直接表示一个布尔值，而是一个状态或结果。这种命名可能会导致混淆，开发者可能误以为它是布尔类型的变量，而实际上它可能是一个描述状态的对象、字符串或者其他类型的数据。</li>
+</ul>
+<h3 id="2-语义不明确">2. <strong>语义不明确</strong></h3>
+<p><code>isSuccess</code> 这个名字表面上表示“是否成功”，但是它缺少具体的上下文，导致语义不够明确。真正表示是否成功的布尔值应该直接使用 <code>boolean</code> 类型的变量，并且使用清晰明确的命名。</p>
+<p>例如：</p>
+<ul>
+<li><code>isCompleted</code>：表示某个任务是否完成。</li>
+<li><code>isSuccessful</code>：表示某个操作是否成功。</li>
+</ul>
+<p>这些命名能更明确地表达布尔变量的含义，避免理解上的歧义。</p>
+<h3 id="3-与标准的-is-前缀混淆">3. <strong>与标准的 <code>is</code> 前缀混淆</strong></h3>
+<p><code>is</code> 前缀通常用来表示“是否”某个条件成立，适用于返回布尔值的方法或者变量。<code>isSuccess</code> 这样的命名会让开发人员误以为它是一个布尔值，或者一个 <code>boolean</code> 类型的值，但实际上它可能是一个复杂类型或者其他非布尔类型，造成不必要的混淆。</p>
+<p>例如：</p>
+<pre class="highlighter-hljs"><code class="language-java highlighter-hljs hljs">&lt;span class=&quot;hljs-type&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;hljs-variable&quot;&gt;isSuccess&lt;/span&gt; &lt;span class=&quot;hljs-operator&quot;&gt;=&lt;/span&gt; someMethod(); &lt;span class=&quot;hljs-comment&quot;&gt;// 看起来是布尔值，但实际类型可能不同&lt;/span&gt;
+</code></pre>
+<p>这种情况可能导致开发人员产生误解，认为 <code>isSuccess</code> 代表的是布尔值，但它可能是某个表示成功的对象、枚举或者其他数据类型。</p>
+<h3 id="4-更好的命名建议">4. <strong>更好的命名建议</strong></h3>
+<p>为了避免歧义和混淆，开发人员应使用更加明确且符合命名规范的名称。以下是一些命名的改进建议：</p>
+<ul>
+<li>如果是布尔值，命名为 <code>isSuccessful</code> 或 <code>wasSuccessful</code>。</li>
+<li>如果是表示结果的对象，使用更具体的名称，例如 <code>operationResult</code> 或 <code>statusCode</code>，以表明它是一个描述操作结果的变量。</li>
+</ul>
+<h3 id="5-提升代码的可读性和可维护性">5. <strong>提升代码的可读性和可维护性</strong></h3>
+<p>清晰且具有意义的命名能够帮助团队成员或未来的开发者更快地理解代码的意图。如果变量名过于模糊（如 <code>isSuccess</code>），就可能让人对其实际含义产生疑问，尤其是在阅读较大或复杂的代码时。良好的命名能够提升代码的可读性和可维护性。</p>
+<h3 id="小结-12">小结</h3>
+<ul>
+<li><strong><code>isSuccess</code></strong> 这样的命名不清晰，容易与布尔类型的变量产生混淆，进而影响代码的可读性。</li>
+<li><strong>命名应尽量明确</strong>，避免使用容易引起歧义的名称，特别是在布尔值类型的命名时。</li>
+<li>建议使用更具描述性的名称，如 <strong><code>isSuccessful</code></strong> 或 <strong><code>wasSuccessful</code></strong>，更清晰地表达变量的意义。</li>
+</ul>
+<h2 id="最后">最后</h2>
+<p>以上是 V 哥精心总结的13个 Java 编程中的小小编码问题，也是V 哥日常编码中总结的学习笔记，分享给大家，如果内容对你有帮助，请不要吝啬来个小赞呗，关注威哥爱编程，Java 路上，你我相伴前行。</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/java" rel="tag">JAVA</a>, <a href="/tag/java%E5%9F%BA%E7%A1%80" rel="tag">java基础</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2024/11/13/co-working.html" rel="prev">成都联合办公品牌排名_成都联合办公推荐</a><br>【下篇】<a href="/2024/11/13/qywx-development.html" rel="next">企业微信开发之代开发应用</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2021/07/01/java-deployment.html">k8s之java-deployment</a></li><li> · <a href="/2018/03/05/alibaba-java.html">阿里巴巴十年Java架构师技术分享</a></li><li> · <a href="/2012/03/06/%E7%A8%8B%E5%BA%8F%E5%91%98%E8%A6%81%E6%98%8E%E7%A1%AE%E8%87%AA%E5%B7%B1%E5%8F%91%E5%B1%95%E6%96%B9%E5%90%91.html">程序员要明确自己发展方向</a></li><li> · <a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li><li> · <a href="/2025/03/20/eventsource-sse.html">去掉setInterval轮询，使用EventSource+SSE</a></li><li> · <a href="/2025/03/13/mybatis-plus.html">mybatis plus新版代码生成器 去掉 i 前缀</a></li><li> · <a href="/2024/03/25/replace-jar.html">不重新打包项目并替换部分jar包</a></li><li> · <a href="/2024/03/04/content-type-text-xml-not-supported.html">接收企微事件回调 Content type ‘text/xml;charset=UTF-8’ not supported</a></li><li> · <a href="/2023/02/17/springboot-lock4j.html">springboot使用lock4j实现并发控制</a></li><li> · <a href="/2023/02/17/springboot-sentinel.html">springboot全局增加sentinel</a></li><li> · <a href="/2023/02/11/efk.html">linux快速搭建轻量级efk日志系统</a></li><li> · <a href="/2023/02/07/springboot-swagger.html">Springboot整合Swagger常用注解</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2024年11月13日发表在<a href="/category/java" rel="category tag">JAVA</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2024/11/13/java-13.html" rel="bookmark" title="本文固定链接 /2024/11/13/java-13.html">Java基础问题13个，你都会哪些？ | Bruce's Blog</a><a href="#" onclick="copy_code('/2024/11/13/java-13.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2024/11/13/java-13.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="6788" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="c9ea721603"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="95"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.079 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:46:27 -->

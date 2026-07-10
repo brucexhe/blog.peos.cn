@@ -1,0 +1,1411 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>ORACLE海量数据更新的并行优化 | Bruce's Blog</title> 
+<meta name="description" content="环境：">
+<meta name="keywords" content="Oracle">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 8 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td><a href="/2012/08/02" aria-label="2012年8月2日 发布的文章">2</a></td><td><a href="/2012/08/03" aria-label="2012年8月3日 发布的文章">3</a></td><td>4</td><td>5</td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/06" aria-label="2012年8月6日 发布的文章">6</a></td><td>7</td><td><a href="/2012/08/08" aria-label="2012年8月8日 发布的文章">8</a></td><td>9</td><td><a href="/2012/08/10" aria-label="2012年8月10日 发布的文章">10</a></td><td>11</td><td><a href="/2012/08/12" aria-label="2012年8月12日 发布的文章">12</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/13" aria-label="2012年8月13日 发布的文章">13</a></td><td>14</td><td><a href="/2012/08/15" aria-label="2012年8月15日 发布的文章">15</a></td><td><a href="/2012/08/16" aria-label="2012年8月16日 发布的文章">16</a></td><td><a href="/2012/08/17" aria-label="2012年8月17日 发布的文章">17</a></td><td><a href="/2012/08/18" aria-label="2012年8月18日 发布的文章">18</a></td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td><a href="/2012/08/21" aria-label="2012年8月21日 发布的文章">21</a></td><td>22</td><td><a href="/2012/08/23" aria-label="2012年8月23日 发布的文章">23</a></td><td><a href="/2012/08/24" aria-label="2012年8月24日 发布的文章">24</a></td><td>25</td><td><a href="/2012/08/26" aria-label="2012年8月26日 发布的文章">26</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/27" aria-label="2012年8月27日 发布的文章">27</a></td><td>28</td><td><a href="/2012/08/29" aria-label="2012年8月29日 发布的文章">29</a></td><td>30</td><td><a href="/2012/08/31" aria-label="2012年8月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/07">« 7 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/09">9 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#61111d;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#455ba3;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#dc78ed;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#c0d394;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#c8bca9;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#f3d1c2;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#c208f5;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#34ef05;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#b074af;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#b6f6bd;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#7d44b6;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#684ca1;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#b7b12d;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#a04de0;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#6039af;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#994853;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#69c97a;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#a93f0;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#94dbb9;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#bdfea2;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#120cb7;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#d1c302;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#dff68a;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#4248e;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#8f19c4;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#3f4740;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#3c0947;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#2649a7;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#c61d86;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#dbc4c5;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#b77b5b;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#6ac511;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#308908;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#ed995;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#13c010;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#8ac75;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#5f0eb6;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#607118;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#53e8b8;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#c9be54;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#ef74bb;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#23e693;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#ace281;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#b6bc7;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#e34dc1;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/oracle" rel="category tag">Oracle</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">ORACLE海量数据更新的并行优化</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-08-06 23:25</span>
+			<span class="category">  <a href="/category/oracle" rel="category tag">Oracle</a></span>
+			<span class="article_comment"><a href="/2012/08/06/oracle%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0%E7%9A%84%E5%B9%B6%E8%A1%8C%E4%BC%98%E5%8C%96.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>3,468</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p class="MsoNormal"><span style="font-size: 11.5pt; font-family: 新宋体;" lang="ZH-CN">环境：</span></p>
+<p> </p>
+<p class="MsoNormal"><span style="font-size: 11.5pt; font-family: 新宋体;">OS<span lang="ZH-CN">：</span> linux</span></p>
+<p> </p>
+<p class="MsoNormal"><span style="font-size: 11.5pt; font-family: 新宋体;">CPU<span lang="ZH-CN">：</span> 8<span lang="ZH-CN">个</span> </span></p>
+<p> </p>
+<p class="MsoNormal"><span style="font-size: 11.5pt; font-family: 新宋体;"><span class="wp_keywordlink_affiliate"><a href="/tag/oracle" title="View all posts in Oracle" target="_blank">Oracle</a></span> Database<span lang="ZH-CN">：</span> 10.2.0.3.0</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;">  <span lang="ZH-CN">接到开发组的一个调优请求，任务是对一张海量表</span> CS2_CT_MVMT<span lang="ZH-CN">（近</span> 2<span lang="ZH-CN">亿多记录，表大小</span> 48G<span lang="ZH-CN">）进行数据</span> update<span lang="ZH-CN">，而更新数据来自于另外一张海量的日志表</span> CS2_TXN_LOG<span lang="ZH-CN">（同样近</span> 2<span lang="ZH-CN">亿，表大小</span> 42G<span lang="ZH-CN">），数据处理的语句如下：</span> </span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;UPDATE CS2_CT_MVMT CT&lt;/span&gt;</code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;         SET CT.LAST_MOD_DT = (SELECT TL.MSG_GMT_DT&lt;/span&gt;</code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                   FROM CS2_TXN_LOG TL&lt;/span&gt;</code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                 WHERE TL.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                                   AND CT.MSG_ID = TL.MSG_ID&lt;/span&gt; &lt;/code&gt;&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                   AND TL.MSG_GMT_DT IS NOT NULL)&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; WHERE EXISTS (SELECT 1&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                FROM CS2_TXN_LOG TL&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;               WHERE TL.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                 AND CT.MSG_ID = TL.MSG_ID&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                 AND TL.MSG_GMT_DT IS NOT NULL);&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">根据开发人员对数据的估算，在此逻辑下，</span> <span style="font-size: 11pt; font-family: 宋体;">CS2_CT_MVMT<span lang="ZH-CN">将会有近一半数据（近</span> 1<span lang="ZH-CN">亿条）要被更新，相对应的，数据来自于</span> CS2_TXN_LOG<span lang="ZH-CN">中的近</span> 1<span lang="ZH-CN">一亿条数据。开发人员曾经尝试过运行语句，但是</span> 3<span lang="ZH-CN">天都没执行完。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">第一步，对语句进行调优</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">首先，先看下语句的查询计划：</span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; set line 300&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; set pages 50&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; explain plan for&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  2  UPDATE CS2_CT_MVMT CT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  3     SET CT.LAST_MOD_DT = (SELECT TL.MSG_GMT_DT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  4                             FROM CS2_TXN_LOG TL&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  5                            WHERE TL.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  6                              AND CT.MSG_ID = TL.MSG_ID&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  7                             AND TL.MSG_GMT_DT IS NOT NULL)&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  8   WHERE EXISTS (SELECT 1&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  9            FROM CS2_TXN_LOG TL&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; 10           WHERE TL.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; 11             AND CT.MSG_ID = TL.MSG_ID&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt; 12             AND TL.MSG_GMT_DT IS NOT NULL);&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;Explained.&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select * from table(dbms_xplan.display());&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;PLAN_TABLE_OUTPUT&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;Plan hash value: 3604468536&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;| Id  | Operation                     | Name           | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   0 | UPDATE STATEMENT              |                |    11M|   432M|       |  3580K  (1)| 11:56:06 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   1 |  UPDATE                       | CS2_CT_MVMT    |       |       |       |            |          |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  2 |   HASH JOIN SEMI              |                |    11M|   432M|   352M|  3580K  (1)| 11:56:06 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  3 |    TABLE ACCESS FULL          | CS2_CT_MVMT    |    11M|   216M|       |  1690K  (1)| 05:38:12 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  4 |    TABLE ACCESS FULL          | CS2_TXN_LOG    |   214M|  3888M|       |  1552K  (1)| 05:10:25 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  5 |   FILTER                      |                |       |       |       |            |          |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  6 |    TABLE ACCESS BY INDEX ROWID| CS2_TXN_LOG    |     1 |    19 |       |     4   (0)| 00:00:01 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  7 |     INDEX UNIQUE SCAN         | CS2_TXN_LOG_PK |     1 |       |       |     3   (0)| 00:00:01 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;Predicate Information (identified by operation id):&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;   2 - access(&quot;CT&quot;.&quot;MSG_ID&quot;=&quot;TL&quot;.&quot;MSG_ID&quot;)&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;   3 - filter(&quot;CT&quot;.&quot;MSG_ID&quot;&amp;gt;9000000000000000000)&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;   4 - filter(&quot;TL&quot;.&quot;MSG_ID&quot;&amp;gt;9000000000000000000 AND &quot;TL&quot;.&quot;MSG_GMT_DT&quot; IS NOT NULL)&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;   5 - filter(9000000000000000000&amp;lt;:B1)&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;PLAN_TABLE_OUTPUT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;   6 - filter(&quot;TL&quot;.&quot;MSG_GMT_DT&quot; IS NOT NULL)&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;   7 - access(&quot;TL&quot;.&quot;MSG_ID&quot;=:B1)&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;       filter(&quot;TL&quot;.&quot;MSG_ID&quot;&amp;gt;9000000000000000000)&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;25 rows selected.&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">从查询计划看，两表之间存在一个</span> <span style="font-size: 11pt; font-family: 宋体;">hash join<span lang="ZH-CN">。再看看两表之间的关系：</span> </span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select c.table_name as child_table, c.constraint_name as FK, p.table_name as parent_table, p.constraint_name as PK&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  2  from all_constraints p, all_constraints c&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  3  where c.table_name in ('CS2_CT_MVMT','CS2_TXN_LOG')&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  4  and c.r_constraint_name = p.constraint_name&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  5  and c.constraint_type = 'R'&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  6  and p.constraint_type='P';&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; CHILD_TABLE                    FK                             PARENT_TABLE                   PK&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;----------------------------- ------------------------------ -------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;CS2_CT_MVMT                    CS2_CT_MVMT_FK1                CS2_TXN_LOG                    CS2_TXN_LOG_PK&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select table_name, column_name from dba_ind_columns&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  2  where index_name = 'CS2_TXN_LOG_PK';&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;ABLE_NAME                     COLUMN_NAME&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;----------------------------- ------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;CS2_TXN_LOG                    MSG_ID&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">可见，</span> <span style="font-size: 11pt; font-family: 宋体;">CS2_CT_MVMT<span lang="ZH-CN">是依赖于</span> CS2_TXN_LOG<span lang="ZH-CN">的子表，其依赖字段</span> MSG_ID<span lang="ZH-CN">正是</span> CS2_TXN_LOG<span lang="ZH-CN">的主键唯一字段。我们可以对这条语句的逻辑描述如下：</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;">CS2_CT_MVMT<span lang="ZH-CN">依据主外键关系从父表</span> CS2_TXN_LOG<span lang="ZH-CN">中更新相应数据，且只从</span> CS2_TXN_LOG<span lang="ZH-CN">获取满足</span> (MSG_ID &gt; 9000000000000000000 AND MSG_GMT_DT IS NOT NULL)<span lang="ZH-CN">。我们可以这个逻辑关系对语句进行调整以减少查询计划中的访问路径：</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">根据业务分析，</span> <span style="font-size: 11pt; font-family: 宋体;">CS2_CT_MVMT<span lang="ZH-CN">中将近一半的数据满足更新条件，也就是由</span> hash join<span lang="ZH-CN">只能过滤一半的数据，而在</span> SET<span lang="ZH-CN">子句中的子查询已经保证了两表数据的完整性关系已经对父表的数据过滤条件。这样的话，这个</span> join<span lang="ZH-CN">的代价就太大了，它应该从语句中拿掉：</span> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;UPDATE CS2_CT_MVMT CT&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;         SET CT.LAST_MOD_DT = (SELECT TL.MSG_GMT_DT&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                                   FROM CS2_TXN_LOG TL&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                WHERE TL.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                                   AND CT.MSG_ID = TL.MSG_ID&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                                   AND TL.MSG_GMT_DT IS NOT NULL);&lt;/span&gt; &lt;/code&gt;&lt;span style=&quot;font-size: 11pt; font-family: 宋体;&quot;&gt; &lt;/span&gt;&lt;/pre&gt;
+&amp;nbsp;
+&lt;p class=&quot;MsoNormal&quot; style=&quot;text-indent: 0.25in;&quot;&gt;&lt;span style=&quot;font-size: 11pt; font-family: 宋体;&quot; lang=&quot;ZH-CN&quot;&gt;但这样会产生一个问题：子查询的记录数可能为&lt;/span&gt; &lt;span style=&quot;font-size: 11pt; font-family: 宋体;&quot;&gt;1&lt;span lang=&quot;ZH-CN&quot;&gt;或&lt;/span&gt; 0&lt;span lang=&quot;ZH-CN&quot;&gt;（&lt;/span&gt; 1:1&lt;span lang=&quot;ZH-CN&quot;&gt;），也就是将近&lt;/span&gt; 1&lt;span lang=&quot;ZH-CN&quot;&gt;半为&lt;/span&gt; NULL&lt;span lang=&quot;ZH-CN&quot;&gt;（即对应的&lt;/span&gt; CS2_CT_MVMT&lt;span lang=&quot;ZH-CN&quot;&gt;记录无需更新）。很简单，我们用&lt;/span&gt; NVL&lt;span lang=&quot;ZH-CN&quot;&gt;函数来处理：&lt;/span&gt; &lt;/span&gt;&lt;/p&gt;
+&amp;nbsp;
+&lt;pre style=&quot;font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;&quot;&gt;&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;UPDATE CS2_CT_MVMT CT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;         SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                                     FROM CS2_TXN_LOG TL&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                 WHERE TL.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                                     AND CT.MSG_ID = TL.MSG_ID&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                     AND TL.MSG_GMT_DT IS NOT NULL), CT.LAST_MOD_DT);&lt;/span&gt; &lt;/code&gt;&lt;span style=&quot;font-size: 11pt; font-family: 宋体;&quot; lang=&quot;ZH-CN&quot;&gt;从查询计划中看到，&lt;/span&gt;
+COST&lt;span lang=&quot;ZH-CN&quot;&gt;将近一半：&lt;/span&gt;&lt;/pre&gt;
+&lt;p class=&quot;MsoNormal&quot; style=&quot;text-indent: 0.25in;&quot;&gt;&lt;/p&gt;
+&amp;nbsp;
+&lt;p class=&quot;MsoPlainText&quot;&gt;&lt;span style=&quot;font-family: 宋体;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&amp;nbsp;
+&lt;pre style=&quot;font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;&quot;&gt;&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;| Id  | Operation                     | Name           | Rows  | Bytes | Cost (%CPU)| Time     |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|   0 | UPDATE STATEMENT              |                |   119M|  2160M|  1699K  (2)| 05:39:57 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|   1 |  UPDATE                       | CS2_CT_MVMT    |       |       |            |          |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|   2 |   TABLE ACCESS FULL           | CS2_CT_MVMT    |   119M|  2160M|  1699K  (2)| 05:39:57 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  3 |   FILTER                      |                |       |       |            |          |&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;*  4 |    TABLE ACCESS BY INDEX ROWID| CS2_TXN_LOG    |     1 |    19 |     4   (0)| 00:00:01 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  5 |     INDEX UNIQUE SCAN         | CS2_TXN_LOG_PK |     1 |       |     3   (0)| 00:00:01 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;Predicate Information (identified by operation id):&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;--------------------------------------------------&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;   3 - filter(9000000000000000000&amp;lt;:B1)&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;   4 - filter(&quot;TL&quot;.&quot;MSG_GMT_DT&quot; IS NOT NULL)&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;   5 - access(&quot;TL&quot;.&quot;MSG_ID&quot;=:B1)&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      filter(&quot;TL&quot;.&quot;MSG_ID&quot;&amp;gt;9000000000000000000)&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">再进一步，由于存在等价关系</span> <span style="font-size: 11pt; font-family: 宋体;">CT.MSG_ID = TL.MSG_ID<span lang="ZH-CN">，我们可以将</span> TL.MSG_ID &gt; 9000000000000000000<span lang="ZH-CN">转换为</span> CT.MSG_ID &gt; 9000000000000000000<span lang="ZH-CN">，作为对</span> CS2_CT_MVMT<span lang="ZH-CN">扫描后的</span> filter<span lang="ZH-CN">，从而大大减少</span> UPDATE<span lang="ZH-CN">操作，也大大减少子查询的运行次数。</span> </span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;UPDATE CS2_CT_MVMT CT&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;        SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;                                  FROM CS2_TXN_LOG TL&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                 WHERE CT.MSG_ID = TL.MSG_ID&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                     AND TL.MSG_GMT_DT IS NOT NULL), CT.LAST_MOD_DT)&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;WHERE CT.MSG_ID &amp;gt; 9000000000000000000;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;| Id  | Operation                    | Name           | Rows  | Bytes | Cost (%CPU)| Time     |&lt;/span&gt; &lt;/code&gt;&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-family: Courier New;&quot;&gt;-----------------------------------------------------------&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|   0 | UPDATE STATEMENT             |                |    11M|   216M|  1690K  (1)| 05:38:12 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|   1 |  UPDATE                      | CS2_CT_MVMT    |       |       |            |          |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;*  2 |   TABLE ACCESS FULL          | CS2_CT_MVMT    |    11M|   216M|  1690K  (1)| 05:38:12 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  3 |   TABLE ACCESS BY INDEX ROWID| CS2_TXN_LOG    |     1 |    19 |     4   (0)| 00:00:01 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  4 |    INDEX UNIQUE SCAN         | CS2_TXN_LOG_PK |     1 |       |     3   (0)| 00:00:01 |&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt;&lt;/code&gt;
+&lt;span style=&quot;font-size: 9pt;&quot;&gt;--&lt;/span&gt;&lt;code style=&quot;font-family: Courier New;&quot;&gt; </code></pre>
+<p> </p>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;   2 - filter(&quot;CT&quot;.&quot;MSG_ID&quot;&amp;gt;9000000000000000000)&lt;/span&gt; </code></pre>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;   3 - filter(&quot;TL&quot;.&quot;MSG_GMT_DT&quot; IS NOT NULL)&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;   4 - access(&quot;TL&quot;.&quot;MSG_ID&quot;=:B1)&lt;/span&gt; </code></pre>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">最后再看子查询部分：对于每条满足条件的</span> <span style="font-size: 11pt; font-family: 宋体;">CS2_CT_MVMT<span lang="ZH-CN">中的记录，都将执行一次子查询，由</span> CS2_TXN_LOG<span lang="ZH-CN">的主键获取其表数据块中的</span> MSG_GMT_DT<span lang="ZH-CN">数据。子查询包含了</span> 3<span lang="ZH-CN">步操作：</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;">1. <span lang="ZH-CN">对主键的</span> INDEX UNIQUE SCAN<span lang="ZH-CN">，获取表记录的</span> ROWID<span lang="ZH-CN">；</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;">2. <span lang="ZH-CN">由</span> ROWID<span lang="ZH-CN">读取表的数据块；</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;">3. <span lang="ZH-CN">根据条件</span> MSG_GMT_DT IS NOT NULL<span lang="ZH-CN">进行过滤</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN"> 可以预计，子查询的执行次数也是巨大的，我们可以考虑通过建立复合字段索引来消除第二步操作。而通过与开发人员确认，实际上</span> <span style="font-size: 11pt; font-family: 宋体;">CS2_TXN_LOG<span lang="ZH-CN">中</span> MSG_GMT_DT<span lang="ZH-CN">为</span> NULL<span lang="ZH-CN">的数据极少，也就是</span> MSG_GMT_DT IS NOT NULL<span lang="ZH-CN">过滤的数据极少，</span> NVL<span lang="ZH-CN">函数已经可以处理这些数据，我们就可以将这个条件拿掉。</span> </span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; CREATE UNIQUE INDEX CS2_PARTY_OWNER.CS2_TXN_LOG_TEST ON CS2_TXN_LOG (MSG_ID, MSG_GMT_DT);&lt;/span&gt; </code></pre>
+<p> </p>
+<p> </p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt; font-family: Arial Unicode MS;&quot; lang=&quot;ZH-CN&quot;&gt;语及查询计划如下：&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;UPDATE CS2_CT_MVMT CT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;         SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                       FROM CS2_TXN_LOG TL&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                      WHERE CT.MSG_ID = TL.MSG_ID), CT.LAST_MOD_DT)&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;WHERE CT.MSG_ID &amp;gt; 9000000000000000000;&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;| Id  | Operation          | Name             | Rows  | Bytes | Cost (%CPU)| Time     |&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   0 | UPDATE STATEMENT   |                  |    11M|   216M|  1690K  (1)| 05:38:12 |&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   1 |  UPDATE            | CS2_CT_MVMT      |       |       |            |          |&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  2 |   TABLE ACCESS FULL| CS2_CT_MVMT      |    11M|   216M|  1690K  (1)| 05:38:12 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  3 |   INDEX RANGE SCAN | CS2_TXN_LOG_TEST |     1 |    19 |     4   (0)| 00:00:01 |&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;Predicate Information (identified by operation id):&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;   2 - filter(&quot;CT&quot;.&quot;MSG_ID&quot;&amp;gt;9000000000000000000)&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;   3 - access(&quot;TL&quot;.&quot;MSG_ID&quot;=:B1)&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">通过逻辑分析和查询计划分析对语句的查询部分优化基本上完成。但是这个结果还远不能满足</span> <span style="font-size: 11pt; font-family: 宋体;">1<span lang="ZH-CN">小时的系统</span> off line<span lang="ZH-CN">时间完成数据更新的目标。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">由于这是一次表更新操作，因此我们就还需要考虑一些依赖对象对更新操作的影响。</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">第二步，消除依赖对象的性能影响</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">我们看下被更新表上有一些什么依赖对象会影响到更新性能。</span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; SELECT trigger_name FROM DBA_TRIGGERS WHERE table_name='CS2_CT_MVMT' AND triggering_event like '%UPDATE%';&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt;</code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;no rows selected&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; SELECT s.constraint_name, search_condition&lt;/span&gt; &lt;span style=&quot;font-size: 9pt;&quot;&gt;  2  FROM DBA_CONSTRAINTS S, DBA_CONS_COLUMNS C&lt;/span&gt; </code></pre>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  3  WHERE s.table_name='CS2_CT_MVMT'&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-family: Courier New;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  4  AND s.constraint_name=c.constraint_name&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  5  and s.table_name=c.table_name&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  6  and c.column_name='LAST_MOD_DT';&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;CONSTRAINT_NAME                SEARCH_CONDITION&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;------------------------------ --------------------------------------------&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SYS_C0013690                   &quot;LAST_MOD_DT&quot; IS NOT NULL&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; SELECT index_name FROM DBA_IND_COLUMNS&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;  2  WHERE TABLE_NAME='CS2_CT_MVMT'&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;  3  AND column_name='LAST_MOD_DT';&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;INDEX_NAME&lt;/span&gt; &lt;/code&gt;
+&lt;code style=&quot;font-family: Courier New;&quot;&gt;&lt;span style=&quot;font-size: 9pt;&quot;&gt;-----------------------------&lt;/span&gt; </code></pre>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;CS2_CT_MVMT_IDX7&lt;/span&gt; </code></pre>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">在批量更新之前，将这些依赖对象和约束先禁用将有助于提高更新性能。</span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; ALTER TABLE CS2_CT_MVMT MODIFY LAST_MOD_DT NULL;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;Table altered.&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">提示：我们已经通过逻辑保证了</span> <span style="font-size: 11pt; font-family: 宋体;">LAST_MOD_DT<span lang="ZH-CN">不被更新为</span> NULL<span lang="ZH-CN">，这个约束对整体性能的影响很小，可以不用关闭。</span> </span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; drop index CS2_CT_MVMT_IDX7;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;Index dropped.&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;">Tips<span lang="ZH-CN">：有人可能会想到将表修改为</span> NOLOGGING<span lang="ZH-CN">，以禁止写</span> REDO LOG<span lang="ZH-CN">。但事实上，</span> NOLOGGING<span lang="ZH-CN">只对</span> Direct Write<span lang="ZH-CN">的</span> INSERT<span lang="ZH-CN">起作用，对</span> UPDATE<span lang="ZH-CN">，总是会写</span> REDO LOG<span lang="ZH-CN">。有兴趣的朋友可以做个简单实验去验证一下。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">第三步，将语句并行化</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">这一步起的作用并不是提高整体性能，而是使过程在更短的时间内占用更大的负载来完成任务。</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">给语句加上并行化提示</span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;UPDATE /*+parallel(CT 8)*/ CS2_CT_MVMT CT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;         SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                       FROM CS2_TXN_LOG TL&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;                                      WHERE CT.MSG_ID = TL.MSG_ID), CT.LAST_MOD_DT)&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;WHERE CT.MSG_ID &amp;gt; 9000000000000000000;&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">看查询计划：</span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;| Id  | Operation          | Name             | Rows  | Bytes | Cost (%CPU)| Time     |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   0 | UPDATE STATEMENT   |                  |    11M|   216M|  1690K  (1)| 05:38:12 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   1 |  UPDATE            | CS2_CT_MVMT      |       |       |            |          |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  2 |   TABLE ACCESS FULL| CS2_CT_MVMT      |    11M|   216M|  1690K  (1)| 05:38:12 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  3 |   INDEX RANGE SCAN | CS2_TXN_LOG_TEST |     1 |    19 |     4   (0)| 00:00:01 |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">嗯，没其作用。看看系统的</span> <span style="font-size: 11pt; font-family: 宋体;">parallel<span lang="ZH-CN">设置：</span> </span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; show parameter parallel&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;NAME                                 TYPE        VALUE&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;------------------------------------ ----------- --------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;fast_start_parallel_rollback         string      LOW&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_adaptive_multi_user         boolean     TRUE&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_automatic_tuning            boolean     FALSE&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_execution_message_size      integer     2152&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_instance_group              string&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_max_servers                 integer     0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_min_percent                 integer     0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_min_servers                 integer     0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_server                      boolean     TRUE&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_server_instances            integer     3&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;parallel_threads_per_cpu             integer     2&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;recovery_parallelism                 integer     0&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">注意到，</span> <span style="font-size: 11pt; font-family: 宋体;">parallel_max_servers<span lang="ZH-CN">被设置为</span> 0<span lang="ZH-CN">了，因此不会起并行进程。修改设置，</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; alter system set parallel_max_servers=160 scope=memory;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;System altered.&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt; font-family: Arial Unicode MS;&quot; lang=&quot;ZH-CN&quot;&gt;再次获取查询计划&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;| Id  | Operation             | Name             | Rows  | Bytes | Cost (%CPU)| Time     |    TQ  |IN-OUT| PQ Distrib |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   0 | UPDATE STATEMENT      |                  |    11M|   216M|   234K  (1)| 00:46:50 |        |      |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   1 |  UPDATE               | CS2_CT_MVMT      |       |       |            |          |        |      |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   2 |   PX COORDINATOR      |                  |       |       |            |          |        |      |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   3 |    PX SEND QC (RANDOM)| :TQ10000         |    11M|   216M|   234K  (1)| 00:46:50 |  Q1,00 | P-&amp;gt;S | QC (RAND)  |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   4 |     PX BLOCK ITERATOR |                  |    11M|   216M|   234K  (1)| 00:46:50 |  Q1,00 | PCWC |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  5 |      TABLE ACCESS FULL| CS2_CT_MVMT      |    11M|   216M|   234K  (1)| 00:46:50 |  Q1,00 | PCWP |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  6 |   INDEX RANGE SCAN    | CS2_TXN_LOG_TEST |     1 |    19 |     4   (0)| 00:00:01 |        |      |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">语句已经并行化了。</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">尝试运行语句，看看效果。</span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select s.sid, s.SERIAL#, s.PROGRAM, s.MODULE, sq.SQL_ID, sq.sql_text&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  2  from v$session s, v$sqlarea sq&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  3  where s.sql_address = sq.address&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  4  order by sql_id, program;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;       SID    SERIAL# PROGRAM                                          MODULE                                           SQL_ID&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------- ---------- ------------------------------------------------ ----&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL_TEXT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1892       6069 oracle@pmrac01 (P000)                            SQL*Plus                                         51b0kx3g5gbfx&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;UPDATE /*+ PARALLEL(CT,8) */ CS2_CT_MVMT CT    SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT                            &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;FROM CS2_TXN_LOG TL                        &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;WHERE CT.MSG_ID = TL.MSG_ID),CT.LAST_MOD_DT) WHERE CT.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;      1961      23363 oracle@pmrac01 (P001)                            SQL*Plus                                         51b0kx3g5gbfx&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;UPDATE /*+ PARALLEL(CT,8) */ CS2_CT_MVMT CT    SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT                            &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;FROM CS2_TXN_LOG TL                        &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;WHERE CT.MSG_ID = TL.MSG_ID),CT.LAST_MOD_DT) WHERE CT.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;... ...&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;      1898       7240 oracle@pmrac01 (P007)                            SQL*Plus                                         51b0kx3g5gbfx&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;UPDATE /*+ PARALLEL(CT,8) */ CS2_CT_MVMT CT    SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT                            &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;FROM CS2_TXN_LOG TL                        &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;WHERE CT.MSG_ID = TL.MSG_ID),CT.LAST_MOD_DT) WHERE CT.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;      1889       6026 sqlplus@pmrac01 (TNS V1-V3)                      SQL*Plus                                         51b0kx3g5gbfx&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;UPDATE /*+ PARALLEL(CT,8) */ CS2_CT_MVMT CT    SET CT.LAST_MOD_DT = NVL((SELECT TL.MSG_GMT_DT                            &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;FROM CS2_TXN_LOG TL                        &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot; lang=&quot;FR&quot;&gt;WHERE CT.MSG_ID = TL.MSG_ID),CT.LAST_MOD_DT) WHERE CT.MSG_ID &amp;gt; 9000000000000000000&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">可以注意到，已经有</span> <span style="font-size: 11pt; font-family: 宋体;">9<span lang="ZH-CN">个会话在执行该语句（</span> 1<span lang="ZH-CN">个协调进程</span> (coordinator)<span lang="ZH-CN">，</span> 8<span lang="ZH-CN">个并行进程</span> (slave)<span lang="ZH-CN">）。</span> sql_id<span lang="ZH-CN">是</span> 51b0kx3g5gbfx<span lang="ZH-CN">。再观察这些会话产生的统计数据：</span> </span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select s.sid, s.SERIAL#, n.NAME, ss.value, s.USERNAME,s.LOGON_TIME,s.MODULE
+ 
+ 
+ 
+   2  from v$sesstat ss, v$statname n, v$session s, v$px_session px
+ 
+ 
+ 
+   3  where n.name in ('physical write bytes', 'physical read bytes', 'undo change vector size','redo size')
+ 
+ 
+ 
+   4  and ss.statistic#=n.STATISTIC#
+ 
+ 
+ 
+   5  and ss.SID = s.SID
+ 
+ 
+ 
+   6  and ss.SID = px.SID
+ 
+ 
+ 
+   7  and not exists (select 1 from v$mystat m where s.sid=m.sid)
+ 
+ 
+ 
+ order by n.name desc,ss.value desc;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;       SID    SERIAL# NAME                                         VALUE&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------- ---------- -------------------------------------- -----------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1889       6026 undo change vector size                  374128088&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1892       6069 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1893      10815 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1954       2616 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11165 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1945       7426 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1961      23363 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1832       6515 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1898       7240 undo change vector size                          0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1889       6026 redo size                               1140869748&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1961      23363 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1832       6515 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1892       6069 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1893      10815 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1898       7240 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11165 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1954       2616 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1945       7426 redo size                                        0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1954       2616 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1945       7426 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11165 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1898       7240 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1893      10815 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1892       6069 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1889       6026 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1832       6515 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1961      23363 physical write bytes                             0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1889       6026 physical read bytes                     3674587136&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1832       6515 physical read bytes                     2610708480&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11165 physical read bytes                     2233417728&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1945       7426 physical read bytes                     1317404672&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1892       6069 physical read bytes                     1291378688&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1893      10815 physical read bytes                     1283899392&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1954       2616 physical read bytes                     1242357760&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1898       7240 physical read bytes                     1230888960&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1961      23363 physical read bytes                     1193918464&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;36 rows selected.&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">发现问题了：只有一个进程（即主进程）产生了</span> <span style="font-size: 11pt; font-family: 宋体;">Redo<span lang="ZH-CN">和</span> Undo log<span lang="ZH-CN">，所有并行进程都没有</span> redo<span lang="ZH-CN">和</span> undo<span lang="ZH-CN">产生，也就是只有一个进程在进行写操作，尽管读已经并行化了。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">再看会话的并行属性：</span></p>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select s.sid, s.SERIAL#, s.PDML_STATUS, s.PDDL_STATUS, s.PQ_STATUS, s.PROGRAM
+ 
+ 
+ 
+   2  from v$session s, v$px_session px
+ 
+ 
+ 
+   3  where s.sid = px.sid
+ 
+ 
+ 
+   4  and not exists (select 1 from v$mystat m where s.sid=m.sid)&lt;/span&gt; &lt;span style=&quot;font-size: 9pt; font-family: Arial Unicode MS;&quot; lang=&quot;ZH-CN&quot;&gt;；&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;       SID    SERIAL# PDML_STA PDDL_STA PQ_STATU&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------- ---------- -------- -------- --------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1792       3473 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1827      12996 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1872       4173 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1889       6998 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1910      16279 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1916       3073 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      12587 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1953       3125 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1958      19949 DISABLED ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;9 rows selected.&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">看到</span> <span style="font-size: 11pt; font-family: 宋体;">PDML<span lang="ZH-CN">是</span> diabled<span lang="ZH-CN">。说明语句只进行了</span> parallel query<span lang="ZH-CN">，而没有达到</span> parallel DML<span lang="ZH-CN">（</span> PDML<span lang="ZH-CN">）的目的。为了实现</span> PDML<span lang="ZH-CN">，还需要在会话中打开</span> parallel DML<span lang="ZH-CN">的开关</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; ALTER SESSION FORCE PARALLEL DML;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;Session altered.&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt; font-family: Arial Unicode MS;&quot; lang=&quot;ZH-CN&quot;&gt;再次运行语句，观察统计情况：&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select s.sid, s.SERIAL#, n.NAME, ss.value&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  2  from v$sesstat ss, v$statname n, v$session s, v$sqlarea sq&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  3  where n.name in ('physical write bytes', 'physical read bytes', 'undo change vector size','redo size')&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  4  and ss.statistic#=n.STATISTIC#&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  5  and s.sql_address = sq.address&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  6  and ss.SID = s.SID&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  7  and sq.sql_id='51b0kx3g5gbfx'&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;  8  order by n.name desc,ss.value desc;&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;       SID    SERIAL# NAME                                           VALUE&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------- ---------- -------------------------------------- --------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1779        524 undo change vector size                      10659808&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1806       8301 undo change vector size                      10592844&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11332 undo change vector size                      9842040&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;... ...&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1838       8657 redo size                                    22625612&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1806       8301 redo size                                    22488968&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11332 redo size                                    20878408&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1892       6131 redo size                                    15077588&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;... ...&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11332 physical write bytes                                0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1838       8657 physical write bytes                                0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1901      28061 physical write bytes                                0&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;... ...&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1838       8657 physical read bytes                         631848960&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      11332 physical read bytes                         625991680&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1872       3007 physical read bytes                         559521792&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;... ...&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;68 rows selected.&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">会话信息中，</span> <span style="font-size: 11pt; font-family: 宋体;">PDML<span lang="ZH-CN">已经强制使用</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;SQL&amp;gt; select s.sid, s.SERIAL#, s.PDML_STATUS, s.PDDL_STATUS, s.PQ_STATUS, s.PROGRAM
+ 
+ 
+ 
+   2  from v$session s, v$px_session px
+ 
+ 
+ 
+   3  where s.sid = px.sid
+ 
+ 
+ 
+   4  and not exists (select 1 from v$mystat m where s.sid=m.sid)&lt;/span&gt; &lt;span style=&quot;font-size: 9pt; font-family: Arial Unicode MS;&quot; lang=&quot;ZH-CN&quot;&gt;；&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;       SID    SERIAL# PDML_STA PDDL_STA PQ_STATU&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;---------- ---------- -------- -------- --------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1779        524 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1783      13993 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1792       3477 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1806       8481 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1812       2874 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1819      24796 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1838       8756 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1842       5929 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1872       4177 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1889       7002 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1894      13805 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1910      16366 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1916       3077 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1927       6182 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1935      12591 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1958      19955 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;      1959       9259 FORCED   ENABLED  ENABLED&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;17 rows selected.&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">细心的朋友可能会留意到在我的</span> <span style="font-size: 11pt; font-family: 宋体;">HINT<span lang="ZH-CN">中指定的</span> Parallel Degree<span lang="ZH-CN">是</span> 8<span lang="ZH-CN">，而在这却出现了</span> 16<span lang="ZH-CN">个</span> slave<span lang="ZH-CN">进程。我们看看在设置</span> PDML<span lang="ZH-CN">语句的查询计划变化就知道原因了：</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;PLAN_TABLE_OUTPUT&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;--------------------------------------------------------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;Plan hash value: 4032879153&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt; &lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;--------------------------------------------------------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;| Id  | Operation                | Name             | Rows  | Bytes | Cost (%CPU)| Time     |    TQ  |IN-OUT| PQ Distrib |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;--------------------------------------------------------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   0 | UPDATE STATEMENT         |                  |    11M|   216M|   124K  (1)| 00:24:53 |        |      |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   1 |  PX COORDINATOR          |                  |       |       |            |          |        |      |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   2 |   PX SEND QC (RANDOM)    | :TQ10001         |    11M|   216M|   124K  (1)| 00:24:53 |  &lt;span style=&quot;color: red;&quot;&gt;Q1,01&lt;/span&gt; | P-&amp;gt;S | QC (RAND)  |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   3 |    INDEX MAINTENANCE     | CS2_CT_MVMT      |       |       |            |          |  Q1,01 | PCWP |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   4 |     PX RECEIVE           |                  |    11M|   216M|   124K  (1)| 00:24:53 |  Q1,01 | PCWP |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   5 |      PX SEND RANGE       | :TQ10000         |    11M|   216M|   124K  (1)| 00:24:53 |  &lt;span style=&quot;color: blue;&quot;&gt;Q1,00&lt;/span&gt; | P-&amp;gt;P | RANGE      |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   6 |       UPDATE             | CS2_CT_MVMT      |       |       |            |          |  Q1,00 | PCWP |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|   7 |        PX BLOCK ITERATOR |                  |    11M|   216M|   124K  (1)| 00:24:53 |  Q1,00 | PCWC |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  8 |         TABLE ACCESS FULL| CS2_CT_MVMT      |    11M|   216M|   124K  (1)| 00:24:53 |  Q1,00 | PCWP |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;|*  9 |        INDEX RANGE SCAN  | CS2_TXN_LOG_TEST |     1 |    19 |     4   (0)| 00:00:01 |        |      |            |&lt;/span&gt; </code></pre>
+<p> </p>
+<pre style="font-size: 10pt; font-family: Courier New; margin: 0in -9pt 0.0001pt 0in; background: none repeat scroll 0% 0% #ffff99;"><code style="font-family: Courier New;">&lt;span style=&quot;font-size: 9pt;&quot;&gt;--------------------------------------------------------------------------------------------------------------------------&lt;/span&gt; </code></pre>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">在查询计划中，</span> <span style="font-size: 11pt; font-family: 宋体;">slave<span lang="ZH-CN">进程集的数量是</span> 2<span lang="ZH-CN">个（</span> TQ<span lang="ZH-CN">字段，</span> Q1,00<span lang="ZH-CN">和</span> Q1,01<span lang="ZH-CN">），因此，进程总量就变为</span> 2*8=16<span lang="ZH-CN">了。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">这样，这条语句就真正实现了</span> <span style="font-size: 11pt; font-family: 宋体;">PDML<span lang="ZH-CN">。最终，我们设置该语句的并行度为</span> 32<span lang="ZH-CN">，在生产环境上的执行时间是</span> 25<span lang="ZH-CN">分钟，加上索引重建的时间，总共时间不到</span> 1<span lang="ZH-CN">小时，实现了优化目的。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><strong> <span style="font-size: 11pt; font-family: 宋体;">Bug</span> </strong> <span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">：说实话，</span> <span style="font-size: 11pt; font-family: 宋体;"><span class="wp_keywordlink_affiliate"><a href="/tag/oracle" title="View all posts in Oracle" target="_blank">Oracle</a></span><span lang="ZH-CN">的</span> PDML<span lang="ZH-CN">还不是十分成熟，在我们的测试调优过程中，遇到了多个</span> Bug<span lang="ZH-CN">（参见</span> Metalink<span lang="ZH-CN">上</span> Bug 4896424<span lang="ZH-CN">、</span> Bug 5914711<span lang="ZH-CN">）。其中还有一个</span> Oracle<span lang="ZH-CN">还在定位中（当</span> Parallel Degree<span lang="ZH-CN">大于</span> 32<span lang="ZH-CN">时随机出现）。这些</span> bug<span lang="ZH-CN">在</span> 10g<span lang="ZH-CN">中都没有补丁，虽然它们都有规避办法，但是如果直接在</span> online<span lang="ZH-CN">时使用</span> PDML<span lang="ZH-CN">总还是让人不放心，好彩我们的程序只是一个运行一次的数据补丁，并不会直接影响生产系统。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><strong> <span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">补充</span> <span style="font-size: 11pt; font-family: 宋体;">1</span> </strong> <span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">：</span> <span style="font-size: 11pt; font-family: 宋体;">parallel DML<span lang="ZH-CN">的效果在很大程度上还取决于磁盘</span> IO<span lang="ZH-CN">的并行程度。有人可能会有一个误解，认为</span> parallel DML<span lang="ZH-CN">只能在分区表上起作用。但事实上，从</span> 9iR2<span lang="ZH-CN">开始，</span> oracle<span lang="ZH-CN">的</span> intra-partition<span lang="ZH-CN">技术支持在单分区的</span> parallel DML<span lang="ZH-CN">（</span> update,merge.<span lang="ZH-CN">在</span> 9iR1<span lang="ZH-CN">开始支持单分区的</span> parallel Insert<span lang="ZH-CN">）。</span> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><span style="font-size: 11pt; font-family: 宋体;"> </span></p>
+<p> </p>
+<p class="MsoNormal" style="text-indent: 0.25in;"><strong> <span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">补充</span> <span style="font-size: 11pt; font-family: 宋体;">2</span> </strong> <span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">：在分分区表或者单个分区上并行进程数量受到</span> <span style="font-size: 11pt; font-family: 宋体;">Min Transaction Freelists<span lang="ZH-CN">的限制。在</span> MSSM<span lang="ZH-CN">的段管理方式中，可以参考下表可（并非一定等于该数值，因为不同的数据块结构会有不同</span> ITL<span lang="ZH-CN">数或其他信息，这些不同都会影响到</span> Min Transaction Freelists<span lang="ZH-CN">）。在</span> ASSM<span lang="ZH-CN">中，</span> Oracle<span lang="ZH-CN">通过</span> bitmap<span lang="ZH-CN">管理</span> free block<span lang="ZH-CN">，这一限制最大可以达到</span> 65535<span lang="ZH-CN">。</span> </span></p>
+<p> </p>
+<table id="table4" class="MsoTableGrid" style="border-collapse: collapse;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 205.4pt; border: 1pt solid windowtext; padding: 0in 5.4pt; background: none repeat scroll 0% 0% gray;" valign="top" width="274">
+<p class="MsoPlainText"><strong><span style="font-family: 宋体;">Block Size</span> </strong></p>
+</td>
+<td style="width: 205.4pt; padding: 0in 5.4pt; background: none repeat scroll 0% 0% gray;" valign="top" width="274">
+<p class="MsoPlainText"><strong><span style="font-family: 宋体;">Min Transaction Freelists</span> </strong></p>
+</td>
+</tr>
+<tr>
+<td style="width: 205.4pt; padding: 0in 5.4pt;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">2k         </span></p>
+</td>
+<td style="width: 205.4pt; padding: 0in 5.4pt;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">25</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 205.4pt; padding: 0in 5.4pt; background: none repeat scroll 0% 0% #e6e6e6;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">4k         </span></p>
+</td>
+<td style="width: 205.4pt; padding: 0in 5.4pt; background: none repeat scroll 0% 0% #e6e6e6;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">50</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 205.4pt; padding: 0in 5.4pt;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">8k         </span></p>
+</td>
+<td style="width: 205.4pt; padding: 0in 5.4pt;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">101</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 205.4pt; padding: 0in 5.4pt; background: none repeat scroll 0% 0% #e6e6e6;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">16k        </span></p>
+</td>
+<td style="width: 205.4pt; padding: 0in 5.4pt; background: none repeat scroll 0% 0% #e6e6e6;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">204</span></p>
+</td>
+</tr>
+<tr>
+<td style="width: 205.4pt; padding: 0in 5.4pt;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">32k        </span></p>
+</td>
+<td style="width: 205.4pt; padding: 0in 5.4pt;" valign="top" width="274">
+<p class="MsoPlainText"><span style="font-family: 宋体;">409 </span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p class="MsoPlainText"><span style="font-family: 宋体;"> </span> <strong><span style="font-size: 11pt; font-family: 宋体;">33</span> </strong> <span style="font-size: 11pt; font-family: 宋体;" lang="ZH-CN">：在我的调试过程中，曾经发生一件令人费解的事——有时从会话中找不到并行会话！最终，通过</span> <span style="font-size: 11pt; font-family: 宋体;"><span lang="ZH-CN">的方法找到了原因，具体可参见这片文章：《<a href="http://www.hellodba.com/Doc/Parallel_Trace.htm">通过</a> </span> <a href="http://www.hellodba.com/Doc/Parallel_Trace.htm">Parallel Trace<span lang="ZH-CN">分析并行过程</span> </a> <span lang="ZH-CN">》。</span> </span></p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/oracle" rel="tag">Oracle</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/08/06/%E6%88%91%E6%9C%80%E5%96%9C%E7%88%B1%E7%9A%84%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E6%8E%92%E8%A1%8C%E6%A6%9C.html" rel="prev">“我最喜爱的编程语言”排行榜</a><br>【下篇】<a href="/2012/08/08/%E8%A7%A3%E5%86%B3c%E6%93%8D%E4%BD%9Cmysql%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html" rel="next">解决c#操作mysql数据库乱码问题</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2020/05/08/log-or-data.html">数据库先写日志还是先写数据？</a></li><li> · <a href="/2017/12/05/missing-partition-or-subpartition-keyword.html">missing PARTITION or SUBPARTITION keyword</a></li><li> · <a href="/2017/11/10/linq2db-oracle.html">Linq2db.Oracle使用详解</a></li><li> · <a href="/2017/10/25/oracle%E4%BF%AE%E6%94%B9%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B.html">oracle修改字段类型</a></li><li> · <a href="/2017/10/09/oracle-long-connect-close-connect.html">[已解决]Oracle数据库长时间空闲后自动断开的解决办法</a></li><li> · <a href="/2017/08/10/plsql-no-database.html">plsql 安装后database下拉没有东西</a></li><li> · <a href="/2017/07/28/oracle64%E4%BD%8D%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85%E7%89%88-instant-client-v11-2-0-3-064-bit.html">oracle64位客户端安装版 Instant Client v11.2.0.3.0(64-bit)</a></li><li> · <a href="/2013/04/27/oracle%E5%BF%98%E8%AE%B0%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81.html">oracle忘记用户名密码</a></li><li> · <a href="/2013/03/18/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AF%94%E8%BE%83.html">数据库比较</a></li><li> · <a href="/2012/12/22/oracle%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%AF%A6%E8%A7%A3.html">oracle数据类型详解</a></li><li> · <a href="/2012/08/02/oracle%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB.html">ORACLE事务隔离级别</a></li><li> · <a href="/2012/05/31/oracle%E6%B7%BB%E5%8A%A0%E6%88%96%E5%88%A0%E9%99%A4%E4%B8%80%E5%88%97.html">oracle添加或删除一列</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年08月06日发表在<a href="/category/oracle" rel="category tag">Oracle</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/08/06/oracle%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0%E7%9A%84%E5%B9%B6%E8%A1%8C%E4%BC%98%E5%8C%96.html" rel="bookmark" title="本文固定链接 /2012/08/06/oracle%e6%b5%b7%e9%87%8f%e6%95%b0%e6%8d%ae%e6%9b%b4%e6%96%b0%e7%9a%84%e5%b9%b6%e8%a1%8c%e4%bc%98%e5%8c%96.html">ORACLE海量数据更新的并行优化 | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/08/06/oracle%e6%b5%b7%e9%87%8f%e6%95%b0%e6%8d%ae%e6%9b%b4%e6%96%b0%e7%9a%84%e5%b9%b6%e8%a1%8c%e4%bc%98%e5%8c%96.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/08/06/oracle%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0%E7%9A%84%E5%B9%B6%E8%A1%8C%E4%BC%98%E5%8C%96.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2446" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="da13a729c3"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="62"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.124 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:04 -->

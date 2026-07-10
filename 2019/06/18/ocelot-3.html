@@ -1,0 +1,992 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>[转].NET Core开源API网关 – Ocelot中文文档 | Bruce's Blog</title> 
+<meta name="description" content="Ocelot是一个用.NET Core实现并且开源的API网关，它功能强大，包括了：路由、请求聚合、服务发现、认证、鉴权、限流熔断、并内置了负载均衡器与Service Fabric、Butterfly Tracing集成。这些功能只都只需要简单的配置即可完成，下面我们会对这些功能的配置一一进行说明。">
+<meta name="keywords" content="Ocelot">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2019 年 6 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="5" class="pad"> </td><td>1</td><td>2</td>
+	</tr>
+	<tr>
+		<td>3</td><td>4</td><td>5</td><td><a href="/2019/06/06" aria-label="2019年6月6日 发布的文章">6</a></td><td>7</td><td><a href="/2019/06/08" aria-label="2019年6月8日 发布的文章">8</a></td><td>9</td>
+	</tr>
+	<tr>
+		<td>10</td><td>11</td><td>12</td><td>13</td><td><a href="/2019/06/14" aria-label="2019年6月14日 发布的文章">14</a></td><td>15</td><td>16</td>
+	</tr>
+	<tr>
+		<td><a href="/2019/06/17" aria-label="2019年6月17日 发布的文章">17</a></td><td><a href="/2019/06/18" aria-label="2019年6月18日 发布的文章">18</a></td><td><a href="/2019/06/19" aria-label="2019年6月19日 发布的文章">19</a></td><td><a href="/2019/06/20" aria-label="2019年6月20日 发布的文章">20</a></td><td>21</td><td><a href="/2019/06/22" aria-label="2019年6月22日 发布的文章">22</a></td><td>23</td>
+	</tr>
+	<tr>
+		<td><a href="/2019/06/24" aria-label="2019年6月24日 发布的文章">24</a></td><td><a href="/2019/06/25" aria-label="2019年6月25日 发布的文章">25</a></td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2019/05">« 5 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2019/07">7 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#b68f13;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#f3efcd;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#67ae02;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#3fd9fc;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#cb5c2d;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#c5d8e0;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#3716d8;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#9ec0ce;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#223c65;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#94564a;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#81a858;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#934918;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#ce95c2;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#827d9;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#b92fc6;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#5d62d4;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#7638cf;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#c19d88;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#8f54c5;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#c99056;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#7dc0bd;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#15d99;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#88c328;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#17180b;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#da4d15;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#e0a76c;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#7301c7;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#c9942f;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#f78db4;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#ec85f4;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#36993;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#2609f9;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#76cb24;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#f61da1;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#483780;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#c0c724;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#45a2e5;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#fc4289;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#a867a3;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#bd4a0f;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#f98ddc;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#34b32d;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#cd5f34;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#e37081;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#fa850b;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/microservice" rel="category tag">微服务</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">[转].NET Core开源API网关 – Ocelot中文文档</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2019-06-18 11:34</span>
+			<span class="category">  <a href="/category/microservice" rel="category tag">微服务</a></span>
+			<span class="article_comment"><a href="/2019/06/18/ocelot-3.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>492</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div id="post_detail">
+<div id="topics">
+<div class="post">
+<div class="clear"></div>
+<div class="postBody">
+<div id="cnblogs_post_body" class="blogpost-body">
+<p><span class="wp_keywordlink_affiliate"><a href="/tag/ocelot" title="View all posts in Ocelot" target="_blank">Ocelot</a></span>是一个用.NET Core实现并且开源的API网关，它功能强大，包括了：路由、请求聚合、服务发现、认证、鉴权、限流熔断、并内置了负载均衡器与Service Fabric、Butterfly Tracing集成。这些功能只都只需要简单的配置即可完成，下面我们会对这些功能的配置一一进行说明。</p>
+<h1>介绍</h1>
+<p>简单的来说<span class="wp_keywordlink_affiliate"><a href="/tag/ocelot" title="View all posts in Ocelot" target="_blank">Ocelot</a></span>是一堆的asp.net core middleware组成的一个管道。当它拿到请求之后会用一个request builder来构造一个HttpRequestMessage发到下游的真实服务器，等下游的服务返回response之后再由一个middleware将它返回的HttpResponseMessage映射到HttpResponse上。</p>
+<blockquote><p>API网关—— 它是系统的暴露在外部的一个访问入口。这个有点像代理访问的家伙，就像一个公司的门卫承担着寻址、限制进入、安全检查、位置引导、等等功能。</p></blockquote>
+<p><strong><span class="wp_keywordlink_affiliate"><a href="/tag/ocelot" title="View all posts in Ocelot" target="_blank">Ocelot</a></span>的基本使用</strong></p>
+<p>用一台web service来host Ocelot，在这里有一个json配置文件，里面设置了所有对当前这个网关的配置。它会接收所有的客户端请求，并路由到对应的下游服务器进行处理，再将请求结果返回。而这个上下游请求的对应关系也被称之为路由。</p>
+<p><img decoding="async" src="/wp-content/uploads/2019/06/OcelotBasic.jpg" alt="../_images/OcelotBasic.jpg"></p>
+<p><strong>集成Identity Server</strong></p>
+<p>当我们涉及到认证和鉴权的时候，我们可以跟Identity Server进行结合。当网关需要请求认证信息的时候会与Identity Server服务器进行交互来完成。</p>
+<p><img decoding="async" src="/wp-content/uploads/2019/06/OcelotIndentityServer.jpg" alt="../_images/OcelotIndentityServer.jpg"></p>
+<p><strong>网关集群</strong></p>
+<p>只有一个网关是很危险的，也就是我们通常所讲的单点，只要它挂了，所有的服务全挂。这显然无法达到高可用，所以我们也可以部署多台网关。当然这个时候在多台网关前，你还需要一台负载均衡器。</p>
+<p><img decoding="async" src="/wp-content/uploads/2019/06/OcelotMultipleInstances.jpg" alt="../_images/OcelotMultipleInstances.jpg"></p>
+<p><strong>Consul 服务发现</strong></p>
+<p>在Ocelot已经支持简单的负载功能，也就是当下游服务存在多个结点的时候，Ocelot能够承担起负载均衡的作用。但是它不提供健康检查，服务的注册也只能通过手动在配置文件里面添加完成。这不够灵活并且在一定程度下会有风险。这个时候我们就可以用Consul来做服务发现，它能与Ocelot完美结合。</p>
+<p><img decoding="async" src="/wp-content/uploads/2019/06/OcelotMultipleInstancesConsul.jpg" alt="../_images/OcelotMultipleInstancesConsul.jpg"></p>
+<h1>集成网关</h1>
+<p>在asp.net core 2.0里通过nuget即可完成集成，或者命令行dotnet add package Ocelot以及通过vs2017 UI添加Ocelot nuget引用都可以。</p>
+<pre class="pure-highlightjs"><code class="hljs sql">&lt;span class=&quot;hljs-keyword&quot;&gt;Install-Package Ocelot&lt;/span&gt;</code></pre>
+<h1><strong>配置</strong></h1>
+<p>我们需要添加一个.json的文件用来添加Ocelot的配置，以下是最基本的配置信息。</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;ReRoutes&quot;: [],
+    &quot;GlobalConfiguration&quot;: {
+        &quot;BaseUrl&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;https://api.mybusiness.com&quot;
+    }
+}&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>要特别注意一下BaseUrl是我们外部暴露的Url，比如我们的Ocelot运行在http://123.111.1.1的一个地址上，但是前面有一个 nginx绑定了域名http://api.jessetalk.cn，那这里我们的BaseUrl就是 http://api.jessetalk.cn。</p>
+<p><strong>将配置文件加入ASP.NET Core Configuration</strong></p>
+<p>我们需要通过WebHostBuilder将我们添加的json文件添加进asp.net core的配置</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;public static IWebHost &lt;span class=&quot;hljs-title&quot;&gt;BuildWebHost&lt;span class=&quot;hljs-params&quot;&gt;(&lt;span class=&quot;hljs-built_in&quot;&gt;string[] args) =&amp;gt;
+    WebHost.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration( (hostingContext,builder) =&amp;gt; {
+            builder
+            .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+            .AddJsonFile(&lt;span class=&quot;hljs-string&quot;&gt;&quot;Ocelot.json&quot;);
+        })
+        .UseStartup&amp;lt;Startup&amp;gt;()
+        .Build();&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p> </p>
+<h4><strong>配置依赖注入与中间件</strong></h4>
+<p>在startup.cs中我们首先需要引用两个命名空间</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-keyword&quot;&gt;using Ocelot.DependencyInjection;
+using Ocelot.Middleware;&lt;/span&gt;</code></pre>
+<p>接下来就是添加依赖注入和中间件</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;public void &lt;span class=&quot;hljs-title&quot;&gt;ConfigureServices&lt;span class=&quot;hljs-params&quot;&gt;(IServiceCollection services)
+{
+    services.AddOcelot();
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;public void &lt;span class=&quot;hljs-title&quot;&gt;Configure&lt;span class=&quot;hljs-params&quot;&gt;(IApplicationBuilder app, IHostingEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+
+    app.UseOcelot().Wait();
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<h3>Ocelot功能介绍</h3>
+<p>通过配置文件可以完成对Ocelot的功能配置：路由、服务聚合、服务发现、认证、鉴权、限流、熔断、缓存、Header头传递等。在配置文件中包含两个根节点：ReRoutes和GlobalConfiguration。ReRoutes是一个数组，其中的每一个元素代表了一个路由，我们可以针对每一个路由进行以上功能配置。下面是一个完整的路由配置</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+          &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;DownstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/&quot;,
+          &quot;UpstreamPathTemplate&quot;: &quot;/&quot;,
+          &quot;UpstreamHttpMethod&quot;: [
+              &quot;Get&quot;
+          ],
+          &quot;AddHeadersToRequest&quot;: {},
+          &quot;AddClaimsToRequest&quot;: {},
+          &quot;RouteClaimsRequirement&quot;: {},
+          &quot;AddQueriesToRequest&quot;: {},
+          &quot;RequestIdKey&quot;: &quot;&quot;,
+          &quot;FileCacheOptions&quot;: {
+              &quot;TtlSeconds&quot;: &lt;span class=&quot;hljs-number&quot;&gt;0,
+              &quot;Region&quot;: &quot;&quot;
+          },
+          &quot;ReRouteIsCaseSensitive&quot;: &lt;span class=&quot;hljs-literal&quot;&gt;false,
+          &quot;ServiceName&quot;: &quot;&quot;,
+          &quot;DownstreamScheme&quot;: &quot;http&quot;,
+          &quot;DownstreamHostAndPorts&quot;: [
+              {
+                  &quot;Host&quot;: &quot;localhost&quot;,
+                  &quot;Port&quot;: 51876,
+              }
+          ],
+          &quot;QoSOptions&quot;: {
+              &quot;ExceptionsAllowedBeforeBreaking&quot;: 0,
+              &quot;DurationOfBreak&quot;: 0,
+              &quot;TimeoutValue&quot;: 0
+          },
+          &quot;LoadBalancer&quot;: &quot;&quot;,
+          &quot;RateLimitOptions&quot;: {
+              &quot;ClientWhitelist&quot;: [],
+              &quot;EnableRateLimiting&quot;: false,
+              &quot;Period&quot;: &quot;&quot;,
+              &quot;PeriodTimespan&quot;: 0,
+              &quot;Limit&quot;: 0
+          },
+          &quot;AuthenticationOptions&quot;: {
+              &quot;AuthenticationProviderKey&quot;: &quot;&quot;,
+              &quot;AllowedScopes&quot;: []
+          },
+          &quot;HttpHandlerOptions&quot;: {
+              &quot;AllowAutoRedirect&quot;: true,
+              &quot;UseCookieContainer&quot;: true,
+              &quot;UseTracing&quot;: true
+          },
+          &quot;UseServiceDiscovery&quot;: false
+      }&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<ul>
+<li>Downstream是下游服务配置</li>
+<li>UpStream是上游服务配置</li>
+<li>Aggregates 服务聚合配置</li>
+<li>ServiceName, LoadBalancer, UseServiceDiscovery 配置服务发现</li>
+<li>AuthenticationOptions 配置服务认证</li>
+<li>RouteClaimsRequirement 配置Claims鉴权</li>
+<li>RateLimitOptions为限流配置</li>
+<li>FileCacheOptions 缓存配置</li>
+<li>QosOptions 服务质量与熔断</li>
+<li>DownstreamHeaderTransform头信息转发</li>
+</ul>
+<p>我们接下来将对这些功能一一进行介绍和配置</p>
+<h1>路由</h1>
+<p>路由是API网关最基本也是最核心的功能、ReRoutes下就是由多个路由节点组成。</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;ReRoutes&quot;: [
+    ]
+}&lt;/span&gt;</code></pre>
+<p>而每一个路由由以下几个基本信息组成：</p>
+<p>下面这个配置信息就是将用户的请求 /post/1 转发到 localhost/api/post/1</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;DownstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/api/post/{postId}&quot;,
+    &quot;DownstreamScheme&quot;: &quot;https&quot;,
+    &quot;DownstreamHostAndPorts&quot;: [
+            {
+                &quot;Host&quot;: &quot;localhost&quot;,
+                &quot;Port&quot;: &lt;span class=&quot;hljs-number&quot;&gt;80,
+            }
+        ],
+    &quot;UpstreamPathTemplate&quot;: &quot;/post/{postId}&quot;,
+    &quot;UpstreamHttpMethod&quot;: [ &quot;Get&quot;]
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<ul>
+<li>DownstreamPathTemplate：下游戏</li>
+<li>DownstreamScheme：下游服务http schema</li>
+<li>DownstreamHostAndPorts：下游服务的地址，如果使用LoadBalancer的话这里可以填多项</li>
+<li>UpstreamPathTemplate: 上游也就是用户输入的请求Url模板</li>
+<li>UpstreamHttpMethod: 上游请求http方法，可使用数组</li>
+</ul>
+<p><strong>万能模板</strong></p>
+<p>万能模板即所有请求全部转发，UpstreamPathTemplate 与DownstreamPathTemplate 设置为 “/{url}”</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;DownstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/{url}&quot;,
+    &quot;DownstreamScheme&quot;: &quot;https&quot;,
+    &quot;DownstreamHostAndPorts&quot;: [
+            {
+                &quot;Host&quot;: &quot;localhost&quot;,
+                &quot;Port&quot;: &lt;span class=&quot;hljs-number&quot;&gt;80,
+            }
+        ],
+    &quot;UpstreamPathTemplate&quot;: &quot;/{url}&quot;,
+    &quot;UpstreamHttpMethod&quot;: [ &quot;Get&quot; ]
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>万能模板的优先级最低，只要有其它的路由模板，其它的路由模板则会优先生效。</p>
+<p><strong>上游Host<br>
+</strong>上游Host也是路由用来判断的条件之一，由客户端访问时的Host来进行区别。比如当a.jesetalk.cn/users/{userid}和b.jessetalk.cn/users/{userid}两个请求的时候可以进行区别对待。</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;DownstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/&quot;,
+    &quot;DownstreamScheme&quot;: &quot;https&quot;,
+    &quot;DownstreamHostAndPorts&quot;: [
+            {
+                &quot;Host&quot;: &quot;10.0.10.1&quot;,
+                &quot;Port&quot;: &lt;span class=&quot;hljs-number&quot;&gt;80,
+            }
+        ],
+    &quot;UpstreamPathTemplate&quot;: &quot;/&quot;,
+    &quot;UpstreamHttpMethod&quot;: [ &quot;Get&quot; ],
+    &quot;UpstreamHost&quot;: &quot;a.jessetalk.cn&quot;
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p><strong>Prioirty优先级<br>
+</strong>对多个产生冲突的路由设置优化级</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;UpstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/goods/{catchAll}&quot;
+    &quot;Priority&quot;: &lt;span class=&quot;hljs-number&quot;&gt;0
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;UpstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/goods/delete&quot;
+    &quot;Priority&quot;: &lt;span class=&quot;hljs-number&quot;&gt;1
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>比如你有同样两个路由，当请求/goods/delete的时候，则下面那个会生效。也就是说Prority是大的会被优先选择。</p>
+<h3>路由负载均衡</h3>
+<p>当下游服务有多个结点的时候，我们可以在DownstreamHostAndPorts中进行配置。</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;DownstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/api/posts/{postId}&quot;,
+    &quot;DownstreamScheme&quot;: &quot;https&quot;,
+    &quot;DownstreamHostAndPorts&quot;: [
+            {
+                &quot;Host&quot;: &quot;10.0.1.10&quot;,
+                &quot;Port&quot;: &lt;span class=&quot;hljs-number&quot;&gt;5000,
+            },
+            {
+                &quot;Host&quot;: &quot;10.0.1.11&quot;,
+                &quot;Port&quot;: 5000,
+            }
+        ],
+    &quot;UpstreamPathTemplate&quot;: &quot;/posts/{postId}&quot;,
+    &quot;LoadBalancer&quot;: &quot;LeastConnection&quot;,
+    &quot;UpstreamHttpMethod&quot;: [ &quot;Put&quot;, &quot;Delete&quot; ]
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>LoadBalancer将决定负载均衡的算法</p>
+<ul>
+<li>LeastConnection – 将请求发往最空闲的那个服务器</li>
+<li>RoundRobin – 轮流发送</li>
+<li>NoLoadBalance – 总是发往第一个请求或者是服务发现</li>
+</ul>
+<p>在负载均衡这里，我们还可以和Consul结合来使用服务发现，我们将在后面的小节中进行详述。</p>
+<h1>请求聚合</h1>
+<p>即将多个API请求结果合并为一个返回。要实现请求聚合我们需要给其它参与的路由起一个Key。</p>
+<pre class="pure-highlightjs"><code class="hljs json">{
+    &lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;ReRoutes&quot;: [
+        {
+            &quot;DownstreamPathTemplate&quot;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;/&quot;,
+            &quot;UpstreamPathTemplate&quot;: &quot;/laura&quot;,
+            &quot;UpstreamHttpMethod&quot;: [
+                &quot;Get&quot;
+            ],
+            &quot;DownstreamScheme&quot;: &quot;http&quot;,
+            &quot;DownstreamHostAndPorts&quot;: [
+                {
+                    &quot;Host&quot;: &quot;localhost&quot;,
+                    &quot;Port&quot;: &lt;span class=&quot;hljs-number&quot;&gt;51881
+                }
+            ],
+            &quot;Key&quot;: &quot;Laura&quot;
+        },
+        {
+            &quot;DownstreamPathTemplate&quot;: &quot;/&quot;,
+            &quot;UpstreamPathTemplate&quot;: &quot;/tom&quot;,
+            &quot;UpstreamHttpMethod&quot;: [
+                &quot;Get&quot;
+            ],
+            &quot;DownstreamScheme&quot;: &quot;http&quot;,
+            &quot;DownstreamHostAndPorts&quot;: [
+                {
+                    &quot;Host&quot;: &quot;localhost&quot;,
+                    &quot;Port&quot;: 51882
+                }
+            ],
+            &quot;Key&quot;: &quot;Tom&quot;
+        }
+    ],
+    &quot;Aggregates&quot;: [
+        {
+            &quot;ReRouteKeys&quot;: [
+                &quot;Tom&quot;,
+                &quot;Laura&quot;
+            ],
+            &quot;UpstreamPathTemplate&quot;: &quot;/&quot;
+        }
+    ]
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>当我们请求/的时候，会将/tom和/laura两个结果合并到一个response返回</p>
+<pre class="pure-highlightjs"><code class="hljs json">{&lt;span class=&quot;hljs-attr&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;hljs-attr&quot;&gt;Tom&quot;:{&quot;Age&quot;: &lt;span class=&quot;hljs-number&quot;&gt;19},&quot;Laura&quot;:{&quot;Age&quot;: 25}}&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>需要注意的是：</p>
+<ul>
+<li>聚合服务目前只支持返回json</li>
+<li>目前只支持Get方式请求下游服务</li>
+<li>任何下游的response header并会被丢弃</li>
+<li>如果下游服务返回404，聚合服务只是这个key的value为空，它不会返回404</li>
+</ul>
+<p>有一些其它的功能会在将来实现</p>
+<ul>
+<li>下游服务很慢的处理</li>
+<li>做一些像 GraphQL的处理对下游服务返回结果进行处理</li>
+<li>404的处理</li>
+</ul>
+<h1>限流</h1>
+<p>对请求进行限流可以防止下游服务器因为访问过载而崩溃，这个功能就是我们的张善友张队进添加进去的。非常优雅的实现，我们只需要在路由下加一些简单的配置即可以完成。</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;RateLimitOptions&quot;: {
+    &quot;ClientWhitelist&quot;: [],
+    &quot;EnableRateLimiting&quot;: &lt;span class=&quot;hljs-literal&quot;&gt;true,
+    &quot;Period&quot;: &quot;1s&quot;,
+    &quot;PeriodTimespan&quot;: &lt;span class=&quot;hljs-number&quot;&gt;1,
+    &quot;Limit&quot;: 1
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<ul>
+<li>ClientWihteList 白名单</li>
+<li>EnableRateLimiting 是否启用限流</li>
+<li>Period 统计时间段：1s, 5m, 1h, 1d</li>
+<li>PeroidTimeSpan 多少秒之后客户端可以重试</li>
+<li>Limit 在统计时间段内允许的最大请求数量</li>
+</ul>
+<p>在 GlobalConfiguration下我们还可以进行以下配置</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;RateLimitOptions&quot;: {
+  &quot;DisableRateLimitHeaders&quot;: &lt;span class=&quot;hljs-literal&quot;&gt;false,
+  &quot;QuotaExceededMessage&quot;: &quot;Customize Tips!&quot;,
+  &quot;HttpStatusCode&quot;: &lt;span class=&quot;hljs-number&quot;&gt;999,
+  &quot;ClientIdHeader&quot; : &quot;Test&quot;
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<ul>
+<li>Http头  X-Rate-Limit 和 Retry-After 是否禁用</li>
+<li>QuotaExceedMessage 当请求过载被截断时返回的消息</li>
+<li>HttpStatusCode 当请求过载被截断时返回的http status</li>
+<li>ClientIdHeader 用来识别客户端的请求头，默认是 ClientId</li>
+</ul>
+<h1>服务质量与熔断</h1>
+<p>熔断的意思是停止将请求转发到下游服务。当下游服务已经出现故障的时候再请求也是功而返，并且增加下游服务器和API网关的负担。这个功能是用的Pollly来实现的，我们只需要为路由做一些简单配置即可</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;QoSOptions&quot;: {
+    &quot;ExceptionsAllowedBeforeBreaking&quot;:&lt;span class=&quot;hljs-number&quot;&gt;3,
+    &quot;DurationOfBreak&quot;:5,
+    &quot;TimeoutValue&quot;:5000
+}&lt;/span&gt;&lt;/span&gt;</code></pre>
+<ul>
+<li>ExceptionsAllowedBeforeBreaking 允许多少个异常请求</li>
+<li>DurationOfBreak 熔断的时间，单位为秒</li>
+<li>TimeoutValue 如果下游请求的处理时间超过多少则自如将请求设置为超时</li>
+</ul>
+<h1>缓存</h1>
+<p>Ocelot可以对下游请求结果进行缓存 ，目前缓存的功能还不是很强大。它主要是依赖于<a href="https://github.com/MichaCo/CacheManager" target="_blank" rel="noopener noreferrer">CacheManager</a> 来实现的，我们只需要在路由下添加以下配置即可</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;FileCacheOptions&quot;: { &quot;TtlSeconds&quot;: &lt;span class=&quot;hljs-number&quot;&gt;15, &quot;Region&quot;: &quot;somename&quot; }&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>Region是对缓存进行的一个分区，我们可以调用Ocelot的 administration API来移除某个区下面的缓存 。</p>
+<h1>认证</h1>
+<p>如果我们需要对下游API进行认证以及鉴权服务的，则首先Ocelot 网关这里需要添加认证服务。这和我们给一个单独的API或者ASP.NET Core Mvc添加认证服务没有什么区别。</p>
+<pre class="pure-highlightjs"><code class="hljs cs">&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;public void &lt;span class=&quot;hljs-title&quot;&gt;ConfigureServices(&lt;span class=&quot;hljs-params&quot;&gt;IServiceCollection services)
+{
+    var authenticationProviderKey = &lt;span class=&quot;hljs-string&quot;&gt;&quot;TestKey&quot;;
+
+    services.AddAuthentication()
+        .AddJwtBearer(authenticationProviderKey, x =&amp;gt;
+        {
+        });
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>然后在ReRoutes的路由模板中的AuthenticationOptions进行配置，只需要我们的AuthenticationProviderKey一致即可。</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;ReRoutes&quot;: [{
+        &quot;DownstreamHostAndPorts&quot;: [
+            {
+                &quot;Host&quot;: &quot;localhost&quot;,
+                &quot;Port&quot;: &lt;span class=&quot;hljs-number&quot;&gt;51876,
+            }
+        ],
+        &quot;DownstreamPathTemplate&quot;: &quot;/&quot;,
+        &quot;UpstreamPathTemplate&quot;: &quot;/&quot;,
+        &quot;UpstreamHttpMethod&quot;: [&quot;Post&quot;],
+        &quot;ReRouteIsCaseSensitive&quot;: &lt;span class=&quot;hljs-literal&quot;&gt;false,
+        &quot;DownstreamScheme&quot;: &quot;http&quot;,
+        &quot;AuthenticationOptions&quot;: {
+            &quot;AuthenticationProviderKey&quot;: &quot;TestKey&quot;,
+            &quot;AllowedScopes&quot;: []
+        }
+    }]&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p><strong>JWT Tokens</strong></p>
+<p>要让网关支持JWT 的认证其实和让API支持JWT  Token的认证是一样的</p>
+<pre class="pure-highlightjs"><code class="hljs cs">&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;public void &lt;span class=&quot;hljs-title&quot;&gt;ConfigureServices(&lt;span class=&quot;hljs-params&quot;&gt;IServiceCollection services)
+{
+    var authenticationProviderKey = &lt;span class=&quot;hljs-string&quot;&gt;&quot;TestKey&quot;;
+
+    services.AddAuthentication()
+        .AddJwtBearer(authenticationProviderKey, x =&amp;gt;
+        {
+            x.Authority = &quot;test&quot;;
+            x.Audience = &quot;test&quot;;
+        });
+
+    services.AddOcelot();
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p><strong>Identity Server Bearer Tokens<br>
+</strong></p>
+<p>添加Identity Server的认证也是一样</p>
+<pre class="pure-highlightjs"><code class="hljs cs">&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;public void &lt;span class=&quot;hljs-title&quot;&gt;ConfigureServices(&lt;span class=&quot;hljs-params&quot;&gt;IServiceCollection services)
+{
+    var authenticationProviderKey = &lt;span class=&quot;hljs-string&quot;&gt;&quot;TestKey&quot;;
+    var options = o =&amp;gt;
+        {
+            o.Authority = &quot;https://whereyouridentityserverlives.com&quot;;
+            o.ApiName = &quot;api&quot;;
+            o.SupportedTokens = SupportedTokens.Both;
+            o.ApiSecret = &quot;secret&quot;;
+        };
+
+    services.AddAuthentication()
+        .AddIdentityServerAuthentication(authenticationProviderKey, options);
+
+    services.AddOcelot();
+}&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p><strong>Allowed Scopes</strong></p>
+<p>这里的Scopes将从当前 token 中的 claims中来获取，我们的鉴权服务将依靠于它来实现 。当前路由的下游API需要某个权限时，我们需要在这里声明 。和oAuth2中的 scope意义一致。</p>
+<h1>鉴权</h1>
+<p>我们通过认证中的AllowedScopes 拿到claims之后，如果要进行权限的鉴别需要添加以下配置</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;RouteClaimsRequirement&quot;: {
+    &quot;UserType&quot;: &quot;registered&quot;
+}&lt;/span&gt;</code></pre>
+<p>当前请求上下文的token中所带的claims如果没有 name=”UserType” 并且 value=”registered” 的话将无法访问下游服务。</p>
+<h1>请求头转化</h1>
+<p>请求头转发分两种：转化之后传给下游和从下游接收转化之后传给客户端。在Ocelot的配置里面叫做Pre  Downstream Request和Post Downstream Request。目前的转化只支持查找和替换。我们用到的配置主要是 UpstreamHeaderTransform 和 DownstreamHeaderTransform</p>
+<p><strong>Pre Downstream Request</strong></p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;Test&quot;: &quot;http://www.bbc.co.uk/, http://ocelot.com/&quot;&lt;/span&gt;</code></pre>
+<p>比如我们将客户端传过来的Header中的 Test 值改为 http://ocelot.com/之后再传给下游</p>
+<pre class="pure-highlightjs"><code class="hljs cpp"> &lt;span class=&quot;hljs-string&quot;&gt;&quot;UpstreamHeaderTransform&quot;: {
+    &quot;Test&quot;: &quot;http://www.bbc.co.uk/, http://ocelot.com/&quot;
+},&lt;/span&gt;</code></pre>
+<p><strong>Post Downstream Request</strong></p>
+<p>而我们同样可以将下游Header中的Test再转为 http://www.bbc.co.uk/之后再转给客户端。</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;DownstreamHeaderTransform&quot;: {
+    &quot;Test&quot;: &quot;http://www.bbc.co.uk/, http://ocelot.com/&quot;
+},&lt;/span&gt;</code></pre>
+<p><strong>变量</strong></p>
+<p>在请求头转化这里Ocelot为我们提供了两个变量：BaseUrl和DownstreamBaseUrl。BaseUrl就是我们在GlobalConfiguration里面配置的BaseUrl，后者是下游服务的Url。这里用301跳转做一个示例如何使用这两个变量。</p>
+<p>默认的301跳转，我们会返回一个Location的头，于是我们希望将http://www.bbc.co.uk 替换为 http://ocelot.com，后者者网关对外的域名。</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;DownstreamHeaderTransform&quot;: {
+    &quot;Location&quot;: &quot;http://www.bbc.co.uk/, http://ocelot.com/&quot;
+},
+ &quot;HttpHandlerOptions&quot;: {
+    &quot;AllowAutoRedirect&quot;: &lt;span class=&quot;hljs-literal&quot;&gt;false,
+},&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>我们通过DownstreamHeaderTranfrom将下游返回的请求头中的Location替换为了网关的域名，而不是下游服务的域名。所以在这里我们也可以使用BaseUrl来做为变量替换。</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;DownstreamHeaderTransform&quot;: {
+    &quot;Location&quot;: &quot;http://localhost:6773, {BaseUrl}&quot;
+},
+ &quot;HttpHandlerOptions&quot;: {
+    &quot;AllowAutoRedirect&quot;: &lt;span class=&quot;hljs-literal&quot;&gt;false,
+},&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>当我们的下游服务有多个的时候，我们就没有办法找到前面的那个http://localhost:6773，因为它可能是多个值。所以这里我们可以使用DownstreamBaseUrl。</p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;DownstreamHeaderTransform&quot;: {
+    &quot;Location&quot;: &quot;{DownstreamBaseUrl}, {BaseUrl}&quot;
+},
+ &quot;HttpHandlerOptions&quot;: {
+    &quot;AllowAutoRedirect&quot;: &lt;span class=&quot;hljs-literal&quot;&gt;false,
+},&lt;/span&gt;&lt;/span&gt;</code></pre>
+<h1>Claims转化</h1>
+<p>Claims转化功能可以将Claims中的值转化到请求头、Query String、或者下游的Claims中，对于Claims的转化，比较特殊的一点是它提供了一种对字符串进行解析的方法。举个例子，比如我们有一个sub的claim。这个claims的 name=”sub” value=”usertypevalue|useridvalue”，实际上我们不会弄这么复杂的value，它是拼接来的，但是我们为了演示这个字符串解析的功能，所以使用了这么一个复杂的value。</p>
+<p>Ocelot为我们提供的功能分为三段，第一段是Claims[sub]，很好理解[] 里面是我们的claim的名称。第二段是  &gt; 表示对字符串进行拆分, 后面跟着拆分完之后我们要取的那个数组里面的某一个元素用 value[index]来表示，取第0位元素也可以直接用value。第三段也是以 &gt; 开头后面跟着我们的分隔符，在我们上面的例子分隔符是 |</p>
+<p>所以在这里如果我们要取  usertype这个claim就会这样写： Claims[sub] &gt; value[0] &gt; |</p>
+<p>Claim取到之后我们如果要放到请求头、QueryString、以及Claim当中对应有以下三个配置。</p>
+<p><strong>Claims to Claims </strong></p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;AddClaimsToRequest&quot;: {
+    &quot;UserType&quot;: &quot;Claims[sub] &amp;gt; value[0] &amp;gt; |&quot;,
+    &quot;UserId&quot;: &quot;Claims[sub] &amp;gt; value[1] &amp;gt; |&quot;
+}&lt;/span&gt;</code></pre>
+<p><strong>Claims to Headers </strong></p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;AddHeadersToRequest&quot;: {
+    &quot;CustomerId&quot;: &quot;Claims[sub] &amp;gt; value[1] &amp;gt; |&quot;
+}&lt;/span&gt;</code></pre>
+<p>这里我们还是用的上面那个 sub = usertypevalue|useridvalue 的claim来进行处理和转化。</p>
+<p><strong>Claims to Query String</strong></p>
+<pre class="pure-highlightjs"><code class="hljs cpp">&lt;span class=&quot;hljs-string&quot;&gt;&quot;AddQueriesToRequest&quot;: {
+    &quot;LocationId&quot;: &quot;Claims[LocationId] &amp;gt; value&quot;,
+}&lt;/span&gt;</code></pre>
+<p>这里没有进行分隔，所以直接取了value。</p>
+<h1>Consul服务发现</h1>
+<p>由于Consul服务发现更多的是Consul的安装、配置、以及使用，所以本小节内容将由另一篇文章来进行详细介绍，欢迎关注。</p>
+<p> </p>
+</div>
+<div id="MySignature">
+<div class="rights">
+<p>作者：Jesse 出处： https://www.cnblogs.com/jesse2013/p/net-core-apigateway-ocelot-docs.html</p>
+<div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/ocelot" rel="tag">Ocelot</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2019/06/18/api-gateway.html" rel="prev">微服务实战（二）：使用API Gateway</a><br>【下篇】<a href="/2019/06/19/flex.html" rel="next">Flex 布局教程：语法篇</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2019/06/18/api-gateway-ocelot-1.html">API网关ocelot特性之聚合</a></li><li> · <a href="/2019/06/14/ocelot-consul-netcore.html">Ocelot+Consul+.netcore高可用&amp;动态伸缩</a></li><li> · <a href="/2019/05/23/ocelot-2.html">使用Ocelot做网关</a></li><li> · <a href="/2019/05/23/ocelot.html">.NET Core微服务之基于Ocelot实现API网关服务</a></li><li> · <a href="/2025/03/06/windows-ssh-wsl.html">windows下利用wsl+sshpass 自动发布脚本</a></li><li> · <a href="/2025/02/28/single-server-rolling-hot-upgrade.html">单台服务器应用不中断服务热部署滚动更新方案</a></li><li> · <a href="/2024/09/07/aliyun-clb-alb-nlb.html">阿里云三种负载均衡的区别</a></li><li> · <a href="/2024/07/24/nginx-health-check-module.html">nginx主动健康检查负载均衡模块</a></li><li> · <a href="/2023/05/20/k3s-kubesphere.html">部署k3s+KubeSphere</a></li><li> · <a href="/2023/02/28/es-filebeat-elastalert2.html">es+filebeat+elastalert2实现异常邮件提醒</a></li><li> · <a href="/2023/02/11/efk.html">linux快速搭建轻量级efk日志系统</a></li><li> · <a href="/2019/06/18/api-gateway.html">微服务实战（二）：使用API Gateway</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2019年06月18日发表在<a href="/category/microservice" rel="category tag">微服务</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2019/06/18/ocelot-3.html" rel="bookmark" title="本文固定链接 /2019/06/18/ocelot-3.html">[转].NET Core开源API网关 – Ocelot中文文档 | Bruce's Blog</a><a href="#" onclick="copy_code('/2019/06/18/ocelot-3.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2019/06/18/ocelot-3.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="5191" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="8cfd80d568"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="50"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.066 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:09 -->

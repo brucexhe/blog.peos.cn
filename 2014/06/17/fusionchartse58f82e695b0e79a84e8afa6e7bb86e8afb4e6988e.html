@@ -1,0 +1,838 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>FusionCharts参数的详细说明 | Bruce's Blog</title> 
+<meta name="description" content=" ">
+<meta name="keywords" content="">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2014 年 6 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="6" class="pad"> </td><td>1</td>
+	</tr>
+	<tr>
+		<td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td>
+	</tr>
+	<tr>
+		<td>9</td><td>10</td><td><a href="/2014/06/11" aria-label="2014年6月11日 发布的文章">11</a></td><td>12</td><td>13</td><td>14</td><td>15</td>
+	</tr>
+	<tr>
+		<td>16</td><td><a href="/2014/06/17" aria-label="2014年6月17日 发布的文章">17</a></td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td>
+	</tr>
+	<tr>
+		<td>23</td><td><a href="/2014/06/24" aria-label="2014年6月24日 发布的文章">24</a></td><td>25</td><td><a href="/2014/06/26" aria-label="2014年6月26日 发布的文章">26</a></td><td><a href="/2014/06/27" aria-label="2014年6月27日 发布的文章">27</a></td><td>28</td><td>29</td>
+	</tr>
+	<tr>
+		<td><a href="/2014/06/30" aria-label="2014年6月30日 发布的文章">30</a></td>
+		<td class="pad" colspan="6"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2014/04">« 4 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2014/07">7 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#c7d02b;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#f3c0a3;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#8f9095;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#589977;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#486f0;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#3f3f15;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#45e7d3;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#22c394;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#142a5b;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#c6b057;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#ff9a84;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#4ceca6;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#d652b9;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#a5f08c;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#85d918;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#a7e2e9;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#e8592c;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#589c72;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#f3fe86;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#bd1364;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#e66ced;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#dd41f4;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#c0d2c0;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#19e291;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#94a53f;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#679098;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#526a4;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#574815;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#907eb3;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#208c5b;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#42fa2b;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#d0f8d3;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#76653b;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#27c4d3;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#eeeec7;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#262e12;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#af8b4a;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#cb4060;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#e4af92;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#7dfc8e;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#f5ba7f;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#55c060;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#e55469;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#38bda7;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#22e71;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/jsjqureycss" rel="category tag">前端</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">FusionCharts参数的详细说明</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2014-06-17 21:04</span>
+			<span class="category">  <a href="/category/jsjqureycss" rel="category tag">前端</a></span>
+			<span class="article_comment"><a href="/2014/06/17/fusioncharts%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,077</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p> </p>
+<div>FusionCharts参数的详细说明和功能特性<br>
+功能特性<br>
+animation                    是否动画显示数据，默认为1(True)<br>
+showNames                    是否显示横向坐标轴(x轴)标签名称<br>
+rotateNames                是否旋转显示标签，默认为0(False):横向显示<br>
+showValues                    是否在图表显示对应的数据值，默认为1(True)<br>
+yAxisMinValue                指定纵轴(y轴)最小值，数字<br>
+yAxisMaxValue                 指定纵轴(y轴)最小值，数字<br>
+showLimits                    是否显示图表限值(y轴最大、最小值)，默认为1(True)<br>
+图表标题和轴名称<br>
+caption                    图表主标题<br>
+subCaption                    图表副标题<br>
+xAxisName                    横向坐标轴(x轴)名称<br>
+yAxisName                    纵向坐标轴(y轴)名称
+<p>图表和画布的样式<br>
+bgColor                    图表背景色，6位16进制颜色值<br>
+canvasBgColor                画布背景色，6位16进制颜色值<br>
+canvasBgAlpha                画布透明度，[0-100]<br>
+canvasBorderColor            画布边框颜色，6位16进制颜色值<br>
+canvasBorderThickness        画布边框厚度，[0-100]<br>
+shadowAlpha                投影透明度，[0-100]<br>
+showLegend                    是否显示系列名，默认为1(True)</p>
+<p>字体属性<br>
+baseFont                    图表字体样式<br>
+baseFontSize                图表字体大小<br>
+baseFontColor                图表字体颜色，6位16进制颜色值<br>
+outCnvBaseFont                图表画布以外的字体样式<br>
+outCnvBaseFontSize            图表画布以外的字体大小<br>
+outCnvBaseFontColor        图表画布以外的字体颜色，6位16进制颜色值</p>
+<p>分区线和网格<br>
+numDivLines                画布内部水平分区线条数，数字<br>
+divLineColor                水平分区线颜色，6位16进制颜色值<br>
+divLineThickness            水平分区线厚度，[1-5]<br>
+divLineAlpha                水平分区线透明度，[0-100]<br>
+showAlternateHGridColor    是否在横向网格带交替的颜色，默认为0(False)<br>
+alternateHGridColor        横向网格带交替的颜色，6位16进制颜色值<br>
+alternateHGridAlpha        横向网格带的透明度，[0-100]<br>
+showDivLinues            是否显示Div行的值，默认？？<br>
+numVDivLines                画布内部垂直分区线条数，数字<br>
+vDivLineColor                垂直分区线颜色，6位16进制颜色值<br>
+vDivLineThickness            垂直分区线厚度，[1-5]<br>
+vDivLineAlpha                垂直分区线透明度，[0-100]<br>
+showAlternateVGridColor    是否在纵向网格带交替的颜色，默认为0(False)<br>
+alternateVGridColor        纵向网格带交替的颜色，6位16进制颜色值<br>
+alternateVGridAlpha        纵向网格带的透明度，[0-100]</p>
+<p>数字格式<br>
+numberPrefix                增加数字前缀<br>
+numberSuffix                增加数字后缀    % 为 '%25'<br>
+formatNumberScale        是否格式化数字,默认为1(True),自动的给你的数字加上K（千）或M（百万）；若取0,则不加K或M<br>
+decimalPrecision            指定小数位的位数，[0-10]    例如：='0' 取整<br>
+divLineDecimalPrecision    指定水平分区线的值小数位的位数，[0-10]<br>
+limitsDecimalPrecision        指定y轴最大、最小值的小数位的位数，[0-10]<br>
+formatNumber                逗号来分隔数字(千位，百万位),默认为1(True)；若取0,则不加分隔符<br>
+decimalSeparator            指定小数分隔符,默认为'.'<br>
+thousandSeparator            指定千分位分隔符,默认为','</p>
+<p>Tool-tip/Hover标题<br>
+showhovercap                是否显示悬停说明框，默认为1(True)<br>
+hoverCapBgColor            悬停说明框背景色，6位16进制颜色值<br>
+hoverCapBorderColor        悬停说明框边框颜色，6位16进制颜色值<br>
+hoverCapSepChar            指定悬停说明框内值与值之间分隔符,默认为','</p>
+<p>折线图的参数<br>
+lineThickness                折线的厚度<br>
+anchorRadius                折线节点半径，数字<br>
+anchorBgAlpha                折线节点透明度，[0-100]<br>
+anchorBgColor                折线节点填充颜色，6位16进制颜色值<br>
+anchorBorderColor            折线节点边框颜色，6位16进制颜色值</p>
+<p>Set标签使用的参数<br>
+value                        数据值<br>
+color                        颜色<br>
+link                        链接（本窗口打开[Url]，新窗口打开[n-Url]，调用JS函数[JavaScript:函数]）<br>
+name                        横向坐标轴标签名称FusionCharts v3新增功能新的3.1版本：<br>
+使得出口能力为PDF格式的图表和图片在客户端以及服务器端<br>
+旋转文字并不需要任何更多的嵌入字体。任何UTF - 8字符现在可以旋转和使用图表从而FusionCharts真正多语言。<br>
+选项指定文本价值，可以代替数值是图表上显示的每个数据项<br>
+无法加载自定义标识，图表上在预先确定的位置，然后连结相同<br>
+...<br>
+FusionCharts v3新增功能 FusionCharts v3的拥有大量的新功能，在以前的版本。下面是几个主要的。</p>
+<p>有什么新的3.1版本：<br>
+使得出口能力为PDF格式的图表和图片在客户端以及服务器端<br>
+旋转文字并不需要任何更多的嵌入字体。任何UTF - 8字符现在可以旋转和使用图表从而FusionCharts真正多语言。<br>
+选项指定文本价值，可以代替数值是图表上显示的每个数据项<br>
+无法加载自定义标识，图表上在预先确定的位置，然后连结相同<br>
+选择添加自定义菜单项，以图表的上下文菜单，然后连结相同<br>
+支持包装的标题，分标题和工具<br>
+趋势线现在可以自定义工具文本<br>
+用户定义调色板的数据项目<br>
+更多的JavaScript事件，以帮助您更好的操纵图表从您的JavaScript代码<br>
+出口能力的数据，图表的CSV使用上下文菜单或JavaScript的API<br>
+能力得到了XML的任何使用JavaScript API的图表<br>
+能力得到了一张图表属性使用JavaScript的API<br>
+图表已重新在36fps解决内存问题在Firefox</p>
+<p>新3.0 有什么？<br>
+新的图表类型<br>
+FusionCharts v3的介绍了很多新的图表类型，如：</p>
+<p>滚动图-柱二维，二维和区系的二维，堆叠柱二维，二维结合，结合二维（双年）<br>
+样图<br>
+样条区域图<br>
+对数坐标图<br>
+二维多图单Ÿ组合图。<br>
+二维多图双Ÿ组合图。此图被用来阴谋9类型的图表：<br>
+柱（小年） +线（中学年）组合<br>
+柱（小年） +地区（中学年）组合<br>
+柱（小年） +柱（中学年）组合<br>
+区（小年） +线（中学年）组合<br>
+区（小年） +柱（中学年）组合<br>
+区（小年） +地区（中学年）组合<br>
+线（小年） +线（中学年）组合<br>
+线（小年） +柱（中学年）组合<br>
+线（小年） +地区（中学年）组合<br>
+三维堆叠柱线双Ÿ组合图<br>
+三维单杠<br>
+三维堆叠式酒吧<br>
+先进的蜡烛棒图支持线，酒吧和数量列<br>
+拖放能够柱线图表先进的模拟情景<br>
+瀑布图</p>
+<p>少数上述所列图表不标准FusionCharts v3的包。例如，花键，对数，瀑布及拖放能够图表的一部分， PowerCharts包，可单独购买..</p>
+<p>出口能力的图表图像<br>
+从FusionCharts v3.0.5 ，现在您可以导出您的图表，图片相结合的客户端和服务器端操作。</p>
+<p>容易，但先进的整合与JavaScript<br>
+FusionCharts v3的提供高级选项，将图表与AJAX应用程序或JavaScript模块。您可以随时更新海图在客户端，调用JavaScript函数的热点链接，或要 求作出动态XML数据不涉及任何页面刷新。您也可以指定一个DOMId的每个图表和有登记的JavaScript 。图表可以保持JavaScript函数公布了它的活动。</p>
+<p>可视化的XML生成工具<br>
+FusionCharts v3的介绍了一个新的Visual XML和图表生成工具，帮助您轻松地建立您的XML数据的图表。您可以手动输入数据的网格，形成XML或转换您现有的数据从电子表格/ csv文件/表格到XML数据。</p>
+<p>时尚元素<br>
+FusionCharts v3的介绍方式，帮助您适用的字体，效果和动画，各种物体的图表。一个简单的样式贷款机制，利用这些您就可以轻松地控制可视化布局图。</p>
+<p>地图支持<br>
+FusionCharts v3的介绍地图PowerMaps包。该PowerMaps Pack是收集61基于Flash矢量地图用来显示不同类型的数据与地理分区。适用于网站和应用程序，每一个地图暴露了其性能使用一个XML的API 。建立一个地图使用几乎需要几分钟，不涉及任何修改源代码。所有您需要做的是饲料中的数据的XML文件，您已经准备好。</p>
+<p>请注意， PowerMaps是一项额外插入FusionCharts v3的，而不是在标准许可。您需要另行购买。</p>
+<p>内置的Adobe Flash 8使用ActionScript 2的<br>
+FusionCharts v3是编码在Flash 8和ActionScript 2 ，充分利用新的和先进功能的Flash 8喜欢动态渐变，过滤器，更好的速度，先进的面向对象的结构等</p>
+<p>新的调试模式<br>
+FusionCharts v3的介绍了调试模式为每个图表。在调试模式可以帮助您寻找到正在发生着什么图表幕后。你可以看到图表是如何初始化，获得的数据以及与 JavaScripts 。各种错误产生，也表明在这。所以，当你看到一个错误的图表现在，你需要做的是切换到调试模式，并确定了。</p>
+<p>梯度支持<br>
+FusionCharts v3的支持梯度大多数图表物件如背景下，油画，数据阴谋等诸多新的图表支持单一属性use3DLighting ，让先进的灯光和梯度影响图更好的视觉效果。</p>
+<p>调色板支持<br>
+FusionCharts v3的介绍调色板，以帮助您快速选择颜色主题，为您的图表。从v3的，你可以选择其中一个五年预先定义调色板改变的外观图。你不必指定任何十六进制颜色代码使用调色板。</p>
+<p>虚线支持<br>
+从FusionCharts v3的，您可以使用虚线策划：</p>
+<p>数据（列，线，馅饼等）<br>
+网格分区线<br>
+趋势线<br>
+垂直分离线<br>
+您也可以指定破折号性能像破折号长度，差距等</p>
+<p>多种显示模式的数据标签<br>
+在FusionCharts v3的，很多选择了介绍，以便更好地x轴Label控件。现在，您可以包装，错层或旋转X轴标签。</p>
+<p>旋转价值盒及动态位置选项<br>
+的数据值的文本字段，现在可以旋转，以避免简洁。此外，在案件列图表，您可以选择是否将文本框的值列内或之外。如果没有空间， FusionCharts v3的会自动调整位置。</p>
+<p>一些规模支持<br>
+FusionCharts v3的介绍了一些调整和更好地控制数字格式。</p>
+<p>自动分区线编码<br>
+FusionCharts v3的介绍自动分区线编号和位置，以最佳的位置上的图表。</p>
+<p>更好的打印支持<br>
+在上下文菜单中的图表现在包括一个新项目“打印图表” ，它提供标准的跨浏览器的打印支持。</p>
+<p>更多的控制权动态调整<br>
+v3的推出两种模式的图表大小- exactFit和noScale 。 noScale使用基于像素的大小。在exactFit模式，您可以调整图的基础上的百分比。此外， exactFit模式允许动态的调整，当容器对象（浏览器，表，分区等）调整大小。</p>
+<p>先进的馅饼和甜甜圈图表<br>
+馅饼和甜甜圈图表FusionCharts v3的提供先进的最终用户的交互选择像动态切片，旋转，链接等此外，智能标签已被引入馅饼/甜甜圈图表。</p>
+<p>更好的传说<br>
+FusionCharts v3的介绍了一个更好的期待和互动传说的multi-series/combination图表。您可以自定义了很多的属性的传说每个图表。</p>
+<p>高级钻取功能<br>
+图表项目现在可以链接到新窗口，弹出式，框架或自我窗口。</p>
+<p>垂直分工之间的界线任何两个数据点。<br>
+在轴的图表，现在你可以选择垂直分工之间的界线任何两套数据。这特别有助于当你策划的数据说， 2岁，你想一个明显的分隔符之间两年的数据图表。</p>
+<p>整个图表作为一个热点<br>
+v3的开始，整个图表现在可以作为一个单一的热点。</p>
+<p>自定义工具提示为每个数据阴谋项目<br>
+现在您可以设定您自己的工具提示文字为每个数据阴谋项目。</p>
+<p>多语言支持的应用信息<br>
+现在，您可以轻松定制的图表显示应用消息（载入中图表，装载数据，绘制图表等。 ）在您自己的语言。要做到这一点，你需要指定的邮件图表来源和重新编译。Demo：<img decoding="async" src="file:///http://www.fusioncharts.com/flex/docs/contents/chartss/images/ms_col3d.jpg" alt="">XML源代码：<br>
+1<br>
+2<br>
+3<br>
+4<br>
+5<br>
+6<br>
+7<br>
+8<br>
+9<br>
+10<br>
+11<br>
+12<br>
+13<br>
+14<br>
+15<br>
+16<br>
+17<br>
+18<br>
+19<br>
+20<br>
+21<br>
+22<br>
+23<br>
+24<br>
+25<br>
+26<br>
+27<br>
+28<br>
+29<br>
+30<br>
+31<br>
+32<br>
+33<br>
+34<br>
+35<br>
+36<br>
+37<br>
+38<br>
+39<br>
+40<br>
+41<br>
+42<br>
+43<br>
+44<br>
+45<br>
+46<br>
+47<br>
+48<br>
+49<br>
+50<br>
+51<br>
+52<br>
+53<br>
+54<br>
+55<br>
+56<br>
+57<br>
+58<br>
+59<br>
+60<br>
+61<br>
+62<br>
+63<br>
+64<br>
+65<br>
+66<br>
+67<br>
+68<br>
+69<br>
+70<br>
+71<br>
+72<br>
+73<br>
+74<br>
+75<br>
+76<br>
+77<br>
+78<br>
+79<br>
+80<br>
+81<br>
+82<br>
+83<br>
+84<br>
+85<br>
+86<br>
+87<br>
+88<br>
+89<br>
+90<br>
+91<br>
+92<br>
+93<br>
+&lt;chart caption='Business Results 2005 v 2006'xAxisName='Month'yAxisName='Revenue'showValues='0'numberPrefix='$'&gt;</p>
+<p>&lt;categories&gt;</p>
+<p>&lt;category label='Jan'/&gt;</p>
+<p>&lt;category label='Feb'/&gt;</p>
+<p>&lt;category label='Mar'/&gt;</p>
+<p>&lt;category label='Apr'/&gt;</p>
+<p>&lt;category label='May'/&gt;</p>
+<p>&lt;category label='Jun'/&gt;</p>
+<p>&lt;category label='Jul'/&gt;</p>
+<p>&lt;category label='Aug'/&gt;</p>
+<p>&lt;category label='Sep'/&gt;</p>
+<p>&lt;category label='Oct'/&gt;</p>
+<p>&lt;category label='Nov'/&gt;</p>
+<p>&lt;category label='Dec'/&gt;</p>
+<p>&lt;/categories&gt;</p>
+<p>&lt;dataset seriesName='2006'&gt;</p>
+<p>&lt;setvalue='27400'/&gt;</p>
+<p>&lt;setvalue='29800'/&gt;</p>
+<p>&lt;setvalue='25800'/&gt;</p>
+<p>&lt;setvalue='26800'/&gt;</p>
+<p>&lt;setvalue='29600'/&gt;</p>
+<p>&lt;setvalue='32600'/&gt;</p>
+<p>&lt;setvalue='31800'/&gt;</p>
+<p>&lt;setvalue='36700'/&gt;</p>
+<p>&lt;setvalue='29700'/&gt;</p>
+<p>&lt;setvalue='31900'/&gt;</p>
+<p>&lt;setvalue='34800'/&gt;</p>
+<p>&lt;setvalue='24800'/&gt;</p>
+<p>&lt;/dataset&gt;</p>
+<p>&lt;dataset seriesName='2005'&gt;</p>
+<p>&lt;setvalue='10000'/&gt;</p>
+<p>&lt;setvalue='11500'/&gt;</p>
+<p>&lt;setvalue='12500'/&gt;</p>
+<p>&lt;setvalue='15000'/&gt;</p>
+<p>&lt;setvalue='11000'/&gt;</p>
+<p>&lt;setvalue='9800'/&gt;</p>
+<p>&lt;setvalue='11800'/&gt;</p>
+<p>&lt;setvalue='19700'/&gt;</p>
+<p>&lt;setvalue='21700'/&gt;</p>
+<p>&lt;setvalue='21900'/&gt;</p>
+<p>&lt;setvalue='22900'/&gt;</p>
+<p>&lt;setvalue='20800'/&gt;</p>
+<p>&lt;/dataset&gt;</p>
+<p>&lt;trendlines&gt;</p>
+<p>&lt;line startValue='26000'color='91C728'displayValue='Target'showOnTop='1'/&gt;</p>
+<p>&lt;/trendlines&gt;</p>
+<p>&lt;/chart&gt;</p></div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag"></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2014/06/11/%E8%BD%A6%E8%BE%86%E5%88%AE%E6%93%A6%E4%B9%8B%E5%90%8E%EF%BC%8C%E4%B8%8D%E8%A6%81%E5%82%BB%E9%87%8C%E5%82%BB%E6%B0%94%E7%9A%84%EF%BC%8C%E9%83%BD%E6%94%B6%E8%97%8F%E8%B5%B7%E6%9D%A5%E5%90%A7%EF%BC%8C.html" rel="prev">车辆刮擦之后，不要傻里傻气的，都收藏起来吧，真的有用！</a><br>【下篇】<a href="/2014/06/24/%E6%98%AF%E4%BB%80%E4%B9%88%E9%99%90%E5%88%B6%E4%BA%86%E4%BD%A0%E7%9A%84%E8%83%BD%E5%8A%9B%EF%BC%9F.html" rel="next">是什么限制了你的能力？</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li><li> · <a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li><li> · <a href="/2025/01/06/nestjs-nextjs-nuxtjs.html">Nest.js 、 Next.js、 Nuxt.js的区别</a></li><li> · <a href="/2024/11/20/mp-bind.html">小程序可以绑定其它小程序吗？</a></li><li> · <a href="/2024/11/19/vue3-vite-subdir.html">vue3+vite+多环境发面到二级目录配置</a></li><li> · <a href="/2024/09/03/catchtap.html">微信小程序防止事件穿透防止事件冒泡</a></li><li> · <a href="/2024/08/29/qrcode-to-miniprogram.html">普通链接二维码跳转小程序</a></li><li> · <a href="/2024/06/03/flex-direction-column.html">解决flex-direction: column 之后元素宽度自动变为100%</a></li><li> · <a href="/2023/11/09/vue-react-node-vite-npm-yarn-build-auto-update-version.html">vue/react/node/vite/npm/yarn build自动更新版本号</a></li><li> · <a href="/2023/05/30/getvisitdistribution.html">getVisitDistribution  访问来源定义（访问来源 key 对应关系）</a></li><li> · <a href="/2023/05/10/tinymce.html">TinyMCE工具栏配置详解</a></li><li> · <a href="/2023/04/17/ant-design-vue-1-7-8-vue2-customer-icon.html">Ant Design Vue 1.7.8 （vu2）自定义路由菜单图标</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2014年06月17日发表在<a href="/category/jsjqureycss" rel="category tag">前端</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2014/06/17/fusioncharts%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E.html" rel="bookmark" title="本文固定链接 /2014/06/17/fusioncharts%e5%8f%82%e6%95%b0%e7%9a%84%e8%af%a6%e7%bb%86%e8%af%b4%e6%98%8e.html">FusionCharts参数的详细说明 | Bruce's Blog</a><a href="#" onclick="copy_code('/2014/06/17/fusioncharts%e5%8f%82%e6%95%b0%e7%9a%84%e8%af%a6%e7%bb%86%e8%af%b4%e6%98%8e.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2014/06/17/fusioncharts%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="3354" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="6c50503ad9"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="187"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.060 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:48:26 -->

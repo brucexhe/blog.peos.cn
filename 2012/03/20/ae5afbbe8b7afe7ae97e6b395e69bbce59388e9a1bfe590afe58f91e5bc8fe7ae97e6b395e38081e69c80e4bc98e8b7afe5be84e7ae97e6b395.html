@@ -1,0 +1,665 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>A*寻路算法(曼哈顿启发式算法、最优路径算法) | Bruce's Blog</title> 
+<meta name="description" content="A*寻路初探 GameDev.net">
+<meta name="keywords" content="A*寻路算法,曼哈顿启发式算法,最优路径算法">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 3 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2012/03/01" aria-label="2012年3月1日 发布的文章">1</a></td><td><a href="/2012/03/02" aria-label="2012年3月2日 发布的文章">2</a></td><td><a href="/2012/03/03" aria-label="2012年3月3日 发布的文章">3</a></td><td><a href="/2012/03/04" aria-label="2012年3月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/05" aria-label="2012年3月5日 发布的文章">5</a></td><td><a href="/2012/03/06" aria-label="2012年3月6日 发布的文章">6</a></td><td><a href="/2012/03/07" aria-label="2012年3月7日 发布的文章">7</a></td><td><a href="/2012/03/08" aria-label="2012年3月8日 发布的文章">8</a></td><td><a href="/2012/03/09" aria-label="2012年3月9日 发布的文章">9</a></td><td><a href="/2012/03/10" aria-label="2012年3月10日 发布的文章">10</a></td><td><a href="/2012/03/11" aria-label="2012年3月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/12" aria-label="2012年3月12日 发布的文章">12</a></td><td>13</td><td>14</td><td><a href="/2012/03/15" aria-label="2012年3月15日 发布的文章">15</a></td><td><a href="/2012/03/16" aria-label="2012年3月16日 发布的文章">16</a></td><td><a href="/2012/03/17" aria-label="2012年3月17日 发布的文章">17</a></td><td><a href="/2012/03/18" aria-label="2012年3月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/19" aria-label="2012年3月19日 发布的文章">19</a></td><td><a href="/2012/03/20" aria-label="2012年3月20日 发布的文章">20</a></td><td><a href="/2012/03/21" aria-label="2012年3月21日 发布的文章">21</a></td><td><a href="/2012/03/22" aria-label="2012年3月22日 发布的文章">22</a></td><td><a href="/2012/03/23" aria-label="2012年3月23日 发布的文章">23</a></td><td><a href="/2012/03/24" aria-label="2012年3月24日 发布的文章">24</a></td><td><a href="/2012/03/25" aria-label="2012年3月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/26" aria-label="2012年3月26日 发布的文章">26</a></td><td><a href="/2012/03/27" aria-label="2012年3月27日 发布的文章">27</a></td><td><a href="/2012/03/28" aria-label="2012年3月28日 发布的文章">28</a></td><td><a href="/2012/03/29" aria-label="2012年3月29日 发布的文章">29</a></td><td><a href="/2012/03/30" aria-label="2012年3月30日 发布的文章">30</a></td><td><a href="/2012/03/31" aria-label="2012年3月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/02">« 2 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/04">4 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#fde145;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#82dc1b;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#117350;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#807570;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#d9b8ac;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#a8a43b;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#c46be5;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#f486f6;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#3ca68a;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#baa018;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#613bef;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#c8b35d;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#1c4228;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#68ea82;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#d73194;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#dafd67;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#888698;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#f1639e;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#7b93b2;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#7d7d8a;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#8eb5b7;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#7a3288;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#90316e;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#f0a3cc;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#7af037;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#4d95dd;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#7099f2;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#6e6bc3;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#9dcb6f;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#6dd85c;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#a8c1e5;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#f40ded;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#9f8d8e;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#c8cce2;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#784540;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#cf238d;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#493b1d;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#83adb;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#636310;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#f3bb1b;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#6ac62;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#6d2bd7;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#f13afa;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#33b1;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#86ecdc;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">A*寻路算法(曼哈顿启发式算法、最优路径算法)</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-03-20 12:54</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2012/03/20/a%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95%E6%9B%BC%E5%93%88%E9%A1%BF%E5%90%AF%E5%8F%91%E5%BC%8F%E7%AE%97%E6%B3%95%E3%80%81%E6%9C%80%E4%BC%98%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95.html#comments">评论(1)</a></span>
+			 <span class="article_view grayline">阅读(<span>4,106</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p><span style="font-size: small;"><strong>A*寻路初探 GameDev.net</strong></span><br>
+<span class="NewsContent2"> 译者序：很久以前就知道了A*算法，但是从未认真读过相关的文章，也没有看过代码，只是脑子里有个模糊的概念。这次决定从头开始，研究一下这个被人推崇备至的简单方法，作为学习人工智能的开始。<br>
+这 篇文章非常知名，国内应该有不少人翻译过它，我没有查找，觉得翻译本身也是对自身英文水平的锻炼。经过努力，终于完成了文档，也明白的A*算法的原理。毫 无疑问，作者用形象的描述，简洁诙谐的语言由浅入深的讲述了这一神奇的算法，相信每个读过的人都会对此有所认识（如果没有，那就是偶的翻译太差了 --b）。<br>
+原文链接：<a href="http://www.gamedev.net/reference/articles/article2003.asp" target="_blank">http://www.gamedev.net/reference/articles/article2003.asp</a><br>
+以下是翻译的正文。(由于本人使用ultraedit编辑，所以没有对原文中的各种链接加以处理(除了图表)，也是为了避免未经许可链接的嫌疑，有兴趣的读者可以参考原文。</span></p>
+<p>会者不难，A*(念作A星)算法对初学者来说的确有些难度。</p>
+<p>这篇文章并不试图对这个话题作权威的陈述。取而代之的是，它只是描述算法的原理，使你可以在进一步的阅读中理解其他相关的资料。</p>
+<p>最后，这篇文章没有程序细节。你尽可以用任意的计算机程序语言实现它。如你所愿，我在文章的末尾包含了一个指向例子程序的链接。 压缩包包括C++和Blitz Basic两个语言的版本，如果你只是想看看它的运行效果，里面还包含了可执行文件。</p>
+<p>我们正在提高自己。让我们从头开始。。。</p>
+<p>序：搜索区域</p>
+<p>假设有人想从A点移动到一墙之隔的B点，如下图，绿色的是起点A，红色是终点B，蓝色方块是中间的墙。</p>
+<p><img decoding="async" src="/wp-content/uploads/2012/03/a214_image001.jpg" alt="" border="0"><br>
+[图1]</p>
+<p>你 首先注意到，搜索区域被我们划分成了方形网格。像这样，简化搜索区域，是寻路的第一步。这一方法把搜索区域简化成了一个二维数组。数组的每一个元素是网格 的一个方块，方块被标记为可通过的和不可通过的。路径被描述为从A到B我们经过的方块的集合。一旦路径被找到，我们的人就从一个方格的中心走向另一个，直 到到达目的地。</p>
+<p>这些中点被称为“节点”。当你阅读其他的寻路资料时，你将经常会看到人们讨论节点。为什么不把他们描述为方格呢？因为有可能 你的路径被分割成其他不是方格的结构。他们完全可以是矩形，六角形，或者其他任意形状。节点能够被放置在形状的任意位置－可以在中心，或者沿着边界，或其 他什么地方。我们使用这种系统，无论如何，因为它是最简单的。</p>
+<p>开始搜索</p>
+<p>正如我们处理上图网格的方法，一旦搜索区域被转化为容易处理的节点，下一步就是去引导一次找到最短路径的搜索。在<span class="wp_keywordlink_affiliate"><a href="/tag/a%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95" title="View all posts in A*寻路算法" target="_blank">A*寻路算法</a></span>中，我们通过从点A开始，检查相邻方格的方式，向外扩展直到找到目标。</p>
+<p>我们做如下操作开始搜索：<br>
+1，从点A开始，并且把它作为待处理点存入一个“开启列表”。开启列表就像一张购物清单。尽管现在列表里只有一个元素，但以后就会多起来。你的路径可能会通过它包含的方格，也可能不会。基本上，这是一个待检查方格的列表。<br>
+2，寻找起点周围所有可到达或者可通过的方格，跳过有墙，水，或其他无法通过地形的方格。也把他们加入开启列表。为所有这些方格保存点A作为“父方格”。当我们想描述路径的时候，父方格的资料是十分重要的。后面会解释它的具体用途。<br>
+3，从开启列表中删除点A，把它加入到一个“关闭列表”，列表中保存所有不需要再次检查的方格。</p>
+<p>在这一点，你应该形成如图的结构。在图中，暗绿色方格是你起始方格的中心。它被用浅蓝色描边，以表示它被加入到关闭列表中了。所有的相邻格现在都在开启列表中，它们被用浅绿色描边。每个方格都有一个灰色指针反指他们的父方格，也就是开始的方格。</p>
+<p><img decoding="async" src="/wp-content/uploads/2012/03/90fc_image002.jpg" alt="" border="0"><br>
+[图2]</p>
+<p>接着，我们选择开启列表中的临近方格，大致重复前面的过程，如下。但是，哪个方格是我们要选择的呢？是那个F值最低的。</p>
+<p>路径评分</p>
+<p>选择路径中经过哪个方格的关键是下面这个等式：</p>
+<p>F = G + H</p>
+<p>这里：<br>
+* G = 从起点A，沿着产生的路径，移动到网格上指定方格的移动耗费。<br>
+* H = 从网格上那个方格移动到终点B的预估移动耗费。这经常被称为启发式的，可能会让你有点迷惑。这样叫的原因是因为它只是个猜测。我们没办法事先知道路径的长 度，因为路上可能存在各种障碍(墙，水，等等)。虽然本文只提供了一种计算H的方法，但是你可以在网上找到很多其他的方法。</p>
+<p>我们的路径是通过反复遍历开启列表并且选择具有最低F值的方格来生成的。文章将对这个过程做更详细的描述。首先，我们更深入的看看如何计算这个方程。</p>
+<p>正 如上面所说，G表示沿路径从起点到当前点的移动耗费。在这个例子里，我们令水平或者垂直移动的耗费为10，对角线方向耗费为14。我们取这些值是因为沿对 角线的距离是沿水平或垂直移动耗费的的根号2（别怕），或者约1.414倍。为了简化，我们用10和14近似。比例基本正确，同时我们避免了求根运算和小 数。这不是只因为我们怕麻烦或者不喜欢数学。使用这样的整数对计算机来说也更快捷。你不就就会发现，如果你不使用这些简化方法，寻路会变得很慢。</p>
+<p>既然我们在计算沿特定路径通往某个方格的G值，求值的方法就是取它父节点的G值，然后依照它相对父节点是对角线方向或者直角方向(非对角线)，分别增加14和10。例子中这个方法的需求会变得更多，因为我们从起点方格以外获取了不止一个方格。</p>
+<p>H 值可以用不同的方法估算。我们这里使用的方法被称为曼哈顿方法，它计算从当前格到目的格之间水平和垂直的方格的数量总和，忽略对角线方向。然后把结果乘以 10。这被成为曼哈顿方法是因为它看起来像计算城市中从一个地方到另外一个地方的街区数，在那里你不能沿对角线方向穿过街区。很重要的一点，我们忽略了一 切障碍物。这是对剩余距离的一个估算，而非实际值，这也是这一方法被称为启发式的原因。想知道更多？你可以在这里找到方程和额外的注解。</p>
+<p>F的值是G和H的和。第一步搜索的结果可以在下面的图表中看到。F,G和H的评分被写在每个方格里。正如在紧挨起始格右侧的方格所表示的，F被打印在左上角，G在左下角，H则在右下角。</p>
+<p><img decoding="async" src="/wp-content/uploads/2012/03/9779_image003.jpg" alt="" border="0"><br>
+[图3]</p>
+<p>现在我们来看看这些方格。写字母的方格里，G = 10。这是因为它只在水平方向偏离起始格一个格距。紧邻起始格的上方，下方和左边的方格的G值都等于10。对角线方向的G值是14。</p>
+<p>H 值通过求解到红色目标格的曼哈顿距离得到，其中只在水平和垂直方向移动，并且忽略中间的墙。用这种方法，起点右侧紧邻的方格离红色方格有3格距离，H值就 是30。这块方格上方的方格有4格距离(记住，只能在水平和垂直方向移动)，H值是40。你大致应该知道如何计算其他方格的H值了～。</p>
+<p>每个格子的F值，还是简单的由G和H相加得到</p>
+<p>继续搜索</p>
+<p>为了继续搜索，我们简单的从开启列表中选择F值最低的方格。然后，对选中的方格做如下处理：</p>
+<p>4，把它从开启列表中删除，然后添加到关闭列表中。<br>
+5，检查所有相邻格子。跳过那些已经在关闭列表中的或者不可通过的(有墙，水的地形，或者其他无法通过的地形)，把他们添加进开启列表，如果他们还不在里面的话。把选中的方格作为新的方格的父节点。<br>
+6，如果某个相邻格已经在开启列表里了，检查现在的这条路径是否更好。换句话说，检查如果我们用新的路径到达它的话，G值是否会更低一些。如果不是，那就什么都不做。<br>
+另一方面，如果新的G值更低，那就把相邻方格的父节点改为目前选中的方格（在上面的图表中，把箭头的方向改为指向这个方格）。最后，重新计算F和G的值。如果这看起来不够清晰，你可以看下面的图示。</p>
+<p>好了，让我们看看它是怎么运作的。我们最初的9格方格中，在起点被切换到关闭列表中后，还剩8格留在开启列表中。这里面，F值最低的那个是起始格右侧紧邻的格子，它的F值是40。因此我们选择这一格作为下一个要处理的方格。在紧随的图中，它被用蓝色突出显示。</p>
+<p><img decoding="async" src="/wp-content/uploads/2012/03/65f6_image004.jpg" alt="" border="0"><br>
+[图4]</p>
+<p>首先，我们把它从开启列表中取出，放入关闭列表(这就是他被蓝色突出显示的原因)。然后我们检查相邻的格子。哦，右侧的格子是墙，所以我们略过。左侧的格子是起始格。它在关闭列表里，所以我们也跳过它。</p>
+<p>其 他4格已经在开启列表里了，于是我们检查G值来判定，如果通过这一格到达那里，路径是否更好。我们来看选中格子下面的方格。它的G值是14。如果我们从当 前格移动到那里，G值就会等于20(到达当前格的G值是10，移动到上面的格子将使得G值增加10)。因为G值20大于14，所以这不是更好的路径。如果 你看图，就能理解。与其通过先水平移动一格，再垂直移动一格，还不如直接沿对角线方向移动一格来得简单。</p>
+<p>当我们对已经存在于开启列表中的4个临近格重复这一过程的时候，我们发现没有一条路径可以通过使用当前格子得到改善，所以我们不做任何改变。既然我们已经检查过了所有邻近格，那么就可以移动到下一格了。</p>
+<p>于 是我们检索开启列表，现在里面只有7格了，我们仍然选择其中F值最低的。有趣的是，这次，有两个格子的数值都是54。我们如何选择？这并不麻烦。从速度上 考虑，选择最后添加进列表的格子会更快捷。这种导致了寻路过程中，在靠近目标的时候，优先使用新找到的格子的偏好。但这无关紧要。（对相同数值的不同对 待，导致不同版本的A*算法找到等长的不同路径。）</p>
+<p>那我们就选择起始格右下方的格子，如图。</p>
+<p><img decoding="async" src="/wp-content/uploads/2012/03/7238_image005.jpg" alt="" border="0"><br>
+[图5]</p>
+<p>这 次，当我们检查相邻格的时候，发现右侧是墙，于是略过。上面一格也被略过。我们也略过了墙下面的格子。为什么呢？因为你不能在不穿越墙角的情况下直接到达 那个格子。你的确需要先往下走然后到达那一格，按部就班的走过那个拐角。(注解：穿越拐角的规则是可选的。它取决于你的节点是如何放置的。)</p>
+<p>这 样一来，就剩下了其他5格。当前格下面的另外两个格子目前不在开启列表中，于是我们添加他们，并且把当前格指定为他们的父节点。其余3格，两个已经在开启 列表中（起始格，和当前格上方的格子，在表格中蓝色高亮显示),于是我们略过它们。最后一格，在当前格的左侧，将被检查通过这条路径，G值是否更低。不必 担心，我们已经准备好检查开启列表中的下一格了。</p>
+<p>我们重复这个过程，知道目标格被添加进开启列表，就如在下面的图中所看到的。</p>
+<p><img decoding="async" src="/wp-content/uploads/2012/03/ec1c_image006.jpg" alt="" border="0"><br>
+[图6]</p>
+<p>注 意，起始格下方格子的父节点已经和前面不同的。之前它的G值是28，并且指向右上方的格子。现在它的G值是20，指向它上方的格子。这在寻路过程中的某处 发生，当应用新路径时，G值经过检查变得低了－于是父节点被重新指定，G和F值被重新计算。尽管这一变化在这个例子中并不重要，在很多场合，这种变化会导 致寻路结果的巨大变化。</p>
+<p>那么，我们怎么确定这条路径呢？很简单，从红色的目标格开始，按箭头的方向朝父节点移动。这最终会引导你回到起始格，这就是你的路径！看起来应该像图中那样。从起始格A移动到目标格B只是简单的从每个格子（节点）的中点沿路径移动到下一个，直到你到达目标点。就这么简单。</p>
+<p><img decoding="async" src="/wp-content/uploads/2012/03/f034_image007.jpg" alt="" border="0"><br>
+[图7]</p>
+<p>A*方法总结</p>
+<p>好，现在你已经看完了整个说明，让我们把每一步的操作写在一起：</p>
+<p>1，把起始格添加到开启列表。<br>
+2，重复如下的工作：<br>
+a) 寻找开启列表中F值最低的格子。我们称它为当前格。<br>
+b) 把它切换到关闭列表。<br>
+c) 对相邻的8格中的每一个？<br>
+* 如果它不可通过或者已经在关闭列表中，略过它。反之如下。<br>
+* 如果它不在开启列表中，把它添加进去。把当前格作为这一格的父节点。记录这一格的F,G,和H值。<br>
+* 如果它已经在开启列表中，用G值为参考检查新的路径是否更好。更低的G值意味着更好的路径。如果是这样，就把这一格的父节点改成当前格，并且重新计算这一格的G和F值。如果你保持你的开启列表按F值排序，改变之后你可能需要重新对开启列表排序。</p>
+<p>d) 停止，当你<br>
+* 把目标格添加进了开启列表，这时候路径被找到，或者<br>
+* 没有找到目标格，开启列表已经空了。这时候，路径不存在。<br>
+3.保存路径。从目标格开始，沿着每一格的父节点移动直到回到起始格。这就是你的路径。</p>
+<p>题外话</p>
+<p>离 题一下，见谅，值得一提的是，当你在网上或者相关论坛看到关于A*的不同的探讨，你有时会看到一些被当作A*算法的代码而实际上他们不是。要使用A*，你 必须包含上面讨论的所有元素－－特定的开启和关闭列表，用F,G和H作路径评价。有很多其他的寻路算法，但他们并不是A*，A*被认为是他们当中最好的。 Bryan Stout在这篇文章后面的参考文档中论述了一部分，包括他们的一些优点和缺点。有时候特定的场合其他算法会更好，但你必须很明确你在作什么。好了，够多 的了。回到文章。</p>
+<p>实现的注解</p>
+<p>现在你已经明白了基本原理，写你的程序的时候还得考虑一些额外的东西。下面这些材料中的一些引用了我用C++和Blitz Basic写的程序，但对其他语言写的代码同样有效。</p>
+<p>1， 维护开启列表：这是<span class="wp_keywordlink_affiliate"><a href="/tag/a%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95" title="View all posts in A*寻路算法" target="_blank">A*寻路算法</a></span>最重要的组成部分。每次你访问开启列表，你都需要寻找F值最低的方格。有几种不同的方法实现这一点。你可以把路径元素随意 保存，当需要寻找F值最低的元素的时候，遍历开启列表。这很简单，但是太慢了，尤其是对长路径来说。这可以通过维护一格排好序的列表来改善，每次寻找F值 最低的方格只需要选取列表的首元素。当我自己实现的时候，这种方法是我的首选。</p>
+<p>在小地图。这种方法工作的很好，但它并不是最快的解决方案。 更苛求速度的A*程序员使用叫做“binary heap”的方法，这也是我在代码中使用的方法。凭我的经验，这种方法在大多数场合会快2～3倍，并且在长路经上速度呈几何级数提升(10倍以上速度)。 如果你想了解更多关于binary heap的内容，查阅我的文章，Using Binary Heaps in A* Pathfinding。</p>
+<p>2， 其他单位：如果你恰好看了我的例子代码，你会发现它完全忽略了其他单位。我的寻路者事实上可以相互穿越。取决于具体的游戏，这也许可以，也许不行。如果你 打算考虑其他单位，希望他们能互相绕过，我建议在寻路算法中忽略其他单位，写一些新的代码作碰撞检测。当碰撞发生，你可以生成一条新路径或者使用一些标准 的移动规则(比如总是向右，等等)直到路上没有了障碍，然后再生成新路径。为什么在最初的路径计算中不考虑其他单位呢？那是因为其他单位会移动，当你到达 他们原来的位置的时候，他们可能已经离开了。这有可能会导致奇怪的结果，一个单位突然转向，躲避一个已经不在那里的单位，并且会撞到计算完路径后，冲进它 的路径中的单位。</p>
+<p>然而，在寻路算法中忽略其他对象，意味着你必须编写单独的碰撞检测代码。这因游戏而异，所以我把这个决定权留给你。参考文献列表中，Bryan Stout的文章值得研究，里面有一些可能的解决方案(像鲁棒追踪，等等)。</p>
+<p>3， 一些速度方面的提示：当你开发你自己的A*程序，或者改写我的，你会发现寻路占据了大量的CPU时间，尤其是在大地图上有大量对象在寻路的时候。如果你阅 读过网上的其他材料，你会明白，即使是开发了星际争霸或帝国时代的专家，这也无可奈何。如果你觉得寻路太过缓慢，这里有一些建议也许有效：</p>
+<p>* 使用更小的地图或者更少的寻路者。<br>
+* 不要同时给多个对象寻路。取而代之的是把他们加入一个队列，把寻路过程分散在几个游戏周期中。如果你的游戏以40周期每秒的速度运行，没人能察觉。但是他们会发觉游戏速度突然变慢，当大量寻路者计算自己路径的时候。<br>
+* 尽量使用更大的地图网格。这降低了寻路中搜索的总网格数。如果你有志气，你可以设计两个或者更多寻路系统以便使用在不同场合，取决于路径的长度。这也正是 专业人士的做法，用大的区域计算长的路径，然后在接近目标的时候切换到使用小格子/区域的精细寻路。如果你对这个观点感兴趣，查阅我的文章Two- Tiered A* Pathfinding。<br>
+* 使用路径点系统计算长路径，或者预先计算好路径并加入到游戏中。<br>
+* 预处理你的地图，表明地图中哪些区域是不可到达的。我把这些区域称作“孤岛”。事实上，他们可以是岛屿或其他被墙壁包围等无法到达的任意区域。A*的下限 是，当你告诉它要寻找通往那些区域的路径时，它会搜索整个地图，直到所有可到达的方格/节点都被通过开启列表和关闭列表的计算。这会浪费大量的CPU时 间。可以通过预先确定这些区域（比如通过flood-fill或类似的方法)来避免这种情况的发生,用某些种类的数组记录这些信息，在开始寻路前检查它。 在我Blitz版本的代码中，我建立了一个地图预处理器来作这个工作。它也标明了寻路算法可以忽略的死端，这进一步提高了寻路速度。</p>
+<p>4，不 同的地形损耗：在这个教程和我附带的程序中，地形只有两种－可通过的和不可通过的。但是你可能会需要一些可通过的地形，但是移动耗费更高－沼泽，小山，地 牢的楼梯，等等。这些都是可通过但是比平坦的开阔地移动耗费更高的地形。类似的，道路应该比自然地形移动耗费更低。</p>
+<p>这个问题很容易解决，只 要在计算任何地形的G值的时候增加地形损耗就可以了。简单的给它增加一些额外的损耗就可以了。由于A*算法已经按照寻找最低耗费的路径来设计，所以很容易 处理这种情况。在我提供的这个简单的例子里，地形只有可通过和不可通过两种，A*会找到最短，最直接的路径。但是在地形耗费不同的场合，耗费最低的路径也 许会包含很长的移动距离－就像沿着路绕过沼泽而不是直接穿过它。</p>
+<p>一种需额外考虑的情况是被专家称之为“influence mapping”的东西（暂译为影响映射图）。就像上面描述的不同地形耗费一样，你可以创建一格额外的分数系统，并把它应用到寻路的AI中。假设你有一张 有大批寻路者的地图，他们都要通过某个山区。每次电脑生成一条通过那个关口的路径，它就会变得更拥挤。如果你愿意，你可以创建一个影响映射图对有大量屠杀 事件的格子施以不利影响。这会让计算机更倾向安全些的路径，并且帮助它避免总是仅仅因为路径短(但可能更危险)而持续把队伍和寻路者送到某一特定路径。</p>
+<p>5，处理未知区域：你是否玩过这样的PC游戏，电脑总是知道哪条路是正确的，即使它还没有侦察过地图？对于游戏，寻路太好会显得不真实。幸运的是，这是一格可以轻易解决的问题。</p>
+<p>答 案就是为每个不同的玩家和电脑（每个玩家，而不是每个单位－－那样的话会耗费大量的内存）创建一个独立的“knownWalkability”数组，每个 数组包含玩家已经探索过的区域，以及被当作可通过区域的其他区域，直到被证实。用这种方法，单位会在路的死端徘徊并且导致错误的选择直到他们在周围找到 路。一旦地图被探索了，寻路就像往常那样进行。</p>
+<p>6，平滑路径：尽管A*提供了最短，最低代价的路径，它无法自动提供看起来平滑的路径。看一下我们的例子最终形成的路径（在图7）。最初的一步是起始格的右下方，如果这一步是直接往下的话，路径不是会更平滑一些吗？</p>
+<p>有 几种方法来解决这个问题。当计算路径的时候可以对改变方向的格子施加不利影响，对G值增加额外的数值。也可以换种方法，你可以在路径计算完之后沿着它跑一 遍，找那些用相邻格替换会让路径看起来更平滑的地方。想知道完整的结果，查看Toward More Realistic Pathfinding，一篇(免费，但是需要注册)Marco Pinter发表在Gamasutra.com的文章</p>
+<p>7，非方形搜索区 域：在我们的例子里，我们使用简单的2D方形图。你可以不使用这种方式。你可以使用不规则形状的区域。想想冒险棋的游戏，和游戏中那些国家。你可以设计一 个像那样的寻路关卡。为此，你可能需要建立一个国家相邻关系的表格，和从一个国家移动到另一个的G值。你也需要估算H值的方法。其他的事情就和例子中完全 一样了。当你需要向开启列表中添加新元素的时候，不需使用相邻的格子，取而代之的是从表格中寻找相邻的国家。</p>
+<p>类似的，你可以为一张确定的地 形图创建路径点系统，路径点一般是路上，或者地牢通道的转折点。作为游戏设计者，你可以预设这些路径点。两个路径点被认为是相邻的如果他们之间的直线上没 有障碍的话。在冒险棋的例子里，你可以保存这些相邻信息在某个表格里，当需要在开启列表中添加元素的时候使用它。然后你就可以记录关联的G值（可能使用两 点间的直线距离），H值（可以使用到目标点的直线距离），其他都按原先的做就可以了。</p>
+<p>另一个在非方形区域搜索RPG地图的例子，查看我的文章Two-Tiered A* Pathfinding。</p>
+<p>进一步的阅读</p>
+<p>好，现在你对一些进一步的观点有了初步认识。这时，我建议你研究我的源代码。包里面包含两个版本，一个是用C++写的，另一个用Blitz Basic。顺便说一句，两个版本都注释详尽，容易阅读，这里是链接。</p>
+<p>* 例子代码：A* Pathfinder (2D) Version 1.71</p>
+<p>如 果你既不用C++也不用Blitz Basic,在C++版本里有两个小的可执行文件。Blitz Basic可以在从Blitz Basic网站免费下载的litz Basic 3D(不是Blitz Plus)演示版上运行。Ben O'Neill提供一个联机演示可以在这里找到。</p>
+<p>你也该看看以下的网页。读了这篇教程后，他们应该变得容易理解多了。</p>
+<p>* Amit的 A* 页面:这是由Amit Patel制作，被广泛引用的页面，如果你没有事先读这篇文章，可能会有点难以理解。值得一看。尤其要看Amit关于这个问题的自己的看法。<br>
+* Smart Moves:智能寻路：Bryan Stout发表在Gamasutra.com的这篇文章需要注册才能阅读。注册是免费的而且比起这篇文章和网站的其他资源，是非常物有所值的。Bryan 用Delphi写的程序帮助我学习A*，也是我的A*代码的灵感之源。它还描述了A*的几种变化。<br>
+* 地形分析：这是一格高阶，但是有趣的话题，Dave Pottinge撰写，Ensemble Studios的专家。这家伙参与了帝国时代和君王时代的开发。别指望看懂这里所有的东西，但是这是篇有趣的文章也许会让你产生自己的想法。它包含一些对 mip-mapping，influence mapping以及其他一些高级AI/寻路观点。对"flood filling"的讨论使我有了我自己的“死端”和“孤岛”的代码的灵感，这些包含在我Blitz版本的代码中。</p>
+<p>其他一些值得一看的网站：</p>
+<p>* aiGuru: Pathfinding<br>
+* Game AI Resource: Pathfinding<br>
+* GameDev.net: Pathfinding</p>
+<p>好了，这就是全部。如果你刚好写一个运用这些观点的程序，我想见识见识。你可以这样联系我：<br>
+现在，好运！</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/a%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95" rel="tag">A*寻路算法</a>, <a href="/tag/%E6%9B%BC%E5%93%88%E9%A1%BF%E5%90%AF%E5%8F%91%E5%BC%8F%E7%AE%97%E6%B3%95" rel="tag">曼哈顿启发式算法</a>, <a href="/tag/%E6%9C%80%E4%BC%98%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95" rel="tag">最优路径算法</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/03/19/%E6%8C%87%E5%AE%9A%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%B7%B2%E7%BB%8F%E6%A0%87%E8%AE%B0%E4%B8%BA%E5%88%A0%E9%99%A4%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html" rel="prev">指定的服务已经标记为删除的解决办法</a><br>【下篇】<a href="/2012/03/20/system-data-sqlclient-sqlerror-%E5%A4%87%E4%BB%BD%E9%9B%86%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%B8%8E%E7%8E%B0%E6%9C%89%E7%9A%84-xxx-%E6%95%B0%E6%8D%AE%E5%BA%93.html" rel="next">System.Data.SqlClient.SqlError: 备份集中的数据库备份与现有的 ‘XXX’ 数据库不同</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li><li> · <a href="/2024/09/12/fix-net-blazor-child-component-not-refresh.html">解决.NET Blazor子组件不刷新问题</a></li><li> · <a href="/2024/09/10/net8-microsoft-aspnetcore.html">.NET8如何在普通类库中引用 Microsoft.AspNetCore</a></li><li> · <a href="/2024/06/27/net8-mysql-ssl-error.html">.NET8 Mysql SSL error</a></li><li> · <a href="/2024/06/25/asp-net-core-razor-unicode.html">ASP.NET Core MVC的Razor视图渲染中文乱码的问题</a></li><li> · <a href="/2022/02/23/netcore-life-circle.html">.NETCORE 依赖注入服务生命周期</a></li><li> · <a href="/2022/02/16/asp-net-zero-mysql.html">asp.net zero改mysql</a></li><li> · <a href="/2022/02/16/net5.html">.NET5面试汇总</a></li><li> · <a href="/2021/05/26/convert-zero-datetime.html">.Net连接Mysql数据库的Convert Zero Datetime日期问题</a></li><li> · <a href="/2020/09/30/vue-message-notification.html">vue使用element-ui中的Message 、MessageBox 、Notification</a></li><li> · <a href="/2020/09/30/asp-net-core-filter-aop.html">Asp.Net Core Filter 深入浅出的那些事-AOP</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年03月20日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/03/20/a%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95%E6%9B%BC%E5%93%88%E9%A1%BF%E5%90%AF%E5%8F%91%E5%BC%8F%E7%AE%97%E6%B3%95%E3%80%81%E6%9C%80%E4%BC%98%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95.html" rel="bookmark" title="本文固定链接 /2012/03/20/a%e5%af%bb%e8%b7%af%e7%ae%97%e6%b3%95%e6%9b%bc%e5%93%88%e9%a1%bf%e5%90%af%e5%8f%91%e5%bc%8f%e7%ae%97%e6%b3%95%e3%80%81%e6%9c%80%e4%bc%98%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95.html">A*寻路算法(曼哈顿启发式算法、最优路径算法) | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/03/20/a%e5%af%bb%e8%b7%af%e7%ae%97%e6%b3%95%e6%9b%bc%e5%93%88%e9%a1%bf%e5%90%af%e5%8f%91%e5%bc%8f%e7%ae%97%e6%b3%95%e3%80%81%e6%9c%80%e4%bc%98%e8%b7%af%e5%be%84%e7%ae%97%e6%b3%95.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+<!-- 引用 -->	
+	<div class="tab_comment">
+		<h2 id="comments">A*寻路算法(曼哈顿启发式算法、最优路径算法)：目前有1 条留言</h2>	
+	</div>
+	<ol class="commentlist">   <li class="comment even thread-even depth-1" id="comment-2877">
+   <div id="div-comment-2877">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/3f209d37276c5d95aea6da8b643dffb64a12b07957a05cf7ea8a8213b6fb9199?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3f209d37276c5d95aea6da8b643dffb64a12b07957a05cf7ea8a8213b6fb9199?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" decoding="async">			</div>
+			<strong><a href="/" class="url" rel="ugc">游客</a></strong> :
+			<span class="datetime">2012年03月20日下午 1:35</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2012/03/20/a%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95%E6%9B%BC%E5%93%88%E9%A1%BF%E5%90%AF%E5%8F%91%E5%BC%8F%E7%AE%97%E6%B3%95%E3%80%81%E6%9C%80%E4%BC%98%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95.html?replytocom=2877#respond" data-commentid="2877" data-postid="1879" data-belowelement="div-comment-2877" data-respondelement="respond" data-replyto="回复给 游客" aria-label="回复给 游客">回复</a></span>
+		</div>
+				<p>关于A*，我一直不明白为什么将它归为广度优先的搜索范畴，我认为它应该是深度优先+启发估价才对。</p>
+	<div class="clear"></div>
+  </div>
+</li></ol>
+
+	<div class="navigation_c">
+		<div class="previous"></div>
+	</div>
+
+ 		<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/03/20/a%E5%AF%BB%E8%B7%AF%E7%AE%97%E6%B3%95%E6%9B%BC%E5%93%88%E9%A1%BF%E5%90%AF%E5%8F%91%E5%BC%8F%E7%AE%97%E6%B3%95%E3%80%81%E6%9C%80%E4%BC%98%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="1879" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="659e4b85bc"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="180"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.068 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:30 -->

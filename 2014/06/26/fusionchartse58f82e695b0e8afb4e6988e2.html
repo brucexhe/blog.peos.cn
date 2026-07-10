@@ -1,0 +1,963 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>FusionCharts参数说明2 | Bruce's Blog</title> 
+<meta name="description" content="图表组件常用参数说明2：">
+<meta name="keywords" content="">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2014 年 6 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="6" class="pad"> </td><td>1</td>
+	</tr>
+	<tr>
+		<td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td>
+	</tr>
+	<tr>
+		<td>9</td><td>10</td><td><a href="/2014/06/11" aria-label="2014年6月11日 发布的文章">11</a></td><td>12</td><td>13</td><td>14</td><td>15</td>
+	</tr>
+	<tr>
+		<td>16</td><td><a href="/2014/06/17" aria-label="2014年6月17日 发布的文章">17</a></td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td>
+	</tr>
+	<tr>
+		<td>23</td><td><a href="/2014/06/24" aria-label="2014年6月24日 发布的文章">24</a></td><td>25</td><td><a href="/2014/06/26" aria-label="2014年6月26日 发布的文章">26</a></td><td><a href="/2014/06/27" aria-label="2014年6月27日 发布的文章">27</a></td><td>28</td><td>29</td>
+	</tr>
+	<tr>
+		<td><a href="/2014/06/30" aria-label="2014年6月30日 发布的文章">30</a></td>
+		<td class="pad" colspan="6"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2014/04">« 4 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2014/07">7 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#28ffbe;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#2b5cbb;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#ccbe43;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#d94ad4;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#ebaaff;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#8d6283;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#252ccd;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#10e12e;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#f8cf0b;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#68a2b4;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#ad428c;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#dec91d;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#b9b292;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#3a9da9;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#bb12af;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#89064c;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#cddd59;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#5677e2;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#940f20;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#48dfb7;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#a3c107;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#8d48c1;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#e72e97;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#a37081;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#e86d90;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#36fff5;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#887413;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#f3212;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#774882;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#7c7a53;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#7e62e6;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#88bf;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#afdc05;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#c93003;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#72e160;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#e68cf5;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#2fbd16;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#b97f47;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#6438;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#ab1b4e;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#d470;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#7cffce;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#adf4b2;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#e6a9ed;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#e4d39f;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/jsjqureycss" rel="category tag">前端</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">FusionCharts参数说明2</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2014-06-26 10:40</span>
+			<span class="category">  <a href="/category/jsjqureycss" rel="category tag">前端</a></span>
+			<span class="article_comment"><a href="/2014/06/26/fusioncharts%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E2.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>5,978</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+</p><p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #ff0000; font-size: xx-large;">图表组件常用参数说明2：</span></p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+animation                     是否动画显示数据，默认为 1(True)<br>
+showNames                     是否显示横向坐标轴(x轴)标签名称<br>
+rotateNames                 是否旋转显示标签，默认为0(False):横向显示<br>
+showValues                     是否在图表显示对应的数据值，默认为1(True)<br>
+yAxisMinValue                 指定纵轴(y轴)最小值，数字<br>
+yAxisMaxValue                  指定纵轴(y轴)最小值，数字<br>
+showLimits                     是否显示图表限值(y轴最大、最小值)，默认为1(True)<br>
+showColumnShadow      是否显示各条形图间的阴影（若柱面图在一起并列的话）<br>
+showAlternateHGridColor 是否隔行显示不同颜色<br>
+图表标题和轴名称<br>
+caption                     图表主标题<br>
+subCaption                     图表副标题<br>
+xAxisName                     横向坐标轴(x轴)名称<br>
+yAxisName                     纵向坐标轴(y轴)名称<br>
+imageSave='1'       是否保存图片<br>
+imageSaveURL='Path/FusionChartsSave.jsp '图片路径</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">hoverCapSepChar='，'。鼠标放到柱面上时显示的提示信息的分隔符<br>
+showhovercap='1'          鼠标放到柱面上时是否显示提示信息<br>
+hoverCapBgColor=‘ffffff’提示信息背景颜色<br>
+图表和画布的样式<br>
+bgColor                     图表背景色，6位16进制颜色值<br>
+canvasBgColor                 画布背景色，6位16进制颜色值<br>
+canvasBgAlpha                 画布透明度，[0-100]<br>
+canvasBorderColor             画布边框颜色，6位16进制颜色值<br>
+canvasBorderThickness         画布边框厚度，[0-100]<br>
+shadowAlpha                 投影透明度，[0-100]<br>
+showLegend                     是否显示系列名，默认为1(True)</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">字体属性<br>
+baseFont                     图表字体样式<br>
+baseFontSize                 图表字体大小<br>
+baseFontColor                 图表字体颜色，6位16进制颜色值<br>
+outCnvBaseFont                 图表画布以外的字体样式<br>
+outCnvBaseFontSize             图表画布以外的字体大小<br>
+outCnvBaseFontColor         图表画布以外的字体颜色，6位16进制颜色值</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">分区线和网格<br>
+numDivLines                 画布内部水平分区线条数，数字<br>
+divLineColor                 水平分区线颜色，6位16进制颜色值<br>
+divLineThickness             水平分区线厚度，[1-5]<br>
+divLineAlpha                 水平分区线透明度，[0-100]<br>
+showAlternateHGridColor     是否在横向网格带交替的颜色，默认为0(False)<br>
+alternateHGridColor         横向网格带交替的颜色，6位16进制颜色值<br>
+alternateHGridAlpha         横向网格带的透明度，[0-100]<br>
+showDivLineValues             是否显示Div行的值，默认？？<br>
+numVDivLines                 画布内部垂直分区线条数，数字<br>
+vDivLineColor                 垂直分区线颜色，6位16进制颜色值<br>
+vDivLineThickness             垂直分区线厚度，[1-5]<br>
+vDivLineAlpha                 垂直分区线透明度，[0-100]<br>
+showAlternateVGridColor     是否在纵向网格带交替的颜色，默认为0(False)<br>
+alternateVGridColor         纵向网格带交替的颜色，6位16进制颜色值<br>
+alternateVGridAlpha         纵向网格带的透明度，[0-100]</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">数字格式<br>
+numberPrefix                 增加数字前缀<br>
+numberSuffix                 增加数字后缀     % 为 '%25' / (吨)为‘%ef%bc%88%e5%90%a8%ef%bc%89’（Server.UrlEncode编码）<br>
+formatNumberScale         是否格式化数字,默认为1(True),自动的给你的数字加上K（千）或M（百万）；若取0,则不加K或M<br>
+decimalPrecision             指定小数位的位数， [0-10]     例如：='0' 取整<br>
+divLineDecimalPrecision     指定水平分区线的值小数位的位数， [0-10]<br>
+limitsDecimalPrecision         指定y轴最大、最小值的小数位的位数，[0-10]<br>
+formatNumber                 逗号来分隔数字(千位，百万位),默认为1(True)；若取0,则不加分隔符<br>
+decimalSeparator             指定小数分隔符,默认为'.'<br>
+thousandSeparator             指定千分位分隔符,默认为','</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">Tool- tip/Hover标题<br>
+showhovercap                 是否显示悬停说明框，默认为1(True)<br>
+hoverCapBgColor             悬停说明框背景色，6位16进制颜色值<br>
+hoverCapBorderColor         悬停说明框边框颜色，6位16进制颜色值<br>
+hoverCapSepChar             指定悬停说明框内值与值之间分隔符,默认为','</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">折线图的参数<br>
+lineThickness                 折线的厚度<br>
+anchorRadius                 折线节点半径，数字<br>
+anchorBgAlpha                 折线节点透明度，[0-100]<br>
+anchorBgColor                 折线节点填充颜色，6位16进制颜色值<br>
+anchorBorderColor             折线节点边框颜色，6位16进制颜色值</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">Set标签使用的参数<br>
+value                         数据值<br>
+color                         颜色<br>
+link                         链接（本窗口打开[Url]，新窗口打开[n-Url]，调用JS函数[JavaScript:函数]）<br>
+name                         横向坐标轴标签名称</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">showFCMenuItem='0' 设置右键显示不显示</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">1. varmyChart= newFusionCharts("../FusionCharts/FCF_Column3D.swf", "myChartId", "600", "<br>
+500");<br>
+第一个参数是SWF 文件的地址。<br>
+第二个是图形的id。这个id 你可以随便叫什么，但是要注意，在后面我们讲到一个页面里有<br>
+多个图形的时候，这个id 一定要是唯一的。<br>
+第三个参数是图形的宽。<br>
+第四个参数是图形的高。<br>
+我们还要设置数据文件的地址。<br>
+1. myChart.setDataURL("Data.xml");<br>
+最后，我们把图形渲染在指定的地方。<br>
+1. myChart.render("chartdiv");<br>
+"chartdiv"就是前面的DIV 的id，这就表示把图形render 到"chartdiv"。<br>
+现在你运行JSChart.html，你会看到同Chart.html 一样的效果。很显然使用JavaScript 加载<br>
+图形，更方便，更直观。</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+如果你想在一个新的窗口打开页面，只需要在连接的前面加上“n-”，就像下面的代码一样：<br>
+1. &lt;graph caption='Monthly Sales Summary' subcaption='For the year 2006 '<br>
+2. xAxisName='Month' yAxisName='Sales' numberPrefix='$'&gt;<br>
+3. &lt;set name='Jan' value='1 7400' link='n-DemoLinkPages/DemoLink1.html' color='AFD8F8' /&gt;</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">XML数据节点和常用属性详解<br>
+caption=‘标题‘<br>
+subcaption=‘子标题‘<br>
+clickURL=‘abc.jsp‘ 点击整个图表时跳转到abc.jsp<br>
+xAxisName=部门‘<br>
+numberPrefix =‘￥’ 数据前缀单位<br>
+numberSuffix =‘个’ 数据后缀单位<br>
+Decimals=‘2’ 保留两位小数，四舍五入<br>
+forceDecimals=‘2’ 强制保留两位小数，对于5.1 转换为5.10<br>
+yAxisName=‘完成率’<br>
+如果使用汉字汉符需加属性：rotateYAxisName=‘1’<br>
+showValues=‘1’<br>
+yAxisMaxValue=‘100’<br>
+对于百分比的常用bgColor='999999,FFFFFF‘<br>
+渐变bgColor=‘999999 ’ 单色<br>
+useRoundEdges=‘1’ 光线效果<br>
+baseFont=‘宋体‘<br>
+baseFontSize='12'<br>
+baseFontColor='333333'</p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+</p><p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+</p><p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+</p><p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+</p><p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #ff0000; font-size: xx-large;">图片组件使用简介：</span></p>
+<p class="p15" style="margin-top: 0pt; margin-bottom: 0pt;">
+</p><p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 1--WebChart </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">图形的基本元素</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在我们了解了</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 的各种使用方法以后，我们就会发现，其实我们要做出各种不同的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Flash</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">图形，最关键的就是那个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 数据。它不但可以描述图形的数据，还可以描述图形的样式。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 我们需要搞清楚图形的组成部分，比如什么是</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">X </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴，什么是</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 轴，什么是图形背景，什么是是图形边框。只有了解这些以后，我们才能做出我们相应的图形。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 1.1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 图形背景和画布</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">对于</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">3D </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">图形，你可以设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">canvas background</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（画布背景）和</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Chart Background</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（图形背景）的颜色，还可以设置它们是否可见。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">对于</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2D </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">图形，你可以设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">canvas background color</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（画布背景颜色），</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">background alpha</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（背景透明度），</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">canvas border color</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（画布边框颜色），</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">canvas border thickness</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（画布边框厚度）等属性。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 1.2 Chart Labels</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（图形标签）</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">你可以设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">caption</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（标题）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, sub caption</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（子标题）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, x-axis name</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">X </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴标签）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, y-axisname</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴标签）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, y-axis maxlimit</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴最大值）， </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">y-axismin limit</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴最小值）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, numberPrefix</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（数值前缀）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, numberSuffix</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（数值后缀），</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">ChartLegend</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（ 图例）。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 1.3 DIV lines</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（刻度线）</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">你可以设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Trend Line</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（趋势线），</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">ZeroPlane</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（零平面），</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">DivLine</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（刻度线）等的一些属性。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 1.4 Alternating</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（间隔色）</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">你可以设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">AlternatingColoredHorizontalGrids</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（垂直表格间隔色）以及透明度，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">AlternatingColoredVerticalGrids</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（水平表格间隔色）以及透明度。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 1.5 Hover Caption</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（提示信息）</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">你可以设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">hovercaptionbackground--</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">提示框的背景，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">hovercaptionborder </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">提示框的边框，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">hovercaptiondataseparatorcharacter--</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">提示信息的分割字符。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 6.6 Anchors</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（锚点）</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">你可以设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Anchors</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（锚点）的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">shape</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（形状）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, radius</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（半径）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, bordercolor</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（边框颜色）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, thickness</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（边框厚度）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, alpha</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（边框透明度）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, background color</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（背景颜色）</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">, backgroundalpha</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（背景透明度）等属性。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 本章我们了解了一些图形基本构成元素，还了解了我们可以对它们进行哪些设置。下章我们将介绍一下的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 2--WebChart </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">和</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WebChart </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 使用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">来创建和控制图形。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 2.1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">数据类型</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">一共有四种数据类型。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> Boole an - </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">它的值为</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">或</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">1</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">表示</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">true</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">表示</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">false</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。例如</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;graph showNames='1' &gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> Number - </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 它的值应该是一个数值。例如</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;graph yAxisMaxValue='200' &gt; </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> String - </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 它的值是一个字符串。例如</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;graph caption='My Chart' &gt; </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Hex Color Code - </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">它表示一个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">16 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 进制的颜色，不需要用“<span lang="EN-US">#</span>”。例如</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;graph bgColor='FFFFDD' &gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 每个图形都有很多属性，我们都可以通过</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 对它进行设置，但是，我们并不需要对每一个属性都进行设置，因为它们都有一个默认值，如果我们没有设置，会使用默认值来替代。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">有几种类型的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">结构：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 2.2 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">单系列图形</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 单系列图形是指只有一个数据集的图形。例如，我们的第一个例子，每月销售情况，就是一个单系列图形（我们只有一年的数据）。我们并没有对数据进行比较，例如，比较两年的每月销售情况。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 2.3 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">多系列图形</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 多系列图形被用来比较两个或更多的数据集。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">多了一个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;categories&gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">元素，它包含很多的子元素<span lang="EN-US">.</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">每个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;category&gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">就表示</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">X </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴上的一个名称。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">注意</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;categories&gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">的子元素的数量应该和</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;dataset&gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">子元素的一致。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 3--WebChart </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">和组合图</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们来看看什么是组合图形，以及它的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">是怎么写的。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 3.1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 什么是组合图形</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 当我们想在一张图形里表示多个图形类型时，我们就要用到组合图。提供了双</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴组合图，它有两个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 轴，每个轴表示不同的刻度（例如，收益和数量，或者访问量和下载量等等。）。图形左边的坐标轴叫主坐标轴，图形右边的叫次坐标轴。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">组合图分为</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2D </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">和</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">3D.</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在双</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 轴图形里，我们必须提供至少两个数据集，一个对应主</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴，一个对应次</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 轴。如果你没有提供两个，图形就不会正确显示。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 3.2 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">简单解释</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">这个组合图的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">和一个多系列图形的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 较为类似，因此，我们只解释以下不同的地方。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在双</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴组合图里，有两个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">轴，每个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Y </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 轴都可以有它自己的刻度和数值格式属性。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> PYAxisName </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">表示主轴的名称，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">SYAxisName </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">表示次轴的名称。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在每个数据集里，我们都必须用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">parentYAxis </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 属性来指定它是属于哪个轴。这个属性的值只能是“<span lang="EN-US">P</span>”或“<span lang="EN-US">S</span>”。</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">P </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">代表主轴，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">S </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 代表次轴。例如我们的代码里，在主轴上有两个销售额数据集</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">--</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">“<span lang="EN-US">2008</span>”和“<span lang="EN-US">2009</span>”：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;dataset </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> seriesName</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2008' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> parentYAxis</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'P' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">... </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;dataset </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> seriesName</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2009' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> parentYAxis</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'P' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">... </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在次轴上有一个数量数据集：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;dataset </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> seriesName</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Total Quantity' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> parentYAxis</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'S' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">... </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">上面的例子里，数量数据集表示的是</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2008 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">和</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2009 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 当月数量的总数。实际上，我们可以在次轴上也设置两个数据集，一个表示</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2008 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 年每月的数量，一个表示</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2009 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">年的。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 3.3 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">注意</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在运行这个例子是，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Flash </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">文件应该使用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART_MSColumn2DLineDY.swf</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，从上图我们可以</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">看出，它是</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">column </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">和</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">line </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">的组合，因此要用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART_MSColumn2DLineDY.swf</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。更多的图形和</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Flash</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">文件的对应关系，请参见</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">调用例子。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 4--</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">动态改变图形的类型和数据</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 在前面的介绍里，我们已经了解了图形的基本使用方法以及图形</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，现在我们已经有能力做出基本的图形了，如果你现在就把它应用到你的项目里，我认为没有任何问题，而且我也相信你还能举一反三地，发展出一些“新”的用法。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">那我们就开始吧。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 4.1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 动态改变图形的类型</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 在项目中，我们有时会需要在页面上方便地改变图形的类型，当然，如果页面不刷新就能看到改变的结果，那是最理想的。举个例子来说，在一个页面上，显示了一 个月销售额的柱状图，但用户要求还可以查看月销售额的饼图，区域图。要实现这个需求，一般的做法是，再做两个页面，一个显示饼图，一个显示区域图，用户想 看这两个图，点击连接就可以了。这样的做法并没有什么不妥。你还可以采用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">AJAX </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 技术，来实现页面无刷新，这样用户的体验会更好一些。只是程序员累一点而已。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 难道我们一定要这么累吗？不！其实我们可以有更好的办法，为你的报表解决方案。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">那么<span lang="EN-US">,</span>是怎么实现上面的需求的呢？简单点说，思路是这样的：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">1</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">、使用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">JavaScript </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 加载第一个图形（如柱状图），至于是用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">dataXML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">方法，还是</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">dataURL </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">方法，都可以。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">、当需要改变图形类型（如改成饼图）时，我们再创建一个新的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WebChart </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">类实例（它的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">SWF</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">文件是饼图），把它</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">render </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">到原来的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">DIV</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">就是这么简单。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们来看看代码吧。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;HTML&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;HEAD&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;SCRIPT </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> LANGUAGE</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"Javascript" </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">SRC</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"../../WebChart/WebChart.js"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;&lt;/SCRIPT&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;SCRIPT </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> LANGUAGE</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"JavaScript"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">//</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">数据</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">var </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">strXML </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">= "</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;graph </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> caption</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Hours worked' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> showNames</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 '</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt; &lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Tom ' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'3</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">2' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'AFD8F8'</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Mary' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 6' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'F6 BD0F'</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Jane' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'4 2' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'8BBA00'</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> /&gt;&lt;/graph&gt;</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">";</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">/*</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">* </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 当用户单击按钮时调用这个方法。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">* </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">这个方法用来使用新的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">SWF </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">文件创建一个新的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WebChart </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">实例。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">*/</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> function updateChart(chartSWF){</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> //Create another instance of the chart.</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">var </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">chart1 </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">= </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;"> new </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WebChart(chartSWF, "chart1Id", "4 00", "3 00", "0", "0");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> chart1.setDataXML(strXML);</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> chart1.render("chart1div");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">}</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/SCRIPT&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/HEAD&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;BODY&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;div </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">id</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"chart1div"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WebChart</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/div&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;script </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> language</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"JavaScript"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">var </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">chart1 </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">= </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;"> new </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WebChart("../../WebChart/WEBCHART_Column3D.swf", "chart1Id", "4 00","3 00", "0", "0");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> chart1.setDataXML(strXML);</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> chart1.render("chart1div");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/script&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;form </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'frmUpdate'</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">Show as:</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;input </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">type</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'button' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Column' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> onClick</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"javaScript:updateChart('../../WebChart/F</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;"> CF_Column3D.swf');" </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'btnColumn' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;input </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">type</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'button' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Line' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> onClick</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"javaScript:updateChart('../../WebChart/WEBCHART</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;"> _Line.swf');" </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'btnLine' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;input </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">type</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'button' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Pie' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> onClick</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"javaScript:updateChart('../../WebChart/WEBCHART_</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;"> Pie3D.swf');" </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'btnPie' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/form&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/CENTER&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/BODY&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/HTML&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">上面的代码非常浅显，就不做解释了。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 4.2 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 动态改变图形的数据</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 我们已经会动态改变图形的类型了，动态改变数据和上面的原来一样，我们只需要在新建</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">实例的时候，传入新的数据就可以了。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 那么为什么还要单独来讲解这个呢？因为</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WebChart </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 给我们提供了一个更简单的方法，那就是</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">updateChartXML(domid,data)</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。它的第一个参数就是我们在创建</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WebChart </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">实例时设置的图形</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">domid</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，第二个参数是</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">XML </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">数据字符。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">来看看下面的代码。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;HTML&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;HEAD&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;TITLE&gt;</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WebChart &amp; JavaScript - Updating chart using setDataXML() Method</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;/TI</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">TLE&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;SCRIPT </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> LANGUAGE</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"Javascript" </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">SRC</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"../../WebChart/WebChart.js"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;&lt;/SCRIPT&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;SCRIPT </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> LANGUAGE</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"JavaScript"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> function updateChart(DOMId){</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> updateChartXML(domId,"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;graph&gt;&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'A' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'3 2' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> /&gt;&lt;/graph&gt;</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">}</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/SCRIPT&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/HEAD&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;BODY&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;div </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">id</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"chart1div"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WebChart</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;/div&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;script </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> language</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"JavaScript"</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">var </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">chart1 </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">= </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;"> new </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WebChart("../../WebChart/WEBCHART_Column3D.swf", "chart1Id", "4 00", "3 00");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> chart1.setDataXML("</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;graph&gt;&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'A' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 0' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'D6 4646' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> /&gt;&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'B' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 1' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'AFD8F8' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> /&gt;&lt;/graph&gt;</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> chart1.render("chart1div");</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/script&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;form </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'frmUpdate'</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;input </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">type</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'button' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'</span><span style="font-size: 12.0pt; font-family: 宋体; color: #000081;">改变数据</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> onClick</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"javaScript:updateChart('chart1Id');" </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'btnUpdate'</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/form&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/HTML&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 当我们单击”改变数据“按钮后，会调用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">updateChart()</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">方法，它会使用新的数据来重新构建图形。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 下章我们来讲讲的下钻图形，听上去很专业，其实就是图形的连接，包括超连接，</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> JavaScript</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 5--WEBCHART </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">中的下级链接</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 在我们开发图形报表时，你可能会遇到这样的需求：用户要求点击柱状图的某根柱子，可查看它的详细数据。其他的一些基于</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">java </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">的图形报表组件，如</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">jfreechart</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，也可以实现加连接</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 的功能，但是使用起来还是有点麻烦的。其实它不光是加连接麻烦，正个使用起来都很麻烦，</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 需要你在后台编写大量的代码。通过前面的章节，你应该知道，<span lang="EN-US">web</span></span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">Chart</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 的使用非常简单，你只需要关注你的数据如何产生就可以了。至于如何产生图形，并不需要你编一行代码。加连接也是如此。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 支持三种类型的连接：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">1</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">、普通的超链接，在同一个窗口打开新的页面。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">、普通的超链接，在新窗口打开新的页面。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">3</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">、</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">JavaScript </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">连接。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 5.1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">普通的超链接</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们先来看看第一种情况。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">想要在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 图形里加连接，你只需要在数据集里加上一个</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">link </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">属性即可。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">1. &lt;set ... value='2235' ... link= 'ShowDetails.jsp%3FMonth%3DJan' ...&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们发现</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">URL </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 是经过了编码的。是的，因为你的连接里可能会含有“<span lang="EN-US">?</span>”，“<span lang="EN-US">&amp;</span>”等字符，所以需要编码。</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在载入这个连接时， 会对它进行解码， 解码后上例中的连接就是</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">“<span lang="EN-US">ShowDetails.jsp?Month=Jan</span>”。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们看一个完整的例子。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;graph </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> caption</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> subcaption</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">''</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> xAxisName</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Month' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> yAxisName</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Sales' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> numberPrefix</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'$' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Jan' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 7400' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'DemoLinkPages/DemoLink1.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'AFD8F8' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Feb' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 9800' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'DemoLinkPages/DemoLink2.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'F6 BD0F' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Mar' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 1800' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'DemoLinkPages/DemoLink3.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'8BBA00' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Apr' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 3800' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'DemoLinkPages/DemoLink4.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'FF8E46' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'May' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 9600' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'DemoLinkPages/DemoLink5.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'008E8E' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Jun' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 7600' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'DemoLinkPages/DemoLink6.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'D6 4646' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/graph&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 如果把上面的数据用柱状图来显示，结果如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 当我们把鼠标移到每个柱子上时，鼠标会变成连接样式，点击它，就会在新的窗口里打开相应的页面。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 5.2 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">新窗口超链接</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 如果你想在一个新的窗口打开页面，只需要在连接的前面加上“<span lang="EN-US">n-</span>”，就像下面的代码一样：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;graph </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> caption</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> subcaption</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">' '</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">xAxisName</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Month' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> yAxisName</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Sales' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> numberPrefix</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'$'</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Jan' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 7400' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'n-DemoLinkPages/DemoLink1.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'AFD8F8' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Feb' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 9800' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'n-DemoLinkPages/DemoLink2.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'F6 BD0F' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Mar' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 1800' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'n-DemoLinkPages/DemoLink3.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'8BBA00' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Apr' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 3800' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'n-DemoLinkPages/DemoLink4.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'FF8E46' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'May' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 9600' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'n-DemoLinkPages/DemoLink5.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'008E8E' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Jun' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 7600' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'n-DemoLinkPages/DemoLink6.html' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'D6 4646' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;/graph&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 5.3 JavaScript </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">连接</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们还可以加上</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">JavaScript </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 连接，在连接里，你可以调用任何在本页可以调用到的</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> JavaScript </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">函数。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Japan' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'1 23' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">link</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">"JavaScript:myJS('Japan, 123');" </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'F6 BD0F'</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 6--WEBCHART </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">中的基本数字格式</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 在我们的报表里，经常要对数值进行一些格式化，如小数位，千分位等等。这在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">里</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 实现起来非常容易。下面我们就来看看。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 6.1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 控制小数位位数</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">所有的</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">图形都支持</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">decimalPrecision </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 属性，这个属性是用来指定小数位的位数的。如果你没有指定这个属性的值，那么</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">默认会显示小数位后面</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">2 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 位小数。这个属性是全局的，也就是说，它对这个图形上的所有数字都起作用。例如，如果你设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">decimalPrecision='0'</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，那么像这些</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">12.432</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">13.4</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">13</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，就会显示成</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">12</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">13</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">13</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">同样的，如果你有</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.12432</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.134 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">， </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.13 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">等数据，并且没有指定</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">decimalPrecision </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">的值，</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">那么</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">就会显示成</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.12</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.13</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.13</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。如果你把</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">decimalPrecision </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">设置成</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">4</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，那么就会显示成</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.1243</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.1340</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">0.1300</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 6.2 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 自动格式化数字</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 会自动的给你的数字加上</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">K</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（千）或</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">M</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">（百万），如下图。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">上图中，三个数字分别代表</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">12500</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">13400</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">13300</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 会自动地把这些数字转化为以千为单位，或是以百万为单位。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 如果你不想这样，你就加上如下的代码：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;graph formatNumberScale='0'..decimalPrecision= '0'...&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">效果如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 现在显示的是全部的数字了。不过，它还加了一些逗号来分隔这些数字。如果你不喜欢这样，你就加上</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">formatNumber=0</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。但是，如果设置了</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">formatNumber=0</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，那么就不能格式化小数位了。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">看起来代码就像这样：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;graph ... formatNumber='0' formatNumberScale='0' ..decimalPrecision= '0'...&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">效果是这样：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 6.3 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 自定义千分位和小数分隔符</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 默认使用“<span lang="EN-US">.</span>”作为小数分隔符，使用“<span lang="EN-US">,</span>”作为千分位分隔符。这也是我们的使用习惯。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">如果你想改成其他的，也可以。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们使用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">decimalSeparator </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">指定小数分隔符，使用</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">thousandSeparator </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 指定千分位分隔符。例如，</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 我们想把小数分隔符和千分位分隔符调换一下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">  &lt;graph ... decimalSeparator=',' thousandSeparator='.' &gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 6.4 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 增加数字前缀和后缀</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 允许我们给所有的数字都加上前缀和后缀。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">如果我们设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">numberPrefix='$'</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，那么会在所有的数字前面就会加上“<span lang="EN-US">$</span>”，就像这样： </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> $40000,</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> $50000</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">如果我们设置</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">numberSuffix='%25'</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，那么会在所以的数字后面加上“<span lang="EN-US">%</span>”，就像这样：</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">43%</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">，</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">39%</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">我们注意到，“<span lang="EN-US">%</span>”是经过了编码的。在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 里，一些特殊的编码都需要经过编码。下一节我们会详细介绍特殊字符。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7--WEBCHART </span> <span style="font-size: 12.0pt; font-family: 宋体; color: black;">中的特殊字符</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 里，如果要在图形里用到一些特殊的字符，你就要对它进行编码，否则就无法显示。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.1 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">欧元符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 里显示“€”，你需要用“<span lang="EN-US">%80</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;graph decimalPrecision='0' numberPrefix='%80 '&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='John' value='420' color='AFD8F8' /&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='Mary' value='295' color='F6BD0F' /&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='Tom' value='523' color='8BBA00' /&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/graph&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 上面的代码会在数字前面都加上“€”。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.2 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">英镑符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 里显示“￡”，你需要用“<span lang="EN-US">%A3</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;graph </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> decimalPrecision</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'0' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> numberPrefix</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'%A3 '</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'John' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'4 20' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'AFD8F8' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Mary' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 95' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'F6 BD0F' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Tom ' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'523' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'8BBA00' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/graph&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 上面的代码会在数字前面都加上“￡”。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.3 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">人民币符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 里显示“￥”，你需要用“<span lang="EN-US">%A5</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;graph </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> decimalPrecision</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'0' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;"> numberPrefix</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'%A5 ' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'John' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'4 20' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'AFD8F8' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Mary' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'2 95' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'F6 BD0F' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">name</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'Tom ' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">value</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'523' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: red;">color</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">=</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #000081;">'8BBA00' </span> <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">/&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;/graph&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 上面的代码会在数字前面都加上“￥”。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.4 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">分符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 里显示“￠”，你需要用“<span lang="EN-US">%A2</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.5 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">百分号符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">里显示“<span lang="EN-US">%</span>”，你需要用“<span lang="EN-US">%25</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">上面的代码会在数字后面都加上“<span lang="EN-US">%</span>”。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.6 &amp;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">里显示“<span lang="EN-US">&amp;</span>”，你需要用“<span lang="EN-US">&amp;amp;</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.7 &gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">里显示“<span lang="EN-US">&gt;</span>”，你需要用“<span lang="EN-US">&amp;gt;</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">上面的代码最后一个数字显示为“<span lang="EN-US">&gt;10</span>”。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 7.8 </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">单引号符号</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">里显示“<span lang="EN-US">'</span>”，你需要用“<span lang="EN-US">&amp;apos;</span>”来替换它。如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: #5c5c5c;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">上面的代码显示为“<span lang="EN-US">John's Count</span>”。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 如果你想要显示双引号，直接使用就可以了，前提是你的属性值是用单引号括起来的。如果你</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 的属性值是用双引号括起来的，你要显示单引号，也可以直接使用，而不必用“<span lang="EN-US">&amp;apos;</span>”来替换</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">它。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><b><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> 8--</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">间断数据的处理</span></b></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 有时候我们的数据并不是连续的，例如我们有一个反映每个月销售额的图形，然而，五月和六月的数据我们缺失了，像这种情况我们该如何处理呢？</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> WEBCHART </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 早就想到这个问题了，我们看看下面的代码：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;"> &lt;graph&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='1</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value= '420' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='2</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='295' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='3</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='523' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='4</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='473' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='5</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='6</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='7</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='354 ' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='8</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='457' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='9</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='127' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">&lt;set name='10</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='354 ' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">12. &lt;set name='11</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value= '485' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">13. &lt;set name='12</span><span style="font-size: 12.0pt; font-family: 宋体; color: blue;">月<span lang="EN-US">' value='486 ' /&gt;</span></span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: blue;">14. &lt;/graph&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 我们看到，上面五月和六月的数据里，并没有</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">value </span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">这个属性。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 如果把这样的数据放到一个柱状图里，效果如下：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">在五月和六月那里没有柱子。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"> </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">如果把这样的数据放到一个曲线图里， </span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 同样的，五月和六月那里没有线段，它是缺失的。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 如果你想连五月和六月的标签都不显示，你可以这样：</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;set /&gt;</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">当然，你还可以干脆连</span><span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;">&lt;set /&gt;</span><span style="font-size: 12.0pt; font-family: 宋体; color: black;">都不要。不过那样会让看图的人容易误解，因为人们一般都会以</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;">为是按顺序来排列月份的。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left"><span style="font-size: 12.0pt; font-family: 宋体; color: black;"> 多系列的图形也可以放置这样的断点数据。</span></p>
+<p class="MsoNormal" style="text-align: left; text-autospace: none;" align="left">  <span lang="EN-US" style="font-size: 12.0pt; font-family: 宋体; color: black;"><br>
+</span></p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag"></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2014/06/24/%E6%98%AF%E4%BB%80%E4%B9%88%E9%99%90%E5%88%B6%E4%BA%86%E4%BD%A0%E7%9A%84%E8%83%BD%E5%8A%9B%EF%BC%9F.html" rel="prev">是什么限制了你的能力？</a><br>【下篇】<a href="/2014/06/27/%E4%B8%89%E7%A7%8Dsql%E5%88%86%E9%A1%B5%E6%B3%95.html" rel="next">三种SQL分页法</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li><li> · <a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li><li> · <a href="/2025/01/06/nestjs-nextjs-nuxtjs.html">Nest.js 、 Next.js、 Nuxt.js的区别</a></li><li> · <a href="/2024/11/20/mp-bind.html">小程序可以绑定其它小程序吗？</a></li><li> · <a href="/2024/11/19/vue3-vite-subdir.html">vue3+vite+多环境发面到二级目录配置</a></li><li> · <a href="/2024/09/03/catchtap.html">微信小程序防止事件穿透防止事件冒泡</a></li><li> · <a href="/2024/08/29/qrcode-to-miniprogram.html">普通链接二维码跳转小程序</a></li><li> · <a href="/2024/06/03/flex-direction-column.html">解决flex-direction: column 之后元素宽度自动变为100%</a></li><li> · <a href="/2023/11/09/vue-react-node-vite-npm-yarn-build-auto-update-version.html">vue/react/node/vite/npm/yarn build自动更新版本号</a></li><li> · <a href="/2023/05/30/getvisitdistribution.html">getVisitDistribution  访问来源定义（访问来源 key 对应关系）</a></li><li> · <a href="/2023/05/10/tinymce.html">TinyMCE工具栏配置详解</a></li><li> · <a href="/2023/04/17/ant-design-vue-1-7-8-vue2-customer-icon.html">Ant Design Vue 1.7.8 （vu2）自定义路由菜单图标</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2014年06月26日发表在<a href="/category/jsjqureycss" rel="category tag">前端</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2014/06/26/fusioncharts%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E2.html" rel="bookmark" title="本文固定链接 /2014/06/26/fusioncharts%e5%8f%82%e6%95%b0%e8%af%b4%e6%98%8e2.html">FusionCharts参数说明2 | Bruce's Blog</a><a href="#" onclick="copy_code('/2014/06/26/fusioncharts%e5%8f%82%e6%95%b0%e8%af%b4%e6%98%8e2.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2014/06/26/fusioncharts%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E2.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="3358" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="1ff10ea3d1"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="132"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.083 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:48:26 -->

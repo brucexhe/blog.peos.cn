@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+
+<title>404错误</title>
+<link href="/statics/v3/css/global.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/statics/v3/js/jquery-1.8.2.min.js"></script>
+</head>
+<body>
+<div class="topbox">
+    <div class="w1200">
+        <div class="topl fl">
+            <span class="home"><a href="http://www.xp510.com/">系统之家首页</a></span>
+            <div class="top_phone">
+                <div class="phone_top"><span>手机版<i></i></span></div>
+                <div class="white-line"></div>
+                <div class="lowphone"><img src="/statics/v3/images/wapcode.png" width="102" height="102"></div>
+            </div>
+            <div class="top_apk">
+                <div class="apk_top"><a href="http://app.9669.com/">9669安卓助手</a></div>
+            </div>
+        </div>
+        <div class="topr fr">
+           <ul>
+               <li><a href="http://www.xp510.com/shouji/">手机之家</a>|</li>
+               <li><a href="http://www.xp510.com/xiazai/newsoft.html">最新更新</a>|</li>
+               <li><a href="http://www.xp510.com/xiazai/category.html">软件分类</a>|</li>
+               <li><a href="http://www.xp510.com/xiazai/submit.html">软件发布</a>|</li>
+               <li><a href="http://www.xp510.com/label/">软件标签</a>|</li>
+               <li><a href="http://www.xp510.com/">收藏本站</a></li>
+           </ul>
+        </div>
+    </div>
+</div>
+<div class="main-404">
+    <div class="in">
+        <div class="distips">抱歉，您访问的页面不存在</div>
+        <p class="showtips">
+            该页面可能是已经更名、删除<br>
+            检查输入的地址是否正确点击
+        </p>
+        <p class="tz">
+            将在 <span><strong id="tiao">5<a href="javascript:countDown"></a></strong>秒</span>后自动返回网站首页，<br>
+            如果您的浏览器没有自动跳转，请点击
+        </p>
+        <p><a href="http://www.xp510.com/" class="btn"></a></p>
+    </div>   
+</div>
+<script type="text/javascript" src="/statics/v3/js/global.js"></script>
+<script>
+function countDown(secs){ 
+ tiao.innerHTML=secs; 
+ if(--secs>0){ 
+  setTimeout("countDown("+secs+")",1000); 
+  }else{
+	location.href="http://www.xp510.com/";
+  }
+} 
+ countDown(3); 
+</script>
+</body>
+</html>

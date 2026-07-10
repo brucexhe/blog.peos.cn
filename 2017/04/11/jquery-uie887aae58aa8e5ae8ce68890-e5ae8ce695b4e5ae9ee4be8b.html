@@ -1,0 +1,1479 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>jQuery UI自动完成 完整实例 | Bruce's Blog</title> 
+<meta name="description" content="jQuery UI 实例 - 自动完成（Autocomplete）">
+<meta name="keywords" content="jQuery UI,自动完成">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2017 年 4 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="5" class="pad"> </td><td>1</td><td>2</td>
+	</tr>
+	<tr>
+		<td>3</td><td>4</td><td>5</td><td>6</td><td><a href="/2017/04/07" aria-label="2017年4月7日 发布的文章">7</a></td><td><a href="/2017/04/08" aria-label="2017年4月8日 发布的文章">8</a></td><td>9</td>
+	</tr>
+	<tr>
+		<td>10</td><td><a href="/2017/04/11" aria-label="2017年4月11日 发布的文章">11</a></td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td>
+	</tr>
+	<tr>
+		<td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td>
+	</tr>
+	<tr>
+		<td>24</td><td><a href="/2017/04/25" aria-label="2017年4月25日 发布的文章">25</a></td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2017/03">« 3 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2017/05">5 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#f24eb6;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#41188;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#a33c6;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#5d896;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#8acc13;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#d15187;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#767bdf;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#d8dd9;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#3da7dd;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#b43e22;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#e37c91;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#5caa8e;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#1f0410;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#902fd6;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#56526f;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#dad4bd;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#26c8fd;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#3e0245;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#9aa2d8;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#aafc82;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#60d15a;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#46dff0;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#afe0e1;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#9aa068;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#cee44c;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#c6e9a2;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#b06d2b;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#fd0588;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#6e9953;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#76d8d6;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#2a9ba3;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#cab1db;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#40b115;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#96651e;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#936402;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#103bc0;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#2b41fe;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#839bd9;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#64e4f4;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#2bd632;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#fcacc8;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#238317;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#23de28;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#9b316b;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#12c5df;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/jsjqureycss" rel="category tag">前端</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">jQuery UI自动完成 完整实例</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2017-04-11 13:21</span>
+			<span class="category">  <a href="/category/jsjqureycss" rel="category tag">前端</a></span>
+			<span class="article_comment"><a href="/2017/04/11/jquery-ui%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90-%E5%AE%8C%E6%95%B4%E5%AE%9E%E4%BE%8B.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>1,235</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div class="article-body">
+<div id="content" class="article-intro">
+<h1><span class="wp_keywordlink_affiliate"><a href="/tag/jquery-ui" title="View all posts in jQuery UI" target="_blank">jQuery UI</a></span> 实例 - <span class="color_h1"><span class="wp_keywordlink_affiliate"><a href="/tag/%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90" title="View all posts in 自动完成" target="_blank">自动完成</a></span>（Autocomplete）</span></h1>
+<p>根据用户输入值进行搜索和过滤，让用户快速找到并从预设值列表中选择。</p>
+<p>如需了解更多有关 autocomplete 部件的细节，请查看 API 文档 <span class="wp_keywordlink_affiliate"><a href="/tag/%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90" title="View all posts in 自动完成" target="_blank">自动完成</a></span>部件（Autocomplete Widget）。</p>
+<p>本章节使用到 search.php 下载。</p>
+<h2>默认功能</h2>
+<p>当您在输入域中输入时，<span class="wp_keywordlink_affiliate"><a href="/tag/%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90" title="View all posts in 自动完成" target="_blank">自动完成</a></span>（Autocomplete）部件提供相应的建议。在本实例中，提供了编程语言的建议选项，您可以输入 "ja" 尝试一下，可以得到 Java 或 JavaScript。</p>
+<p>数据源是一个简单的 JavaScript 数组，使用 source 选项提供给部件。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 默认功能</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">var</span><span class="pln"> availableTags </span><span class="pun">=</span> <span class="pun">[</span>
+      <span class="str">"ActionScript"</span><span class="pun">,</span>
+      <span class="str">"AppleScript"</span><span class="pun">,</span>
+      <span class="str">"Asp"</span><span class="pun">,</span>
+      <span class="str">"BASIC"</span><span class="pun">,</span>
+      <span class="str">"C"</span><span class="pun">,</span>
+      <span class="str">"C++"</span><span class="pun">,</span>
+      <span class="str">"Clojure"</span><span class="pun">,</span>
+      <span class="str">"COBOL"</span><span class="pun">,</span>
+      <span class="str">"ColdFusion"</span><span class="pun">,</span>
+      <span class="str">"Erlang"</span><span class="pun">,</span>
+      <span class="str">"Fortran"</span><span class="pun">,</span>
+      <span class="str">"Groovy"</span><span class="pun">,</span>
+      <span class="str">"Haskell"</span><span class="pun">,</span>
+      <span class="str">"Java"</span><span class="pun">,</span>
+      <span class="str">"JavaScript"</span><span class="pun">,</span>
+      <span class="str">"Lisp"</span><span class="pun">,</span>
+      <span class="str">"Perl"</span><span class="pun">,</span>
+      <span class="str">"PHP"</span><span class="pun">,</span>
+      <span class="str">"Python"</span><span class="pun">,</span>
+      <span class="str">"Ruby"</span><span class="pun">,</span>
+      <span class="str">"Scala"</span><span class="pun">,</span>
+      <span class="str">"Scheme"</span>
+    <span class="pun">];</span><span class="pln">
+    $</span><span class="pun">(</span> <span class="str">"#tags"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+      source</span><span class="pun">:</span><span class="pln"> availableTags
+    </span><span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"tags"</span><span class="tag">&gt;</span><span class="pln">标签：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"tags"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>包含重音</h2>
+<p>autocomplete 域使用自定义的 source 选项来匹配带有重音字符的结果项，即使文本域不包含重音字符也会匹配。但是如果您在文本域中键入了重音字符，则不会显示非重音的结果项。</p>
+<p>尝试键入 "Jo"，会看到 "John" 和 "Jörn"，然后 键入 "Jö"，只会看到 "Jörn"。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 包含重音</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">var</span><span class="pln"> names </span><span class="pun">=</span> <span class="pun">[</span> <span class="str">"Jörn Zaefferer"</span><span class="pun">,</span> <span class="str">"Scott González"</span><span class="pun">,</span> <span class="str">"John Resig"</span> <span class="pun">];</span>
+ 
+    <span class="kwd">var</span><span class="pln"> accentMap </span><span class="pun">=</span> <span class="pun">{</span>
+      <span class="str">"á"</span><span class="pun">:</span> <span class="str">"a"</span><span class="pun">,</span>
+      <span class="str">"ö"</span><span class="pun">:</span> <span class="str">"o"</span>
+    <span class="pun">};</span>
+    <span class="kwd">var</span><span class="pln"> normalize </span><span class="pun">=</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> term </span><span class="pun">)</span> <span class="pun">{</span>
+      <span class="kwd">var</span><span class="pln"> ret </span><span class="pun">=</span> <span class="str">""</span><span class="pun">;</span>
+      <span class="kwd">for</span> <span class="pun">(</span> <span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span> <span class="lit">0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> term</span><span class="pun">.</span><span class="pln">length</span><span class="pun">;</span><span class="pln"> i</span><span class="pun">++</span> <span class="pun">)</span> <span class="pun">{</span><span class="pln">
+        ret </span><span class="pun">+=</span><span class="pln"> accentMap</span><span class="pun">[</span><span class="pln"> term</span><span class="pun">.</span><span class="pln">charAt</span><span class="pun">(</span><span class="pln">i</span><span class="pun">)</span> <span class="pun">]</span> <span class="pun">||</span><span class="pln"> term</span><span class="pun">.</span><span class="pln">charAt</span><span class="pun">(</span><span class="pln">i</span><span class="pun">);</span>
+      <span class="pun">}</span>
+      <span class="kwd">return</span><span class="pln"> ret</span><span class="pun">;</span>
+    <span class="pun">};</span><span class="pln">
+ 
+    $</span><span class="pun">(</span> <span class="str">"#developer"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+      source</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">,</span><span class="pln"> response </span><span class="pun">)</span> <span class="pun">{</span>
+        <span class="kwd">var</span><span class="pln"> matcher </span><span class="pun">=</span> <span class="kwd">new</span> <span class="typ">RegExp</span><span class="pun">(</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">ui</span><span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">.</span><span class="pln">escapeRegex</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">.</span><span class="pln">term </span><span class="pun">),</span> <span class="str">"i"</span> <span class="pun">);</span><span class="pln">
+        response</span><span class="pun">(</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">grep</span><span class="pun">(</span><span class="pln"> names</span><span class="pun">,</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> value </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+          value </span><span class="pun">=</span><span class="pln"> value</span><span class="pun">.</span><span class="pln">label </span><span class="pun">||</span><span class="pln"> value</span><span class="pun">.</span><span class="pln">value </span><span class="pun">||</span><span class="pln"> value</span><span class="pun">;</span>
+          <span class="kwd">return</span><span class="pln"> matcher</span><span class="pun">.</span><span class="pln">test</span><span class="pun">(</span><span class="pln"> value </span><span class="pun">)</span> <span class="pun">||</span><span class="pln"> matcher</span><span class="pun">.</span><span class="pln">test</span><span class="pun">(</span><span class="pln"> normalize</span><span class="pun">(</span><span class="pln"> value </span><span class="pun">)</span> <span class="pun">);</span>
+        <span class="pun">})</span> <span class="pun">);</span>
+      <span class="pun">}</span>
+    <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;form&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"developer"</span><span class="tag">&gt;</span><span class="pln">开发人员：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"developer"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;/form&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>分类</h2>
+<p>分类的搜索结果。尝试键入 "a" 或 "n"。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 分类</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete</span><span class="pun">-</span><span class="pln">category </span><span class="pun">{</span><span class="pln">
+    font</span><span class="pun">-</span><span class="pln">weight</span><span class="pun">:</span><span class="pln"> bold</span><span class="pun">;</span><span class="pln">
+    padding</span><span class="pun">:</span> <span class="pun">.</span><span class="lit">2em</span> <span class="pun">.</span><span class="lit">4em</span><span class="pun">;</span><span class="pln">
+    margin</span><span class="pun">:</span> <span class="pun">.</span><span class="lit">8em</span> <span class="lit">0</span> <span class="pun">.</span><span class="lit">2em</span><span class="pun">;</span><span class="pln">
+    line</span><span class="pun">-</span><span class="pln">height</span><span class="pun">:</span> <span class="lit">1.5</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">.</span><span class="pln">widget</span><span class="pun">(</span> <span class="str">"custom.catcomplete"</span><span class="pun">,</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">ui</span><span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">,</span> <span class="pun">{</span><span class="pln">
+    _renderMenu</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> ul</span><span class="pun">,</span><span class="pln"> items </span><span class="pun">)</span> <span class="pun">{</span>
+      <span class="kwd">var</span><span class="pln"> that </span><span class="pun">=</span> <span class="kwd">this</span><span class="pun">,</span><span class="pln">
+        currentCategory </span><span class="pun">=</span> <span class="str">""</span><span class="pun">;</span><span class="pln">
+      $</span><span class="pun">.</span><span class="pln">each</span><span class="pun">(</span><span class="pln"> items</span><span class="pun">,</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> index</span><span class="pun">,</span><span class="pln"> item </span><span class="pun">)</span> <span class="pun">{</span>
+        <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">category </span><span class="pun">!=</span><span class="pln"> currentCategory </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+          ul</span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span> <span class="str">"&lt;li class='ui-autocomplete-category'&gt;"</span> <span class="pun">+</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">category </span><span class="pun">+</span> <span class="str">"&lt;/li&gt;"</span> <span class="pun">);</span><span class="pln">
+          currentCategory </span><span class="pun">=</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">category</span><span class="pun">;</span>
+        <span class="pun">}</span><span class="pln">
+        that</span><span class="pun">.</span><span class="pln">_renderItemData</span><span class="pun">(</span><span class="pln"> ul</span><span class="pun">,</span><span class="pln"> item </span><span class="pun">);</span>
+      <span class="pun">});</span>
+    <span class="pun">}</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">var</span><span class="pln"> data </span><span class="pun">=</span> <span class="pun">[</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"anders"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">""</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"andreas"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">""</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"antal"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">""</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"annhhx10"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">"Products"</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"annk K12"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">"Products"</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"annttop C13"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">"Products"</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"anders andersson"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">"People"</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"andreas andersson"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">"People"</span> <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln"> label</span><span class="pun">:</span> <span class="str">"andreas johnson"</span><span class="pun">,</span><span class="pln"> category</span><span class="pun">:</span> <span class="str">"People"</span> <span class="pun">}</span>
+    <span class="pun">];</span><span class="pln">
+ 
+    $</span><span class="pun">(</span> <span class="str">"#search"</span> <span class="pun">).</span><span class="pln">catcomplete</span><span class="pun">({</span><span class="pln">
+      delay</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">,</span><span class="pln">
+      source</span><span class="pun">:</span><span class="pln"> data
+    </span><span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"search"</span><span class="tag">&gt;</span><span class="pln">搜索：</span><span class="tag">&lt;/label&gt;</span>
+<span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"search"</span><span class="tag">&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>组合框（Combobox）</h2>
+<p>一个由 Autocomplete 和 Button 创建的自定义部件。您可以键入一些字符，来获得基于您的输入过滤的结果，或者使用按钮从完整列表中选择。</p>
+<p>该输入是从一个已有的 select 元素中读取，传递给带有自定义的 source 选项的 Autocomplete。</p>
+<p>这是一个不被支持的不完美的部件。这里纯粹是为了演示 autocomplete 定制功能。如需了解更多有关该部件工作原理的细节，请点击这里查看相关的 jQuery 文章。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 组合框（Combobox）</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">custom</span><span class="pun">-</span><span class="pln">combobox </span><span class="pun">{</span><span class="pln">
+    position</span><span class="pun">:</span><span class="pln"> relative</span><span class="pun">;</span><span class="pln">
+    display</span><span class="pun">:</span> <span class="kwd">inline</span><span class="pun">-</span><span class="pln">block</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="pun">.</span><span class="pln">custom</span><span class="pun">-</span><span class="pln">combobox</span><span class="pun">-</span><span class="pln">toggle </span><span class="pun">{</span><span class="pln">
+    position</span><span class="pun">:</span><span class="pln"> absolute</span><span class="pun">;</span><span class="pln">
+    top</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">;</span><span class="pln">
+    bottom</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">;</span><span class="pln">
+    margin</span><span class="pun">-</span><span class="pln">left</span><span class="pun">:</span> <span class="pun">-</span><span class="lit">1px</span><span class="pun">;</span><span class="pln">
+    padding</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">;</span>
+    <span class="com">/* 支持： IE7 */</span>
+    <span class="pun">*</span><span class="pln">height</span><span class="pun">:</span> <span class="lit">1.7em</span><span class="pun">;</span>
+    <span class="pun">*</span><span class="pln">top</span><span class="pun">:</span> <span class="lit">0.1em</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="pun">.</span><span class="pln">custom</span><span class="pun">-</span><span class="pln">combobox</span><span class="pun">-</span><span class="pln">input </span><span class="pun">{</span><span class="pln">
+    margin</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">;</span><span class="pln">
+    padding</span><span class="pun">:</span> <span class="lit">0.3em</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span>
+  <span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln"> $ </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+    $</span><span class="pun">.</span><span class="pln">widget</span><span class="pun">(</span> <span class="str">"custom.combobox"</span><span class="pun">,</span> <span class="pun">{</span><span class="pln">
+      _create</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">wrapper </span><span class="pun">=</span><span class="pln"> $</span><span class="pun">(</span> <span class="str">"&lt;span&gt;"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">addClass</span><span class="pun">(</span> <span class="str">"custom-combobox"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">insertAfter</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">element </span><span class="pun">);</span>
+ 
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">element</span><span class="pun">.</span><span class="pln">hide</span><span class="pun">();</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">_createAutocomplete</span><span class="pun">();</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">_createShowAllButton</span><span class="pun">();</span>
+      <span class="pun">},</span><span class="pln">
+ 
+      _createAutocomplete</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+        <span class="kwd">var</span><span class="pln"> selected </span><span class="pun">=</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">element</span><span class="pun">.</span><span class="pln">children</span><span class="pun">(</span> <span class="str">":selected"</span> <span class="pun">),</span><span class="pln">
+          value </span><span class="pun">=</span><span class="pln"> selected</span><span class="pun">.</span><span class="pln">val</span><span class="pun">()</span> <span class="pun">?</span><span class="pln"> selected</span><span class="pun">.</span><span class="pln">text</span><span class="pun">()</span> <span class="pun">:</span> <span class="str">""</span><span class="pun">;</span>
+ 
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">input </span><span class="pun">=</span><span class="pln"> $</span><span class="pun">(</span> <span class="str">"&lt;input&gt;"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">appendTo</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">wrapper </span><span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">val</span><span class="pun">(</span><span class="pln"> value </span><span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span> <span class="str">"title"</span><span class="pun">,</span> <span class="str">""</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">addClass</span><span class="pun">(</span> <span class="str">"custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+            delay</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">,</span><span class="pln">
+            minLength</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">,</span><span class="pln">
+            source</span><span class="pun">:</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">proxy</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">,</span> <span class="str">"_source"</span> <span class="pun">)</span>
+          <span class="pun">})</span>
+          <span class="pun">.</span><span class="pln">tooltip</span><span class="pun">({</span><span class="pln">
+            tooltipClass</span><span class="pun">:</span> <span class="str">"ui-state-highlight"</span>
+          <span class="pun">});</span>
+ 
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">_on</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">input</span><span class="pun">,</span> <span class="pun">{</span><span class="pln">
+          autocompleteselect</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+            ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">option</span><span class="pun">.</span><span class="pln">selected </span><span class="pun">=</span> <span class="kwd">true</span><span class="pun">;</span>
+            <span class="kwd">this</span><span class="pun">.</span><span class="pln">_trigger</span><span class="pun">(</span> <span class="str">"select"</span><span class="pun">,</span><span class="pln"> event</span><span class="pun">,</span> <span class="pun">{</span><span class="pln">
+              item</span><span class="pun">:</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">option
+            </span><span class="pun">});</span>
+          <span class="pun">},</span><span class="pln">
+ 
+          autocompletechange</span><span class="pun">:</span> <span class="str">"_removeIfInvalid"</span>
+        <span class="pun">});</span>
+      <span class="pun">},</span><span class="pln">
+ 
+      _createShowAllButton</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+        <span class="kwd">var</span><span class="pln"> input </span><span class="pun">=</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">input</span><span class="pun">,</span><span class="pln">
+          wasOpen </span><span class="pun">=</span> <span class="kwd">false</span><span class="pun">;</span><span class="pln">
+ 
+        $</span><span class="pun">(</span> <span class="str">"&lt;a&gt;"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span> <span class="str">"tabIndex"</span><span class="pun">,</span> <span class="pun">-</span><span class="lit">1</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span> <span class="str">"title"</span><span class="pun">,</span> <span class="str">"Show All Items"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">tooltip</span><span class="pun">()</span>
+          <span class="pun">.</span><span class="pln">appendTo</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">wrapper </span><span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">button</span><span class="pun">({</span><span class="pln">
+            icons</span><span class="pun">:</span> <span class="pun">{</span><span class="pln">
+              primary</span><span class="pun">:</span> <span class="str">"ui-icon-triangle-1-s"</span>
+            <span class="pun">},</span><span class="pln">
+            text</span><span class="pun">:</span> <span class="kwd">false</span>
+          <span class="pun">})</span>
+          <span class="pun">.</span><span class="pln">removeClass</span><span class="pun">(</span> <span class="str">"ui-corner-all"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">addClass</span><span class="pun">(</span> <span class="str">"custom-combobox-toggle ui-corner-right"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">mousedown</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span><span class="pln">
+            wasOpen </span><span class="pun">=</span><span class="pln"> input</span><span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">(</span> <span class="str">"widget"</span> <span class="pun">).</span><span class="pln">is</span><span class="pun">(</span> <span class="str">":visible"</span> <span class="pun">);</span>
+          <span class="pun">})</span>
+          <span class="pun">.</span><span class="pln">click</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span><span class="pln">
+            input</span><span class="pun">.</span><span class="pln">focus</span><span class="pun">();</span>
+ 
+            <span class="com">// 如果已经可见则关闭</span>
+            <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> wasOpen </span><span class="pun">)</span> <span class="pun">{</span>
+              <span class="kwd">return</span><span class="pun">;</span>
+            <span class="pun">}</span>
+ 
+            <span class="com">// 传递空字符串作为搜索的值，显示所有的结果</span><span class="pln">
+            input</span><span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">(</span> <span class="str">"search"</span><span class="pun">,</span> <span class="str">""</span> <span class="pun">);</span>
+          <span class="pun">});</span>
+      <span class="pun">},</span><span class="pln">
+ 
+      _source</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">,</span><span class="pln"> response </span><span class="pun">)</span> <span class="pun">{</span>
+        <span class="kwd">var</span><span class="pln"> matcher </span><span class="pun">=</span> <span class="kwd">new</span> <span class="typ">RegExp</span><span class="pun">(</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">ui</span><span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">.</span><span class="pln">escapeRegex</span><span class="pun">(</span><span class="pln">request</span><span class="pun">.</span><span class="pln">term</span><span class="pun">),</span> <span class="str">"i"</span> <span class="pun">);</span><span class="pln">
+        response</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">element</span><span class="pun">.</span><span class="pln">children</span><span class="pun">(</span> <span class="str">"option"</span> <span class="pun">).</span><span class="pln">map</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+          <span class="kwd">var</span><span class="pln"> text </span><span class="pun">=</span><span class="pln"> $</span><span class="pun">(</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">();</span>
+          <span class="kwd">if</span> <span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">&amp;&amp;</span> <span class="pun">(</span> <span class="pun">!</span><span class="pln">request</span><span class="pun">.</span><span class="pln">term </span><span class="pun">||</span><span class="pln"> matcher</span><span class="pun">.</span><span class="pln">test</span><span class="pun">(</span><span class="pln">text</span><span class="pun">)</span> <span class="pun">)</span> <span class="pun">)</span>
+            <span class="kwd">return</span> <span class="pun">{</span><span class="pln">
+              label</span><span class="pun">:</span><span class="pln"> text</span><span class="pun">,</span><span class="pln">
+              value</span><span class="pun">:</span><span class="pln"> text</span><span class="pun">,</span><span class="pln">
+              option</span><span class="pun">:</span> <span class="kwd">this</span>
+            <span class="pun">};</span>
+        <span class="pun">})</span> <span class="pun">);</span>
+      <span class="pun">},</span><span class="pln">
+ 
+      _removeIfInvalid</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span>
+ 
+        <span class="com">// 选择一项，不执行其他动作</span>
+        <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item </span><span class="pun">)</span> <span class="pun">{</span>
+          <span class="kwd">return</span><span class="pun">;</span>
+        <span class="pun">}</span>
+ 
+        <span class="com">// 搜索一个匹配（不区分大小写）</span>
+        <span class="kwd">var</span><span class="pln"> value </span><span class="pun">=</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">input</span><span class="pun">.</span><span class="pln">val</span><span class="pun">(),</span><span class="pln">
+          valueLowerCase </span><span class="pun">=</span><span class="pln"> value</span><span class="pun">.</span><span class="pln">toLowerCase</span><span class="pun">(),</span><span class="pln">
+          valid </span><span class="pun">=</span> <span class="kwd">false</span><span class="pun">;</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">element</span><span class="pun">.</span><span class="pln">children</span><span class="pun">(</span> <span class="str">"option"</span> <span class="pun">).</span><span class="pln">each</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+          <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> $</span><span class="pun">(</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">().</span><span class="pln">toLowerCase</span><span class="pun">()</span> <span class="pun">===</span><span class="pln"> valueLowerCase </span><span class="pun">)</span> <span class="pun">{</span>
+            <span class="kwd">this</span><span class="pun">.</span><span class="pln">selected </span><span class="pun">=</span><span class="pln"> valid </span><span class="pun">=</span> <span class="kwd">true</span><span class="pun">;</span>
+            <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+          <span class="pun">}</span>
+        <span class="pun">});</span>
+ 
+        <span class="com">// 找到一个匹配，不执行其他动作</span>
+        <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> valid </span><span class="pun">)</span> <span class="pun">{</span>
+          <span class="kwd">return</span><span class="pun">;</span>
+        <span class="pun">}</span>
+ 
+        <span class="com">// 移除无效的值</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">input
+          </span><span class="pun">.</span><span class="pln">val</span><span class="pun">(</span> <span class="str">""</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span> <span class="str">"title"</span><span class="pun">,</span><span class="pln"> value </span><span class="pun">+</span> <span class="str">" didn't match any item"</span> <span class="pun">)</span>
+          <span class="pun">.</span><span class="pln">tooltip</span><span class="pun">(</span> <span class="str">"open"</span> <span class="pun">);</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">element</span><span class="pun">.</span><span class="pln">val</span><span class="pun">(</span> <span class="str">""</span> <span class="pun">);</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">_delay</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+          <span class="kwd">this</span><span class="pun">.</span><span class="pln">input</span><span class="pun">.</span><span class="pln">tooltip</span><span class="pun">(</span> <span class="str">"close"</span> <span class="pun">).</span><span class="pln">attr</span><span class="pun">(</span> <span class="str">"title"</span><span class="pun">,</span> <span class="str">""</span> <span class="pun">);</span>
+        <span class="pun">},</span> <span class="lit">2500</span> <span class="pun">);</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">input</span><span class="pun">.</span><span class="pln">data</span><span class="pun">(</span> <span class="str">"ui-autocomplete"</span> <span class="pun">).</span><span class="pln">term </span><span class="pun">=</span> <span class="str">""</span><span class="pun">;</span>
+      <span class="pun">},</span><span class="pln">
+ 
+      _destroy</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">wrapper</span><span class="pun">.</span><span class="pln">remove</span><span class="pun">();</span>
+        <span class="kwd">this</span><span class="pun">.</span><span class="pln">element</span><span class="pun">.</span><span class="pln">show</span><span class="pun">();</span>
+      <span class="pun">}</span>
+    <span class="pun">});</span>
+  <span class="pun">})(</span><span class="pln"> jQuery </span><span class="pun">);</span><span class="pln">
+ 
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span><span class="pln">
+    $</span><span class="pun">(</span> <span class="str">"#combobox"</span> <span class="pun">).</span><span class="pln">combobox</span><span class="pun">();</span><span class="pln">
+    $</span><span class="pun">(</span> <span class="str">"#toggle"</span> <span class="pun">).</span><span class="pln">click</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span><span class="pln">
+      $</span><span class="pun">(</span> <span class="str">"#combobox"</span> <span class="pun">).</span><span class="pln">toggle</span><span class="pun">();</span>
+    <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label&gt;</span><span class="pln">您喜欢的编程语言：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;select</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"combobox"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">""</span><span class="tag">&gt;</span><span class="pln">请选择...</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"ActionScript"</span><span class="tag">&gt;</span><span class="pln">ActionScript</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"AppleScript"</span><span class="tag">&gt;</span><span class="pln">AppleScript</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Asp"</span><span class="tag">&gt;</span><span class="pln">Asp</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"BASIC"</span><span class="tag">&gt;</span><span class="pln">BASIC</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"C"</span><span class="tag">&gt;</span><span class="pln">C</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"C++"</span><span class="tag">&gt;</span><span class="pln">C++</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Clojure"</span><span class="tag">&gt;</span><span class="pln">Clojure</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"COBOL"</span><span class="tag">&gt;</span><span class="pln">COBOL</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"ColdFusion"</span><span class="tag">&gt;</span><span class="pln">ColdFusion</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Erlang"</span><span class="tag">&gt;</span><span class="pln">Erlang</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Fortran"</span><span class="tag">&gt;</span><span class="pln">Fortran</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Groovy"</span><span class="tag">&gt;</span><span class="pln">Groovy</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Haskell"</span><span class="tag">&gt;</span><span class="pln">Haskell</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Java"</span><span class="tag">&gt;</span><span class="pln">Java</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"JavaScript"</span><span class="tag">&gt;</span><span class="pln">JavaScript</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Lisp"</span><span class="tag">&gt;</span><span class="pln">Lisp</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Perl"</span><span class="tag">&gt;</span><span class="pln">Perl</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"PHP"</span><span class="tag">&gt;</span><span class="pln">PHP</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Python"</span><span class="tag">&gt;</span><span class="pln">Python</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Ruby"</span><span class="tag">&gt;</span><span class="pln">Ruby</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Scala"</span><span class="tag">&gt;</span><span class="pln">Scala</span><span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="atn">value</span><span class="pun">=</span><span class="atv">"Scheme"</span><span class="tag">&gt;</span><span class="pln">Scheme</span><span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;/select&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;button</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"toggle"</span><span class="tag">&gt;</span><span class="pln">显示基础的选择框</span><span class="tag">&lt;/button&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>自定义数据并显示</h2>
+<p>您可以使用自定义数据格式，并通过简单地重载默认的聚焦和选择行为来显示数据。</p>
+<p>尝试键入 "j"，或者按向下箭头按键，即可得到一个项目列表。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 自定义数据并显示</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="com">#project-label {</span><span class="pln">
+    display</span><span class="pun">:</span><span class="pln"> block</span><span class="pun">;</span><span class="pln">
+    font</span><span class="pun">-</span><span class="pln">weight</span><span class="pun">:</span><span class="pln"> bold</span><span class="pun">;</span><span class="pln">
+    margin</span><span class="pun">-</span><span class="pln">bottom</span><span class="pun">:</span> <span class="lit">1em</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="com">#project-icon {</span>
+    <span class="kwd">float</span><span class="pun">:</span><span class="pln"> left</span><span class="pun">;</span><span class="pln">
+    height</span><span class="pun">:</span> <span class="lit">32px</span><span class="pun">;</span><span class="pln">
+    width</span><span class="pun">:</span> <span class="lit">32px</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="com">#project-description {</span><span class="pln">
+    margin</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">;</span><span class="pln">
+    padding</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">var</span><span class="pln"> projects </span><span class="pun">=</span> <span class="pun">[</span>
+      <span class="pun">{</span><span class="pln">
+        value</span><span class="pun">:</span> <span class="str">"jquery"</span><span class="pun">,</span><span class="pln">
+        label</span><span class="pun">:</span> <span class="str">"jQuery"</span><span class="pun">,</span><span class="pln">
+        desc</span><span class="pun">:</span> <span class="str">"the write less, do more, JavaScript library"</span><span class="pun">,</span><span class="pln">
+        icon</span><span class="pun">:</span> <span class="str">"jquery_32x32.png"</span>
+      <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln">
+        value</span><span class="pun">:</span> <span class="str">"jquery-ui"</span><span class="pun">,</span><span class="pln">
+        label</span><span class="pun">:</span> <span class="str">"jQuery UI"</span><span class="pun">,</span><span class="pln">
+        desc</span><span class="pun">:</span> <span class="str">"the official user interface library for jQuery"</span><span class="pun">,</span><span class="pln">
+        icon</span><span class="pun">:</span> <span class="str">"jqueryui_32x32.png"</span>
+      <span class="pun">},</span>
+      <span class="pun">{</span><span class="pln">
+        value</span><span class="pun">:</span> <span class="str">"sizzlejs"</span><span class="pun">,</span><span class="pln">
+        label</span><span class="pun">:</span> <span class="str">"Sizzle JS"</span><span class="pun">,</span><span class="pln">
+        desc</span><span class="pun">:</span> <span class="str">"a pure-JavaScript CSS selector engine"</span><span class="pun">,</span><span class="pln">
+        icon</span><span class="pun">:</span> <span class="str">"sizzlejs_32x32.png"</span>
+      <span class="pun">}</span>
+    <span class="pun">];</span><span class="pln">
+ 
+    $</span><span class="pun">(</span> <span class="str">"#project"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+      minLength</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">,</span><span class="pln">
+      source</span><span class="pun">:</span><span class="pln"> projects</span><span class="pun">,</span><span class="pln">
+      focus</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="str">"#project"</span> <span class="pun">).</span><span class="pln">val</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">label </span><span class="pun">);</span>
+        <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+      <span class="pun">},</span><span class="pln">
+      select</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="str">"#project"</span> <span class="pun">).</span><span class="pln">val</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">label </span><span class="pun">);</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="str">"#project-id"</span> <span class="pun">).</span><span class="pln">val</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="str">"#project-description"</span> <span class="pun">).</span><span class="pln">html</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">desc </span><span class="pun">);</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="str">"#project-icon"</span> <span class="pun">).</span><span class="pln">attr</span><span class="pun">(</span> <span class="str">"src"</span><span class="pun">,</span> <span class="str">"images/"</span> <span class="pun">+</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">icon </span><span class="pun">);</span>
+ 
+        <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+      <span class="pun">}</span>
+    <span class="pun">})</span>
+    <span class="pun">.</span><span class="pln">data</span><span class="pun">(</span> <span class="str">"ui-autocomplete"</span> <span class="pun">).</span><span class="pln">_renderItem </span><span class="pun">=</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> ul</span><span class="pun">,</span><span class="pln"> item </span><span class="pun">)</span> <span class="pun">{</span>
+      <span class="kwd">return</span><span class="pln"> $</span><span class="pun">(</span> <span class="str">"&lt;li&gt;"</span> <span class="pun">)</span>
+        <span class="pun">.</span><span class="pln">append</span><span class="pun">(</span> <span class="str">"&lt;a&gt;"</span> <span class="pun">+</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">label </span><span class="pun">+</span> <span class="str">"&lt;br&gt;"</span> <span class="pun">+</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">desc </span><span class="pun">+</span> <span class="str">"&lt;/a&gt;"</span> <span class="pun">)</span>
+        <span class="pun">.</span><span class="pln">appendTo</span><span class="pun">(</span><span class="pln"> ul </span><span class="pun">);</span>
+    <span class="pun">};</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"project-label"</span><span class="tag">&gt;</span><span class="pln">选择一个项目（请键入 "j"）：</span><span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;img</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"project-icon"</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"images/transparent_1x1.png"</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-state-default"</span> <span class="atn">alt</span><span class="pun">=</span><span class="atv">""</span><span class="tag">&gt;</span>
+<span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"project"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;input</span> <span class="atn">type</span><span class="pun">=</span><span class="atv">"hidden"</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"project-id"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;p</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"project-description"</span><span class="tag">&gt;&lt;/p&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>多个值</h2>
+<p>用法：键入一些字符，比如 "j"，可以看到相关的编程语言结果。选择一个值，然后继续键入字符来添加其他的值。</p>
+<p>本实例演示如何使用 source 选项和一些事件来实现在一个单一的文本域输入多个自动完成的值。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 多个值</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">var</span><span class="pln"> availableTags </span><span class="pun">=</span> <span class="pun">[</span>
+      <span class="str">"ActionScript"</span><span class="pun">,</span>
+      <span class="str">"AppleScript"</span><span class="pun">,</span>
+      <span class="str">"Asp"</span><span class="pun">,</span>
+      <span class="str">"BASIC"</span><span class="pun">,</span>
+      <span class="str">"C"</span><span class="pun">,</span>
+      <span class="str">"C++"</span><span class="pun">,</span>
+      <span class="str">"Clojure"</span><span class="pun">,</span>
+      <span class="str">"COBOL"</span><span class="pun">,</span>
+      <span class="str">"ColdFusion"</span><span class="pun">,</span>
+      <span class="str">"Erlang"</span><span class="pun">,</span>
+      <span class="str">"Fortran"</span><span class="pun">,</span>
+      <span class="str">"Groovy"</span><span class="pun">,</span>
+      <span class="str">"Haskell"</span><span class="pun">,</span>
+      <span class="str">"Java"</span><span class="pun">,</span>
+      <span class="str">"JavaScript"</span><span class="pun">,</span>
+      <span class="str">"Lisp"</span><span class="pun">,</span>
+      <span class="str">"Perl"</span><span class="pun">,</span>
+      <span class="str">"PHP"</span><span class="pun">,</span>
+      <span class="str">"Python"</span><span class="pun">,</span>
+      <span class="str">"Ruby"</span><span class="pun">,</span>
+      <span class="str">"Scala"</span><span class="pun">,</span>
+      <span class="str">"Scheme"</span>
+    <span class="pun">];</span>
+    <span class="kwd">function</span><span class="pln"> split</span><span class="pun">(</span><span class="pln"> val </span><span class="pun">)</span> <span class="pun">{</span>
+      <span class="kwd">return</span><span class="pln"> val</span><span class="pun">.</span><span class="pln">split</span><span class="pun">(</span> <span class="str">/,\s*/</span> <span class="pun">);</span>
+    <span class="pun">}</span>
+    <span class="kwd">function</span><span class="pln"> extractLast</span><span class="pun">(</span><span class="pln"> term </span><span class="pun">)</span> <span class="pun">{</span>
+      <span class="kwd">return</span><span class="pln"> split</span><span class="pun">(</span><span class="pln"> term </span><span class="pun">).</span><span class="pln">pop</span><span class="pun">();</span>
+    <span class="pun">}</span><span class="pln">
+ 
+    $</span><span class="pun">(</span> <span class="str">"#tags"</span> <span class="pun">)</span>
+      <span class="com">// 当选择一个条目时不离开文本域</span>
+      <span class="pun">.</span><span class="pln">bind</span><span class="pun">(</span> <span class="str">"keydown"</span><span class="pun">,</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event </span><span class="pun">)</span> <span class="pun">{</span>
+        <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> event</span><span class="pun">.</span><span class="pln">keyCode </span><span class="pun">===</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">ui</span><span class="pun">.</span><span class="pln">keyCode</span><span class="pun">.</span><span class="pln">TAB </span><span class="pun">&amp;&amp;</span><span class="pln">
+            $</span><span class="pun">(</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">data</span><span class="pun">(</span> <span class="str">"ui-autocomplete"</span> <span class="pun">).</span><span class="pln">menu</span><span class="pun">.</span><span class="pln">active </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+          event</span><span class="pun">.</span><span class="pln">preventDefault</span><span class="pun">();</span>
+        <span class="pun">}</span>
+      <span class="pun">})</span>
+      <span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+        minLength</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">,</span><span class="pln">
+        source</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">,</span><span class="pln"> response </span><span class="pun">)</span> <span class="pun">{</span>
+          <span class="com">// 回到 autocomplete，但是提取最后的条目</span><span class="pln">
+          response</span><span class="pun">(</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">ui</span><span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">.</span><span class="pln">filter</span><span class="pun">(</span><span class="pln">
+            availableTags</span><span class="pun">,</span><span class="pln"> extractLast</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">.</span><span class="pln">term </span><span class="pun">)</span> <span class="pun">)</span> <span class="pun">);</span>
+        <span class="pun">},</span><span class="pln">
+        focus</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+          <span class="com">// 防止在获得焦点时插入值</span>
+          <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+        <span class="pun">},</span><span class="pln">
+        select</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span>
+          <span class="kwd">var</span><span class="pln"> terms </span><span class="pun">=</span><span class="pln"> split</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span>
+          <span class="com">// 移除当前输入</span><span class="pln">
+          terms</span><span class="pun">.</span><span class="pln">pop</span><span class="pun">();</span>
+          <span class="com">// 添加被选项</span><span class="pln">
+          terms</span><span class="pun">.</span><span class="pln">push</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span>
+          <span class="com">// 添加占位符，在结尾添加逗号+空格</span><span class="pln">
+          terms</span><span class="pun">.</span><span class="pln">push</span><span class="pun">(</span> <span class="str">""</span> <span class="pun">);</span>
+          <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">=</span><span class="pln"> terms</span><span class="pun">.</span><span class="pln">join</span><span class="pun">(</span> <span class="str">", "</span> <span class="pun">);</span>
+          <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+        <span class="pun">}</span>
+      <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"tags"</span><span class="tag">&gt;</span><span class="pln">编程语言：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"tags"</span> <span class="atn">size</span><span class="pun">=</span><span class="atv">"50"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>多个值，远程</h2>
+<p>用法：键入至少两个字符来获取鸟的名称。选择一个值，然后继续键入字符来添加其他的值。</p>
+<p>本实例演示如何使用 source 选项和一些事件来实现在一个单一的文本域输入多个自动完成的值。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 多个值，远程</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete</span><span class="pun">-</span><span class="pln">loading </span><span class="pun">{</span><span class="pln">
+    background</span><span class="pun">:</span><span class="pln"> white url</span><span class="pun">(</span><span class="str">'images/ui-anim_basic_16x16.gif'</span><span class="pun">)</span><span class="pln"> right center </span><span class="kwd">no</span><span class="pun">-</span><span class="pln">repeat</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">function</span><span class="pln"> split</span><span class="pun">(</span><span class="pln"> val </span><span class="pun">)</span> <span class="pun">{</span>
+      <span class="kwd">return</span><span class="pln"> val</span><span class="pun">.</span><span class="pln">split</span><span class="pun">(</span> <span class="str">/,\s*/</span> <span class="pun">);</span>
+    <span class="pun">}</span>
+    <span class="kwd">function</span><span class="pln"> extractLast</span><span class="pun">(</span><span class="pln"> term </span><span class="pun">)</span> <span class="pun">{</span>
+      <span class="kwd">return</span><span class="pln"> split</span><span class="pun">(</span><span class="pln"> term </span><span class="pun">).</span><span class="pln">pop</span><span class="pun">();</span>
+    <span class="pun">}</span><span class="pln">
+ 
+    $</span><span class="pun">(</span> <span class="str">"#birds"</span> <span class="pun">)</span>
+      <span class="com">// 当选择一个条目时不离开文本域</span>
+      <span class="pun">.</span><span class="pln">bind</span><span class="pun">(</span> <span class="str">"keydown"</span><span class="pun">,</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event </span><span class="pun">)</span> <span class="pun">{</span>
+        <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> event</span><span class="pun">.</span><span class="pln">keyCode </span><span class="pun">===</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">ui</span><span class="pun">.</span><span class="pln">keyCode</span><span class="pun">.</span><span class="pln">TAB </span><span class="pun">&amp;&amp;</span><span class="pln">
+            $</span><span class="pun">(</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">data</span><span class="pun">(</span> <span class="str">"ui-autocomplete"</span> <span class="pun">).</span><span class="pln">menu</span><span class="pun">.</span><span class="pln">active </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+          event</span><span class="pun">.</span><span class="pln">preventDefault</span><span class="pun">();</span>
+        <span class="pun">}</span>
+      <span class="pun">})</span>
+      <span class="pun">.</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+        source</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">,</span><span class="pln"> response </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+          $</span><span class="pun">.</span><span class="pln">getJSON</span><span class="pun">(</span> <span class="str">"search.php"</span><span class="pun">,</span> <span class="pun">{</span><span class="pln">
+            term</span><span class="pun">:</span><span class="pln"> extractLast</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">.</span><span class="pln">term </span><span class="pun">)</span>
+          <span class="pun">},</span><span class="pln"> response </span><span class="pun">);</span>
+        <span class="pun">},</span><span class="pln">
+        search</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+          <span class="com">// 自定义最小长度</span>
+          <span class="kwd">var</span><span class="pln"> term </span><span class="pun">=</span><span class="pln"> extractLast</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span>
+          <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> term</span><span class="pun">.</span><span class="pln">length </span><span class="pun">&lt;</span> <span class="lit">2</span> <span class="pun">)</span> <span class="pun">{</span>
+            <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+          <span class="pun">}</span>
+        <span class="pun">},</span><span class="pln">
+        focus</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+          <span class="com">// 防止在获得焦点时插入值</span>
+          <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+        <span class="pun">},</span><span class="pln">
+        select</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span>
+          <span class="kwd">var</span><span class="pln"> terms </span><span class="pun">=</span><span class="pln"> split</span><span class="pun">(</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span>
+          <span class="com">// 移除当前输入</span><span class="pln">
+          terms</span><span class="pun">.</span><span class="pln">pop</span><span class="pun">();</span>
+          <span class="com">// 添加被选项</span><span class="pln">
+          terms</span><span class="pun">.</span><span class="pln">push</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span>
+          <span class="com">// 添加占位符，在结尾添加逗号+空格</span><span class="pln">
+          terms</span><span class="pun">.</span><span class="pln">push</span><span class="pun">(</span> <span class="str">""</span> <span class="pun">);</span>
+          <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">=</span><span class="pln"> terms</span><span class="pun">.</span><span class="pln">join</span><span class="pun">(</span> <span class="str">", "</span> <span class="pun">);</span>
+          <span class="kwd">return</span> <span class="kwd">false</span><span class="pun">;</span>
+        <span class="pun">}</span>
+      <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"birds"</span><span class="tag">&gt;</span><span class="pln">鸟：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"birds"</span> <span class="atn">size</span><span class="pun">=</span><span class="atv">"50"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>远程 JSONP 数据源</h2>
+<p>当您在文本域中键入字符时，Autocomplete 部件给出建议结果。在本实例中，当您在文本域中至少键入两个字符时，将显示相关城市的名称。</p>
+<p>在本实例中，数据源是 geonames.org webservice。虽然选择一个元素后文本域中是该城市名称，但是会显示更多的信息以便找到正确的条目。数据也可以回调，显示在下面的结果框中。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 远程 JSONP 数据源</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete</span><span class="pun">-</span><span class="pln">loading </span><span class="pun">{</span><span class="pln">
+    background</span><span class="pun">:</span><span class="pln"> white url</span><span class="pun">(</span><span class="str">'images/ui-anim_basic_16x16.gif'</span><span class="pun">)</span><span class="pln"> right center </span><span class="kwd">no</span><span class="pun">-</span><span class="pln">repeat</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="com">#city { width: 25em; }</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">function</span><span class="pln"> log</span><span class="pun">(</span><span class="pln"> message </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+      $</span><span class="pun">(</span> <span class="str">"&lt;div&gt;"</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">(</span><span class="pln"> message </span><span class="pun">).</span><span class="pln">prependTo</span><span class="pun">(</span> <span class="str">"#log"</span> <span class="pun">);</span><span class="pln">
+      $</span><span class="pun">(</span> <span class="str">"#log"</span> <span class="pun">).</span><span class="pln">scrollTop</span><span class="pun">(</span> <span class="lit">0</span> <span class="pun">);</span>
+    <span class="pun">}</span><span class="pln">
+ 
+    $</span><span class="pun">(</span> <span class="str">"#city"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+      source</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">,</span><span class="pln"> response </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+        $</span><span class="pun">.</span><span class="pln">ajax</span><span class="pun">({</span><span class="pln">
+          url</span><span class="pun">:</span> <span class="str">"http://ws.geonames.org/searchJSON"</span><span class="pun">,</span><span class="pln">
+          dataType</span><span class="pun">:</span> <span class="str">"jsonp"</span><span class="pun">,</span><span class="pln">
+          data</span><span class="pun">:</span> <span class="pun">{</span><span class="pln">
+            featureClass</span><span class="pun">:</span> <span class="str">"P"</span><span class="pun">,</span><span class="pln">
+            style</span><span class="pun">:</span> <span class="str">"full"</span><span class="pun">,</span><span class="pln">
+            maxRows</span><span class="pun">:</span> <span class="lit">12</span><span class="pun">,</span><span class="pln">
+            name_startsWith</span><span class="pun">:</span><span class="pln"> request</span><span class="pun">.</span><span class="pln">term
+          </span><span class="pun">},</span><span class="pln">
+          success</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> data </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+            response</span><span class="pun">(</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">map</span><span class="pun">(</span><span class="pln"> data</span><span class="pun">.</span><span class="pln">geonames</span><span class="pun">,</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> item </span><span class="pun">)</span> <span class="pun">{</span>
+              <span class="kwd">return</span> <span class="pun">{</span><span class="pln">
+                label</span><span class="pun">:</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">name </span><span class="pun">+</span> <span class="pun">(</span><span class="pln">item</span><span class="pun">.</span><span class="pln">adminName1 </span><span class="pun">?</span> <span class="str">", "</span> <span class="pun">+</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">adminName1 </span><span class="pun">:</span> <span class="str">""</span><span class="pun">)</span> <span class="pun">+</span> <span class="str">", "</span> <span class="pun">+</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">countryName</span><span class="pun">,</span><span class="pln">
+                value</span><span class="pun">:</span><span class="pln"> item</span><span class="pun">.</span><span class="pln">name
+              </span><span class="pun">}</span>
+            <span class="pun">}));</span>
+          <span class="pun">}</span>
+        <span class="pun">});</span>
+      <span class="pun">},</span><span class="pln">
+      minLength</span><span class="pun">:</span> <span class="lit">2</span><span class="pun">,</span><span class="pln">
+      select</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+        log</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item </span><span class="pun">?</span>
+          <span class="str">"Selected: "</span> <span class="pun">+</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">label </span><span class="pun">:</span>
+          <span class="str">"Nothing selected, input was "</span> <span class="pun">+</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">value</span><span class="pun">);</span>
+      <span class="pun">},</span><span class="pln">
+      open</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">removeClass</span><span class="pun">(</span> <span class="str">"ui-corner-all"</span> <span class="pun">).</span><span class="pln">addClass</span><span class="pun">(</span> <span class="str">"ui-corner-top"</span> <span class="pun">);</span>
+      <span class="pun">},</span><span class="pln">
+      close</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">removeClass</span><span class="pun">(</span> <span class="str">"ui-corner-top"</span> <span class="pun">).</span><span class="pln">addClass</span><span class="pun">(</span> <span class="str">"ui-corner-all"</span> <span class="pun">);</span>
+      <span class="pun">}</span>
+    <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"city"</span><span class="tag">&gt;</span><span class="pln">您的城市：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"city"</span><span class="tag">&gt;</span><span class="pln">
+  Powered by </span><span class="tag">&lt;a</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://geonames.org"</span> <span class="atn">target</span><span class="pun">=</span><span class="atv">"_blank"</span><span class="tag">&gt;</span><span class="pln">geonames.org</span><span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span> <span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">margin</span><span class="pun">-</span><span class="pln">top</span><span class="pun">:</span><span class="lit">2em</span><span class="pun">;</span><span class="pln"> font</span><span class="pun">-</span><span class="pln">family</span><span class="pun">:</span><span class="typ">Arial</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
+  结果：
+  </span><span class="tag">&lt;div</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"log"</span> <span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">height</span><span class="pun">:</span> <span class="lit">200px</span><span class="pun">;</span><span class="pln"> width</span><span class="pun">:</span> <span class="lit">300px</span><span class="pun">;</span><span class="pln"> overflow</span><span class="pun">:</span> <span class="kwd">auto</span><span class="pun">;</span><span class="atv">"</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget-content"</span><span class="tag">&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>远程数据源</h2>
+<p>当您在文本域中键入字符时，Autocomplete 部件给出建议结果。在本实例中，当您在文本域中至少键入两个字符时，将显示相关鸟的名称。</p>
+<p>在本实例中，数据源是可返回 JSON 数据的服务器端脚本，通过一个简单的 source 选项来指定。另外，minLength 选项设置为 2，避免查询返回太多的结果，select 事件用于显示一些反馈。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 远程数据源</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete</span><span class="pun">-</span><span class="pln">loading </span><span class="pun">{</span><span class="pln">
+    background</span><span class="pun">:</span><span class="pln"> white url</span><span class="pun">(</span><span class="str">'images/ui-anim_basic_16x16.gif'</span><span class="pun">)</span><span class="pln"> right center </span><span class="kwd">no</span><span class="pun">-</span><span class="pln">repeat</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">function</span><span class="pln"> log</span><span class="pun">(</span><span class="pln"> message </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+      $</span><span class="pun">(</span> <span class="str">"&lt;div&gt;"</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">(</span><span class="pln"> message </span><span class="pun">).</span><span class="pln">prependTo</span><span class="pun">(</span> <span class="str">"#log"</span> <span class="pun">);</span><span class="pln">
+      $</span><span class="pun">(</span> <span class="str">"#log"</span> <span class="pun">).</span><span class="pln">scrollTop</span><span class="pun">(</span> <span class="lit">0</span> <span class="pun">);</span>
+    <span class="pun">}</span><span class="pln">
+ 
+    $</span><span class="pun">(</span> <span class="str">"#birds"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+      source</span><span class="pun">:</span> <span class="str">"search.php"</span><span class="pun">,</span><span class="pln">
+      minLength</span><span class="pun">:</span> <span class="lit">2</span><span class="pun">,</span><span class="pln">
+      select</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+        log</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item </span><span class="pun">?</span>
+          <span class="str">"Selected: "</span> <span class="pun">+</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">value </span><span class="pun">+</span> <span class="str">" aka "</span> <span class="pun">+</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">id </span><span class="pun">:</span>
+          <span class="str">"Nothing selected, input was "</span> <span class="pun">+</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span>
+      <span class="pun">}</span>
+    <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"birds"</span><span class="tag">&gt;</span><span class="pln">鸟：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"birds"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span> <span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">margin</span><span class="pun">-</span><span class="pln">top</span><span class="pun">:</span><span class="lit">2em</span><span class="pun">;</span><span class="pln"> font</span><span class="pun">-</span><span class="pln">family</span><span class="pun">:</span><span class="typ">Arial</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
+  结果：
+  </span><span class="tag">&lt;div</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"log"</span> <span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">height</span><span class="pun">:</span> <span class="lit">200px</span><span class="pun">;</span><span class="pln"> width</span><span class="pun">:</span> <span class="lit">300px</span><span class="pun">;</span><span class="pln"> overflow</span><span class="pun">:</span> <span class="kwd">auto</span><span class="pun">;</span><span class="atv">"</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget-content"</span><span class="tag">&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>远程缓存</h2>
+<p>当您在文本域中键入字符时，Autocomplete 部件给出建议结果。在本实例中，当您在文本域中至少键入两个字符时，将显示相关鸟的名称。</p>
+<p>为了提高性能，这里添加了一些本地缓存，其他与远程数据源实例相似。在这里，缓存只保存了一个查询，并可以扩展到缓存多个值，每个条目一个值。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 远程缓存</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete</span><span class="pun">-</span><span class="pln">loading </span><span class="pun">{</span><span class="pln">
+    background</span><span class="pun">:</span><span class="pln"> white url</span><span class="pun">(</span><span class="str">'images/ui-anim_basic_16x16.gif'</span><span class="pun">)</span><span class="pln"> right center </span><span class="kwd">no</span><span class="pun">-</span><span class="pln">repeat</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">var</span><span class="pln"> cache </span><span class="pun">=</span> <span class="pun">{};</span><span class="pln">
+    $</span><span class="pun">(</span> <span class="str">"#birds"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+      minLength</span><span class="pun">:</span> <span class="lit">2</span><span class="pun">,</span><span class="pln">
+      source</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> request</span><span class="pun">,</span><span class="pln"> response </span><span class="pun">)</span> <span class="pun">{</span>
+        <span class="kwd">var</span><span class="pln"> term </span><span class="pun">=</span><span class="pln"> request</span><span class="pun">.</span><span class="pln">term</span><span class="pun">;</span>
+        <span class="kwd">if</span> <span class="pun">(</span><span class="pln"> term in cache </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+          response</span><span class="pun">(</span><span class="pln"> cache</span><span class="pun">[</span><span class="pln"> term </span><span class="pun">]</span> <span class="pun">);</span>
+          <span class="kwd">return</span><span class="pun">;</span>
+        <span class="pun">}</span><span class="pln">
+ 
+        $</span><span class="pun">.</span><span class="pln">getJSON</span><span class="pun">(</span> <span class="str">"search.php"</span><span class="pun">,</span><span class="pln"> request</span><span class="pun">,</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> data</span><span class="pun">,</span><span class="pln"> status</span><span class="pun">,</span><span class="pln"> xhr </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+          cache</span><span class="pun">[</span><span class="pln"> term </span><span class="pun">]</span> <span class="pun">=</span><span class="pln"> data</span><span class="pun">;</span><span class="pln">
+          response</span><span class="pun">(</span><span class="pln"> data </span><span class="pun">);</span>
+        <span class="pun">});</span>
+      <span class="pun">}</span>
+    <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"birds"</span><span class="tag">&gt;</span><span class="pln">鸟：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"birds"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>可滚动的结果</h2>
+<p>当显示一个长列表的选项时，您可以简单地为 autocomplete 菜单设置 max-height 来防止菜单显示太长。尝试键入 "a" 或 "s" 来获得一个可滚动的长列表的结果。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - 可滚动的结果</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete </span><span class="pun">{</span><span class="pln">
+    max</span><span class="pun">-</span><span class="pln">height</span><span class="pun">:</span> <span class="lit">100px</span><span class="pun">;</span><span class="pln">
+    overflow</span><span class="pun">-</span><span class="pln">y</span><span class="pun">:</span> <span class="kwd">auto</span><span class="pun">;</span>
+    <span class="com">/* 防止水平滚动条 */</span><span class="pln">
+    overflow</span><span class="pun">-</span><span class="pln">x</span><span class="pun">:</span><span class="pln"> hidden</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="com">/* IE 6 不支持 max-height
+   * 我们使用 height 代替，但是这会强制菜单总是显示为那个高度
+   */</span>
+  <span class="pun">*</span><span class="pln"> html </span><span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete </span><span class="pun">{</span><span class="pln">
+    height</span><span class="pun">:</span> <span class="lit">100px</span><span class="pun">;</span>
+  <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">var</span><span class="pln"> availableTags </span><span class="pun">=</span> <span class="pun">[</span>
+      <span class="str">"ActionScript"</span><span class="pun">,</span>
+      <span class="str">"AppleScript"</span><span class="pun">,</span>
+      <span class="str">"Asp"</span><span class="pun">,</span>
+      <span class="str">"BASIC"</span><span class="pun">,</span>
+      <span class="str">"C"</span><span class="pun">,</span>
+      <span class="str">"C++"</span><span class="pun">,</span>
+      <span class="str">"Clojure"</span><span class="pun">,</span>
+      <span class="str">"COBOL"</span><span class="pun">,</span>
+      <span class="str">"ColdFusion"</span><span class="pun">,</span>
+      <span class="str">"Erlang"</span><span class="pun">,</span>
+      <span class="str">"Fortran"</span><span class="pun">,</span>
+      <span class="str">"Groovy"</span><span class="pun">,</span>
+      <span class="str">"Haskell"</span><span class="pun">,</span>
+      <span class="str">"Java"</span><span class="pun">,</span>
+      <span class="str">"JavaScript"</span><span class="pun">,</span>
+      <span class="str">"Lisp"</span><span class="pun">,</span>
+      <span class="str">"Perl"</span><span class="pun">,</span>
+      <span class="str">"PHP"</span><span class="pun">,</span>
+      <span class="str">"Python"</span><span class="pun">,</span>
+      <span class="str">"Ruby"</span><span class="pun">,</span>
+      <span class="str">"Scala"</span><span class="pun">,</span>
+      <span class="str">"Scheme"</span>
+    <span class="pun">];</span><span class="pln">
+    $</span><span class="pun">(</span> <span class="str">"#tags"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+      source</span><span class="pun">:</span><span class="pln"> availableTags
+    </span><span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"tags"</span><span class="tag">&gt;</span><span class="pln">标签：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"tags"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+<h2>XML 数据</h2>
+<p>本实例演示如何获取一些 XML 数据，并使用 jQuery 的方法解析它，然后把它提供给 autocomplete 作为数据源。</p>
+<p>本实例也可作为解析远程 XML 数据源的参考 - 解析在每次 source 回调请求时发生。</p>
+<pre class="prettyprint prettyprinted"><span class="dec">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="atn">lang</span><span class="pun">=</span><span class="atv">"en"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="atn">charset</span><span class="pun">=</span><span class="atv">"utf-8"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span><span class="pln">jQuery UI 自动完成（Autocomplete） - XML 数据</span><span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/jquery-1.9.1.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;script</span> <span class="atn">src</span><span class="pun">=</span><span class="atv">"//code.jquery.com/ui/1.10.4/jquery-ui.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+  <span class="tag">&lt;link</span> <span class="atn">rel</span><span class="pun">=</span><span class="atv">"stylesheet"</span> <span class="atn">href</span><span class="pun">=</span><span class="atv">"http://jqueryui.com/resources/demos/style.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+  <span class="pun">.</span><span class="pln">ui</span><span class="pun">-</span><span class="pln">autocomplete</span><span class="pun">-</span><span class="pln">loading </span><span class="pun">{</span><span class="pln"> background</span><span class="pun">:</span><span class="pln"> white url</span><span class="pun">(</span><span class="str">'images/ui-anim_basic_16x16.gif'</span><span class="pun">)</span><span class="pln"> right center </span><span class="kwd">no</span><span class="pun">-</span><span class="pln">repeat</span><span class="pun">;</span> <span class="pun">}</span>
+  <span class="tag">&lt;/style&gt;</span>
+  <span class="tag">&lt;script&gt;</span><span class="pln">
+  $</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+    <span class="kwd">function</span><span class="pln"> log</span><span class="pun">(</span><span class="pln"> message </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+      $</span><span class="pun">(</span> <span class="str">"&lt;div/&gt;"</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">(</span><span class="pln"> message </span><span class="pun">).</span><span class="pln">prependTo</span><span class="pun">(</span> <span class="str">"#log"</span> <span class="pun">);</span><span class="pln">
+      $</span><span class="pun">(</span> <span class="str">"#log"</span> <span class="pun">).</span><span class="pln">attr</span><span class="pun">(</span> <span class="str">"scrollTop"</span><span class="pun">,</span> <span class="lit">0</span> <span class="pun">);</span>
+    <span class="pun">}</span><span class="pln">
+ 
+    $</span><span class="pun">.</span><span class="pln">ajax</span><span class="pun">({</span><span class="pln">
+      url</span><span class="pun">:</span> <span class="str">"london.xml"</span><span class="pun">,</span><span class="pln">
+      dataType</span><span class="pun">:</span> <span class="str">"xml"</span><span class="pun">,</span><span class="pln">
+      success</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> xmlResponse </span><span class="pun">)</span> <span class="pun">{</span>
+        <span class="kwd">var</span><span class="pln"> data </span><span class="pun">=</span><span class="pln"> $</span><span class="pun">(</span> <span class="str">"geoname"</span><span class="pun">,</span><span class="pln"> xmlResponse </span><span class="pun">).</span><span class="pln">map</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span> <span class="pun">{</span>
+          <span class="kwd">return</span> <span class="pun">{</span><span class="pln">
+            value</span><span class="pun">:</span><span class="pln"> $</span><span class="pun">(</span> <span class="str">"name"</span><span class="pun">,</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">()</span> <span class="pun">+</span> <span class="str">", "</span> <span class="pun">+</span>
+              <span class="pun">(</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">trim</span><span class="pun">(</span><span class="pln"> $</span><span class="pun">(</span> <span class="str">"countryName"</span><span class="pun">,</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">()</span> <span class="pun">)</span> <span class="pun">||</span> <span class="str">"(unknown country)"</span> <span class="pun">),</span><span class="pln">
+            id</span><span class="pun">:</span><span class="pln"> $</span><span class="pun">(</span> <span class="str">"geonameId"</span><span class="pun">,</span> <span class="kwd">this</span> <span class="pun">).</span><span class="pln">text</span><span class="pun">()</span>
+          <span class="pun">};</span>
+        <span class="pun">}).</span><span class="kwd">get</span><span class="pun">();</span><span class="pln">
+        $</span><span class="pun">(</span> <span class="str">"#birds"</span> <span class="pun">).</span><span class="pln">autocomplete</span><span class="pun">({</span><span class="pln">
+          source</span><span class="pun">:</span><span class="pln"> data</span><span class="pun">,</span><span class="pln">
+          minLength</span><span class="pun">:</span> <span class="lit">0</span><span class="pun">,</span><span class="pln">
+          select</span><span class="pun">:</span> <span class="kwd">function</span><span class="pun">(</span><span class="pln"> event</span><span class="pun">,</span><span class="pln"> ui </span><span class="pun">)</span> <span class="pun">{</span><span class="pln">
+            log</span><span class="pun">(</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item </span><span class="pun">?</span>
+              <span class="str">"Selected: "</span> <span class="pun">+</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">value </span><span class="pun">+</span> <span class="str">", geonameId: "</span> <span class="pun">+</span><span class="pln"> ui</span><span class="pun">.</span><span class="pln">item</span><span class="pun">.</span><span class="pln">id </span><span class="pun">:</span>
+              <span class="str">"Nothing selected, input was "</span> <span class="pun">+</span> <span class="kwd">this</span><span class="pun">.</span><span class="pln">value </span><span class="pun">);</span>
+          <span class="pun">}</span>
+        <span class="pun">});</span>
+      <span class="pun">}</span>
+    <span class="pun">});</span>
+  <span class="pun">});</span>
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="atn">for</span><span class="pun">=</span><span class="atv">"birds"</span><span class="tag">&gt;</span><span class="pln">London 匹配：</span><span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"birds"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+<span class="tag">&lt;div</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget"</span> <span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">margin</span><span class="pun">-</span><span class="pln">top</span><span class="pun">:</span><span class="lit">2em</span><span class="pun">;</span><span class="pln"> font</span><span class="pun">-</span><span class="pln">family</span><span class="pun">:</span><span class="typ">Arial</span><span class="atv">"</span><span class="tag">&gt;</span><span class="pln">
+  结果：
+  </span><span class="tag">&lt;div</span> <span class="atn">id</span><span class="pun">=</span><span class="atv">"log"</span> <span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">height</span><span class="pun">:</span> <span class="lit">200px</span><span class="pun">;</span><span class="pln"> width</span><span class="pun">:</span> <span class="lit">300px</span><span class="pun">;</span><span class="pln"> overflow</span><span class="pun">:</span> <span class="kwd">auto</span><span class="pun">;</span><span class="atv">"</span> <span class="atn">class</span><span class="pun">=</span><span class="atv">"ui-widget-content"</span><span class="tag">&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+ 
+ 
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+<p><button class="btn btn-info btn-lg">查看演示</button></p>
+</div>
+</div>
+<div class="previous-next-links"></div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/jquery-ui" rel="tag">jQuery UI</a>, <a href="/tag/%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90" rel="tag">自动完成</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2017/04/08/%E7%BE%8E%E5%9B%BD%E6%80%BB%E7%BB%9F%E7%89%B9%E6%9C%97%E6%99%AE%E6%95%99%E8%82%B2%E5%AD%A9%E5%AD%90%E7%9A%84%E6%80%BB%E7%BB%93.html" rel="prev">美国总统特朗普教育孩子的总结</a><br>【下篇】<a href="/2017/04/11/%E4%BD%BF%E7%94%A8c-net%E5%BC%80%E5%8F%91%E7%9A%84%E5%8D%83%E4%B8%87%E7%BA%A7%E5%BA%94%E7%94%A8.html" rel="next">使用C#.NET开发的千万级应用</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li><li> · <a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li><li> · <a href="/2025/01/06/nestjs-nextjs-nuxtjs.html">Nest.js 、 Next.js、 Nuxt.js的区别</a></li><li> · <a href="/2024/11/20/mp-bind.html">小程序可以绑定其它小程序吗？</a></li><li> · <a href="/2024/11/19/vue3-vite-subdir.html">vue3+vite+多环境发面到二级目录配置</a></li><li> · <a href="/2024/09/03/catchtap.html">微信小程序防止事件穿透防止事件冒泡</a></li><li> · <a href="/2024/08/29/qrcode-to-miniprogram.html">普通链接二维码跳转小程序</a></li><li> · <a href="/2024/06/03/flex-direction-column.html">解决flex-direction: column 之后元素宽度自动变为100%</a></li><li> · <a href="/2023/11/09/vue-react-node-vite-npm-yarn-build-auto-update-version.html">vue/react/node/vite/npm/yarn build自动更新版本号</a></li><li> · <a href="/2023/05/30/getvisitdistribution.html">getVisitDistribution  访问来源定义（访问来源 key 对应关系）</a></li><li> · <a href="/2023/05/10/tinymce.html">TinyMCE工具栏配置详解</a></li><li> · <a href="/2023/04/17/ant-design-vue-1-7-8-vue2-customer-icon.html">Ant Design Vue 1.7.8 （vu2）自定义路由菜单图标</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2017年04月11日发表在<a href="/category/jsjqureycss" rel="category tag">前端</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2017/04/11/jquery-ui%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90-%E5%AE%8C%E6%95%B4%E5%AE%9E%E4%BE%8B.html" rel="bookmark" title="本文固定链接 /2017/04/11/jquery-ui%e8%87%aa%e5%8a%a8%e5%ae%8c%e6%88%90-%e5%ae%8c%e6%95%b4%e5%ae%9e%e4%be%8b.html">jQuery UI自动完成 完整实例 | Bruce's Blog</a><a href="#" onclick="copy_code('/2017/04/11/jquery-ui%e8%87%aa%e5%8a%a8%e5%ae%8c%e6%88%90-%e5%ae%8c%e6%95%b4%e5%ae%9e%e4%be%8b.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/04/11/jquery-ui%E8%87%AA%E5%8A%A8%E5%AE%8C%E6%88%90-%E5%AE%8C%E6%95%B4%E5%AE%9E%E4%BE%8B.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4243" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="4e7cbbe482"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="94"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.096 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:44 -->

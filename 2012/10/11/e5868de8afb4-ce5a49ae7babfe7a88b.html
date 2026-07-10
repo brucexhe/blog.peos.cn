@@ -1,0 +1,1676 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>再说 C#多线程 | Bruce's Blog</title> 
+<meta name="description" content="引言">
+<meta name="keywords" content="C#多线程,线程">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 10 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td>
+	</tr>
+	<tr>
+		<td><a href="/2012/10/08" aria-label="2012年10月8日 发布的文章">8</a></td><td>9</td><td>10</td><td><a href="/2012/10/11" aria-label="2012年10月11日 发布的文章">11</a></td><td><a href="/2012/10/12" aria-label="2012年10月12日 发布的文章">12</a></td><td>13</td><td>14</td>
+	</tr>
+	<tr>
+		<td>15</td><td><a href="/2012/10/16" aria-label="2012年10月16日 发布的文章">16</a></td><td>17</td><td>18</td><td><a href="/2012/10/19" aria-label="2012年10月19日 发布的文章">19</a></td><td><a href="/2012/10/20" aria-label="2012年10月20日 发布的文章">20</a></td><td><a href="/2012/10/21" aria-label="2012年10月21日 发布的文章">21</a></td>
+	</tr>
+	<tr>
+		<td>22</td><td><a href="/2012/10/23" aria-label="2012年10月23日 发布的文章">23</a></td><td>24</td><td><a href="/2012/10/25" aria-label="2012年10月25日 发布的文章">25</a></td><td>26</td><td>27</td><td>28</td>
+	</tr>
+	<tr>
+		<td>29</td><td><a href="/2012/10/30" aria-label="2012年10月30日 发布的文章">30</a></td><td><a href="/2012/10/31" aria-label="2012年10月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="4"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/09">« 9 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/11">11 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#567c73;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#44f67e;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#d7873c;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#ed2452;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#c2249c;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#4d56ee;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#d3e726;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#d25947;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#379ac0;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#c6ece8;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#cd8c14;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#cf8dc4;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#bfbd5e;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#133eb8;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#88a720;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#71e173;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#295c62;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#77b1a2;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#27d223;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#5f0e51;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#824ac9;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#bad7b6;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#c2e2f5;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#d87ecf;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#5de1c;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#8bf189;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#ff9a64;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#3c6c63;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#51a8a0;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#a9c419;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#a4ba59;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#7e6ea0;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#7a911d;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#c174ab;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#f3e62b;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#40cabe;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#bf51c9;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#176351;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#7c025a;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#79af94;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#fe7313;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#7f0561;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#568d34;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#178573;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#4d2304;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">再说 C#多线程</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-10-11 15:27</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2012/10/11/%E5%86%8D%E8%AF%B4-c%E5%A4%9A%E7%BA%BF%E7%A8%8B.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>3,277</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>引言</p>
+<p> </p>
+<p>本文主要从<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%BA%BF%E7%A8%8B" title="View all posts in 线程" target="_blank">线程</a></span>的基础用法，CLR<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%BA%BF%E7%A8%8B" title="View all posts in 线程" target="_blank">线程</a></span>池当中工作者<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%BA%BF%E7%A8%8B" title="View all posts in 线程" target="_blank">线程</a></span>与I/O线程的开发，并行操作PLINQ等多个方面介绍多线程的开发。<br>
+其中委托的BeginInvoke方法以及回调函数最为常用。<br>
+而 I/O线程可能容易遭到大家的忽略，其实在开发多线程系统，更应该多留意I/O线程的操作。特别是在ASP.NET开发当中，可能更多人只会留意在客户端 使用Ajax或者在服务器端使用UpdatePanel。其实合理使用I/O线程在通讯项目或文件下载时，能尽可能地减少IIS的压力。<br>
+并行编程是Framework4.0中极力推广的异步操作方式，更值得更深入地学习。<br>
+希望本篇文章能对各位的学习研究有所帮助，当中有所错漏的地方敬请点评。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>目录</p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;">一、线程的定义</span></span></p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;">二、线程的基础知识</span></span></p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;">三、以ThreadStart方式实现多线程</span></span></p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;">四、CLR线程池的工作者线程</span></span></p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #0000ff;">五、CLR线程池的I/O线程</span></span></span></span></p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;">六、异步 SqlCommand</span></span></p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;">七、并行编程与PLINQ</span></span></p>
+<p> </p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;">八、计时器与锁</span></span></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><a name="t1"></a></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><span style="font-size: 16px;"><strong>一、线程的定义</strong></span></p>
+<p> </p>
+<p><strong> 1. 1 进程、应用程序域与线程的关系</strong></p>
+<p> </p>
+<p>进程（Process）是Windows系统中的一个基本概念，它包含着一个运行程序所需要的资源。进程之间是相对独立的，一个进程无法访问另一个 进程的数据（除非利用分布式计算方式），一个进程运行的失败也不会影响其他进程的运行，Windows系统就是利用进程把工作划分为多个独立的区域的。进 程可以理解为一个程序的基本边界。</p>
+<p> </p>
+<p>应用程序域（AppDomain）是一个程序运行的逻辑区域，它可以视为一个轻量级的进程，.NET的程序集正是在应用程序域中运行的，一个进程可 以包含有多个应用程序域，一个应用程序域也可以包含多个程序集。在一个应用程序域中包含了一个或多个上下文context，使用上下文CLR就能够把某些 特殊对象的状态放置在不同容器当中。</p>
+<p> </p>
+<p>线程（Thread）是进程中的基本执行单元，在进程入口执行的第一个线程被视为这个进程的主线程。在.NET应用程序中，都是以Main()方法 作为入口的，当调用此方法时系统就会自动创建一个主线程。线程主要是由CPU寄存器、调用栈和线程本地存储器（Thread Local Storage，TLS）组成的。CPU寄存器主要记录当前所执行线程的状态，调用栈主要用于维护线程所调用到的内存与数据，TLS主要用于存放线程的状 态信息。</p>
+<p> </p>
+<p>进程、应用程序域、线程的关系如下图，一个进程内可以包括多个应用程序域，也有包括多个线程，线程也可以穿梭于多个应用程序域当中。但在同一个时刻，线程只会处于一个应用程序域内。</p>
+<p> </p>
+<p><a name="a1"></a></p>
+<p> </p>
+<p><img fetchpriority="high" decoding="async" style="border: 1px ridge #808080; display: block; margin-left: auto; margin-right: auto;" src="http://pic002.cnblogs.com/images/2012/64989/2012010713392540.jpg" alt="" width="502" height="264"></p>
+<p> <br>
+由于本文是以介绍多线程技术为主题，对进程、应用程序域的介绍就到此为止。关于进程、线程、应用程序域的技术，在“<span style="color: #0000ff;"><span style="color: #0000ff;">C#综合揭秘——细说进程、应用程序域与上下文</span></span>”会有详细介绍。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>1.2 多线程</strong></p>
+<p> </p>
+<p>在单CPU系统的一个单位时间（time slice）内，CPU只能运行单个线程，运行顺序取决于线程的优先级别。如果在单位时间内线程未能完成执行，系统就会把线程的状态信息保存到线程的本地 存储器（TLS） 中，以便下次执行时恢复执行。而多线程只是系统带来的一个假像，它在多个单位时间内进行多个线程的切换。因为切换频密而且单位时间非常短暂，所以多线程可 被视作同时运行。</p>
+<p> </p>
+<p>适当使用多线程能提高系统的性能，比如：在系统请求大容量的数据时使用多线程，把数据输出工作交给异步线程，使主线程保持其稳定性去处理其他问题。但需要注意一点，因为CPU需要花费不少的时间在线程的切换上，所以过多地使用多线程反而会导致性能的下降。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><a name="t2"></a></p>
+<p> </p>
+<p style="text-align: right;"><span style="color: #0000ff;"><span style="color: #0000ff;">返回目录</span></span></p>
+<p> </p>
+<p><span style="font-size: 16px;"><strong>二、线程的基础知识</strong></span></p>
+<p> </p>
+<p><strong>2.1 System.Threading.Thread类</strong></p>
+<p> </p>
+<p>System.Threading.Thread是用于控制线程的基础类，通过Thread可以控制当前应用程序域中线程的创建、挂起、停止、销毁。</p>
+<p> </p>
+<p>它包括以下常用公共属性：</p>
+<p> </p>
+<table class="memberListTable" style="font-size: 14px; width: 600px;">
+<colgroup>
+<col width="30%">
+<col width="70%"> </colgroup>
+<tbody>
+<tr>
+<th><span style="font-size: 12px;">属性名称</span></th>
+<th><span style="font-size: 12px;">说明</span></th>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">CurrentContext</span></td>
+<td><span style="font-size: 12px;">获取线程正在其中执行的当前上下文。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">CurrentThread</span></td>
+<td><span style="font-size: 12px;">获取当前正在运行的线程。</span></td>
+</tr>
+<tr valign="top">
+<td valign="middle"><span style="font-size: 12px;">ExecutionContext</span></td>
+<td><span style="font-size: 12px;">获取一个 ExecutionContext 对象，该对象包含有关当前线程的各种上下文的信息。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">IsAlive</span></td>
+<td><span style="font-size: 12px;">获取一个值，该值指示当前线程的执行状态。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">IsBackground</span></td>
+<td><span style="font-size: 12px;">获取或设置一个值，该值指示某个线程是否为后台线程。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">IsThreadPoolThread</span></td>
+<td><span style="font-size: 12px;">获取一个值，该值指示线程是否属于托管线程池。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ManagedThreadId</span></td>
+<td><span style="font-size: 12px;">获取当前托管线程的唯一标识符。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Name</span></td>
+<td><span style="font-size: 12px;">获取或设置线程的名称。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Priority</span></td>
+<td><span style="font-size: 12px;">获取或设置一个值，该值指示线程的调度优先级。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ThreadState</span></td>
+<td><span style="font-size: 12px;">获取一个值，该值包含当前线程的状态。</span></td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p><strong> </strong></p>
+<p> </p>
+<p><strong>2.1.1 线程的标识符</strong></p>
+<p> </p>
+<p>ManagedThreadId是确认线程的唯一标识符，程序在大部分情况下都是通过Thread.ManagedThreadId来辨别线程的。 而Name是一个可变值，在默认时候，Name为一个空值 Null，开发人员可以通过程序设置线程的名称，但这只是一个辅助功能。</p>
+<p> </p>
+<p><strong> </strong></p>
+<p> </p>
+<p><strong>2.1.2 线程的优先级别</strong></p>
+<p> </p>
+<p>.NET为线程设置了Priority属性来定义线程执行的优先级别，里面包含5个选项，其中Normal是默认值。除非系统有特殊要求，否则不应该随便设置线程的优先级别。</p>
+<p> </p>
+<div>
+<table id="memberList" style="width: 600px;" border="0" cellpadding="1">
+<tbody>
+<tr>
+<th class="nameColumn"><span style="font-size: 12px;">成员名称</span></th>
+<th class="descriptionColumn"><span style="font-size: 12px;">说明</span></th>
+</tr>
+<tr>
+<td><span class="selflink" style="font-size: 12px;">Lowest</span></td>
+<td><span style="font-size: 12px;"> <span id="xn2_3e53547e0e9a509aff4a76382e494083" class="sentence">可以将 Thread 安排在具有任何其他优先级的线程之后。</span> </span></td>
+</tr>
+<tr>
+<td><span class="selflink" style="font-size: 12px;">BelowNormal</span></td>
+<td><span style="font-size: 12px;"> <span id="xn3_f979b4a5dfbb5a35942312092b2cd47a" class="sentence">可以将 Thread 安排在具有 <span class="input">Normal</span> 优先级的线程之后，在具有 <span class="input">Lowest</span> 优先级的线程之前。</span> </span></td>
+</tr>
+<tr>
+<td><span class="selflink" style="font-size: 12px;">Normal</span></td>
+<td><span style="font-size: 12px;"> <span id="xn4_8b94d9644aacd17640f4971fc6e79dc7" class="sentence">默认选择。可以将 Thread 安排在具有 <span class="input">AboveNormal</span> 优先级的线程之后，在具有 <span class="input">BelowNormal</span> 优先级的线程之前</span><span id="xn5_6fa67ded483ad3d242ea365f0ac225c4" class="sentence">。</span> </span></td>
+</tr>
+<tr>
+<td><span class="selflink" style="font-size: 12px;">AboveNormal</span></td>
+<td><span style="font-size: 12px;"> <span id="xn6_d067edb8ea0b5bfd51a2591334b86fd7" class="sentence">可以将 Thread 安排在具有 <span class="input">Highest</span> 优先级的线程之后，在具有 <span class="input">Normal</span> 优先级的线程之前。</span> </span></td>
+</tr>
+<tr>
+<td><span class="selflink" style="font-size: 12px;">Highest</span></td>
+<td><span style="font-size: 12px;"> <span id="xn7_fc7a0e931c772d08fc98b6de2c82ab3c" class="sentence">可以将 Thread 安排在具有任何其他优先级的线程之前。</span> </span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p> </p>
+<p><strong> </strong></p>
+<p> </p>
+<p><strong>2.1.3 线程的状态</strong></p>
+<p> </p>
+<p>通过ThreadState可以检测线程是处于Unstarted、Sleeping、Running 等等状态，它比 IsAlive 属性能提供更多的特定信息。</p>
+<p> </p>
+<p>前面说过，一个应用程序域中可能包括多个上下文，而通过CurrentContext可以获取线程当前的上下文。</p>
+<p> </p>
+<p>CurrentThread是最常用的一个属性，它是用于获取当前运行的线程。</p>
+<p> </p>
+<p><strong> </strong></p>
+<p> </p>
+<p><strong>2.1.4 System.Threading.Thread的方法</strong></p>
+<p> </p>
+<p>Thread 中包括了多个方法来控制线程的创建、挂起、停止、销毁，以后来的例子中会经常使用。</p>
+<p> </p>
+<table class="memberListTable" style="font-size: 14px; width: 600px;">
+<colgroup>
+<col width="30%">
+<col width="70%"> </colgroup>
+<tbody>
+<tr>
+<th><span style="font-size: 12px;">方法名称</span></th>
+<th><span style="font-size: 12px;">说明</span></th>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Abort()　　　　</span></td>
+<td><span style="font-size: 12px;">终止本线程。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">GetDomain()</span></td>
+<td><span style="font-size: 12px;">返回当前线程正在其中运行的当前域。 </span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">GetDomainId()</span></td>
+<td><span style="font-size: 12px;">返回当前线程正在其中运行的当前域Id。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Interrupt()</span></td>
+<td><span style="font-size: 12px;">中断处于 WaitSleepJoin 线程状态的线程。 </span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Join()</span></td>
+<td><span style="font-size: 12px;">已重载。 阻塞调用线程，直到某个线程终止时为止。 </span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;"> Resume()</span></td>
+<td><span style="font-size: 12px;">继续运行已挂起的线程。 </span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Start()　　</span></td>
+<td><span style="font-size: 12px;">执行本线程。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Suspend()</span></td>
+<td><span style="font-size: 12px;">挂起当前线程，如果当前线程已属于挂起状态则此不起作用</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Sleep()　　</span></td>
+<td><span style="font-size: 12px;">把正在运行的线程挂起一段时间。</span></td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>2.1.5 开发实例</strong></p>
+<p> </p>
+<p>以下这个例子，就是通过Thread显示当前线程信息</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 2</span>         {
+<span style="color: #008080;"> 3</span>             Thread thread = Thread.CurrentThread;
+<span style="color: #008080;"> 4</span>             thread.Name = <span style="color: #800000;">"</span><span style="color: #800000;">Main Thread</span><span style="color: #800000;">"</span>;
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">string</span> threadMessage = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">Thread ID:{0}\n Current AppDomainId:{1}\n </span><span style="color: #800000;">"</span>+
+<span style="color: #008080;"> 6</span>                 <span style="color: #800000;">"</span><span style="color: #800000;">Current ContextId:{2}\n Thread Name:{3}\n </span><span style="color: #800000;">"</span>+
+<span style="color: #008080;"> 7</span>                 <span style="color: #800000;">"</span><span style="color: #800000;">Thread State:{4}\n Thread Priority:{5}\n</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;"> 8</span>                 thread.ManagedThreadId, Thread.GetDomainID(), Thread.CurrentContext.ContextID,
+<span style="color: #008080;"> 9</span>                 thread.Name, thread.ThreadState, thread.Priority);
+<span style="color: #008080;">10</span>             Console.WriteLine(threadMessage);
+<span style="color: #008080;">11</span>             Console.ReadKey();
+<span style="color: #008080;">12</span>         }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>运行结果</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012010718230274.jpg" alt="" width="553" height="148"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>2.2  System.Threading 命名空间</strong></p>
+<p> </p>
+<p>在System.Threading命名空间内提供多个方法来构建多线程应用程序,其中ThreadPool与Thread是多线程开发中最常用到 的，在.NET中专门设定了一个CLR线程池专门用于管理线程的运行，这个CLR线程池正是通过ThreadPool类来管理。而Thread是管理线程 的最直接方式，下面几节将详细介绍有关内容。</p>
+<p> </p>
+<table class="memberListTable" style="width: 600px;">
+<tbody>
+<tr valign="top">
+<td style="text-align: center; width: 30%;"><span style="font-size: 12px;"><strong>类　　　　</strong></span></td>
+<td style="text-align: center; width: 70%;"><span style="font-size: 12px;"><strong>说明</strong></span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">AutoResetEvent</span></td>
+<td><span style="font-size: 12px;">通知正在等待的线程已发生事件。无法继承此类。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ExecutionContext</span></td>
+<td><span style="font-size: 12px;">管理当前线程的执行上下文。无法继承此类。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Interlocked</span></td>
+<td><span style="font-size: 12px;">为多个线程共享的变量提供原子操作。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Monitor</span></td>
+<td><span style="font-size: 12px;">提供同步对对象的访问的机制。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Mutex</span></td>
+<td><span style="font-size: 12px;">一个同步基元，也可用于进程间同步。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Thread</span></td>
+<td><span style="font-size: 12px;">创建并控制线程，设置其优先级并获取其状态。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ThreadAbortException</span></td>
+<td><span style="font-size: 12px;">在对 Abort 方法进行调用时引发的异常。无法继承此类。</span></td>
+</tr>
+<tr valign="top">
+<td valign="middle"><span style="font-size: 12px;">ThreadPool</span></td>
+<td><span style="font-size: 12px;">提供一个线程池，该线程池可用于发送工作项、处理异步 I/O、代表其他线程等待以及处理计时器。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Timeout</span></td>
+<td><span style="font-size: 12px;">包含用于指定无限长的时间的常数。无法继承此类。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">Timer</span></td>
+<td><span style="font-size: 12px;">提供以指定的时间间隔执行方法的机制。无法继承此类。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">WaitHandle</span></td>
+<td><span style="font-size: 12px;">封装等待对共享资源的独占访问的操作系统特定的对象。</span></td>
+</tr>
+</tbody>
+</table>
+<p> <br>
+在System.Threading中的包含了下表中的多个常用委托，其中ThreadStart、ParameterizedThreadStart是最常用到的委托。<br>
+由ThreadStart生成的线程是最直接的方式，但由ThreadStart所生成并不受线程池管理。<br>
+而ParameterizedThreadStart是为异步触发带参数的方法而设的，在下一节将为大家逐一细说。</p>
+<p> </p>
+<table class="memberListTable" style="width: 600px; font-size: 14px;">
+<tbody>
+<tr>
+<th style="text-align: center;" align="left"><span style="font-size: 12px;">委托</span></th>
+<th style="text-align: center;" align="left"><span style="font-size: 12px;">说明</span></th>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ContextCallback</span></td>
+<td><span style="font-size: 12px;">表示要在新上下文中调用的方法。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ParameterizedThreadStart</span></td>
+<td><span style="font-size: 12px;">表示在 Thread 上执行的方法。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ThreadExceptionEventHandler</span></td>
+<td><span style="font-size: 12px;">表示将要处理 Application 的 ThreadException 事件的方法。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">ThreadStart</span></td>
+<td><span style="font-size: 12px;">表示在 Thread 上执行的方法。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">TimerCallback</span></td>
+<td><span style="font-size: 12px;">表示处理来自 Timer 的调用的方法。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">WaitCallback</span></td>
+<td><span style="font-size: 12px;">表示线程池线程要执行的回调方法。</span></td>
+</tr>
+<tr valign="top">
+<td><span style="font-size: 12px;">WaitOrTimerCallback</span></td>
+<td><span style="font-size: 12px;">表示当 WaitHandle 超时或终止时要调用的方法。</span></td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>2.3 线程的管理方式</strong></p>
+<p> </p>
+<p>通过ThreadStart来创建一个新线程是最直接的方法，但这样创建出来的线程比较难管理，如果创建过多的线程反而会让系统的性能下载。有见及 此，.NET为线程管理专门设置了一个CLR线程池，使用CLR线程池系统可以更合理地管理线程的使用。所有请求的服务都能运行于线程池中，当运行结束时 线程便会回归到线程池。通过设置，能控制线程池的最大线程数量，在请求超出线程最大值时，线程池能按照操作的优先级别来执行，让部分操作处于等待状态，待 有线程回归时再执行操作。</p>
+<p> </p>
+<p>基础知识就为大家介绍到这里，下面将详细介绍多线程的开发。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><a name="t3"></a></p>
+<p> </p>
+<p style="text-align: right;"><span style="color: #0000ff;"><span style="color: #0000ff;">返回目录</span></span></p>
+<p> </p>
+<p><span style="font-size: 16px;"><strong>三、以ThreadStart方式实现多线程</strong></span></p>
+<p> </p>
+<p><strong>3.1 使用ThreadStart委托</strong></p>
+<p> </p>
+<p>这里先以一个例子体现一下多线程带来的好处，首先在Message类中建立一个方法ShowMessage()，里面显示了当前运行线程的Id，并 使用Thread.Sleep（int ) 方法模拟部分工作。在main()中通过ThreadStart委托绑定Message对象的ShowMessage（）方法，然后通过 Thread.Start（）执行异步方法。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>       <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Message
+<span style="color: #008080;"> 2</span>       {
+<span style="color: #008080;"> 3</span>           <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> ShowMessage()
+<span style="color: #008080;"> 4</span>           {
+<span style="color: #008080;"> 5</span>               <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">Async threadId is :{0}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;"> 6</span>                                               Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;"> 7</span>               Console.WriteLine(message);
+<span style="color: #008080;"> 8</span>   
+<span style="color: #008080;"> 9</span>               <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span>; n &lt; <span style="color: #800080;">10</span>; n++)
+<span style="color: #008080;">10</span>               {
+<span style="color: #008080;">11</span>                   Thread.Sleep(<span style="color: #800080;">300</span>);   
+<span style="color: #008080;">12</span>                   Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">The number is:</span><span style="color: #800000;">"</span> + n.ToString()); 
+<span style="color: #008080;">13</span>               }
+<span style="color: #008080;">14</span>           }
+<span style="color: #008080;">15</span>       }
+<span style="color: #008080;">16</span>   
+<span style="color: #008080;">17</span>       <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;">18</span>       {
+<span style="color: #008080;">19</span>           <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;">20</span>           {
+<span style="color: #008080;">21</span>               Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main threadId is:</span><span style="color: #800000;">"</span>+
+<span style="color: #008080;">22</span>                                 Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">23</span>               Message message=<span style="color: #0000ff;">new</span> Message();
+<span style="color: #008080;">24</span>               Thread thread = <span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span> ThreadStart(message.ShowMessage));
+<span style="color: #008080;">25</span>               thread.Start();
+<span style="color: #008080;">26</span>               Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Do something ..........!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">27</span>               Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main thread working is complete!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">28</span>               
+<span style="color: #008080;">29</span>           }
+<span style="color: #008080;">30</span>       }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> <br>
+请注意运行结果，在调用Thread.Start()方法后，系统以异步方式运行Message.ShowMessage()，而主线程的操作是继续执行的，在Message.ShowMessage()完成前，主线程已完成所有的操作。</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012010721572365.jpg" alt="" width="565" height="254"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>3.2 使用ParameterizedThreadStart委托</strong></p>
+<p> </p>
+<p>ParameterizedThreadStart委托与ThreadStart委托非常相似，但 ParameterizedThreadStart委托是面向带参数方法的。注意ParameterizedThreadStart 对应方法的参数为object，此参数可以为一个值对象，也可以为一个自定义对象。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Person
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span> Name
+<span style="color: #008080;"> 4</span>         {
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">get</span>;
+<span style="color: #008080;"> 6</span>             <span style="color: #0000ff;">set</span>;
+<span style="color: #008080;"> 7</span>         }
+<span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> Age
+<span style="color: #008080;"> 9</span>         {
+<span style="color: #008080;">10</span>             <span style="color: #0000ff;">get</span>;
+<span style="color: #008080;">11</span>             <span style="color: #0000ff;">set</span>;
+<span style="color: #008080;">12</span>         }
+<span style="color: #008080;">13</span>     }
+<span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Message
+<span style="color: #008080;">16</span>     {
+<span style="color: #008080;">17</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> ShowMessage(<span style="color: #0000ff;">object</span> person)
+<span style="color: #008080;">18</span>         {
+<span style="color: #008080;">19</span>             <span style="color: #0000ff;">if</span> (person != <span style="color: #0000ff;">null</span>)
+<span style="color: #008080;">20</span>             {
+<span style="color: #008080;">21</span>                 Person _person = (Person)person;
+<span style="color: #008080;">22</span>                 <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">\n{0}'s age is {1}!\nAsync threadId is:{2}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">23</span>                     _person.Name,_person.Age,Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">24</span>                 Console.WriteLine(message);
+<span style="color: #008080;">25</span>             }
+<span style="color: #008080;">26</span>             <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span>; n &lt; <span style="color: #800080;">10</span>; n++)
+<span style="color: #008080;">27</span>             {
+<span style="color: #008080;">28</span>                 Thread.Sleep(<span style="color: #800080;">300</span>);   
+<span style="color: #008080;">29</span>                 Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">The number is:</span><span style="color: #800000;">"</span> + n.ToString()); 
+<span style="color: #008080;">30</span>             }
+<span style="color: #008080;">31</span>         }
+<span style="color: #008080;">32</span>     }
+<span style="color: #008080;">33</span> 
+<span style="color: #008080;">34</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;">35</span>     {
+<span style="color: #008080;">36</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;">37</span>         {     
+<span style="color: #008080;">38</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main threadId is:</span><span style="color: #800000;">"</span>+Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">39</span>             
+<span style="color: #008080;">40</span>             Message message=<span style="color: #0000ff;">new</span> Message();
+<span style="color: #008080;">41</span>             <span style="color: #008000;">//</span><span style="color: #008000;">绑定带参数的异步方法</span><span style="color: #008000;">
+</span><span style="color: #008080;">42</span>             Thread thread = <span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span> ParameterizedThreadStart(message.ShowMessage));
+<span style="color: #008080;">43</span>             Person person = <span style="color: #0000ff;">new</span> Person();
+<span style="color: #008080;">44</span>             person.Name = <span style="color: #800000;">"</span><span style="color: #800000;">Jack</span><span style="color: #800000;">"</span>;
+<span style="color: #008080;">45</span>             person.Age = <span style="color: #800080;">21</span>;
+<span style="color: #008080;">46</span>             thread.Start(person);  <span style="color: #008000;">//</span><span style="color: #008000;">启动异步线程 </span><span style="color: #008000;">
+</span><span style="color: #008080;">47</span>             
+<span style="color: #008080;">48</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Do something ..........!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">49</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main thread working is complete!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">50</span>              
+<span style="color: #008080;">51</span>         }
+<span style="color: #008080;">52</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> <br>
+运行结果：</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012010722462070.jpg" alt="" width="561" height="262"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>3.3 前台线程与后台线程</strong></p>
+<p> </p>
+<p>注意以上两个例子都没有使用Console.ReadKey（）,但系统依然会等待异步线程完成后才会结束。这是因为使用Thread.Start()启动的线程默认为前台线程，而系统必须等待所有前台线程运行结束后，应用程序域才会自动卸载。</p>
+<p> </p>
+<p>在第二节曾经介绍过线程Thread有一个属性IsBackground，通过把此属性设置为true，就可以把线程设置为后台线程！这时应用程序域将在主线程完成时就被卸载，而不会等待异步线程的运行。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>3.4 挂起线程</strong></p>
+<p> </p>
+<p>为了等待其他后台线程完成后再结束主线程，就可以使用Thread.Sleep()方法。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Message
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> ShowMessage()
+<span style="color: #008080;"> 4</span>         {
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">\nAsync threadId is:{0}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;"> 6</span>                                            Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;"> 7</span>             Console.WriteLine(message);
+<span style="color: #008080;"> 8</span>             <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span>; n &lt; <span style="color: #800080;">10</span>; n++)
+<span style="color: #008080;"> 9</span>             {
+<span style="color: #008080;">10</span>                 Thread.Sleep(<span style="color: #800080;">300</span>);
+<span style="color: #008080;">11</span>                 Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">The number is:</span><span style="color: #800000;">"</span> + n.ToString());
+<span style="color: #008080;">12</span>             }
+<span style="color: #008080;">13</span>         }
+<span style="color: #008080;">14</span>     }
+<span style="color: #008080;">15</span> 
+<span style="color: #008080;">16</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;">17</span>     {
+<span style="color: #008080;">18</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;">19</span>         {     
+<span style="color: #008080;">20</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main threadId is:</span><span style="color: #800000;">"</span>+
+<span style="color: #008080;">21</span>                               Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">22</span>             
+<span style="color: #008080;">23</span>             Message message=<span style="color: #0000ff;">new</span> Message();
+<span style="color: #008080;">24</span>             Thread thread = <span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span> ThreadStart(message.ShowMessage));
+<span style="color: #008080;">25</span>             thread.IsBackground = <span style="color: #0000ff;">true</span>;
+<span style="color: #008080;">26</span>             thread.Start();
+<span style="color: #008080;">27</span>             
+<span style="color: #008080;">28</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Do something ..........!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">29</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main thread working is complete!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">30</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main thread sleep!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">31</span>             Thread.Sleep(<span style="color: #800080;">5000</span>);
+<span style="color: #008080;">32</span>         }
+<span style="color: #008080;">33</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>运行结果如下，此时应用程序域将在主线程运行5秒后自动结束</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012010723153675.jpg" alt="" width="542" height="268"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>但系统无法预知异步线程需要运行的时间，所以用通过Thread.Sleep（int）阻塞主线程并不是一个好的解决方法。有见及此，.NET专门 为等待异步线程完成开发了另一个方法thread.Join()。把上面例子中的最后一行Thread.Sleep（5000）修改为 thread.Join() 就能保证主线程在异步线程thread运行结束后才会终止。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>3.5 Suspend 与 Resume （慎用）</strong></p>
+<p> </p>
+<p>Thread.Suspend（）与 Thread.Resume（）是在Framework1.0 就已经存在的老方法了，它们分别可以挂起、恢复线程。但在Framework2.0中就已经明确排斥这两个方法。这是因为一旦某个线程占用了已有的资源， 再使用Suspend（）使线程长期处于挂起状态，当在其他线程调用这些资源的时候就会引起死锁！所以在没有必要的情况下应该避免使用这两个方法。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>3.6 终止线程</strong></p>
+<p> </p>
+<p>若想终止正在运行的线程，可以使用Abort（）方法。在使用Abort（）的时候，将引发一个特殊异常 ThreadAbortException 。<br>
+若想在线程终止前恢复线程的执行，可以在捕获异常后 ,在catch（ThreadAbortException ex）{...} 中调用Thread.ResetAbort（）取消终止。<br>
+而使用Thread.Join（）可以保证应用程序域等待异步线程结束后才终止运行。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;"> static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 2</span>          {
+<span style="color: #008080;"> 3</span>              Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main threadId is:</span><span style="color: #800000;">"</span> +
+<span style="color: #008080;"> 4</span>                                Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;"> 5</span>  
+<span style="color: #008080;"> 6</span>              Thread thread = <span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span> ThreadStart(AsyncThread));
+<span style="color: #008080;"> 7</span>              thread.IsBackground = <span style="color: #0000ff;">true</span>;
+<span style="color: #008080;"> 8</span>              thread.Start();
+<span style="color: #008080;"> 9</span>              thread.Join();
+<span style="color: #008080;">10</span>  
+<span style="color: #008080;">11</span>          }     
+<span style="color: #008080;">12</span>          
+<span style="color: #008080;">13</span>          <span style="color: #008000;">//</span><span style="color: #008000;">以异步方式调用</span><span style="color: #008000;">
+</span><span style="color: #008080;">14</span>          <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> AsyncThread()
+<span style="color: #008080;">15</span>          {
+<span style="color: #008080;">16</span>              <span style="color: #0000ff;">try</span>
+<span style="color: #008080;">17</span>              {
+<span style="color: #008080;">18</span>                  <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">\nAsync threadId is:{0}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">19</span>                     Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">20</span>                  Console.WriteLine(message);
+<span style="color: #008080;">21</span>  
+<span style="color: #008080;">22</span>                  <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span>; n &lt; <span style="color: #800080;">10</span>; n++)
+<span style="color: #008080;">23</span>                  {
+<span style="color: #008080;">24</span>                      <span style="color: #008000;">//</span><span style="color: #008000;">当n等于4时，终止线程</span><span style="color: #008000;">
+</span><span style="color: #008080;">25</span>                      <span style="color: #0000ff;">if</span> (n &gt;= <span style="color: #800080;">4</span>)
+<span style="color: #008080;">26</span>                      {
+<span style="color: #008080;">27</span>                          Thread.CurrentThread.Abort(n);
+<span style="color: #008080;">28</span>                      }
+<span style="color: #008080;">29</span>                      Thread.Sleep(<span style="color: #800080;">300</span>);
+<span style="color: #008080;">30</span>                      Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">The number is:</span><span style="color: #800000;">"</span> + n.ToString());
+<span style="color: #008080;">31</span>                  }
+<span style="color: #008080;">32</span>              }
+<span style="color: #008080;">33</span>              <span style="color: #0000ff;">catch</span> (ThreadAbortException ex)
+<span style="color: #008080;">34</span>              {
+<span style="color: #008080;">35</span>                  <span style="color: #008000;">//</span><span style="color: #008000;">输出终止线程时n的值</span><span style="color: #008000;">
+</span><span style="color: #008080;">36</span>                  <span style="color: #0000ff;">if</span> (ex.ExceptionState != <span style="color: #0000ff;">null</span>)
+<span style="color: #008080;">37</span>                      Console.WriteLine(<span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">Thread abort when the number is: {0}!</span><span style="color: #800000;">"</span>, 
+<span style="color: #008080;">38</span>                                                       ex.ExceptionState.ToString()));
+<span style="color: #008080;">39</span>                 
+<span style="color: #008080;">40</span>                  <span style="color: #008000;">//</span><span style="color: #008000;">取消终止，继续执行线程</span><span style="color: #008000;">
+</span><span style="color: #008080;">41</span>                  Thread.ResetAbort();
+<span style="color: #008080;">42</span>                  Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Thread ResetAbort!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">43</span>              }
+<span style="color: #008080;">44</span>  
+<span style="color: #008080;">45</span>              <span style="color: #008000;">//</span><span style="color: #008000;">线程结束</span><span style="color: #008000;">
+</span><span style="color: #008080;">46</span>              Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Thread Close!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">47</span>          }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>运行结果如下</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012010919274011.jpg" alt="" width="554" height="194"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><a name="t4"></a></p>
+<p> </p>
+<p style="text-align: right;"><span style="color: #0000ff;"><span style="color: #0000ff;">返回目录</span></span></p>
+<p> </p>
+<p><strong><span style="font-size: 16px;">四、CLR线程池的工作者线程</span></strong></p>
+<p> </p>
+<p><strong>4.1 关于CLR线程池</strong></p>
+<p> </p>
+<p>使用ThreadStart与ParameterizedThreadStart建立新线程非常简单，但通过此方法建立的线程难于管理，若建立过多的线程反而会影响系统的性能。<br>
+有 见及此，.NET引入CLR线程池这个概念。CLR线程池并不会在CLR初始化的时候立刻建立线程，而是在应用程序要创建线程来执行任务时，线程池才初始 化一个线程。线程的初始化与其他的线程一样。在完成任务以后，该线程不会自行销毁，而是以挂起的状态返回到线程池。直到应用程序再次向线程池发出请求时， 线程池里挂起的线程就会再度激活执行任务。这样既节省了建立线程所造成的性能损耗，也可以让多个任务反复重用同一线程，从而在应用程序生存期内节约大量开 销。</p>
+<p> </p>
+<div style="background: #f4f4f4; border: 1px solid #808080; width：80%;margin: 20px; padding: 20px;">
+<p><em>注意</em>：<em>通过CLR线程池所建立的线程总是默认为后台线程，优先级数为ThreadPriority.Normal。</em></p>
+</div>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>4.2 工作者线程与I/O线程</strong></p>
+<p> </p>
+<p>CLR线程池分为工作者线程（workerThreads）与I/O线程 (<span class="parameter">completion</span>PortThreads) 两种，工作者线程是主要用作管理CLR内部对象的运作，I/O（Input/Output) 线程顾名思义是用于与外部系统交换信息，IO线程的细节将在下一节详细说明。</p>
+<p> </p>
+<p>通过ThreadPool.GetMax（out int workerThreads,out int completionPortThreads )和 ThreadPool.SetMax( int workerThreads, int completionPortThreads)两个方法可以分别读取和设置CLR线程池中工作者线程与I/O线程的最大线程数。在 Framework2.0中最大线程默认为25*CPU数，在Framewok3.0、4.0中最大线程数默认为250*CPU数，在近年 I3,I5,I7 CPU出现后，线程池的最大值一般默认为1000、2000。<br>
+若想测试线程池中有多少的线程正在投入使用，可以通过ThreadPool.GetAvailableThreads( <span style="color: #000000;">out int</span> workerThreads,out int completionPortThreads ) 方法。</p>
+<p> </p>
+<p>使用CLR线程池的工作者线程一般有两种方式，一是直接通过 ThreadPool.QueueUserWorkItem() 方法，二是通过委托，下面将逐一细说。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>4.3 通过QueueUserWorkItem启动工作者线程</strong></p>
+<p> </p>
+<p>ThreadPool线程池中包含有两个静态方法可以直接启动工作者线程：<br>
+一为 ThreadPool.QueueUserWorkItem(WaitCallback)<br>
+二为 ThreadPool.QueueUserWorkItem(WaitCallback,Object)</p>
+<p> </p>
+<p>先把WaitCallback委托指向一个带有Object参数的无返回值方法，再使用 ThreadPool.QueueUserWorkItem(WaitCallback) 就可以异步启动此方法，此时异步方法的参数被视为null 。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 4</span>         {
+<span style="color: #008080;"> 5</span>             <span style="color: #008000;">//</span><span style="color: #008000;">把CLR线程池的最大值设置为1000</span><span style="color: #008000;">
+</span><span style="color: #008080;"> 6</span>             ThreadPool.SetMaxThreads(<span style="color: #800080;">1000</span>, <span style="color: #800080;">1000</span>);
+<span style="color: #008080;"> 7</span>             <span style="color: #008000;">//</span><span style="color: #008000;">显示主线程启动时线程池信息</span><span style="color: #008000;">
+</span><span style="color: #008080;"> 8</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Start</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;"> 9</span>             <span style="color: #008000;">//</span><span style="color: #008000;">启动工作者线程</span><span style="color: #008000;">
+</span><span style="color: #008080;">10</span>             ThreadPool.QueueUserWorkItem(<span style="color: #0000ff;">new</span> WaitCallback(AsyncCallback));
+<span style="color: #008080;">11</span>             Console.ReadKey();
+<span style="color: #008080;">12</span>         }
+<span style="color: #008080;">13</span>         
+<span style="color: #008080;">14</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> AsyncCallback(<span style="color: #0000ff;">object</span> state)
+<span style="color: #008080;">15</span>         {
+<span style="color: #008080;">16</span>             Thread.Sleep(<span style="color: #800080;">200</span>);
+<span style="color: #008080;">17</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">AsyncCallback</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">18</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Async thread do work!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">19</span>         }
+<span style="color: #008080;">20</span> 
+<span style="color: #008080;">21</span>         <span style="color: #008000;">//</span><span style="color: #008000;">显示线程现状</span><span style="color: #008000;">
+</span><span style="color: #008080;">22</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">23</span>         {
+<span style="color: #008080;">24</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n CurrentThreadId is {1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">25</span>                  data, Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">26</span>             Console.WriteLine(message);
+<span style="color: #008080;">27</span>         }
+<span style="color: #008080;">28</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>运行结果</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012011313135388.jpg" alt="" width="551" height="127"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>使用 ThreadPool.QueueUserWorkItem(WaitCallback,Object) 方法可以把object对象作为参数传送到回调函数中。<br>
+下面例子中就是把一个string对象作为参数发送到回调函数当中。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 4</span>         {
+<span style="color: #008080;"> 5</span>             <span style="color: #008000;">//</span><span style="color: #008000;">把线程池的最大值设置为1000</span><span style="color: #008000;">
+</span><span style="color: #008080;"> 6</span>             ThreadPool.SetMaxThreads(<span style="color: #800080;">1000</span>, <span style="color: #800080;">1000</span>);
+<span style="color: #008080;"> 7</span>           
+<span style="color: #008080;"> 8</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Start</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;"> 9</span>             ThreadPool.QueueUserWorkItem(<span style="color: #0000ff;">new</span> WaitCallback(AsyncCallback),<span style="color: #800000;">"</span><span style="color: #800000;">Hello Elva</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">10</span>             Console.ReadKey();
+<span style="color: #008080;">11</span>         }
+<span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> AsyncCallback(<span style="color: #0000ff;">object</span> state)
+<span style="color: #008080;">14</span>         {
+<span style="color: #008080;">15</span>             Thread.Sleep(<span style="color: #800080;">200</span>);
+<span style="color: #008080;">16</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">AsyncCallback</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span>             <span style="color: #0000ff;">string</span> data = (<span style="color: #0000ff;">string</span>)state;
+<span style="color: #008080;">19</span>             Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Async thread do work!\n</span><span style="color: #800000;">"</span>+data);
+<span style="color: #008080;">20</span>         }
+<span style="color: #008080;">21</span> 
+<span style="color: #008080;">22</span>         <span style="color: #008000;">//</span><span style="color: #008000;">显示线程现状</span><span style="color: #008000;">
+</span><span style="color: #008080;">23</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">24</span>         {
+<span style="color: #008080;">25</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n CurrentThreadId is {1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">26</span>                  data, Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">27</span>             Console.WriteLine(message);
+<span style="color: #008080;">28</span>         }
+<span style="color: #008080;">29</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>运行结果</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012011313184468.jpg" alt="" width="540" height="151"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>通过ThreadPool.QueueUserWorkItem启动工作者线程虽然是方便，但WaitCallback委托指向的必须是一个带有 Object参数的无返回值方法，这无疑是一种限制。若方法需要有返回值，或者带有多个参数，这将多费周折。有见及此，.NET提供了另一种方式去建立工 作者线程，那就是委托。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>4.4  委托类</strong></p>
+<p> </p>
+<p>使用CLR线程池中的工作者线程，最灵活最常用的方式就是使用委托的异步方法，在此先简单介绍一下委托类。</p>
+<p> </p>
+<p>当定义委托后，.NET就会自动创建一个代表该委托的类，下面可以用反射方式显示委托类的方法成员（对反射有兴趣的朋友可以先参考一下“<span style="color: #0000ff;"><span style="color: #0000ff;">.NET基础篇——反射的奥妙</span></span>”）</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">void</span> MyDelegate();
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 6</span>         {
+<span style="color: #008080;"> 7</span>             MyDelegate delegate1 = <span style="color: #0000ff;">new</span> MyDelegate(AsyncThread);
+<span style="color: #008080;"> 8</span>             <span style="color: #008000;">//</span><span style="color: #008000;">显示委托类的几个方法成员 </span><span style="color: #008000;">
+</span><span style="color: #008080;"> 9</span>             <span style="color: #0000ff;">var</span> methods=delegate1.GetType().GetMethods();
+<span style="color: #008080;">10</span>             <span style="color: #0000ff;">if</span> (methods != <span style="color: #0000ff;">null</span>)
+<span style="color: #008080;">11</span>                 <span style="color: #0000ff;">foreach</span> (MethodInfo info <span style="color: #0000ff;">in</span> methods)
+<span style="color: #008080;">12</span>                     Console.WriteLine(info.Name);
+<span style="color: #008080;">13</span>             Console.ReadKey();
+<span style="color: #008080;">14</span>          }
+<span style="color: #008080;">15</span>      }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>委托类包括以下几个重要方法</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012011116562025.jpg" alt=""></p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyDelegate:MulticastDelegate
+<span style="color: #008080;">2</span>     {
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">public</span> MyDelegate(<span style="color: #0000ff;">object</span> target, <span style="color: #0000ff;">int</span> methodPtr);
+<span style="color: #008080;">4</span>         <span style="color: #008000;">//</span><span style="color: #008000;">调用委托方法</span><span style="color: #008000;">
+</span><span style="color: #008080;">5</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">void</span> Invoke();
+<span style="color: #008080;">6</span>         <span style="color: #008000;">//</span><span style="color: #008000;">异步委托</span><span style="color: #008000;">
+</span><span style="color: #008080;">7</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">virtual</span> IAsyncResult BeginInvoke(AsyncCallback callback,<span style="color: #0000ff;">object</span> state);
+<span style="color: #008080;">8</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">void</span> EndInvoke(IAsyncResult result);
+<span style="color: #008080;">9</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>当调用Invoke（）方法时，对应此委托的所有方法都会被执行。而BeginInvoke与EndInvoke则支持委托方法的异步调用，由BeginInvoke启动的线程都属于CLR线程池中的工作者线程，在下面将详细说明。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>4.5  利用BeginInvoke与EndInvoke完成异步委托方法</strong></p>
+<p> </p>
+<p>首先建立一个委托对象，通过IAsyncResult BeginInvoke(string name,AsyncCallback callback,object state) 异步调用委托方法，BeginInvoke 方法除最后的两个参数外，其它参数都是与方法参数相对应的。通过 BeginInvoke 方法将返回一个实现了 System.IAsyncResult 接口的对象，之后就可以利用EndInvoke（IAsyncResult ) 方法就可以结束异步操作，获取委托的运行结果。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">string</span> MyDelegate(<span style="color: #0000ff;">string</span> name);
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 6</span>         {
+<span style="color: #008080;"> 7</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Main Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;"> 8</span>             
+<span style="color: #008080;"> 9</span>             <span style="color: #008000;">//</span><span style="color: #008000;">建立委托</span><span style="color: #008000;">
+</span><span style="color: #008080;">10</span>             MyDelegate myDelegate = <span style="color: #0000ff;">new</span> MyDelegate(Hello);
+<span style="color: #008080;">11</span>             <span style="color: #008000;">//</span><span style="color: #008000;">异步调用委托，获取计算结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">12</span>             IAsyncResult result=myDelegate.BeginInvoke(<span style="color: #800000;">"</span><span style="color: #800000;">Leslie</span><span style="color: #800000;">"</span>, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span>);
+<span style="color: #008080;">13</span>             <span style="color: #008000;">//</span><span style="color: #008000;">完成主线程其他工作
+</span><span style="color: #008080;">14</span> <span style="color: #008000;"><span style="color: #000000;"> .............</span> 
+</span><span style="color: #008080;">15</span>             <span style="color: #008000;">//</span><span style="color: #008000;">等待异步方法完成</span><span style="color: #008000;">，调用EndInvoke(IAsyncResult)获取运行结果
+</span><span style="color: #008080;">16</span>             <span style="color: #0000ff;">string</span> data=myDelegate.EndInvoke(result);
+<span style="color: #008080;">17</span>             Console.WriteLine(data);
+<span style="color: #008080;">18</span>             
+<span style="color: #008080;">19</span>             Console.ReadKey();
+<span style="color: #008080;">20</span>         }
+<span style="color: #008080;">21</span> 
+<span style="color: #008080;">22</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">string</span> Hello(<span style="color: #0000ff;">string</span> name)
+<span style="color: #008080;">23</span>         {
+<span style="color: #008080;">24</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">25</span>             Thread.Sleep(<span style="color: #800080;">2000</span>);            <span style="color: #008000;">//虚拟异步工作</span>
+<span style="color: #008080;">26</span>             <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">Hello </span><span style="color: #800000;">"</span> + name;
+<span style="color: #008080;">27</span>         }
+<span style="color: #008080;">28</span> 
+<span style="color: #008080;">29</span>         <span style="color: #008000;">//</span><span style="color: #008000;">显示当前线程</span><span style="color: #008000;">
+</span><span style="color: #008080;">30</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">31</span>         {
+<span style="color: #008080;">32</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n ThreadId is:{1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">33</span>                    data,Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">34</span>             Console.WriteLine(message);
+<span style="color: #008080;">35</span>         }
+<span style="color: #008080;">36</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>运行结果</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012011117481112.jpg" alt="" width="579" height="137"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong>4.6  善用IAsyncResult</strong></p>
+<p> </p>
+<p>在以上例子中可以看见，如果在使用myDelegate.BeginInvoke后立即调用myDelegate.EndInvoke，那在异步线 程未完成工作以前主线程将处于阻塞状态，等到异步线程结束获取计算结果后，主线程才能继续工作，这明显无法展示出多线程的优势。此时可以好好利用 IAsyncResult 提高主线程的工作性能，IAsyncResult有以下成员：</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span> IAsyncResult
+<span style="color: #008080;">2</span> {
+<span style="color: #008080;">3</span>     <span style="color: #0000ff;">object</span> AsyncState {<span style="color: #0000ff;">get</span>;}            <span style="color: #008000;">//获取用户定义的对象，它限定或包含关于异步操作的信息。</span>
+<span style="color: #008080;">4</span>     WailHandle AsyncWaitHandle {<span style="color: #0000ff;">get</span>;}   <span style="color: #008000;">//获取用于等待异步操作完成的 WaitHandle。</span>
+<span style="color: #008080;">5</span>     <span style="color: #0000ff;">bool</span> CompletedSynchronously {<span style="color: #0000ff;">get</span>;}  <span style="color: #008000;">//获取异步操作是否同步完成的指示。</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">bool</span> IsCompleted {<span style="color: #0000ff;">get</span>;}             <span style="color: #008000;">//获取异步操作是否已完成的指示。</span>
+<span style="color: #008080;">7</span> }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>通过轮询方式，使用IsCompleted属性判断异步操作是否完成，这样在异步操作未完成前就可以让主线程执行另外的工作。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">string</span> MyDelegate(<span style="color: #0000ff;">string</span> name);
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 6</span>         {
+<span style="color: #008080;"> 7</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Main Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;"> 8</span>             
+<span style="color: #008080;"> 9</span>             <span style="color: #008000;">//</span><span style="color: #008000;">建立委托</span><span style="color: #008000;">
+</span><span style="color: #008080;">10</span>             MyDelegate myDelegate = <span style="color: #0000ff;">new</span> MyDelegate(Hello);
+<span style="color: #008080;">11</span>             <span style="color: #008000;">//</span><span style="color: #008000;">异步调用委托，获取计算结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">12</span>             IAsyncResult result=myDelegate.BeginInvoke(<span style="color: #800000;">"</span><span style="color: #800000;">Leslie</span><span style="color: #800000;">"</span>, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span>);
+<span style="color: #008080;">13</span>             <span style="color: #008000;">//</span><span style="color: #008000;">在异步线程未完成前执行其他工作</span><span style="color: #008000;">
+</span><span style="color: #008080;">14</span>             <span style="color: #0000ff;">while</span> (!result.IsCompleted)
+<span style="color: #008080;">15</span>             {
+<span style="color: #008080;">16</span>                 Thread.Sleep(<span style="color: #800080;">200</span>);      <span style="color: #008000;">//虚拟操作</span>
+<span style="color: #008080;">17</span>                 Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main thead do work!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">18</span>             }
+<span style="color: #008080;">19</span>             <span style="color: #0000ff;">string</span> data=myDelegate.EndInvoke(result);
+<span style="color: #008080;">20</span>             Console.WriteLine(data);
+<span style="color: #008080;">21</span>             
+<span style="color: #008080;">22</span>             Console.ReadKey();
+<span style="color: #008080;">23</span>         }
+<span style="color: #008080;">24</span> 
+<span style="color: #008080;">25</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">string</span> Hello(<span style="color: #0000ff;">string</span> name)
+<span style="color: #008080;">26</span>         {
+<span style="color: #008080;">27</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">28</span>             Thread.Sleep(<span style="color: #800080;">2000</span>);
+<span style="color: #008080;">29</span>             <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">Hello </span><span style="color: #800000;">"</span> + name;
+<span style="color: #008080;">30</span>         }
+<span style="color: #008080;">31</span> 
+<span style="color: #008080;">32</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">33</span>         {
+<span style="color: #008080;">34</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n ThreadId is:{1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">35</span>                    data,Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">36</span>             Console.WriteLine(message);
+<span style="color: #008080;">37</span>         }
+<span style="color: #008080;">38</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>运行结果：</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012011118580960.jpg" alt="" width="575" height="284"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>除此以外，也可以使用WailHandle完成同样的工作，WaitHandle里面包含有一个方法WaitOne（int timeout），它可以判断委托是否完成工作，在工作未完成前主线程可以继续其他工作。运行下面代码可得到与使用 IAsyncResult.IsCompleted 同样的结果，而且更简单方便 。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">namespace</span> Test
+<span style="color: #008080;"> 2</span> {
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 4</span>     {
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">string</span> MyDelegate(<span style="color: #0000ff;">string</span> name);
+<span style="color: #008080;"> 6</span> 
+<span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 8</span>         {
+<span style="color: #008080;"> 9</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Main Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">10</span>             
+<span style="color: #008080;">11</span>             <span style="color: #008000;">//</span><span style="color: #008000;">建立委托</span><span style="color: #008000;">
+</span><span style="color: #008080;">12</span>             MyDelegate myDelegate = <span style="color: #0000ff;">new</span> MyDelegate(Hello);
+<span style="color: #008080;">13</span>  
+<span style="color: #008080;">14</span>             <span style="color: #008000;">//</span><span style="color: #008000;">异步调用委托，获取计算结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">15</span>             IAsyncResult result=myDelegate.BeginInvoke(<span style="color: #800000;">"</span><span style="color: #800000;">Leslie</span><span style="color: #800000;">"</span>, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span>);
+<span style="color: #008080;">16</span>             
+<span style="color: #008080;">17</span>             <span style="color: #0000ff;">while</span> (!result.AsyncWaitHandle.WaitOne(<span style="color: #800080;">200</span>))
+<span style="color: #008080;">18</span>             {
+<span style="color: #008080;">19</span>                 Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main thead do work!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">20</span>             }
+<span style="color: #008080;">21</span>             <span style="color: #0000ff;">string</span> data=myDelegate.EndInvoke(result);
+<span style="color: #008080;">22</span>             Console.WriteLine(data);
+<span style="color: #008080;">23</span>             
+<span style="color: #008080;">24</span>             Console.ReadKey();
+<span style="color: #008080;">25</span>         }
+<span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">string</span> Hello(<span style="color: #0000ff;">string</span> name)
+<span style="color: #008080;">28</span>         {
+<span style="color: #008080;">29</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">30</span>             Thread.Sleep(<span style="color: #800080;">2000</span>);
+<span style="color: #008080;">31</span>             <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">Hello </span><span style="color: #800000;">"</span> + name;
+<span style="color: #008080;">32</span>         }
+<span style="color: #008080;">33</span> 
+<span style="color: #008080;">34</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">35</span>         {
+<span style="color: #008080;">36</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n ThreadId is:{1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">37</span>                    data,Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">38</span>             Console.WriteLine(message);
+<span style="color: #008080;">39</span>         }
+<span style="color: #008080;">40</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>当要监视多个运行对象的时候，使用IAsyncResult.WaitHandle.WaitOne可就派不上用场了。<br>
+幸好.NET为WaitHandle准备了另外两个静态方法：WaitAny（waitHandle[], int）与WaitAll (waitHandle[] , int)。<br>
+其中WaitAll在等待所有waitHandle完成后再返回一个bool值。<br>
+而WaitAny是等待其中一个waitHandle完成后就返回一个int，这个int是代表已完成waitHandle在waitHandle[]中的数组索引。<br>
+下面就是使用WaitAll的例子，运行结果与使用 IAsyncResult.IsCompleted 相同。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">string</span> MyDelegate(<span style="color: #0000ff;">string</span> name);
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 6</span>         {
+<span style="color: #008080;"> 7</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Main Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;"> 8</span>             
+<span style="color: #008080;"> 9</span>             <span style="color: #008000;">//</span><span style="color: #008000;">建立委托</span><span style="color: #008000;">
+</span><span style="color: #008080;">10</span>             MyDelegate myDelegate = <span style="color: #0000ff;">new</span> MyDelegate(Hello);
+<span style="color: #008080;">11</span>  
+<span style="color: #008080;">12</span>             <span style="color: #008000;">//</span><span style="color: #008000;">异步调用委托，获取计算结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">13</span>             IAsyncResult result=myDelegate.BeginInvoke(<span style="color: #800000;">"</span><span style="color: #800000;">Leslie</span><span style="color: #800000;">"</span>, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span>);
+<span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>             <span style="color: #008000;">//</span><span style="color: #008000;">此处可加入多个检测对象</span><span style="color: #008000;">
+</span><span style="color: #008080;">16</span>             WaitHandle[] waitHandleList = <span style="color: #0000ff;">new</span> WaitHandle[] { result.AsyncWaitHandle,........ };
+<span style="color: #008080;">17</span>             <span style="color: #0000ff;">while</span> (!WaitHandle.WaitAll(waitHandleList,<span style="color: #800080;">200</span>))
+<span style="color: #008080;">18</span>             {
+<span style="color: #008080;">19</span>                 Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Main thead do work!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">20</span>             }
+<span style="color: #008080;">21</span>             <span style="color: #0000ff;">string</span> data=myDelegate.EndInvoke(result);
+<span style="color: #008080;">22</span>             Console.WriteLine(data);
+<span style="color: #008080;">23</span>             
+<span style="color: #008080;">24</span>             Console.ReadKey();
+<span style="color: #008080;">25</span>         }
+<span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">string</span> Hello(<span style="color: #0000ff;">string</span> name)
+<span style="color: #008080;">28</span>         {
+<span style="color: #008080;">29</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">30</span>             Thread.Sleep(<span style="color: #800080;">2000</span>);
+<span style="color: #008080;">31</span>             <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">Hello </span><span style="color: #800000;">"</span> + name;
+<span style="color: #008080;">32</span>         }
+<span style="color: #008080;">33</span> 
+<span style="color: #008080;">34</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">35</span>         {
+<span style="color: #008080;">36</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n ThreadId is:{1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">37</span>                    data,Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">38</span>             Console.WriteLine(message);
+<span style="color: #008080;">39</span>         }
+<span style="color: #008080;">40</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p> </p>
+<p> <br>
+<strong>4.7 回调函数</strong></p>
+<p> </p>
+<p>使用轮询方式来检测异步方法的状态非常麻烦，而且效率不高，有见及此，.NET为 IAsyncResult BeginInvoke（AsyncCallback , object）准备了一个回调函数。使用 AsyncCallback 就可以绑定一个方法作为回调函数，回调函数必须是带参数 IAsyncResult 且无返回值的方法： void AsycnCallbackMethod(IAsyncResult result) 。在BeginInvoke方法完成后，系统就会调用AsyncCallback所绑定的回调函数,最后回调函数中调用 XXX EndInvoke（IAsyncResult result) 就可以结束异步方法，它的返回值类型与委托的返回值一致。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">string</span> MyDelegate(<span style="color: #0000ff;">string</span> name);
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;"> 6</span>         {
+<span style="color: #008080;"> 7</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Main Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span>             <span style="color: #008000;">//</span><span style="color: #008000;">建立委托</span><span style="color: #008000;">
+</span><span style="color: #008080;">10</span>             MyDelegate myDelegate = <span style="color: #0000ff;">new</span> MyDelegate(Hello);
+<span style="color: #008080;">11</span>             <span style="color: #008000;">//</span><span style="color: #008000;">异步调用委托，获取计算结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">12</span>             myDelegate.BeginInvoke(<span style="color: #800000;">"</span><span style="color: #800000;">Leslie</span><span style="color: #800000;">"</span>, <span style="color: #0000ff;">new</span> AsyncCallback(Completed), <span style="color: #0000ff;">null</span>);
+<span style="color: #008080;">13</span>             <span style="color: #008000;">//</span><span style="color: #008000;">在启动异步线程后，主线程可以继续工作而不需要等待</span><span style="color: #008000;">
+</span><span style="color: #008080;">14</span>             <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span>; n &lt; <span style="color: #800080;">6</span>; n++)
+<span style="color: #008080;">15</span>                 Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> Main thread do work!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">16</span>             Console.WriteLine(<span style="color: #800000;">""</span>);
+<span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span>             Console.ReadKey();
+<span style="color: #008080;">19</span>         }
+<span style="color: #008080;">20</span> 
+<span style="color: #008080;">21</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">string</span> Hello(<span style="color: #0000ff;">string</span> name)
+<span style="color: #008080;">22</span>         {
+<span style="color: #008080;">23</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">24</span>             Thread.Sleep(<span style="color: #800080;">2000</span>);             <span style="color: #008000;">\\模拟异步操作</span>
+<span style="color: #008080;">25</span>             <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">\nHello </span><span style="color: #800000;">"</span> + name;
+<span style="color: #008080;">26</span>         }
+<span style="color: #008080;">27</span> 
+<span style="color: #008080;">28</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Completed(IAsyncResult result)
+<span style="color: #008080;">29</span>         {
+<span style="color: #008080;">30</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Completed</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">31</span> 
+<span style="color: #008080;">32</span>             <span style="color: #008000;">//</span><span style="color: #008000;">获取委托对象，调用EndInvoke方法获取运行结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">33</span>             AsyncResult _result = (AsyncResult)result;
+<span style="color: #008080;">34</span>             MyDelegate myDelegate = (MyDelegate)_result.AsyncDelegate;
+<span style="color: #008080;">35</span>             <span style="color: #0000ff;">string</span> data = myDelegate.EndInvoke(_result);
+<span style="color: #008080;">36</span>             Console.WriteLine(data);
+<span style="color: #008080;">37</span>         }
+<span style="color: #008080;">38</span> 
+<span style="color: #008080;">39</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">40</span>         {
+<span style="color: #008080;">41</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n ThreadId is:{1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">42</span>                    data, Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">43</span>             Console.WriteLine(message);
+<span style="color: #008080;">44</span>         }
+<span style="color: #008080;">45</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> <br>
+可以看到，主线在调用BeginInvoke方法可以继续执行其他命令，而无需再等待了，这无疑比使用轮询方式判断异步方法是否完成更有优势。<br>
+在异步方法执行完成后将会调用AsyncCallback所绑定的回调函数，注意一点，回调函数依然是在异步线程中执行，这样就不会影响主线程的运行，这也使用回调函数最值得青昧的地方。<br>
+在回调函数中有一个既定的参数IAsyncResult,把IAsyncResult强制转换为AsyncResult后，就可以通过 AsyncResult.AsyncDelegate 获取原委托，再使用EndInvoke方法获取计算结果。<br>
+运行结果如下：</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012011323313036.jpg" alt="" width="572" height="267"></p>
+<p> <br>
+如果想为回调函数传送一些外部信息，就可以利用BeginInvoke(AsyncCallback,object)的最后一个参数 object,它允许外部向回调函数输入任何类型的参数。只需要在回调函数中利用 AsyncResult.AsyncState 就可以获取object对象。</p>
+<p> </p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">class</span> Program
+<span style="color: #008080;"> 2</span>     {
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Person
+<span style="color: #008080;"> 4</span>         {
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span> Name;
+<span style="color: #008080;"> 6</span>             <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> Age;
+<span style="color: #008080;"> 7</span>         }
+<span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">string</span> MyDelegate(<span style="color: #0000ff;">string</span> name);
+<span style="color: #008080;">10</span> 
+<span style="color: #008080;">11</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)
+<span style="color: #008080;">12</span>         {
+<span style="color: #008080;">13</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Main Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>             <span style="color: #008000;">//</span><span style="color: #008000;">建立委托</span><span style="color: #008000;">
+</span><span style="color: #008080;">16</span>             MyDelegate myDelegate = <span style="color: #0000ff;">new</span> MyDelegate(Hello);
+<span style="color: #008080;">17</span>             
+<span style="color: #008080;">18</span>             <span style="color: #008000;">//</span><span style="color: #008000;">建立Person对象</span><span style="color: #008000;">
+</span><span style="color: #008080;">19</span>             Person person = <span style="color: #0000ff;">new</span> Person();
+<span style="color: #008080;">20</span>             person.Name = <span style="color: #800000;">"</span><span style="color: #800000;">Elva</span><span style="color: #800000;">"</span>;
+<span style="color: #008080;">21</span>             person.Age = <span style="color: #800080;">27</span>;
+<span style="color: #008080;">22</span>             
+<span style="color: #008080;">23</span>             <span style="color: #008000;">//</span><span style="color: #008000;">异步调用委托，输入参数对象person, 获取计算结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">24</span>             myDelegate.BeginInvoke(<span style="color: #800000;">"</span><span style="color: #800000;">Leslie</span><span style="color: #800000;">"</span>, <span style="color: #0000ff;">new</span> AsyncCallback(Completed), person);            
+<span style="color: #008080;">25</span>           
+<span style="color: #008080;">26</span>             <span style="color: #008000;">//</span><span style="color: #008000;">在启动异步线程后，主线程可以继续工作而不需要等待</span><span style="color: #008000;">
+</span><span style="color: #008080;">27</span>             <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span>; n &lt; <span style="color: #800080;">6</span>; n++)
+<span style="color: #008080;">28</span>                 Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> Main thread do work!</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">29</span>             Console.WriteLine(<span style="color: #800000;">""</span>);
+<span style="color: #008080;">30</span> 
+<span style="color: #008080;">31</span>             Console.ReadKey();
+<span style="color: #008080;">32</span>         }
+<span style="color: #008080;">33</span> 
+<span style="color: #008080;">34</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">string</span> Hello(<span style="color: #0000ff;">string</span> name)
+<span style="color: #008080;">35</span>         {
+<span style="color: #008080;">36</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Thread</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">37</span>             Thread.Sleep(<span style="color: #800080;">2000</span>);
+<span style="color: #008080;">38</span>             <span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">\nHello </span><span style="color: #800000;">"</span> + name;
+<span style="color: #008080;">39</span>         }
+<span style="color: #008080;">40</span> 
+<span style="color: #008080;">41</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Completed(IAsyncResult result)
+<span style="color: #008080;">42</span>         {
+<span style="color: #008080;">43</span>             ThreadMessage(<span style="color: #800000;">"</span><span style="color: #800000;">Async Completed</span><span style="color: #800000;">"</span>);
+<span style="color: #008080;">44</span> 
+<span style="color: #008080;">45</span>             <span style="color: #008000;">//</span><span style="color: #008000;">获取委托对象，调用EndInvoke方法获取运行结果</span><span style="color: #008000;">
+</span><span style="color: #008080;">46</span>             AsyncResult _result = (AsyncResult)result;
+<span style="color: #008080;">47</span>             MyDelegate myDelegate = (MyDelegate)_result.AsyncDelegate;
+<span style="color: #008080;">48</span>             <span style="color: #0000ff;">string</span> data = myDelegate.EndInvoke(_result);
+<span style="color: #008080;">49</span>             <span style="color: #008000;">//</span><span style="color: #008000;">获取Person对象</span><span style="color: #008000;">
+</span><span style="color: #008080;">50</span>             Person person = (Person)result.AsyncState;
+<span style="color: #008080;">51</span>             <span style="color: #0000ff;">string</span> message = person.Name + <span style="color: #800000;">"</span><span style="color: #800000;">'s age is </span><span style="color: #800000;">"</span> + person.Age.ToString();
+<span style="color: #008080;">52</span> 
+<span style="color: #008080;">53</span>             Console.WriteLine(data+<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span>+message);
+<span style="color: #008080;">54</span>         }
+<span style="color: #008080;">55</span> 
+<span style="color: #008080;">56</span>         <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> ThreadMessage(<span style="color: #0000ff;">string</span> data)
+<span style="color: #008080;">57</span>         {
+<span style="color: #008080;">58</span>             <span style="color: #0000ff;">string</span> message = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">"</span><span style="color: #800000;">{0}\n ThreadId is:{1}</span><span style="color: #800000;">"</span>,
+<span style="color: #008080;">59</span>                    data, Thread.CurrentThread.ManagedThreadId);
+<span style="color: #008080;">60</span>             Console.WriteLine(message);
+<span style="color: #008080;">61</span>         }
+<span style="color: #008080;">62</span>     }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p> </p>
+<p>运行结果:</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="http://pic002.cnblogs.com/images/2012/64989/2012011323434221.jpg" alt="" width="566" height="281"></p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/c%E5%A4%9A%E7%BA%BF%E7%A8%8B" rel="tag">C#多线程</a>, <a href="/tag/%E7%BA%BF%E7%A8%8B" rel="tag">线程</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/10/08/%E5%86%8D%E8%AF%B4sql%E7%B4%A2%E5%BC%95%E4%B8%8Esql%E4%BC%98%E5%8C%96.html" rel="prev">再说SQL索引与SQL优化</a><br>【下篇】<a href="/2012/10/12/%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F%E7%9A%84%E4%B8%89%E8%A6%81%E7%B4%A0.html" rel="next">提高代码质量的三要素</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2012/12/11/c%E7%BA%BF%E7%A8%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0.html">C#线程之线程池</a></li><li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li><li> · <a href="/2024/09/12/fix-net-blazor-child-component-not-refresh.html">解决.NET Blazor子组件不刷新问题</a></li><li> · <a href="/2024/09/10/net8-microsoft-aspnetcore.html">.NET8如何在普通类库中引用 Microsoft.AspNetCore</a></li><li> · <a href="/2024/06/27/net8-mysql-ssl-error.html">.NET8 Mysql SSL error</a></li><li> · <a href="/2024/06/25/asp-net-core-razor-unicode.html">ASP.NET Core MVC的Razor视图渲染中文乱码的问题</a></li><li> · <a href="/2022/02/23/netcore-life-circle.html">.NETCORE 依赖注入服务生命周期</a></li><li> · <a href="/2022/02/16/asp-net-zero-mysql.html">asp.net zero改mysql</a></li><li> · <a href="/2022/02/16/net5.html">.NET5面试汇总</a></li><li> · <a href="/2021/05/26/convert-zero-datetime.html">.Net连接Mysql数据库的Convert Zero Datetime日期问题</a></li><li> · <a href="/2020/09/30/vue-message-notification.html">vue使用element-ui中的Message 、MessageBox 、Notification</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年10月11日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/10/11/%E5%86%8D%E8%AF%B4-c%E5%A4%9A%E7%BA%BF%E7%A8%8B.html" rel="bookmark" title="本文固定链接 /2012/10/11/%e5%86%8d%e8%af%b4-c%e5%a4%9a%e7%ba%bf%e7%a8%8b.html">再说 C#多线程 | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/10/11/%e5%86%8d%e8%af%b4-c%e5%a4%9a%e7%ba%bf%e7%a8%8b.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/10/11/%E5%86%8D%E8%AF%B4-c%E5%A4%9A%E7%BA%BF%E7%A8%8B.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2651" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="3428ebeda0"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="57"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.096 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:48:55 -->

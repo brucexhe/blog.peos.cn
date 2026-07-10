@@ -1,0 +1,796 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>如何用一行 CSS 分别实现 10 种现代布局？ | Bruce's Blog</title> 
+<meta name="description" content=" ">
+<meta name="keywords" content="CSS,CSS3,HTML5,前端">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2020 年 7 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
+	</tr>
+	<tr>
+		<td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+	</tr>
+	<tr>
+		<td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td>21</td><td>22</td><td><a href="/2020/07/23" aria-label="2020年7月23日 发布的文章">23</a></td><td>24</td><td>25</td><td>26</td>
+	</tr>
+	<tr>
+		<td>27</td><td>28</td><td>29</td><td><a href="/2020/07/30" aria-label="2020年7月30日 发布的文章">30</a></td><td>31</td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2020/06">« 6 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2020/08">8 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#983d78;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#a926b4;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#5862f2;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#201f41;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#597f6f;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#62f3f5;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#b04566;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#fdbac3;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#6160c6;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#2e4573;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#55bb44;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#868a15;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#6d427e;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#4aaf5;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#61b871;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#5c86c6;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#8cabb0;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#f19d7c;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#1ab20f;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#1f6f85;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#5fd6dd;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#415fe8;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#e66673;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#98672;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#61a5fb;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#cbcfd9;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#51e80d;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#103913;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#133ca7;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#2f1150;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#a28386;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#84ddd1;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#6067f3;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#8b826a;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#e6bd72;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#89b605;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#41e4f4;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#e8f383;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#aace97;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#845350;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#5cb534;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#a53d5a;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#4527d0;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#ec6896;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#8de7f1;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/jsjqureycss" rel="category tag">前端</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">如何用一行 CSS 分别实现 10 种现代布局？</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2020-07-23 17:34</span>
+			<span class="category">  <a href="/category/jsjqureycss" rel="category tag">前端</a></span>
+			<span class="article_comment"><a href="/2020/07/23/css3-2.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>361</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div class="article-content" data-v-15c3fc70="" data-id="5f058d2c5188252e332eaa3c">
+<blockquote><p><img decoding="async" src="/wp-content/uploads/2020/07/1f819c9faf9d12bd28ef3642e5546766.png"></p>
+<p> </p></blockquote>
+<h2 class="heading" data-id="heading-0">前言</h2>
+<blockquote><p>更新于 2020/7/12，和 Una Kravets 邮件确认了下，最近她在 web.dev 也发布了新的关于视频里面布局的 blog，有兴趣的可以前去一观 <a href="https://web.dev/one-line-layouts/" target="_blank" rel="nofollow noopener noreferrer">one line layouts</a></p></blockquote>
+<p>周日在家看 web.dev 的 2020 三天 live，发现不少有意思的东西，其中有一项是关于 <span class="wp_keywordlink_affiliate"><a href="/tag/css" title="View all posts in CSS" target="_blank">CSS</a></span> 的，主播是 Una Kravets（chrome team 成员）。虽然我已经好几个月没有深入研究 <span class="wp_keywordlink_affiliate"><a href="/tag/css" title="View all posts in CSS" target="_blank">CSS</a></span> 的东西了，不过以前的底子还在（有兴趣的可以看我一年前发布的关于 <span class="wp_keywordlink_affiliate"><a href="/tag/css" title="View all posts in CSS" target="_blank">CSS</a></span> 的东西，虽然由于太过底层没啥人愿意看, sad）。</p>
+<blockquote><p><strong>注意：下面大部分代码已经由各大主流最新浏览器实现，切记不要使用在 production 当中</strong></p></blockquote>
+<blockquote><p><strong>注意：本文所有的代码来自于 Una Kravets。网络较好的，可以看 Una Kravets 的为 web.dev 专门写的网址，里面有所有的demo - <a href="http://1linelayouts.glitch.me/" target="_blank" rel="nofollow noopener noreferrer">1linelayouts</a></strong></p></blockquote>
+<h2 class="heading" data-id="heading-1">正文</h2>
+<h3 class="heading" data-id="heading-2">01. 超级居中</h3>
+<p>在没有 flex 和 grid 之前，垂直居中一直不能很优雅的实现。而现在，我们可以结合 <code>grid</code> 和 <code>place-items</code> 优雅的同时实现<strong>水平居中</strong>和<strong>垂直居中</strong>。</p>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent blue&quot;&lt;/span&gt; &amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box coral&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    :)
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex1&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;place-items&lt;/span&gt;: center;
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dabf13e3874e?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dabf13e3874e?imageslim" data-width="884" data-height="625"></figure>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/place-items" target="_blank" rel="nofollow noopener noreferrer">MDN, place-items 属性详解</a></p>
+<p><a href="https://codepen.io/una/pen/YzyYbBx" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-3">02. 可解构的自适应布局(The Deconstructed Pancake)</h3>
+<p><code>flex: 0 1 &lt;baseWidth&gt;</code></p>
+<p>这种布局经常出现在电商网站：</p>
+<ol>
+<li>在 viewport 足够的时候，三个 box 固定宽度横放</li>
+<li>在 viewport 不够的时候（比如在 mobile 上面），宽度仍然固定，但是自动解构（原谅我的中文水平），不在同一水平面上</li>
+</ol>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent white&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box green&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;1&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box green&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;2&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box green&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;3&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex2&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: flex;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;flex-wrap&lt;/span&gt;: wrap;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;justify-content&lt;/span&gt;: center;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex2&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.box&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;flex&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;150px&lt;/span&gt;; &lt;span class=&quot;hljs-comment&quot;&gt;/*  flex-grow: 1 ，表示自动延展到最大宽度 */&lt;/span&gt;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;flex&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;150px&lt;/span&gt;; &lt;span class=&quot;hljs-comment&quot;&gt;/*  No stretching: */&lt;/span&gt;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;margin&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;5px&lt;/span&gt;;
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dac40f14d8ac?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dac40f14d8ac?imageslim" data-width="884" data-height="625"></figure>
+<p>当我们设置 <code>flex: 1 1 150px;</code> 时候：</p>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dac787cf0997?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dac787cf0997?imageslim" data-width="884" data-height="625"></figure>
+<p><a href="https://codepen.io/una/pen/WNQdBza" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-4">03. 经典的 sidebar</h3>
+<p><code>grid-template-columns: minmax(&lt;min&gt;, &lt;max&gt;) ...</code></p>
+<p>同样使用 <code>grid</code> layout，可以结合 <code>minmax()</code> 实现弹性的 sidebar（这在你要适应大屏幕的时候很有用）。<code>minmax(&lt;min&gt;, &lt;max&gt;)</code> 就是字面意思。结合 <code>&lt;flex&gt;</code> 单位，非常优雅，避免了数学计算宽度等不灵活的手段（比如我们设置 gap 的时候）。</p>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;section yellow&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    Min: 150px / Max: 25%
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;section purple&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      This element takes the second grid position (1fr), meaning
+      it takes up the rest of the remaining space.
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex3&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-template-columns&lt;/span&gt;: &lt;span class=&quot;hljs-built_in&quot;&gt;minmax&lt;/span&gt;(150px, 25%) &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;fr;
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dacd15793615?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dacd15793615?imageslim" data-width="1280" data-height="662"></figure>
+<p><a href="https://codepen.io/una/pen/gOaNeWL" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-5">04. 固定的 header 和 footer</h3>
+<p><code>grid-template-rows: auto 1fr auto</code></p>
+<p>固定高度的 header 和 footer，占据剩余空间的 body 是经常使用的布局，我们可以利用 <code>grid</code> 和 <code>fr</code> 单位完美实现。</p>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;blue section&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Header&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;header&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;main&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;coral section&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Main&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;main&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;footer&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;purple section&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Footer Content&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;footer&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex4&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-template-rows&lt;/span&gt;: auto &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;fr auto;
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad032a61035?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad032a61035?imageslim" data-width="799" data-height="625"></figure>
+<p><a href="https://codepen.io/una/pen/bGVXPWB" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-6">05. 经典的圣杯布局(classical holy Grail layout)</h3>
+<p><code>grid-template: auto 1fr auto / auto 1fr auto</code></p>
+<p>我们可以轻松的使用 Grid 布局来实现圣杯布局，并且是弹性的。</p>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;pink section&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;Header&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;header&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;left-side blue section&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Left Sidebar&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;main&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;section coral&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt; Main Content&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;main&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;right-side yellow section&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Right Sidebar&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;footer&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;green section&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;Footer&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;footer&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex5&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-template&lt;/span&gt;: auto &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;fr auto / auto &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;fr auto;
+  }
+  
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex5&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;header&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;padding&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;2rem&lt;/span&gt;;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-column&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt; / &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex5&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.left-side&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-column&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt; / &lt;span class=&quot;hljs-number&quot;&gt;2&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex5&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;main&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-column&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;2&lt;/span&gt; / &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex5&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.right-side&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-column&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt; / &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex5&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;footer&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-column&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt; / &lt;span class=&quot;hljs-number&quot;&gt;4&lt;/span&gt;;
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad2e858bdc4?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad2e858bdc4?imageslim" data-width="799" data-height="625"></figure>
+<p><a href="https://codepen.io/una/pen/mdVbdBy" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-7">06. 有意思的叠块</h3>
+<p>使用 <code>grid-template-columns</code> 和 <code>grid-column</code> 可以实现如下图所示的布局。进一步说明了 <code>repeat</code> 和 <code>fr</code> 的便捷性。</p>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad59d08e72b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad59d08e72b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" data-width="712" data-height="623"></figure>
+<p><a href="https://codepen.io/una/pen/eYJOYjj" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-8">07. RAM 技巧</h3>
+<p><code>grid-template-columns: repeat(auto-fit, minmax(&lt;base&gt;, 1fr))</code></p>
+<p>Una Kravets 称之为 repeat, auto, minmax 技巧。这在弹性布局 <strong>图片/box</strong> 这类非常有用(一行可以排放的卡片数量自动适应)。</p>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex7&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-gap&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1rem&lt;/span&gt;;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-template-columns&lt;/span&gt;: &lt;span class=&quot;hljs-built_in&quot;&gt;repeat&lt;/span&gt;(auto-fit, minmax(150px, 1fr));
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent white&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box pink&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;1&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box purple&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;2&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box blue&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;3&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;box green&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;4&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<p>其效果是如果能够满足多个 box 的最小宽度（比如上面的 <code>150px</code>），自动弹性适应放在多行。 举个例子:</p>
+<ol>
+<li>当前宽度是 <code>160px</code>（不考虑 gap），那么上面四个 <code>box</code> 的宽度会自适应为 <code>160px</code>,并且分为 4 行</li>
+<li>当前宽度是 <code>310px</code> （不考虑 gap），上面四个 <code>box</code> 分成两行，两个 <code>box</code> 平分宽度</li>
+<li>当满足一行放下 3 个box 时，第三个 box 自动到第一行</li>
+<li>当满足一行放下 4 个 box 时，第四个 box 自动到第一行</li>
+</ol>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad9836c2da6?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dad9836c2da6?imageslim" data-width="902" data-height="609"></figure>
+<p>如果我们将 <code>auto-fit</code> 改为 <code>auto-fill</code>:</p>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dadca4652b64?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dadca4652b64?imageslim" data-width="902" data-height="609"></figure>
+<p><a href="https://codepen.io/una/pen/oNbvNQv" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-9">08. 卡片弹性自适应</h3>
+<p><code>justify-content: space-between</code>，结合 <code>grid</code> 和 <code>flex</code> 实现完美的卡片布局。</p>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent white&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;card yellow&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;Title - Card 1&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Medium length description with a few more words here.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;visual pink&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;card yellow&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;Title - Card 2&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Long Description. Lorem ipsum dolor sit, amet consectetur adipisicing elit.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;visual blue&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;card yellow&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;Title - Card 3&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;contenteditable&lt;/span&gt;&amp;gt;&lt;/span&gt;Short Description.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;visual green&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex8&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;height&lt;/span&gt;: auto;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-gap&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1rem&lt;/span&gt;;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;grid-template-columns&lt;/span&gt;: &lt;span class=&quot;hljs-built_in&quot;&gt;repeat&lt;/span&gt;(3, 1fr);
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex8&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.visual&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;height&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;100px&lt;/span&gt;;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;width&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;100%&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex8&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.card&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: flex;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;flex-direction&lt;/span&gt;: column;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;padding&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1rem&lt;/span&gt;;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;justify-content&lt;/span&gt;: space-between;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex8&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;h3&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;margin&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dae06839697a?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dae06839697a?imageslim" data-width="902" data-height="609"></figure>
+<p>无论是宽度或高度的收缩还是延展，都可以完美的展现 card 的布局。</p>
+<p><a href="https://codepen.io/una/pen/ExPYomq" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+<h3 class="heading" data-id="heading-10">09. 使用 clamp 实现 fluid typography</h3>
+<p><code>clamp(&lt;min&gt;, &lt;actual&gt;, &lt;max&gt;)</code></p>
+<p>使用最新的 <code>clamp()</code> 方法可以一行实现 fluid typography。提高 UX，非常适合包含阅读内容的 card，因为我们不希望一行字太短或太长。</p>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent white&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;card purple&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;Title Here&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;visual yellow&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;Descriptive Text. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed est error repellat veritatis.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex9&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;place-items&lt;/span&gt;: center;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex9&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.card&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;width&lt;/span&gt;: &lt;span class=&quot;hljs-built_in&quot;&gt;clamp&lt;/span&gt;(23ch, 50%, 46ch);
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: flex;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;flex-direction&lt;/span&gt;: column;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;padding&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1rem&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex9&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.visual&lt;/span&gt; {
+      &lt;span class=&quot;hljs-attribute&quot;&gt;height&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;125px&lt;/span&gt;;
+      &lt;span class=&quot;hljs-attribute&quot;&gt;width&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;100%&lt;/span&gt;;
+    }
+  
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dae38edf694c?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dae38edf694c?imageslim" data-width="902" data-height="609"></figure>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/clamp" target="_blank" rel="nofollow noopener noreferrer">MDN, clamp() 详解</a></li>
+<li><a href="https://codepen.io/una/pen/QWyLxaL" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></li>
+</ul>
+<h3 class="heading" data-id="heading-11">10. 完美实现比例</h3>
+<p><code>aspect-ratio: &lt;width&gt; / &lt;height&gt;</code></p>
+<p>在展现 CMS 或其他设计内容时，我们会期望图片、video、卡片能够按照固定的比例进行布局。而最新的 <code>aspect-ratio</code> 就能优雅的实现该功能(使用 chrome 84+)</p>
+<pre><code class="hljs html copyable" lang="html">&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;parent white&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;card blue&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;Video Title&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;visual green&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;Descriptive Text. This demo works in Chromium 84+.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<pre><code class="hljs css copyable" lang="css">&lt;span class=&quot;hljs-selector-class&quot;&gt;.ex10&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.parent&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: grid;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;place-items&lt;/span&gt;: center;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex10&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.visual&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;aspect-ratio&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;16&lt;/span&gt; / &lt;span class=&quot;hljs-number&quot;&gt;9&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;hljs-selector-class&quot;&gt;.ex10&lt;/span&gt; &lt;span class=&quot;hljs-selector-class&quot;&gt;.card&lt;/span&gt; {
+    &lt;span class=&quot;hljs-attribute&quot;&gt;width&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;50%&lt;/span&gt;;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;display&lt;/span&gt;: flex;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;flex-direction&lt;/span&gt;: column;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;padding&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;1rem&lt;/span&gt;;
+  }
+&lt;span class=&quot;copy-code-btn&quot;&gt;复制代码&lt;/span&gt;</code></pre>
+<figure><img decoding="async" class="lazyload inited loaded" src="https://user-gold-cdn.xitu.io/2020/7/8/1732dae707a79fb2?imageslim" data-src="https://user-gold-cdn.xitu.io/2020/7/8/1732dae707a79fb2?imageslim" data-width="873" data-height="496"></figure>
+<p><a href="https://codepen.io/una/pen/xxZKzaX" target="_blank" rel="nofollow noopener noreferrer">Una Kravets 的 codepen 地址</a></p>
+</div>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/css" rel="tag">CSS</a>, <a href="/tag/css3" rel="tag">CSS3</a>, <a href="/tag/html5" rel="tag">HTML5</a>, <a href="/tag/%E5%89%8D%E7%AB%AF" rel="tag">前端</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2020/06/24/%E7%99%BE%E5%BA%A6%E4%BA%91%E5%88%86%E4%BA%AB%E5%9B%BA%E5%AE%9A%E5%AF%86%E7%A0%81.html" rel="prev">百度云分享固定密码</a><br>【下篇】<a href="/2020/07/30/vue-element-ui-demo.html" rel="next">Vue开发环境安装并集成element-ui示例</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li><li> · <a href="/2024/06/03/flex-direction-column.html">解决flex-direction: column 之后元素宽度自动变为100%</a></li><li> · <a href="/2023/03/08/h5-recorderjs.html">h5吹气互动(利用recorderjs获取输入音量大小)</a></li><li> · <a href="/2019/11/25/pointer-events.html">详解css3 pointer-events(阻止hover、active、onclick等触发事件)</a></li><li> · <a href="/2019/06/19/flex.html">Flex 布局教程：语法篇</a></li><li> · <a href="/2019/05/16/css3.html">分享一个CSS3边框旋转特效</a></li><li> · <a href="/2018/04/25/css-radio-checkbox.html">[转]纯CSS 实现radio checkbox样式美化</a></li><li> · <a href="/2016/04/05/css-cursor-%E7%9A%84%E5%8F%AF%E9%80%89%E5%80%BC%EF%BC%88%E9%BC%A0%E6%A0%87%E7%9A%84%E5%90%84%E7%A7%8D%E6%A0%B7%E5%BC%8F%EF%BC%89.html">css cursor 的可选值（鼠标的各种样式）</a></li><li> · <a href="/2015/11/04/css-padding-width.html">CSS里padding和width的问题</a></li><li> · <a href="/2015/01/22/css3%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E7%BC%A9%E6%94%BE%E5%8A%A8%E7%94%BB.html">CSS3背景图片缩放动画</a></li><li> · <a href="/2014/09/09/css%E6%B5%8F%E8%A7%88%E5%99%A8%E5%85%BC%E5%AE%B9.html">CSS浏览器兼容</a></li><li> · <a href="/2012/12/13/css%E9%87%8D%E7%BD%AEcss%E5%A4%9A%E6%B5%8F%E8%A7%88%E5%99%A8%E5%85%BC%E5%AE%B9.html">CSS重置CSS多浏览器兼容</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2020年07月23日发表在<a href="/category/jsjqureycss" rel="category tag">前端</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2020/07/23/css3-2.html" rel="bookmark" title="本文固定链接 /2020/07/23/css3-2.html">如何用一行 CSS 分别实现 10 种现代布局？ | Bruce's Blog</a><a href="#" onclick="copy_code('/2020/07/23/css3-2.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2020/07/23/css3-2.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="5361" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="a30a6dfea8"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="56"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.071 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:02 -->

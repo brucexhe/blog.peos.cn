@@ -1,0 +1,915 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>window下安装和配置Redis | Bruce's Blog</title> 
+<meta name="description" content="window平台Redis安装 redis windows安装文件下载地址:http://code.google.com/p/servicestack/wiki/RedisWindowsDownload#Download_32bit_Cygwin_builds_for_Windows">
+<meta name="keywords" content="Redis">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 8 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td><a href="/2012/08/02" aria-label="2012年8月2日 发布的文章">2</a></td><td><a href="/2012/08/03" aria-label="2012年8月3日 发布的文章">3</a></td><td>4</td><td>5</td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/06" aria-label="2012年8月6日 发布的文章">6</a></td><td>7</td><td><a href="/2012/08/08" aria-label="2012年8月8日 发布的文章">8</a></td><td>9</td><td><a href="/2012/08/10" aria-label="2012年8月10日 发布的文章">10</a></td><td>11</td><td><a href="/2012/08/12" aria-label="2012年8月12日 发布的文章">12</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/13" aria-label="2012年8月13日 发布的文章">13</a></td><td>14</td><td><a href="/2012/08/15" aria-label="2012年8月15日 发布的文章">15</a></td><td><a href="/2012/08/16" aria-label="2012年8月16日 发布的文章">16</a></td><td><a href="/2012/08/17" aria-label="2012年8月17日 发布的文章">17</a></td><td><a href="/2012/08/18" aria-label="2012年8月18日 发布的文章">18</a></td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td><a href="/2012/08/21" aria-label="2012年8月21日 发布的文章">21</a></td><td>22</td><td><a href="/2012/08/23" aria-label="2012年8月23日 发布的文章">23</a></td><td><a href="/2012/08/24" aria-label="2012年8月24日 发布的文章">24</a></td><td>25</td><td><a href="/2012/08/26" aria-label="2012年8月26日 发布的文章">26</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/08/27" aria-label="2012年8月27日 发布的文章">27</a></td><td>28</td><td><a href="/2012/08/29" aria-label="2012年8月29日 发布的文章">29</a></td><td>30</td><td><a href="/2012/08/31" aria-label="2012年8月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/07">« 7 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/09">9 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#6c3437;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#d3eae1;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#6f3e96;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#d9a72;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#a0b1bc;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#23973d;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#81ae3a;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#948b4c;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#da2a72;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#4f727f;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#100072;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#46e2a9;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#238eca;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#e61367;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#64b223;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#66271f;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#eed88e;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#65aec;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#11b360;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#25a55b;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#5f5947;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#82324f;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#f42470;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#c69a5c;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#a357b;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#dc247b;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#9ee30c;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#30efdf;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#1fc024;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#240846;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#493ac5;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#34da09;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#4fd37c;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#51ba0a;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#c7561f;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#28297d;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#e3c2b7;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#63e816;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#c65395;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#630151;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#c9861d;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#44aa50;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#a47d87;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#7bd7a9;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#59de45;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/redis" rel="category tag">Redis</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">window下安装和配置Redis</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-08-13 16:37</span>
+			<span class="category">  <a href="/category/redis" rel="category tag">Redis</a></span>
+			<span class="article_comment"><a href="/2012/08/13/window%E4%B8%8B%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEredis.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>3,126</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div id="blog_content"><strong>window平台<span class="wp_keywordlink_affiliate"><a href="/tag/redis" title="View all posts in Redis" target="_blank">Redis</a></span>安装 </strong><strong>redis windows安装文件下载地址</strong>:<a href="http://code.google.com/p/servicestack/wiki/RedisWindowsDownload#Download_32bit_Cygwin_builds_for_Windows" target="_blank">http://code.google.com/p/servicestack/wiki/RedisWindowsDownload#Download_32bit_Cygwin_builds_for_Windows</a><br>
+我选择的redis为最新版的安装文件，见下图：<br>
+<img decoding="async" src="http://dl.iteye.com/upload/attachment/0065/8339/76cba281-426f-3be8-b739-089269408eae.jpg" alt="">
+<p><strong><span class="wp_keywordlink_affiliate"><a href="/tag/redis" title="View all posts in Redis" target="_blank">Redis</a></span>安装文件解压后，有以下几个文件。见下图</strong><br>
+<img decoding="async" src="http://dl.iteye.com/upload/attachment/0065/8335/9992dac5-202b-3c46-b712-bb43e4eb66e5.jpg" alt=""><br>
+redis-server.exe：服务程序<br>
+redis-check-dump.exe：本地数据库检查<br>
+redis-check-aof.exe：更新日志检查<br>
+redis-benchmark.exe：性能测试，用以模拟同时由N个客户端发送M个 SETs/GETs 查询 (类似于 Apache 的ab 工具).</p>
+<p>在解压好redis的安装文件到E:\根目录后，还需要在redis根目录增加一个redis的配置文件redis.conf，文件具体内容附件中有，不过这里我仍然把配置文件的内容贴上来：</p>
+<div id="">
+<div>
+<div>Java代码  <a title="收藏这段代码"><img decoding="async" src="http://zheng12tian.iteye.com/images/icon_star.png" alt="收藏代码"></a></div>
+</div>
+<ol start="1">
+<li># <span class="wp_keywordlink_affiliate"><a href="/tag/redis" title="View all posts in Redis" target="_blank">Redis</a></span> configuration file example</li>
+<li>
+<li># By default Redis does not run as a daemon. Use 'yes' if you need it.</li>
+<li># Note that Redis will write a pid file in /var/run/redis.pid when daemonized.</li>
+<li>daemonize no</li>
+<li>
+<li># When run as a daemon, Redis write a pid file in /var/run/redis.pid by default.</li>
+<li># You can specify a custom pid file location here.</li>
+<li>pidfile /var/run/redis.pid</li>
+<li>
+<li># Accept connections on the specified port, default is 6379</li>
+<li>port 6379</li>
+<li>
+<li># If you want you can bind a single interface, if the bind option is not</li>
+<li># specified all the interfaces will listen for connections.</li>
+<li>#</li>
+<li># bind 127.0.0.1</li>
+<li>
+<li># Close the connection after a client is idle for N seconds (0 to disable)</li>
+<li>timeout 300</li>
+<li>
+<li># Set server verbosity to 'debug'</li>
+<li># it can be one of:</li>
+<li># debug (a lot of information, useful for development/testing)</li>
+<li># notice (moderately verbose, what you want in production probably)</li>
+<li># warning (only very important / critical messages are logged)</li>
+<li>loglevel debug</li>
+<li>
+<li># Specify the log file name. Also 'stdout' can be used to force</li>
+<li># the demon to log on the standard output. Note that if you use standard</li>
+<li># output for logging but daemonize, logs will be sent to /dev/null</li>
+<li>logfile stdout</li>
+<li>
+<li># Set the number of databases. The default database is DB 0, you can select</li>
+<li># a different one on a per-connection basis using SELECT &lt;dbid&gt; where</li>
+<li># dbid is a number between 0 and 'databases'-1</li>
+<li>databases 16</li>
+<li>
+<li>################################ SNAPSHOTTING  #################################</li>
+<li>#</li>
+<li># Save the DB on disk:</li>
+<li>#</li>
+<li>#   save &lt;seconds&gt; &lt;changes&gt;</li>
+<li>#</li>
+<li>#   Will save the DB if both the given number of seconds and the given</li>
+<li>#   number of write operations against the DB occurred.</li>
+<li>#</li>
+<li>#   In the example below the behaviour will be to save:</li>
+<li>#   after 900 sec (15 min) if at least 1 key changed</li>
+<li>#   after 300 sec (5 min) if at least 10 keys changed</li>
+<li>#   after 60 sec if at least 10000 keys changed</li>
+<li>save 900 1</li>
+<li>save 300 10</li>
+<li>save 60 10000</li>
+<li>
+<li># Compress string objects using LZF when dump .rdb databases?</li>
+<li># For default that's set to 'yes' as it's almost always a win.</li>
+<li># If you want to save some CPU in the saving child set it to 'no' but</li>
+<li># the dataset will likely be bigger if you have compressible values or keys.</li>
+<li>rdbcompression yes</li>
+<li>
+<li># The filename where to dump the DB</li>
+<li>dbfilename dump.rdb</li>
+<li>
+<li># For default save/load DB in/from the working directory</li>
+<li># Note that you must specify a directory not a file name.</li>
+<li>dir ./</li>
+<li>
+<li>################################# REPLICATION #################################</li>
+<li>
+<li># Master-Slave replication. Use slaveof to make a Redis instance a copy of</li>
+<li># another Redis server. Note that the configuration is local to the slave</li>
+<li># so for example it is possible to configure the slave to save the DB with a</li>
+<li># different interval, or to listen to another port, and so on.</li>
+<li>#</li>
+<li># slaveof &lt;masterip&gt; &lt;masterport&gt;</li>
+<li>
+<li># If the master is password protected (using the "requirepass" configuration</li>
+<li># directive below) it is possible to tell the slave to authenticate before</li>
+<li># starting the replication synchronization process, otherwise the master will</li>
+<li># refuse the slave request.</li>
+<li>#</li>
+<li># masterauth &lt;master-password&gt;</li>
+<li>
+<li>################################## SECURITY ###################################</li>
+<li>
+<li># Require clients to issue AUTH &lt;PASSWORD&gt; before processing any other</li>
+<li># commands.  This might be useful in environments in which you do not trust</li>
+<li># others with access to the host running redis-server.</li>
+<li>#</li>
+<li># This should stay commented out for backward compatibility and because most</li>
+<li># people do not need auth (e.g. they run their own servers).</li>
+<li>#</li>
+<li># requirepass foobared</li>
+<li>
+<li>################################### LIMITS ####################################</li>
+<li>
+<li># Set the max number of connected clients at the same time. By default there</li>
+<li># is no limit, and it's up to the number of file descriptors the Redis process</li>
+<li># is able to open. The special value '0' means no limts.</li>
+<li># Once the limit is reached Redis will close all the new connections sending</li>
+<li># an error 'max number of clients reached'.</li>
+<li>#</li>
+<li># maxclients 128</li>
+<li>
+<li># Don't use more memory than the specified amount of bytes.</li>
+<li># When the memory limit is reached Redis will try to remove keys with an</li>
+<li># EXPIRE set. It will try to start freeing keys that are going to expire</li>
+<li># in little time and preserve keys with a longer time to live.</li>
+<li># Redis will also try to remove objects from free lists if possible.</li>
+<li>#</li>
+<li># If all this fails, Redis will start to reply with errors to commands</li>
+<li># that will use more memory, like SET, LPUSH, and so on, and will continue</li>
+<li># to reply to most read-only commands like GET.</li>
+<li>#</li>
+<li># WARNING: maxmemory can be a good idea mainly if you want to use Redis as a</li>
+<li># 'state' server or cache, not as a real DB. When Redis is used as a real</li>
+<li># database the memory usage will grow over the weeks, it will be obvious if</li>
+<li># it is going to use too much memory in the long run, and you'll have the time</li>
+<li># to upgrade. With maxmemory after the limit is reached you'll start to get</li>
+<li># errors for write operations, and this may even lead to DB inconsistency.</li>
+<li>#</li>
+<li># maxmemory &lt;bytes&gt;</li>
+<li>
+<li>############################## APPEND ONLY MODE ###############################</li>
+<li>
+<li># By default Redis asynchronously dumps the dataset on disk. If you can live</li>
+<li># with the idea that the latest records will be lost if something like a crash</li>
+<li># happens this is the preferred way to run Redis. If instead you care a lot</li>
+<li># about your data and don't want to that a single record can get lost you should</li>
+<li># enable the append only mode: when this mode is enabled Redis will append</li>
+<li># every write operation received in the file appendonly.log. This file will</li>
+<li># be read on startup in order to rebuild the full dataset in memory.</li>
+<li>#</li>
+<li># Note that you can have both the async dumps and the append only file if you</li>
+<li># like (you have to comment the "save" statements above to disable the dumps).</li>
+<li># Still if append only mode is enabled Redis will load the data from the</li>
+<li># log file at startup ignoring the dump.rdb file.</li>
+<li>#</li>
+<li># The name of the append only file is "appendonly.log"</li>
+<li>#</li>
+<li># IMPORTANT: Check the BGREWRITEAOF to check how to rewrite the append</li>
+<li># log file in background when it gets too big.</li>
+<li>
+<li>appendonly no</li>
+<li>
+<li># The fsync() call tells the Operating System to actually write data on disk</li>
+<li># instead to wait for more data in the output buffer. Some OS will really flush</li>
+<li># data on disk, some other OS will just try to do it ASAP.</li>
+<li>#</li>
+<li># Redis supports three different modes:</li>
+<li>#</li>
+<li># no: don't fsync, just let the OS flush the data when it wants. Faster.</li>
+<li># always: fsync after every write to the append only log . Slow, Safest.</li>
+<li># everysec: fsync only if one second passed since the last fsync. Compromise.</li>
+<li>#</li>
+<li># The default is "always" that's the safer of the options. It's up to you to</li>
+<li># understand if you can relax this to "everysec" that will fsync every second</li>
+<li># or to "no" that will let the operating system flush the output buffer when</li>
+<li># it want, for better performances (but if you can live with the idea of</li>
+<li># some data loss consider the default persistence mode that's snapshotting).</li>
+<li>
+<li>appendfsync always</li>
+<li># appendfsync everysec</li>
+<li># appendfsync no</li>
+<li>
+<li>############################### ADVANCED CONFIG ###############################</li>
+<li>
+<li># Glue small output buffers together in order to send small replies in a</li>
+<li># single TCP packet. Uses a bit more CPU but most of the times it is a win</li>
+<li># in terms of number of queries per second. Use 'yes' if unsure.</li>
+<li>glueoutputbuf yes</li>
+<li>
+<li># Use object sharing. Can save a lot of memory if you have many common</li>
+<li># string in your dataset, but performs lookups against the shared objects</li>
+<li># pool so it uses more CPU and can be a bit slower. Usually it's a good</li>
+<li># idea.</li>
+<li>#</li>
+<li># When object sharing is enabled (shareobjects yes) you can use</li>
+<li># shareobjectspoolsize to control the size of the pool used in order to try</li>
+<li># object sharing. A bigger pool size will lead to better sharing capabilities.</li>
+<li># In general you want this value to be at least the double of the number of</li>
+<li># very common strings you have in your dataset.</li>
+<li>#</li>
+<li># WARNING: object sharing is experimental, don't enable this feature</li>
+<li># in production before of Redis 1.0-stable. Still please try this feature in</li>
+<li># your development environment so that we can test it better.</li>
+<li># shareobjects no</li>
+<li># shareobjectspoolsize 1024</li>
+</ol>
+</div>
+<p>将附件中的redis_conf.rar解压下来放到redis的根目录中即可。到此，redis的安装已经完毕。下面开始使用redis数据库。</p>
+<p><strong>启动redis：</strong><br>
+输入命令：redis-server.exe redis.conf<br>
+启动后如下图所示：<br>
+<img decoding="async" src="http://dl.iteye.com/upload/attachment/0065/8348/f18c9013-4761-30c8-8377-3781e37e1cb8.jpg" alt=""></p>
+<p>启动cmd窗口要一直开着，关闭后则Redis服务关闭。<br>
+这时服务开启着，另外开一个窗口进行，设置客户端：<br>
+输入命令：redis-cli.exe -h 202.117.16.133 -p 6379<br>
+输入后如下图所示：<br>
+<img decoding="async" src="http://dl.iteye.com/upload/attachment/0065/8358/ce41fd2b-8bdd-3876-af26-7bd14c4e05c2.jpg" alt=""><br>
+然后可以开始玩了：</p>
+<p>设置一个Key并获取返回的值:</p>
+<div id="">
+<div>
+<div>Java代码  <a title="收藏这段代码"><img decoding="async" src="http://zheng12tian.iteye.com/images/icon_star.png" alt="收藏代码"></a></div>
+</div>
+<ol start="1">
+<li>$ ./redis-cli set mykey somevalue</li>
+<li>OK</li>
+<li>$ ./redis-cli get mykey</li>
+<li>Somevalue</li>
+</ol>
+</div>
+<p>如何添加值到list:</p>
+<div id="">
+<div>
+<div>Java代码  <a title="收藏这段代码"><img decoding="async" src="http://zheng12tian.iteye.com/images/icon_star.png" alt="收藏代码"></a></div>
+</div>
+<ol start="1">
+<li>$ ./redis-cli lpush mylist firstvalue</li>
+<li>OK</li>
+<li>$ ./redis-cli lpush mylist secondvalue</li>
+<li>OK</li>
+<li>$ ./redis-cli lpush mylist thirdvalue</li>
+<li>OK</li>
+<li>$ ./redis-cli lrange mylist 0 -1</li>
+<li>. thirdvalue</li>
+<li>. secondvalue</li>
+<li>. firstvalue</li>
+<li>$ ./redis-cli rpop mylist</li>
+<li>firstvalue</li>
+<li>$ ./redis-cli lrange mylist 0 -1</li>
+<li>. thirdvalue</li>
+<li>. secondvalue</li>
+</ol>
+</div>
+<p>redis-benchmark.exe：性能测试，用以模拟同时由N个客户端发送M个 SETs/GETs 查询 (类似于 Apache 的 ab 工具).</p>
+<div id="">
+<div>
+<div>Java代码  <a title="收藏这段代码"><img decoding="async" src="http://zheng12tian.iteye.com/images/icon_star.png" alt="收藏代码"></a></div>
+</div>
+<ol start="1">
+<li>./redis-benchmark -n 100000 –c 50</li>
+<li>    ====== SET ======</li>
+<li>    100007 requests completed in 0.88 seconds （译者注：100004 查询完成于 1.14 秒 ）</li>
+<li>50 parallel clients （译者注：50个并发客户端）</li>
+<li>3 bytes payload （译者注：3字节有效载荷)</li>
+<li>keep alive: 1 （译者注：保持1个连接)</li>
+<li>58.50% &lt;= 0 milliseconds（译者注：毫秒）</li>
+<li>99.17% &lt;= 1 milliseconds</li>
+<li>99.58% &lt;= 2 milliseconds</li>
+<li>99.85% &lt;= 3 milliseconds</li>
+<li>99.90% &lt;= 6 milliseconds</li>
+<li>100.00% &lt;= 9 milliseconds</li>
+<li>114293.71 requests per second（译者注：每秒 114293.71 次查询）</li>
+</ol>
+</div>
+<p>Windows下测试并发客户端极限为60</p>
+<p>========================================================================</p>
+<p><strong>linux平台Redis安装：</strong></p>
+<div id="">
+<div>
+<div>Java代码  <a title="收藏这段代码"><img decoding="async" src="http://zheng12tian.iteye.com/images/icon_star.png" alt="收藏代码"></a></div>
+</div>
+<ol start="1">
+<li>wget http://code.google.com/p/redis/downloads/detail?name=redis-2.0.4.tar.gz</li>
+<li>tar xvzf redis-2.0.4.tar.gz</li>
+<li>cd  redis-2.0.4</li>
+<li>make</li>
+<li>mkdir /home/redis</li>
+<li>cp redis-server  /home/redis</li>
+<li>cp redis-benchmark  /home/redis</li>
+<li>cp redis-cli  /home/redis</li>
+<li>cp redis.conf  /home/redis</li>
+<li>cd  /home/redis</li>
+</ol>
+</div>
+<p>在安装过程中可能需要用到sudo命令，可能新装的redhat虚拟机中新用户还不能使用sudo命令，因此需要手动的修改/etc/sudoers文件，命令如下：</p>
+<div id="">
+<div>
+<div>Java代码  <a title="收藏这段代码"><img decoding="async" src="http://zheng12tian.iteye.com/images/icon_star.png" alt="收藏代码"></a></div>
+</div>
+<ol start="1">
+<li>cd /etc</li>
+<li>su root ##切换为root用户，同时输入密码</li>
+<li>chmod u+w sudoers ##放开sudoers文件的写权限</li>
+<li>##在root ALL = (ALL) ALL下面一行增加 "你的用户名" ALL = (ALL) ALL</li>
+<li>:wq ##保存退出</li>
+<li>chmod u-w sudoers ##取消修改权限</li>
+</ol>
+</div>
+<p>启动<br>
+./redis-server redis.conf<br>
+进入命令交互模式，两种：<br>
+1:   ./redis-cli<br>
+2:   telnet 127.0.0.1 6379       (ip接端口)</p>
+<p>=============================================================<br>
+<strong>配置文件参数说明: </strong></p>
+<p>1. Redis默认不是以守护进程的方式运行，可以通过该配置项修改，使用yes启用守护进程<br>
+daemonize no<br>
+2. 当Redis以守护进程方式运行时，Redis默认会把pid写入/var/run/redis.pid文件，可以通过pidfile指定<br>
+pidfile /var/run/redis.pid<br>
+3. 指定Redis监听端口，默认端口为6379，作者在自己的一篇博文中解释了为什么选用6379作为默认端口，因为6379在手机按键上MERZ对应的号码，而MERZ取自意大利歌女Alessia Merz的名字<br>
+port 6379<br>
+4. 绑定的主机地址<br>
+bind 127.0.0.1<br>
+5.当 客户端闲置多长时间后关闭连接，如果指定为0，表示关闭该功能<br>
+timeout 300<br>
+6. 指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为verbose<br>
+loglevel verbose<br>
+7. 日志记录方式，默认为标准输出，如果配置Redis为守护进程方式运行，而这里又配置为日志记录方式为标准输出，则日志将会发送给/dev/null<br>
+logfile stdout<br>
+8. 设置数据库的数量，默认数据库为0，可以使用SELECT &lt;dbid&gt;命令在连接上指定数据库id<br>
+databases 16<br>
+9. 指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合<br>
+save &lt;seconds&gt; &lt;changes&gt;<br>
+Redis默认配置文件中提供了三个条件：<br>
+save 900 1<br>
+save 300 10<br>
+save 60 10000<br>
+分别表示900秒（15分钟）内有1个更改，300秒（5分钟）内有10个更改以及60秒内有10000个更改。</p>
+<p>10. 指定存储至本地数据库时是否压缩数据，默认为yes，Redis采用LZF压缩，如果为了节省CPU时间，可以关闭该选项，但会导致数据库文件变的巨大<br>
+rdbcompression yes<br>
+11. 指定本地数据库文件名，默认值为dump.rdb<br>
+dbfilename dump.rdb<br>
+12. 指定本地数据库存放目录<br>
+dir ./<br>
+13. 设置当本机为slav服务时，设置master服务的IP地址及端口，在Redis启动时，它会自动从master进行数据同步<br>
+slaveof &lt;masterip&gt; &lt;masterport&gt;<br>
+14. 当master服务设置了密码保护时，slav服务连接master的密码<br>
+masterauth &lt;master-password&gt;<br>
+15. 设置Redis连接密码，如果配置了连接密码，客户端在连接Redis时需要通过AUTH &lt;password&gt;命令提供密码，默认关闭<br>
+requirepass foobared<br>
+16. 设置同一时间最大客户端连接数，默认无限制，Redis可以同时打开的客户端连接数为Redis进程可以打开的最大文件描述符数，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis会关闭新的连接并向客户端返回max number of clients reached错误信息<br>
+maxclients 128<br>
+17. 指定Redis最大内存限制，Redis在启动时会把数据加载到内存中，达到最大内存后，Redis会先尝试清除已到期或即将到期的Key，当此方法处理 后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis新的vm机制，会把Key存放内存，Value会存放在swap区<br>
+maxmemory &lt;bytes&gt;<br>
+18. 指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为 redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为no<br>
+appendonly no<br>
+19. 指定更新日志文件名，默认为appendonly.aof<br>
+appendfilename appendonly.aof<br>
+20. 指定更新日志条件，共有3个可选值：<br>
+no：表示等操作系统进行数据缓存同步到磁盘（快）<br>
+always：表示每次更新操作后手动调用fsync()将数据写到磁盘（慢，安全）<br>
+everysec：表示每秒同步一次（折衷，默认值）<br>
+appendfsync everysec</p>
+<p>21. 指定是否启用虚拟内存机制，默认值为no，简单的介绍一下，VM机制将数据分页存放，由Redis将访问量较少的页即冷数据swap到磁盘上，访问多的页面由磁盘自动换出到内存中（在后面的文章我会仔细分析Redis的VM机制）<br>
+vm-enabled no<br>
+22. 虚拟内存文件路径，默认值为/tmp/redis.swap，不可多个Redis实例共享<br>
+vm-swap-file /tmp/redis.swap<br>
+23. 将所有大于vm-max-memory的数据存入虚拟内存,无论vm-max-memory设置多小,所有索引数据都是内存存储的(Redis的索引数据 就是keys),也就是说,当vm-max-memory设置为0的时候,其实是所有value都存在于磁盘。默认值为0<br>
+vm-max-memory 0<br>
+24. Redis swap文件分成了很多的page，一个对象可以保存在多个page上面，但一个page上不能被多个对象共享，vm-page-size是要根据存储的 数据大小来设定的，作者建议如果存储很多小对象，page大小最好设置为32或者64bytes；如果存储很大大对象，则可以使用更大的page，如果不 确定，就使用默认值<br>
+vm-page-size 32<br>
+25. 设置swap文件中的page数量，由于页表（一种表示页面空闲或使用的bitmap）是在放在内存中的，，在磁盘上每8个pages将消耗1byte的内存。<br>
+vm-pages 134217728<br>
+26. 设置访问swap文件的线程数,最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的，可能会造成比较长时间的延迟。默认值为4<br>
+vm-max-threads 4<br>
+27. 设置在向客户端应答时，是否把较小的包合并为一个包发送，默认为开启<br>
+glueoutputbuf yes<br>
+28. 指定在超过一定的数量或者最大的元素超过某一临界值时，采用一种特殊的哈希算法<br>
+hash-max-zipmap-entries 64<br>
+hash-max-zipmap-value 512<br>
+29. 指定是否激活重置哈希，默认为开启（后面在介绍Redis的哈希算法时具体介绍）<br>
+activerehashing yes<br>
+30. 指定包含其它的配置文件，可以在同一主机上多个Redis实例之间使用同一份配置文件，而同时各个实例又拥有自己的特定配置文件<br>
+include /path/to/local.conf</p>
+</div>
+<ul>
+<li><a href="http://dl.iteye.com/topics/download/4b1d69f2-b723-3a10-868d-33816493ec20">redis_conf.rar</a> (3.4 KB)</li>
+<li>下载次数: 1100</li>
+</ul>
+<p>原文地址：http://zheng12tian.iteye.com/blog/1471726</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/redis" rel="tag">Redis</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/08/13/windows%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AEnode-js.html" rel="prev">windows安装与配置node.js</a><br>【下篇】<a href="/2012/08/15/photoshop%E5%8E%BB%E9%99%A4%E6%B0%B4%E5%8D%B0%E7%9A%84%E5%85%AD%E7%A7%8D%E6%96%B9%E6%B3%95.html" rel="next">photoshop去除水印的六种方法</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2018/01/17/mycat-redis.html">一步一步使用mycat(四)：Redis数据库缓存</a></li><li> · <a href="/2018/01/08/miaosha-1.html">利用消息中间件和缓存实现简单的秒杀系统(一)：理论</a></li><li> · <a href="/2012/09/27/%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E7%9F%AD%E7%94%9F%E5%91%BD%E6%9C%9F%E6%95%B0%E6%8D%AE.html">如何处理短生命期数据</a></li><li> · <a href="/2012/08/21/python%E5%88%A0%E9%99%A4redis%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE.html">python删除redis所有数据</a></li><li> · <a href="/2012/08/16/ubuntu%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEredis.html">ubuntu安装配置redis</a></li><li> · <a href="/2012/08/12/c%E6%93%8D%E4%BD%9Credis%E4%BE%8B%E5%AD%90.html">C#操作REDIS例子</a></li><li> · <a href="/2012/08/12/python%E4%BD%BF%E7%94%A8redis%E7%A4%BA%E4%BE%8B.html">python使用redis示例</a></li><li> · <a href="/2012/08/06/redis%E6%95%99%E7%A8%8B2.html">Redis教程2</a></li><li> · <a href="/2012/08/06/redis%E6%95%99%E7%A8%8B1.html">Redis教程1</a></li><li> · <a href="/2013/10/25/%E8%85%BE%E8%AE%AF%E3%80%8A%E5%89%8D%E7%AB%AF%E7%89%B9%E5%B7%A5%E3%80%8B%E9%97%AF%E5%85%B3%E8%AE%B0.html">腾讯《前端特工》闯关记</a></li><li> · <a href="/2012/08/21/python-%E6%80%8E%E4%B9%88%E6%B7%BB%E5%8A%A0%E4%B8%AD%E6%96%87%E6%B3%A8%E9%87%8A.html">python 怎么添加中文注释</a></li><li> · <a href="/2012/08/13/windows%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AEnode-js.html">windows安装与配置node.js</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年08月13日发表在<a href="/category/redis" rel="category tag">Redis</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/08/13/window%E4%B8%8B%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEredis.html" rel="bookmark" title="本文固定链接 /2012/08/13/window%e4%b8%8b%e5%ae%89%e8%a3%85%e5%92%8c%e9%85%8d%e7%bd%aeredis.html">window下安装和配置Redis | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/08/13/window%e4%b8%8b%e5%ae%89%e8%a3%85%e5%92%8c%e9%85%8d%e7%bd%aeredis.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/08/13/window%E4%B8%8B%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEredis.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2464" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="bfbe298058"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="123"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.066 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:03 -->

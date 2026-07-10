@@ -1,0 +1,858 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>ASP.NET MVC 缓存使用示例 | Bruce's Blog</title> 
+<meta name="description" content="应该说，缓存的设计是一门较为复杂的学问，主要考虑的问题包括：要不要缓存?要缓存哪些数据?要缓存多少数据?要缓存多久?如何更新缓存(手动还是自 动)?将缓存放在哪里?本文将以较为通俗易懂的方式，来看一看在MVC3的项目中，如何使用缓存功能。对于上述提到的一些具体业务问题，我这里不会进行太 过深入地探讨。">
+<meta name="keywords" content="MVC,MVC缓存,OutputCache,VaryByParam,分布式缓存">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 5 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="1" class="pad"> </td><td><a href="/2012/05/01" aria-label="2012年5月1日 发布的文章">1</a></td><td>2</td><td>3</td><td><a href="/2012/05/04" aria-label="2012年5月4日 发布的文章">4</a></td><td><a href="/2012/05/05" aria-label="2012年5月5日 发布的文章">5</a></td><td><a href="/2012/05/06" aria-label="2012年5月6日 发布的文章">6</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/05/07" aria-label="2012年5月7日 发布的文章">7</a></td><td>8</td><td>9</td><td><a href="/2012/05/10" aria-label="2012年5月10日 发布的文章">10</a></td><td><a href="/2012/05/11" aria-label="2012年5月11日 发布的文章">11</a></td><td>12</td><td><a href="/2012/05/13" aria-label="2012年5月13日 发布的文章">13</a></td>
+	</tr>
+	<tr>
+		<td>14</td><td><a href="/2012/05/15" aria-label="2012年5月15日 发布的文章">15</a></td><td><a href="/2012/05/16" aria-label="2012年5月16日 发布的文章">16</a></td><td>17</td><td><a href="/2012/05/18" aria-label="2012年5月18日 发布的文章">18</a></td><td><a href="/2012/05/19" aria-label="2012年5月19日 发布的文章">19</a></td><td><a href="/2012/05/20" aria-label="2012年5月20日 发布的文章">20</a></td>
+	</tr>
+	<tr>
+		<td>21</td><td>22</td><td><a href="/2012/05/23" aria-label="2012年5月23日 发布的文章">23</a></td><td><a href="/2012/05/24" aria-label="2012年5月24日 发布的文章">24</a></td><td><a href="/2012/05/25" aria-label="2012年5月25日 发布的文章">25</a></td><td><a href="/2012/05/26" aria-label="2012年5月26日 发布的文章">26</a></td><td>27</td>
+	</tr>
+	<tr>
+		<td><a href="/2012/05/28" aria-label="2012年5月28日 发布的文章">28</a></td><td><a href="/2012/05/29" aria-label="2012年5月29日 发布的文章">29</a></td><td><a href="/2012/05/30" aria-label="2012年5月30日 发布的文章">30</a></td><td><a href="/2012/05/31" aria-label="2012年5月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="3"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/04">« 4 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/06">6 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#367e35;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#67e2cc;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#778f1;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#442e3e;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#1ba8ca;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#45172f;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#8c3d57;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#d79893;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#8257c3;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#db35e9;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#187cc8;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#dbd2ed;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#64fcaf;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#843c6d;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#c963b1;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#28124e;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#ef8f3d;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#9b24e6;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#c3eec9;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#11b8a3;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#18eed9;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#18244c;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#993474;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#194716;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#92d951;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#68570;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#5e1e06;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#a40f1a;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#b36576;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#8e7f69;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#f8f662;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#ccf79;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#4e3a6a;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#41858e;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#c40eb9;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#5d4dc6;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#46e5ae;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#f99735;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#59845f;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#fadb66;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#623309;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#679a03;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#535f35;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#a349ce;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#a907e9;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">ASP.NET MVC 缓存使用示例</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-05-28 15:52</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2012/05/28/asp-net-mvc-%E7%BC%93%E5%AD%98%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B.html#comments">评论(1)</a></span>
+			 <span class="article_view grayline">阅读(<span>12,415</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>应该说，缓存的设计是一门较为复杂的学问，主要考虑的问题包括：要不要缓存?要缓存哪些数据?要缓存多少数据?要缓存多久?如何更新缓存(手动还是自 动)?将缓存放在哪里?本文将以较为通俗易懂的方式，来看一看在<span class="wp_keywordlink_affiliate"><a href="/tag/mvc" title="View all posts in MVC" target="_blank">MVC</a></span>3的项目中，如何使用缓存功能。对于上述提到的一些具体业务问题，我这里不会进行太 过深入地探讨。</p>
+<p>为什么需要讨论缓存?缓存是一个中大型系统所必须考虑的问题。为了避免每次请求都去访问后台的资源(例如数据库)，我们一般会考虑将一些更新不是很 频繁的，可以重用的数据，通过一定的方式临时地保存起来，后续的请求根据情况可以直接访问这些保存起来的数据。这种机制就是所谓的缓存机制。</p>
+<p>根据缓存的位置不同，可以区分为：</p>
+<p>①客户端缓存(缓存在用户的客户端，例如浏览器中)</p>
+<p>②服务器缓存(缓存在服务器中，可以缓存在内存中，也可以缓存在文件里，并且还可以进一步地区分为本地缓存和<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98" title="View all posts in 分布式缓存" target="_blank">分布式缓存</a></span>两种)</p>
+<p> </p>
+<p><strong><span class="wp_keywordlink_affiliate"><a href="/tag/mvc" title="View all posts in MVC" target="_blank">MVC</a></span>3中的缓存功能</strong></p>
+<p>ASP.NET <span class="wp_keywordlink_affiliate"><a href="/tag/mvc" title="View all posts in MVC" target="_blank">MVC</a></span>3 继承了ASP.NET的优良传统，内置提供了缓存功能支持。主要表现为如下几个方面：</p>
+<p>①可以直接在Controller，Action或者ChildAction上面定义输出缓存(这个做法相当于原先的页面缓存和控件缓存功能)</p>
+<p>②支持通过CacheProfile的方式，灵活定义缓存的设置(新功能)</p>
+<p>③支持缓存依赖，以便当外部资源发生变化时得到通知，并且更新缓存</p>
+<p>④支持使用缓存API，还支持一些第三方的缓存方案(例如<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98" title="View all posts in 分布式缓存" target="_blank">分布式缓存</a></span>)</p>
+<p>那么，下面我们就逐一来了解一下</p>
+<p><strong>一、范例准备</strong></p>
+<p>我准备了一个空白的MVC 3项目，里面创建好了一个Model类型：Employee</p>
+<div id="div_code">
+<div>
+<ol class="linenums">
+<li class="L0"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">;</span></li>
+<li class="L1"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span></li>
+<li class="L2"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Linq</span><span class="pun">;</span></li>
+<li class="L3"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">;</span></li>
+<li class="L4"><span class="kwd">namespace</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span><span class="pun">.</span><span class="typ">Models</span></li>
+<li class="L5"><span class="pun">{</span><span class="pln">  </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">Employee</span></li>
+<li class="L6"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L7"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> ID </span><span class="pun">{</span><span class="pln"> get</span><span class="pun">;</span><span class="pln"> </span><span class="typ">set</span><span class="pun">;</span><span class="pln"> </span><span class="pun">}</span></li>
+<li class="L8"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> string </span><span class="typ">Name</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> get</span><span class="pun">;</span><span class="pln"> </span><span class="typ">set</span><span class="pun">;</span><span class="pln"> </span><span class="pun">}</span></li>
+<li class="L9"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> string </span><span class="typ">Gender</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> get</span><span class="pun">;</span><span class="pln"> </span><span class="typ">set</span><span class="pun">;</span><span class="pln"> </span><span class="pun">}</span></li>
+<li class="L0"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L1"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p>然后，我还准备了一个HomeController</p>
+<ol class="linenums">
+<li class="L0"><span class="pln">using System;</span></li>
+<li class="L1"><span class="pln">using System.Collections.Generic;</span></li>
+<li class="L2"><span class="pln">using System.Linq;</span></li>
+<li class="L3"><span class="pln">using System.Web;</span></li>
+<li class="L4"><span class="pln">using System.Web.Mvc;</span></li>
+<li class="L5"><span class="pln">using MvcApplicationCacheSample.Models;</span></li>
+<li class="L6"><span class="pln">namespace MvcApplicationCacheSample.Controllers</span></li>
+<li class="L7"><span class="pln">{  public class HomeController : Controller</span></li>
+<li class="L8"><span class="pln">    {</span></li>
+<li class="L9"><span class="pln">        //</span></li>
+<li class="L0"><span class="pln">        // GET: /Home/</span></li>
+<li class="L1"><span class="pln">        public ActionResult Index()</span></li>
+<li class="L2"><span class="pln">        {</span></li>
+<li class="L3"><span class="pln">            //这里目前作为演示，是直接硬编码，实际上可能是读取数据库的数据</span></li>
+<li class="L4"><span class="pln">            var employees = new[]{</span></li>
+<li class="L5"><span class="pln">                new Employee(){ID=1,Name="ares",Gender="Male"}</span></li>
+<li class="L6"><span class="pln">            };</span></li>
+<li class="L7"><span class="pln">            return View(employees);</span></li>
+<li class="L8"><span class="pln">        }</span></li>
+<li class="L9"><span class="pln">    }</span></li>
+<li class="L0"><span class="pln">}</span></li>
+<li class="L1"><span class="pln"> </span></li>
+<li class="L2"><span class="pln"> 　　同时，为这个Action生成了一个View</span></li>
+<li class="L3"><span class="pln">@model IEnumerable</span><span class="tag">&lt;MvcApplicationCacheSample.Models.Employee&gt;</span></li>
+<li class="L4"><span class="pln">@{</span></li>
+<li class="L5"><span class="pln">    ViewBag.Title = "Index";</span></li>
+<li class="L6"><span class="pln">}</span></li>
+<li class="L7"><span class="tag">&lt;h2&gt;</span><span class="pln">Index</span><span class="tag">&lt;/h2&gt;</span></li>
+<li class="L8"><span class="tag">&lt;p&gt;</span></li>
+<li class="L9"><span class="pln">    @Html.ActionLink("Create New", "Create")</span></li>
+<li class="L0"><span class="tag">&lt;/p&gt;</span></li>
+<li class="L1"><span class="tag">&lt;table&gt;</span></li>
+<li class="L2"><span class="pln">    </span><span class="tag">&lt;tr&gt;&lt;th&gt;</span><span class="pln">Name</span><span class="tag">&lt;/th&gt;</span></li>
+<li class="L3"><span class="pln">          </span><span class="tag">&lt;th&gt;</span><span class="pln">Gender</span><span class="tag">&lt;/th&gt;</span></li>
+<li class="L4"><span class="pln">          </span><span class="tag">&lt;th&gt;&lt;/th&gt;</span></li>
+<li class="L5"><span class="pln">    </span><span class="tag">&lt;/tr&gt;</span></li>
+<li class="L6"><span class="pln">@foreach (var item in Model) {</span></li>
+<li class="L7"><span class="pln">    </span><span class="tag">&lt;tr&gt;</span></li>
+<li class="L8"><span class="pln">        </span><span class="tag">&lt;td&gt;</span><span class="pln">@Html.DisplayFor(modelItem =&gt; item.Name)</span><span class="tag">&lt;/td&gt;</span></li>
+<li class="L9"><span class="pln">        </span><span class="tag">&lt;td&gt;</span><span class="pln">@Html.DisplayFor(modelItem =&gt; item.Gender)</span><span class="tag">&lt;/td&gt;</span></li>
+<li class="L0"><span class="pln">        </span><span class="tag">&lt;td&gt;</span></li>
+<li class="L1"><span class="pln">            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |</span></li>
+<li class="L2"><span class="pln">            @Html.ActionLink("Details", "Details", new { id=item.ID }) |</span></li>
+<li class="L3"><span class="pln">            @Html.ActionLink("Delete", "Delete", new { id=item.ID })</span></li>
+<li class="L4"><span class="pln">        </span><span class="tag">&lt;/td&gt;</span></li>
+<li class="L5"><span class="pln">    </span><span class="tag">&lt;/tr&gt;</span></li>
+<li class="L6"><span class="pln">}</span></li>
+<li class="L7"><span class="tag">&lt;/table&gt;</span></li>
+</ol>
+<div id="div_code">
+<div><strong>二、使用输出缓存</strong>　　那么，现在我们假设这个读取员工的数据很频繁，但是数据又更新不是很频繁，我们就会想到，能不能对这部分数据进行缓存，以便减少每次执行的时间。
+<p>是的，我们可以这么做，而且也很容易做到这一点。MVC中内置了一个<span class="wp_keywordlink_affiliate"><a href="/tag/outputcache" title="View all posts in OutputCache" target="_blank">OutputCache</a></span>的ActionFilter，我们可以将它应用在某个Action或者ChildAction上面</p>
+<p>【备注】ChildAction是MVC3的一个新概念，本质上就是一个Action，但通常都是返回一个PartialView。通常这类 Action，可以加上一个ChildActionOnly的ActionFilter以标识它只能作为Child被请求，而不能直接通过地址请求。</p>
+<p>【备注】我们确实可以在Controller级别定义输出缓存，但我不建议这么做。缓存是要经过考虑的，而不是不管三七二十一就全部缓存起来。缓存不当所造成的问题可能比没有缓存还要大。</p>
+<p>下面的代码启用了Index这个Action的缓存功能，我们让他缓存10秒钟。</p>
+<div id="div_code">
+<div>
+<ol class="linenums">
+<li class="L0"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">;</span></li>
+<li class="L1"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span></li>
+<li class="L2"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Linq</span><span class="pun">;</span></li>
+<li class="L3"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">;</span></li>
+<li class="L4"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="typ">Mvc</span><span class="pun">;</span></li>
+<li class="L5"><span class="kwd">using</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span><span class="pun">.</span><span class="typ">Models</span><span class="pun">;</span></li>
+<li class="L6"><span class="kwd">namespace</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span><span class="pun">.</span><span class="typ">Controllers</span></li>
+<li class="L7"><span class="pun">{</span></li>
+<li class="L8"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">HomeController</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">Controller</span></li>
+<li class="L9"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L0"><span class="pln">        </span><span class="com">//</span></li>
+<li class="L1"><span class="pln">        </span><span class="com">// GET: /Home/</span></li>
+<li class="L2"><span class="pln">        </span><span class="pun">[</span><span class="typ"><span class="wp_keywordlink_affiliate"><a href="/tag/outputcache" title="View all posts in OutputCache" target="_blank">OutputCache</a></span></span><span class="pun">(</span><span class="typ">Duration</span><span class="pun">=</span><span class="lit">10</span><span class="pun">)]</span></li>
+<li class="L3"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">ActionResult</span><span class="pln"> </span><span class="typ">Index</span><span class="pun">()</span></li>
+<li class="L4"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L5"><span class="pln">            </span><span class="com">//这里目前作为演示，是直接硬编码，实际上可能是读取数据库的数据</span></li>
+<li class="L6"><span class="pln">            var employees </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pun">[]{</span></li>
+<li class="L7"><span class="pln">                </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Employee</span><span class="pun">(){</span><span class="pln">ID</span><span class="pun">=</span><span class="lit">1</span><span class="pun">,</span><span class="typ">Name</span><span class="pun">=</span><span class="str">"ares"</span><span class="pun">,</span><span class="typ">Gender</span><span class="pun">=</span><span class="str">"Male"</span><span class="pun">}</span></li>
+<li class="L8"><span class="pln">            </span><span class="pun">};</span></li>
+<li class="L9"><span class="pln">            </span><span class="kwd">return</span><span class="pln"> </span><span class="typ">View</span><span class="pun">(</span><span class="pln">employees</span><span class="pun">);</span></li>
+<li class="L0"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L1"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L2"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p>那么，也就是说，第一次请求这个Index的时候，里面的代码会执行，并且结果会被缓存起来，然后在10秒钟内，第二个或者后续的请求，就不需要再次执行，而是直接将结果返回给用户即可。</p>
+<p>这个<span class="wp_keywordlink_affiliate"><a href="/tag/outputcache" title="View all posts in OutputCache" target="_blank">OutputCache</a></span>的Attribute，实际上是一个ActionFilter，它有很多参数，具体的请参考 http://msdn.microsoft.com/zh-cn/library/system.web.mvc.outputcacheattribute.aspx</p>
+<p>这些参数中，Duration是必须的，这是设置一个过期时间，以秒为单位，这个我想大家都很好理解。我重点要一下下面几个：VaryByContentEncoding、VaryByCustom、VaryByHeader、<span class="wp_keywordlink_affiliate"><a href="/tag/varybyparam" title="View all posts in VaryByParam" target="_blank">VaryByParam</a></span>。</p>
+<p>这四个参数的意思是，决定缓存中如何区分不同请求，就是说，哪些因素将决定使用还是不使用缓存。默认情况下，如果不做任何设置，那么在规定的时间内(我们称为缓存期间)，所有用户，不管用什么方式来访问，都是直接读取缓存。</p>
+<p><span class="wp_keywordlink_affiliate"><a href="/tag/varybyparam" title="View all posts in VaryByParam" target="_blank">VaryByParam</a></span>，可以根据用户请求的参数来决定是否读取缓存。这个参数主要指的就是QueryString。例如</p>
+<div id="div_code">
+<div>如果我们缓存了http://localhost/Home/Index，那么用这个地址来访问的时候，规定时间内都是读取缓存。但如果用http://localhost/Home/Index?name=chenxizhang这样的地址过来访问，显然我们希望不要读取缓存，因为参数不一样了。要实现这样的需求，也就是说，希望根据name参数的不同缓存不同的数据。则可以设置<span class="wp_keywordlink_affiliate"><a href="/tag/varybyparam" title="View all posts in VaryByParam" target="_blank">VaryByParam</a></span>=”name”。
+<p>如果有多个参数的话，可以用逗号分开他们。例如 VaryByParam=”name,Id”</p></div>
+</div>
+<p>【备注】这里其实会有一个潜在的风险，由于针对不同的参数(以及他们的组合)需要缓存不同的数据版本，假设有一个恶意的程序，分别用不同的参数发起大量的请求，那么就会导致缓存爆炸的情况，极端情况下，会导致服务器出现问题。(当然，IIS里面，如果发现缓存的内容不够用了，会自动将一些数据清理掉，但这就同样导致了程序的不稳定性，因为某些正常需要用的缓存可能会被销毁掉)。这也就是我为什么强调说，缓存设计是一个比较复杂的事情。</p>
+<p>VaryByHeader，可以根据用户请求中所提供的一些Header信息不同而决定是否读取缓存。我们可以看到在每个请求中都会包含一些Header信息，如下图所示</p>
+<p><img decoding="async" src="http://image20.it168.com/201112_500x375/892/e7d89a8a9c5712d9.jpg" alt="" border="1"></p>
+<p>这个也很有用，例如根据不同的语言，我们显然是有不同的版本的。或者根据用户浏览器不同，也可以缓存不同的版本。可以通过这样设置</p>
+<div id="div_code">
+<div>VaryByHeader=”Accept-Language,User-Agent”</div>
+</div>
+<p>上面两个是比较常用的。当然还有另外两个属性也可以设置</p>
+<p>VaryByContentEncoding，一般设置为Accept-Encoding里面可能的Encoding名称，从上图也可以看出，Request里面是包含这个标头的。</p>
+<p>VaryByCustom，则是一个完全可以定制的设置，例如我们可能需要根据用户角色来决定不同的缓存版本，或者根据浏览器的一些小版本号来区分不同 的缓存版本，我们可以这样设置：VaryByCustom=”Role,BrowserVersion”,这些名称是你自己定义的，光这样写当然是没有用 的，我们还需要在Global.asax文件中，添加一个特殊的方法，来针对这种特殊的需求进行处理。</p>
+<div id="div_code">
+<div>
+<ol class="linenums">
+<li class="L0"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">;</span></li>
+<li class="L1"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span></li>
+<li class="L2"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Linq</span><span class="pun">;</span></li>
+<li class="L3"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">;</span></li>
+<li class="L4"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="typ">Mvc</span><span class="pun">;</span></li>
+<li class="L5"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="typ">Routing</span><span class="pun">;</span></li>
+<li class="L6"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="typ">Security</span><span class="pun">;</span></li>
+<li class="L7"><span class="kwd">namespace</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span></li>
+<li class="L8"><span class="pun">{</span></li>
+<li class="L9"><span class="pln">    </span><span class="com">// Note: For instructions on enabling IIS6 or IIS7 classic mode,</span></li>
+<li class="L0"><span class="pln">    </span><span class="com">// visit http://go.microsoft.com/?LinkId=9394801</span></li>
+<li class="L1"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">MvcApplication</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="typ">HttpApplication</span></li>
+<li class="L2"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L3"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">RegisterGlobalFilters</span><span class="pun">(</span><span class="typ">GlobalFilterCollection</span><span class="pln"> filters</span><span class="pun">)</span></li>
+<li class="L4"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L5"><span class="pln">            filters</span><span class="pun">.</span><span class="typ">Add</span><span class="pun">(</span><span class="kwd">new</span><span class="pln"> </span><span class="typ">HandleErrorAttribute</span><span class="pun">());</span></li>
+<li class="L6"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L7"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">RegisterRoutes</span><span class="pun">(</span><span class="typ">RouteCollection</span><span class="pln"> routes</span><span class="pun">)</span></li>
+<li class="L8"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L9"><span class="pln">            routes</span><span class="pun">.</span><span class="typ">IgnoreRoute</span><span class="pun">(</span><span class="str">"{resource}.axd/{*pathInfo}"</span><span class="pun">);</span></li>
+<li class="L0"><span class="pln">            routes</span><span class="pun">.</span><span class="typ">MapRoute</span><span class="pun">(</span></li>
+<li class="L1"><span class="pln">                </span><span class="str">"Default"</span><span class="pun">,</span><span class="pln"> </span><span class="com">// Route name</span></li>
+<li class="L2"><span class="pln">                </span><span class="str">"{controller}/{action}/{id}"</span><span class="pun">,</span><span class="pln"> </span><span class="com">// URL with parameters</span></li>
+<li class="L3"><span class="pln">                </span><span class="kwd">new</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> controller </span><span class="pun">=</span><span class="pln"> </span><span class="str">"Home"</span><span class="pun">,</span><span class="pln"> action </span><span class="pun">=</span><span class="pln"> </span><span class="str">"Index"</span><span class="pun">,</span><span class="pln"> id </span><span class="pun">=</span><span class="pln"> </span><span class="typ">UrlParameter</span><span class="pun">.</span><span class="typ">Optional</span><span class="pln"> </span><span class="pun">}</span><span class="pln"> </span><span class="com">// Parameter defaults</span></li>
+<li class="L4"><span class="pln">            </span><span class="pun">);</span></li>
+<li class="L5"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L6"><span class="pln">        </span><span class="kwd">protected</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">Application_Start</span><span class="pun">()</span></li>
+<li class="L7"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L8"><span class="pln">            </span><span class="typ">AreaRegistration</span><span class="pun">.</span><span class="typ">RegisterAllAreas</span><span class="pun">();</span></li>
+<li class="L9"><span class="pln">            </span><span class="typ">RegisterGlobalFilters</span><span class="pun">(</span><span class="typ">GlobalFilters</span><span class="pun">.</span><span class="typ">Filters</span><span class="pun">);</span></li>
+<li class="L0"><span class="pln">            </span><span class="typ">RegisterRoutes</span><span class="pun">(</span><span class="typ">RouteTable</span><span class="pun">.</span><span class="typ">Routes</span><span class="pun">);</span></li>
+<li class="L1"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L2"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> override string </span><span class="typ">GetVaryByCustomString</span><span class="pun">(</span><span class="typ">HttpContext</span><span class="pln"> context</span><span class="pun">,</span><span class="pln"> string custom</span><span class="pun">)</span></li>
+<li class="L3"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L4"><span class="pln">            </span><span class="kwd">switch</span><span class="pun">(</span><span class="pln">custom</span><span class="pun">)</span></li>
+<li class="L5"><span class="pln">            </span><span class="pun">{</span></li>
+<li class="L6"><span class="pln">                </span><span class="kwd">case</span><span class="pln"> </span><span class="str">"Role"</span><span class="pun">:</span></li>
+<li class="L7"><span class="pln">                    </span><span class="pun">{</span></li>
+<li class="L8"><span class="pln">                        </span><span class="kwd">return</span><span class="pln"> string</span><span class="pun">.</span><span class="typ">Join</span><span class="pun">(</span><span class="str">","</span><span class="pun">,</span><span class="pln"> </span><span class="typ">Roles</span><span class="pun">.</span><span class="typ">GetRolesForUser</span><span class="pun">());</span></li>
+<li class="L9"><span class="pln">                    </span><span class="pun">}</span></li>
+<li class="L0"><span class="pln">                </span><span class="kwd">case</span><span class="pln"> </span><span class="str">"BrowserVersion"</span><span class="pun">:</span></li>
+<li class="L1"><span class="pln">                    </span><span class="pun">{</span></li>
+<li class="L2"><span class="pln">                        </span><span class="kwd">return</span><span class="pln"> context</span><span class="pun">.</span><span class="typ">Request</span><span class="pun">.</span><span class="typ">Browser</span><span class="pun">.</span><span class="typ">Type</span><span class="pun">;</span></li>
+<li class="L3"><span class="pln">                    </span><span class="pun">}</span></li>
+<li class="L4"><span class="pln">                </span><span class="kwd">default</span><span class="pun">:</span></li>
+<li class="L5"><span class="pln">                    </span><span class="kwd">break</span><span class="pun">;</span></li>
+<li class="L6"><span class="pln">            </span><span class="pun">}</span></li>
+<li class="L7"><span class="pln">            </span><span class="kwd">return</span><span class="pln"> string</span><span class="pun">.</span><span class="typ">Empty</span><span class="pun">;</span></li>
+<li class="L8"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L9"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L0"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p>上面四个属性，可以改变缓存使用的行为。另外还有一个重要属性将影响缓存保存的位置，这就是Location属性，这个属性有如下几个可选项，我从文档中摘录过来</p>
+<p><img decoding="async" src="http://image20.it168.com/201112_500x375/892/7a4dcef2a0450a01.jpg" alt="" border="1"></p>
+<p>这里要思考一个问题，设置为Client与设置为Server有哪些行为上面的不同</p>
+<p>如果设置为Client，那么第一次请求的时候，得到的响应标头里面，会记录好这个页面应该是要缓存的，并且在10秒之后到期。如下图所示</p>
+<p><img decoding="async" src="http://image20.it168.com/201112_500x375/892/8ed16da9f288002b.jpg" alt="" border="1"></p>
+<p>而如果设置为Server的话，则会看到客户端是没有缓存的。</p>
+<p><img decoding="async" src="http://image20.it168.com/201112_500x375/892/e1082c96668e64e8.jpg" alt="" border="1"></p>
+<p>看起来不错，不是吗?如果你不加思索地就表示同意，我要告诉你，你错了。所以，不要着急就下结论，请再试一下设置为Client的情况，你会发现， 如果你刷新页面，那么仍然会发出请求，而且Result也是返回200，这表示这是一个新的请求，确实也返回了结果。这显然是跟我们预期不一样的。</p>
+<p>为了做测试，我特意加了一个时间输出，如果仅仅设置为Client的话，每次刷新这个时间都是不一样的。这说明，服务器端代码被执行了。</p>
+<p><img decoding="async" src="http://image20.it168.com/201112_500x375/892/17089b7cbedcb796.jpg" alt="" border="1"></p>
+<p>同样的问题也出现在，如果我们将Location设置为ServerAndClient的时候，其实你会发现Client的缓存好像并没有生效，每次都仍然是请求服务器，只不过这一种情况下，服务器端已经做了缓存，所以在规定时间内，服务器代码是不会执行的，所以结果也不会变。但是问题在于，既然设置了客户端缓存，那么理应就直接使用客户端的缓存版本，不应该去请求服务器才对。</p>
+<p>这个问题，其实属于是ASP.NET本身的一个问题，这里有一篇文章介绍 http://blog.miniasp.com/post/2010/03/30/OutputCacheLocation-ServerAndClient-problem-fixed.aspx</p>
+<p>我们可以看一下，将Location设置为ServerAndClient， 对代码稍作修改</p>
+<div id="div_code">
+<div>
+<ol class="linenums">
+<li class="L0"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">;</span></li>
+<li class="L1"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span></li>
+<li class="L2"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Linq</span><span class="pun">;</span></li>
+<li class="L3"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">;</span></li>
+<li class="L4"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="typ">Mvc</span><span class="pun">;</span></li>
+<li class="L5"><span class="kwd">using</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span><span class="pun">.</span><span class="typ">Models</span><span class="pun">;</span></li>
+<li class="L6"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="pln">UI</span><span class="pun">;</span></li>
+<li class="L7"><span class="kwd">namespace</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span><span class="pun">.</span><span class="typ">Controllers</span></li>
+<li class="L8"><span class="pun">{</span></li>
+<li class="L9"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">HomeController</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">Controller</span></li>
+<li class="L0"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L1"><span class="pln">        </span><span class="com">//</span></li>
+<li class="L2"><span class="pln">        </span><span class="com">// GET: /Home/</span></li>
+<li class="L3"><span class="pln">        </span><span class="pun">[</span><span class="typ">OutputCache</span><span class="pun">(</span><span class="typ">Duration</span><span class="pun">=</span><span class="lit">10</span><span class="pun">,</span><span class="typ">Location</span><span class="pun">=</span><span class="typ">OutputCacheLocation</span><span class="pun">.</span><span class="typ">ServerAndClient</span><span class="pun">)]</span></li>
+<li class="L4"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">ActionResult</span><span class="pln"> </span><span class="typ">Index</span><span class="pun">()</span></li>
+<li class="L5"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L6"><span class="pln">            </span><span class="typ">Response</span><span class="pun">.</span><span class="typ">Cache</span><span class="pun">.</span><span class="typ">SetOmitVaryStar</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span></li>
+<li class="L7"><span class="pln">            </span><span class="typ">ViewBag</span><span class="pun">.</span><span class="typ">CurrentTime</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">DateTime</span><span class="pun">.</span><span class="typ">Now</span><span class="pun">.</span><span class="typ">ToString</span><span class="pun">();</span></li>
+<li class="L8"><span class="pln">            </span><span class="com">//这里目前作为演示，是直接硬编码，实际上可能是读取数据库的数据</span></li>
+<li class="L9"><span class="pln">            var employees </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pun">[]{</span></li>
+<li class="L0"><span class="pln">                </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Employee</span><span class="pun">(){</span><span class="pln">ID</span><span class="pun">=</span><span class="lit">1</span><span class="pun">,</span><span class="typ">Name</span><span class="pun">=</span><span class="str">"ares"</span><span class="pun">,</span><span class="typ">Gender</span><span class="pun">=</span><span class="str">"Male"</span><span class="pun">}</span></li>
+<li class="L1"><span class="pln">            </span><span class="pun">};</span></li>
+<li class="L2"><span class="pln">            </span><span class="kwd">return</span><span class="pln"> </span><span class="typ">View</span><span class="pun">(</span><span class="pln">employees</span><span class="pun">);</span></li>
+<li class="L3"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L4"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L5"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p><img decoding="async" src="http://image20.it168.com/201112_500x375/892/61a031e3e71ecb31.jpg" alt="" border="1"></p>
+<p>我们看到，从第二次请求开始，状态码是304，这表示该页被缓存了，所以浏览器并不需要请求服务器的数据。而且你可以看到Received的字节为221B，而不是原先的1.25KB。</p>
+<p>但是，如果仅仅设置为Client，则仍然无法真正实现客户端缓存(这个行为是有点奇怪的)。这个问题我确实也一直没有找到办法，如果我们确实需要使用客户端缓存，索性我们还是设置为ServerAndClient吧。</p>
+<p>使用客户端缓存，可以明显减少对服务器发出的请求数，这从一定意义上更加理想。</p>
+<p>三、<strong>使用缓存配置文件</strong></p>
+<p>第一节中，我们详细地了解了MVC中，如何通过OutputCache这个ActionFilter来设置缓存。但是，因为这些设置都是通过C#代码直接定义在Action上面的，所以未免不是很灵活，例如我们可能需要经常调整这些设置，该如何办呢?</p>
+<p>ASP.NET 4.0中提供了一个新的机制，就是CacheProfile的功能，我们可以在配置文件中，定义所谓的Profile，然后在OutputCache这个Attribute里面可以直接使用。</p>
+<p>通过下面的例子，可以很容易看到这种机制的好处。下面的节点定义在system.web中</p>
+<div id="div_code">
+<div>    &lt;caching&gt;<br>
+&lt;outputCacheSettings&gt;<br>
+&lt;outputCacheProfiles&gt;<br>
+&lt;add name="employee" duration="10" enabled="true" location="ServerAndClient" varyByParam="none"/&gt;<br>
+&lt;/outputCacheProfiles&gt;<br>
+&lt;/outputCacheSettings&gt;<br>
+&lt;/caching&gt;</div>
+</div>
+<p>然后，代码中可以直接地使用这个Profile了</p>
+<div id="div_code">
+<div>
+<ol class="linenums">
+<li class="L0"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">;</span></li>
+<li class="L1"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Collections</span><span class="pun">.</span><span class="typ">Generic</span><span class="pun">;</span></li>
+<li class="L2"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Linq</span><span class="pun">;</span></li>
+<li class="L3"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">;</span></li>
+<li class="L4"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="typ">Mvc</span><span class="pun">;</span></li>
+<li class="L5"><span class="kwd">using</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span><span class="pun">.</span><span class="typ">Models</span><span class="pun">;</span></li>
+<li class="L6"><span class="kwd">using</span><span class="pln"> </span><span class="typ">System</span><span class="pun">.</span><span class="typ">Web</span><span class="pun">.</span><span class="pln">UI</span><span class="pun">;</span></li>
+<li class="L7"><span class="kwd">namespace</span><span class="pln"> </span><span class="typ">MvcApplicationCacheSample</span><span class="pun">.</span><span class="typ">Controllers</span></li>
+<li class="L8"><span class="pun">{</span></li>
+<li class="L9"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">HomeController</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">Controller</span></li>
+<li class="L0"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L1"><span class="pln">        </span><span class="com">//</span></li>
+<li class="L2"><span class="pln">        </span><span class="com">// GET: /Home/</span></li>
+<li class="L3"><span class="pln">        </span><span class="pun">[</span><span class="typ">OutputCache</span><span class="pun">(</span><span class="typ">CacheProfile</span><span class="pun">=</span><span class="str">"employee"</span><span class="pun">)]</span></li>
+<li class="L4"><span class="pln">        </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">ActionResult</span><span class="pln"> </span><span class="typ">Index</span><span class="pun">()</span></li>
+<li class="L5"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L6"><span class="pln">            </span><span class="com">//Response.Cache.SetOmitVaryStar(true);</span></li>
+<li class="L7"><span class="pln">            </span><span class="typ">ViewBag</span><span class="pun">.</span><span class="typ">CurrentTime</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">DateTime</span><span class="pun">.</span><span class="typ">Now</span><span class="pun">.</span><span class="typ">ToString</span><span class="pun">();</span></li>
+<li class="L8"><span class="pln"> </span></li>
+<li class="L9"><span class="pln">            </span><span class="com">//这里目前作为演示，是直接硬编码，实际上可能是读取数据库的数据</span></li>
+<li class="L0"><span class="pln">            var employees </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pun">[]{</span></li>
+<li class="L1"><span class="pln">                </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Employee</span><span class="pun">(){</span><span class="pln">ID</span><span class="pun">=</span><span class="lit">1</span><span class="pun">,</span><span class="typ">Name</span><span class="pun">=</span><span class="str">"ares"</span><span class="pun">,</span><span class="typ">Gender</span><span class="pun">=</span><span class="str">"Male"</span><span class="pun">}</span></li>
+<li class="L2"><span class="pln">            </span><span class="pun">};</span></li>
+<li class="L3"><span class="pln">            </span><span class="kwd">return</span><span class="pln"> </span><span class="typ">View</span><span class="pun">(</span><span class="pln">employees</span><span class="pun">);</span></li>
+<li class="L4"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L5"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L6"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p>这个例子很直观，有了Profile，我们可以很轻松地在运行时配置缓存的一些关键值。</p>
+<p><strong>使用缓存API</strong></p>
+<p>通过上面的两步，我们了解到了使用OutputCache，并且结合CacheProfile，可以很好地实现灵活的缓存配置。但是有的时候，我们可能 还希望对缓存控制得更加精细一些。因为OutputCache是对Action的缓存，不同的Action之间是不能共享数据的，假如某些数据，我们是在 不同的Action之间共享的，那么，简单地采用OutputCache来做，就会导致对同一份数据，缓存多次的问题。</p>
+<p>所以，ASP.NET除了提供OutputCache这种基于声明的输出缓存设置之外，还允许我们在代码中，自己控制要对哪些数据进行缓存，并且提供了更多的选项。</p>
+<p>关于如何通过API的方式添加或者使用缓存，请参考http://msdn.microsoft.com/zh-cn/library/18c1wd61%28v=VS.80%29.aspx</p>
+<p>基本上就是使用HttpContext.Cache类型，可以完成所有的操作，而且足够灵活。</p>
+<p>值得一提的是，我知道不少公司在项目中都会采用一些ORM框架，某些ORM框架中也允许实现缓存。例如NHibernate就提供了较为丰富的缓存功 能，大致可以参考一下 http://www.cnblogs.com/RicCC/archive/2009/12/28/nhibernate-cache-internals.html</p>
+<p>需要注意的是，微软自己提供的Entity Framework本身并没有包含缓存的功能。</p>
+<p>这里仍然要特别提醒一下，使用这种基于API的缓存方案，需要仔细推敲每一层缓存的设置是否合理，以及更新等问题。</p>
+<p><strong>使用缓存依赖</strong></p>
+<p>很早之前，在ASP.NET中设计缓存的时候，我们就可以使用缓存依赖的技术。关于缓存依赖，详细的信息请参考 http://msdn.microsoft.com/zh-cn/library/ms178604.aspx</p>
+<p>实际上，这个技术确实很有用，ASP.NET默认提供了一个SqlCacheDependency，可以通过配置，连接SQL Server数据库，当数据库的表发生变化的时候，会通知到ASP.NET，该缓存就会失效。</p>
+<p>值得一提的是，不管是采用OutputCache这样的声明式的缓存方式，还是采用缓存API的方式，都可以使用到缓存依赖。而且使用缓存API的话， 除了使用SqlCacheDependency之外，还可以使用标准的CacheDependency对象，实现对文件的依赖。</p>
+<p><strong><span class="wp_keywordlink_affiliate"><a href="/tag/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98" title="View all posts in 分布式缓存" target="_blank">分布式缓存</a></span></strong></p>
+<p>上面提到的手段都很不错，如果应用系统不是很庞大的话，也够用了。需要注意的是，上面所提到的缓存手段，都是在Web服务器本地内存中进行缓存，这种做法的问题在于，如果我们需要做负载均衡(一般就会有多台服务器)的时候，就不可能在多台服务器之间共享到这些缓存。正因为如此，分布式缓存的概念就应运而生了。</p>
+<p>谈到分布式缓存，目前比较受到大家认可的一个开源框架是 memcached。顾名思义，它仍然使用的是内存的缓存，只不过，它天生就是基于分布式的，它的访问都是直接通过tcp的方式，所以可以访问远程服务器，也可以多台Web服务器访问同一台缓存服务器。</p>
+<p>需要注意的是，分布式缓存不是为了来提高性能的(这可能是一个误区)，并且可以肯定的是，它的速度一定会被本地慢一些。如果你的应用只有一台服务器就能满足要求，你就没有必要使用memcached。它的最大好处就是跨服务器，跨应用共享缓存。</p>
+</div>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/mvc" rel="tag">MVC</a>, <a href="/tag/mvc%E7%BC%93%E5%AD%98" rel="tag">MVC缓存</a>, <a href="/tag/outputcache" rel="tag">OutputCache</a>, <a href="/tag/varybyparam" rel="tag">VaryByParam</a>, <a href="/tag/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98" rel="tag">分布式缓存</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/05/26/%E7%9B%B8%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%EF%BC%9A%E5%85%89%E5%9C%88%E3%80%81%E5%BF%AB%E9%97%A8%E3%80%81%E6%84%9F%E5%85%89%E5%BA%A6.html" rel="prev">相机基础知识：光圈、快门、感光度ISO、光圈、景深</a><br>【下篇】<a href="/2012/05/29/%E5%8C%97%E4%BA%AC90%E5%90%8E-%E5%8E%9F%E5%88%9B%E5%A5%B3%E6%AD%8C%E6%89%8B-%E9%98%BF%E6%82%84%E7%9A%84%E7%9C%9F%E5%AE%9E%E7%94%9F%E6%B4%BB.html" rel="next">北京90后 原创女歌手 阿悄的真实生活</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2017/12/22/windows2008r2-asp-net-mvc.html">windows2008r2部署mvc</a></li><li> · <a href="/2017/03/30/simple-mvc-web-booksstore-demo.html">[转]一步步打造一个简单的 MVC 网站 – BooksStore（简单易懂）</a></li><li> · <a href="/2016/05/27/%E6%9F%A5%E7%9C%8Bmvc-entityvalidationerrors%E8%AF%A6%E7%BB%86%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF.html">查看MVC EntityValidationErrors详细错误信息</a></li><li> · <a href="/2016/05/09/vs2015%E6%B2%A1%E6%9C%89mvc.html">vs2015没有MVC</a></li><li> · <a href="/2014/09/09/asp-net-mvc4-0-%E5%AE%89%E8%A3%85%E5%8C%85.html">asp.net mvc4.0 安装包</a></li><li> · <a href="/2012/06/07/asp-net-mvc%E7%9A%84filter%E8%BF%87%E8%99%91%E5%99%A8%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3.html">ASP.NET MVC的Filter过虑器使用示例详解</a></li><li> · <a href="/2012/05/31/%E6%80%8E%E4%B9%88%E5%88%86%E7%A6%BBasp-net-mvc%E9%A1%B9%E7%9B%AE.html">怎么分离ASP.NET MVC项目</a></li><li> · <a href="/2012/05/20/mvc%E5%AE%9E%E7%8E%B0%E6%8D%A2%E8%82%A4%E5%8A%9F%E8%83%BD.html">ASP.NET Mvc实现换肤功能</a></li><li> · <a href="/2012/05/07/asp-net-mvc3-%E7%AE%80%E5%8D%95%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0sql%E4%BE%9D%E8%B5%96.html">asp.net mvc3 简单缓存实现sql依赖</a></li><li> · <a href="/2012/03/30/%E5%BE%AE%E8%BD%AF%E5%BC%80%E6%BA%90asp-net-mvc.html">微软开源ASP.NET MVC</a></li><li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年05月28日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/05/28/asp-net-mvc-%E7%BC%93%E5%AD%98%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B.html" rel="bookmark" title="本文固定链接 /2012/05/28/asp-net-mvc-%e7%bc%93%e5%ad%98%e4%bd%bf%e7%94%a8%e7%a4%ba%e4%be%8b.html">ASP.NET MVC 缓存使用示例 | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/05/28/asp-net-mvc-%e7%bc%93%e5%ad%98%e4%bd%bf%e7%94%a8%e7%a4%ba%e4%be%8b.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+<!-- 引用 -->	
+	<div class="tab_comment">
+		<h2 id="comments">ASP.NET MVC 缓存使用示例：目前有1 条留言</h2>	
+	</div>
+	<ol class="commentlist">   <li class="comment byuser comment-author-admin bypostauthor even thread-even depth-1" id="comment-2928">
+   <div id="div-comment-2928">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" decoding="async"> 
+							</div>
+			<strong>数据库之家</strong> :
+			<span class="datetime">2012年05月29日下午 4:52</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2012/05/28/asp-net-mvc-%E7%BC%93%E5%AD%98%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B.html?replytocom=2928#respond" data-commentid="2928" data-postid="2283" data-belowelement="div-comment-2928" data-respondelement="respond" data-replyto="回复给 数据库之家" aria-label="回复给 数据库之家">回复</a></span>
+		</div>
+				<p><a href="http://115.com/file/c28u9xr4#%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF%E6%B1%87%E6%80%BB.xls" rel="nofollow ugc">http://115.com/file/c28u9xr4#%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF%E6%B1%87%E6%80%BB.xls</a></p>
+	<div class="clear"></div>
+  </div>
+</li></ol>
+
+	<div class="navigation_c">
+		<div class="previous"></div>
+	</div>
+
+ 		<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/05/28/asp-net-mvc-%E7%BC%93%E5%AD%98%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2283" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="62b2f7b658"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="3"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.078 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:11 -->

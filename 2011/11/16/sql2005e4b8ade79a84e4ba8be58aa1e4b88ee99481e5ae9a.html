@@ -1,0 +1,2254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>SQL2005中的事务与锁定 | Bruce's Blog</title> 
+<meta name="description" content=" ">
+<meta name="keywords" content="sql">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 11 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="1" class="pad"> </td><td><a href="/2011/11/01" aria-label="2011年11月1日 发布的文章">1</a></td><td><a href="/2011/11/02" aria-label="2011年11月2日 发布的文章">2</a></td><td><a href="/2011/11/03" aria-label="2011年11月3日 发布的文章">3</a></td><td>4</td><td><a href="/2011/11/05" aria-label="2011年11月5日 发布的文章">5</a></td><td><a href="/2011/11/06" aria-label="2011年11月6日 发布的文章">6</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/11/07" aria-label="2011年11月7日 发布的文章">7</a></td><td><a href="/2011/11/08" aria-label="2011年11月8日 发布的文章">8</a></td><td><a href="/2011/11/09" aria-label="2011年11月9日 发布的文章">9</a></td><td>10</td><td>11</td><td>12</td><td>13</td>
+	</tr>
+	<tr>
+		<td><a href="/2011/11/14" aria-label="2011年11月14日 发布的文章">14</a></td><td>15</td><td><a href="/2011/11/16" aria-label="2011年11月16日 发布的文章">16</a></td><td>17</td><td><a href="/2011/11/18" aria-label="2011年11月18日 发布的文章">18</a></td><td>19</td><td>20</td>
+	</tr>
+	<tr>
+		<td>21</td><td><a href="/2011/11/22" aria-label="2011年11月22日 发布的文章">22</a></td><td>23</td><td><a href="/2011/11/24" aria-label="2011年11月24日 发布的文章">24</a></td><td><a href="/2011/11/25" aria-label="2011年11月25日 发布的文章">25</a></td><td><a href="/2011/11/26" aria-label="2011年11月26日 发布的文章">26</a></td><td><a href="/2011/11/27" aria-label="2011年11月27日 发布的文章">27</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/11/28" aria-label="2011年11月28日 发布的文章">28</a></td><td><a href="/2011/11/29" aria-label="2011年11月29日 发布的文章">29</a></td><td><a href="/2011/11/30" aria-label="2011年11月30日 发布的文章">30</a></td>
+		<td class="pad" colspan="4"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2011/10">« 10 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2011/12">12 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#c03b51;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#75bb97;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#7005ef;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#7c221c;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#e959ab;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#b91eb2;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#b6b2de;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#400e5d;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#2a23db;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#da61aa;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#cacbe0;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#d33c2a;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#bba7b3;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#73106f;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#d458c;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#6c066c;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#d2eb26;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#456ecf;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#520ae3;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#97f6be;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#9df973;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#61c20d;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#310696;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#8dd5dc;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#dc2cda;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#88f7b6;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#9e0b44;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#897a9c;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#62b163;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#d73e5c;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#da5ce6;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#6afaba;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#46cf32;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#1a2afa;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#507bbe;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#3c3ce6;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#2d255d;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#6c0202;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#e32f08;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#66b8fd;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#d9a940;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#640eb4;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#56f266;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#7057db;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#bc5cd6;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/sql-server" rel="category tag">SQL Server</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">SQL2005中的事务与锁定</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-11-16 05:13</span>
+			<span class="category">  <a href="/category/sql-server" rel="category tag">SQL Server</a></span>
+			<span class="article_comment"><a href="/2011/11/16/sql2005%E4%B8%AD%E7%9A%84%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%94%81%E5%AE%9A.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,906</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p> </p>
+<p> </p>
+<p><span><span lang="EN-US"><span>      终于定下心来写这个事务与锁定的文章，下笔后才发现真的很难写，交易中事务与锁定这个话题过于复杂，甚至有些还摸不着（就是通过DMV或DMF或其它工具你可能很难看到它的踪影），让人有点让人望而止步，但是既然说了要写，似乎不继续下去不是我的风格。在接下来的几篇文章（其实我也不知道要几篇）里我就事务与锁定这个话题写写，由SQL2005的并发模型引入事务，在事务的概念里展开锁定，本着先概念后实例的原则，和大家一起来学习，有不当之处希望大家指正。</span></span></span></p>
+<p><span><span lang="EN-US"><span> </span></span></span></p>
+<p><span><span lang="EN-US"><span>      </span></span></span></p>
+<p><span><span lang="EN-US"><span>一、并发及并发控制模型</span></span></span></p>
+<p><span><span lang="EN-US">    对于这个我在&lt;&lt; SQL2005数据库引擎结构&gt;&gt;一文有所提及，你可以通过如下链接进行访问：SQL2005数据库引擎结构（三）</span><span lang="EN-US">并有一起的意思，显然就是多个的意思啦，光书面来理解并发就是多个东西同时发生，在数据库并发就是多个进程同时取、存数据库里数据的能力。着眼我们开发的系统，当然是激动态的并互不打架的并发用户进程越多并发能力就越强大啦，你想想看好多的网上购物系统，如果没有并发处理的能力，那么在上面登记的用户信息、商品有库存信息及用户帐户信息很难保证正确性和一致性，比如一个物品本身库存只有100个，结果如果100人同时在线进行预定，库存就有可能搞一个100－1的效果出来。</span></span></p>
+<p><span><span lang="EN-US"><span>    很显然对上述的例子我们希望一个进程在修改库存数据时必须阻止其它进程读或修改数据，或是正在读的用户进程限制其它活动的用户进程进行读或修改的操作，这样一来势必造成系统的并发性能下降，但是如果不采用这种办法又无法保证数据正确性和一致性。那怎么解决这个问题呢，办法只有通过不同的并发模式来管理这些并发事件。我们下面来理解并发控制的模式、并发下可能发生的非一致数据行为，即并发副作用，并由模式及数据行为引入事务及相关的5个隔离等级等概念，进而来理解不同隔离等级下并发实现的机理，显然我们自己也就可以回答上面这个问题了。</span></span></span></p>
+<p><span><span lang="EN-US"><span>并发控制模式：一般并发控制模式有两种：积极并发（又称乐观并发）和消极并发（又称悲观并发）。积极并发是SQL2005才引入的新模式，在2005以前的版本其实只有唯一的并发模式即：消极并发。那什么是消极并发呢？消极并发就是SQLSERVER默认行为是进程以获取锁的方式来阻止其它进程对正在使用的数据进行修改的能力。对于数据库来说对数据修改的操作进程肯定很多，这些进程肯定都会去影响其它进程读取数据的能力，反之，对数据进行读时加上锁也一定会影响其它进程修改数据的能力，简而言之，就是读取与修改数据之间是冲突的、互相阻塞的。乐观并发是SQL2005利用一个行版本控制器的新技术来处理上述的冲突。行版本控制器在当前进程读取数据时生成旧版本的数据，使得其它请求读的进程能看到当前进程一开始读取时的数据状态，并且不受当前进程或其它进程对数据进行修改的影响。简而言之读与修改之间是不冲突的，但是修改与修改之间还是冲突的。</span></span></span></p>
+<p><span><span lang="EN-US"><span>    对于这两种并发模式两个进程同时请求数据修改必然会冲突的，除此以外的差别在于一个是在冲突发生前进行控制，另一个在冲突发生了进行协调处理。这好比生活一样，两种方式就是两种不同的人生，一种消极怠工一种积极向上。</span></span></span></p>
+<p><span><span lang="EN-US"><span>二、并发下可能发生的并发副作用：丢失更新、脏读、不可重复读、幻影。</span></span></span></p>
+<p><span><span lang="EN-US"><span>    为了把这些可能发生的并发副作用说清楚，我们先“布置”一个场景：这是一个卖工艺石头的小商店，平时在前场完成交易，客户凭单据到后场领取石头，AMM和BMM是营业员，她们平时掌握库存数是通过大厅里的一块LED显示牌得之，并且在各自完成一笔交易后修改LED显示，以保证数据的实时性。在这个场景下我们来观察可能发生的行为：</span></span></span></p>
+<p><span><span lang="EN-US"><span>1、  丢失更新：</span></span></span></p>
+<p><span><span lang="EN-US"><span>丢失更新估计是所有数据库用户都不想发生的情况，什么是丢失更新呢？丢失更新是当2个或两个以上的用户进程同时读取同样的数据后又企图修改原来的数据时就会发生。好在上述场景下，大厅LED显示牌显示当前库存1000，这时同时有两个客户上门了，AMM和BMM满面春风接待，比如AMM卖出1个，BMM呢卖出了10个，AMM处理完业务后赶紧把LED显示数修改为1000　－　1　＝　999个，几乎同一时间BMM处理完自己的业务后习惯性的把LED显示数修改为1000　－　10　＝　990　个，这时老板从后场过来，看着LED有点不爽，大吼一声：现在还有多少存货呀？，AMM说我卖了1个，BMM说我是10个，不过两个人都傻眼了，LED显示怎么是990呢？原来BMM在更改时把AMM做的更改搞丢了，这就是丢失更新。显然对老板和营业员来说都是必须回避不能发生的事。</span></span></span></p>
+<p><span><span lang="EN-US"><span>2、  脏读</span></span></span></p>
+<p><span><span lang="EN-US"><span>很显然，在上面的例子里因为AMM和BMM事先因为不知道对方已经修改了柜台存货，所以才造成了存货数目显示错误，出了问题我们要想办法解决问题，英明的老板说了，你们随便哪个在谈一笔生意时先把客户意向购卖石头数扣掉，如果最后客户不要你再改回头，两个MM对老板的英明决定表示等赞同，可是问题还是发生了，怎么回事呢，还是假设柜台存货1000个石头，AMM有一笔生意正在谈着，顾客意向要600块石头，AMM赶紧把LED显示修改为400。这时BMM也很兴奋因为她已经谈成一笔700块石头的生意，所以呢BMM抬头一看，好嘛，还有400块可卖，完了BMM的生意做不成了，只好向客户表达歉意。BMM只能让老板进货，可是老板一看LED显示还有1000块怎么你的700块生意做不成了呢？哦，因为最后AMM的600块生意没做成。嘿嘿，也就是BMM错误的读取了AMM修改的数据，完成了一次“脏读”操作。脏读也就是一个用户进程读取了另一个用户进程修改过但没有正式提交的数据，这时导致了数据不一样的情形发生了。因为A用户进程是无法确认另一个B用户进程在自己提交数据前是否修改过数据，这是数据库系统默认情况下必须回避的。</span></span></span></p>
+<p><span><span lang="EN-US"><span>3、  不可重复读</span></span></span></p>
+<p><span><span lang="EN-US"><span>不可重复读又称不一致分析，不过，个人以为似乎不一致分析更让人好理解一点，但是大部分地方称不可重复读。不可重复读是指一个用户进程两次读取数据得到不同样的数据。比如那个英明的老板吧，他知道要盘点，掌握库存的变化，忙得満头大汗，终于计出库存数来，比如说1000吧，或是当他跑到大厅一看LED显示牌却只有了900，显然这一次的检查库存的过程中两次得到库存数不一样，原因就是AMM在老板从后场走到前场的过程中做了一担生意，卖出100块。嘿嘿，老板气又不是不气又不是，这AMM真可爱，做生意挺两下呀！显然在一个用户进程两次读取数据间隔内另一个用户进程修改了数据，这就是不可重复读。</span></span></span></p>
+<p><span><span lang="EN-US"><span>4、  幻影</span></span></span></p>
+<p><span><span lang="EN-US"><span>幻影，嘿嘿，我们不是经常无视BS自己的人吗？你无视他并不代表他不BS你吧，这个BS你的人就成了幻影，嘿嘿开个玩笑。这种情况多数在查询带谓词时结果集内部分数据变化的时候发生，如果谓词限定下在一个交易里两次同一查询的结果集不同，那些不同的行或行集就是幻影。比方说英明的老板到大厅走走，顺便请大家吃饭，数数人数，BMM，。。。。一路数过去，发现有10人，呵呵，正好一桌，，通知好她们后老板回办会室拿人民币，回到前场看见AMM，再一数11人，晕，刚才怎么看到AMM　？AMM也知道了老板请客没数到他，很是生气，这时AMM就成了幻影。</span></span></span></p>
+<p><span><span lang="EN-US"> </span><span lang="EN-US"> </span></span></p>
+<p><span><span lang="EN-US"><span>以上是四种并发副作用只是一个交易事务里或事务间可能发生的异常的非一致的数据行为（记好并发副作用和不一致的数据行为术语，这在以后会经常提及），其实还是有好多的行为是我们所期望的，那么我们期望的行为是什么呢，下面我们在事务里来介绍。我们可以通过隔离级别来设定一个合适级别以决定上述上种数据行为哪些是允许的。那什么是交易事务，什么又是隔离等级呢？</span></span></span></p>
+<p><span> </span></p>
+<p><span><span lang="EN-US"><span>三、事务</span></span></span></p>
+<p><span><span lang="EN-US"><span>    事务是数据库一笔交易的基本单元，存于两种并发模型中。又分为显式事务和隐式事务。显式事务是显式的开始一个事务并显式的滚回或提交事务，除了显式的事务还有隐式的了，隐式事务是数据库自己根据情况完成的事务处理，如单独的select、update、delete、select语句。</span></span></span></p>
+<p><span><span lang="EN-US"><span>    作为一个事务，它能保证数据库的数据一致性及重做。提到事务不得不提及事务的ACID属性：原子性、一致性、隔离性及持久性。不管是显式还是隐式的，都必须维持这四个属性。</span></span></span></p>
+<p><span><span lang="EN-US"><span>    原子性：一个事务是一个整体，要不全部提交，要不全部中止。意思就是要不全部成功提交到数据，要不全部回滚恢复事务开始前的状态。比方我们做一个入库操作，在这个事务里，审核入库单和修改库存作为一个整体，要不单据变成审核过同时库存增加相应的值，要不就是单据未审核同时库存不变。</span></span></span></p>
+<p><span><span lang="EN-US"><span>    一致性：一致性要求事务保证数据在逻辑上正确，处理的结果不是一个不确定的状态，什么是不确定状态呢，比如说我们完成一个库存减少的操作，如果没有一个出货单据那么这个库存的当前修改就是一个不确定状态，因为你无法知道减少的东东到哪儿去了。</span></span></span></p>
+<p><span><span lang="EN-US"><span>    隔离性：这个隔离和锁定有关，以后在说锁的过程中会提到这些，你先记住这个就行。</span></span></span></p>
+<p><span><span lang="EN-US"><span>持久性：持久很显然是要求正确提交的修改必须保证长久存在，不会因为关机或掉电把这笔交易丢掉。进行中的事务发生故障那事务就完全撤销，像没有发生一样，如果事务提交的确认已经反馈给应用程序发生故障，那么这些日志利用先写技术，在启动恢复阶段自动完成相应的动作保证事务的持久性。（这个在前面的引擎组件有过介绍哦。）</span></span></span></p>
+<p> </p>
+<p><span> </span></p>
+<p>四、隔离等级</p>
+<p>    首先来说说隔离，隔离是一个事务必须与其他事务所进行的资源或数据更改相隔开，显然隔离等级就是相隔的程度了吧。在说隔离级别不得不提及锁的概念，但是在本单不提及锁，在以后听章节里再作说明，大家只要有个印象就行。在这儿我们必须明白两件事：</p>
+<p>    1，隔离级别不会影响进程获得数据修改的排它锁，并且这个锁会保存到事务结束。相对于读进程来说，隔离级别就是对读操作的一个保护级别，保护读操作受其它事务影响的程序。</p>
+<p>    2，较低的隔离级别可以增强许多用户同时访问数据的能力，但也增加了用户可能遇到的并发副作用（例如脏读或丢失更新）的数量。相反，较高的隔离级别减少了用户可能遇到的并发副作用，却需要太多的系统资源及一个事务阻塞其他事务的可能性。</p>
+<p>    应平衡应用程序的完整性要求与相应隔离级别的系统开销，在此基础上选择相应的隔离级别。最高隔离级别（可序列化）保证事务在每次重复读取操作时都能准确检索到相同的数据，但需要通过执行某种级别的锁定来完成此操作，而锁定可能会影响其他用户进程。最低隔离级别（未提交读）可以检索其他事务已经修改但未提交的数据。在未提交读中，所有并发副作用都可能发生，但因为没有读锁定或修改阻塞读取，所以开销最少。</p>
+<p>    不同的隔离级别决定我们有哪些数据副作用可以发生，而并发模型决定不同隔离等级下如何来限制这些数据行为或如何协调这数据行为。好，那我们来关注一下不同隔离等级下如何限制这些行为的发生。</p>
+<p>    未提交读（uncommitted Read）：字面理解一下，修改了的未提交数据可以读取。准确点：一个用户进程可以读取另一个用户进程修改却未提交的数据。SQL SERVER对这个等级下的读操作不需要获得任何锁就可以读取数据，因为不需要锁所以不会和其它任何进程互相阻塞，自然而然能读取其它进程修改了的却未提交数据。显然这不是我们理想的一种模式，但是它却有了高并发性，因为读操作没有锁不会影响其它进程的读或写操作。在这种级别下，除了丢失更新（上一讲中的数据可能发生的行为）外，其它行为都有可能发生，冒着数据不一致的风险来避免修改的进程阻塞读取的进程，事务的一致性肯定是得不到保障，显然这是消极并发模式下的回避阻塞频繁的一种解决方案。未提交读那肯定是不适合于股票、金融系统的，但是在一些趋势分析的系统里，要求的只是一种走向，准确性可以不是那么严格时，这个级别因并发性能超强成为首选。</p>
+<p>    已提交读(Read Committed)：它和未提交读相反，已提交读级别保证一个进程不可能读到另一个进程修改但未提交的数据。这个级别是引擎默认的级别，也是2005乐观并发模式下支持的级别，也就是说已提交读可是乐观的也可以是悲观的，那究竟当前库是属于哪个并发模型下的已提交读呢，这取决于一个READ_COMMITED_SNAPSHOT数据库配置项，并且缺省是悲观并发控制的。这个配置项决定已提交读级别下事务使用锁定还是行版本控制，并很显然行版本控制是乐观并发模式，锁定是悲观并发模式。我们来点角本看看：</p>
+<p> </p>
+<p>--设置已提交读隔离使用行版本控制</p>
+<p>ALTER DATABASE testcsdn SET READ_COMMITTED_SNAPSHOT ON</p>
+<p>GO</p>
+<p>--查看当前已提交读隔离并发模型</p>
+<p>select name,database_id,is_read_committed_snapshot_on  from sys.databases</p>
+<p>/*</p>
+<p>  name                  database_id is_read_committed_snapshot_on</p>
+<p>--------------------   ----------- -----------------------------</p>
+<p>master                       1           0</p>
+<p>tempdb                       2           0</p>
+<p>model                        3           0</p>
+<p>msdb                         4           0</p>
+<p>ReportServer$SQL2005         5           0</p>
+<p>ReportServer$SQL2005TempDB   6           0</p>
+<p>TestCsdn                     7           1  --current</p>
+<p> </p>
+<p>(7 行受影响)</p>
+<p>*/</p>
+<p>--设置已提交读隔离使用锁定</p>
+<p>ALTER DATABASE testcsdn SET READ_COMMITTED_SNAPSHOT OFF</p>
+<p>GO</p>
+<p>--查看已提交读隔离并发模型</p>
+<p>select name,database_id,is_read_committed_snapshot_on  from sys.databases</p>
+<p> </p>
+<p> </p>
+<p>/*</p>
+<p>  name                  database_id is_read_committed_snapshot_on</p>
+<p>--------------------   ----------- -----------------------------</p>
+<p>master                       1           0</p>
+<p>tempdb                       2           0</p>
+<p>model                        3           0</p>
+<p>msdb                         4           0</p>
+<p>ReportServer$SQL2005         5           0</p>
+<p>ReportServer$SQL2005TempDB   6           0</p>
+<p>TestCsdn                     7           0 --curret</p>
+<p> </p>
+<p>(7 行受影响)</p>
+<p>*/</p>
+<p>    已提交读在逻辑上保证了不会读到不实际存在的数据。悲观并发下的已提交读，当进程要修改数据时会在数据行上申请排它锁，其它进程（无论是读还是写）必须等到排它锁释放才可以使用这些数据。如果进程仅是读取数据时会使用共享锁，其它进程虽然可以读取数据但是无法更新数据，必须等到共离锁释放（共享锁在数据处理完即释放，比如行共享锁在当前数据行数据处理完就自动释放，不会在整个事务内保留发。）。乐观并发的已提交读，也确保不会读到未提交的数据，不是通过锁定的方式来实现，而是通过行版本控制器生成行的提前交的数据版本，被修改的数据虽然仍然锁定，但是其它进程可以可以读取更新前版本数据。</p>
+<p>    可重复读（Repeatable Read）：这也是一个悲观并发的级别。可重复读比已提交读要求更严格，在已提交读的基础上增加了一个限制：获取的共享锁保留到事务结束。在这个限制下，进程在一个事务里两交次读取的数据一致，也就是不会读取到其它进程修改了数据。在这儿我们提到共享锁会保留到事务结束，那得申明一下无论哪种级别及并发模型，排它锁是一定要保留到事务结束的。在可重复读级别共享锁同样也会保留到事务结束。那么这种对数据安全的保证是通过增加共享保留的开销为代价的，也就是只要开始一个事务，其它用户进程是不可能修改数据的，显而易见的系统的并发性和性能必然下降。这似乎是我们想像中的一种级别，虽然这个级别暂时无法回避幻影读，而且我们也默许并发及性能下降，那只有对程序员对事务的控制有严格的要求：事务要短并尽量不要人为因素的干扰，减少潜在的锁竞争。</p>
+<p>    快照(SnapShot)：乐观并发级别。这是2005新增加的一个隔离级别。快照级别与使用乐观并发的已提交读差不多，差别在于行版控制器里的数据版本有多早，这个在以后讲锁时再说。这个级别保证了一个事务读取的数据是事务开始时就在数据库逻辑上确认并符合一致性的数据。读操作不会要求共享锁定，如果要求的数据已经排它，就会通过行版本控制器读取最近的符合一致性的数据。</p>
+<p>    可串行化：是目前最严谨、最健壮的一个级别，属于悲观并发。它防止幻影的发生，回避了以前所有意外行为的发生。可串行化意味着系统按进程进入队列的顺序依次、序列化的执行的结果与事务同时运行得到一致的结果。这个最健壮的级别显然共享锁也是随事务开始随事务结束，并通过锁定部分不存在的数据（即索引键范围锁定）来回避幻影的发生。</p>
+<p> </p>
+<p>        在前面的两篇里我从纯理论上把事务相关的知识作了一个梳理，有人看了一定觉得无味了吧，好这一篇我们加入一点T-SQL语句把前面所说有东东关联起来，我们人为产生锁定来理解不同的意外数据行为在不同隔离等级下的表现，顺便再重温一下意外数据行及隔离等级，让大家对交易事务有一个直观的认识。</p>
+<p>     在进行实例前不得不先介绍一点锁的知识，注意这儿只是简单的说一下，不作深入讨论。我们根据用户访问资源的行为先归纳出几种锁，这几种锁在下面的实例里会出现，它们为：共享锁定、排它锁定、更新锁定及用意向这个限定词限定的三种锁(意向共享、意向排它、意向更新)，当当然还有其它的模式，我们在下一篇再说。意向锁的存在是解决死锁的发生，保证进程在申请锁定前确定当前数据是否存在不兼容性的锁定。</p>
+<p>    先对上面提到的锁作一个简单的描述，更详细的下面再说。</p>
+<p>   共享锁定发生在查询记录时，直观就是我们select啦，但是并不是只有select才有共享锁定。一个查询记录的语句必须在没有与共享锁定互斥锁定存在或等待互斥锁定结束后，才能设置共享锁定并提取数据(互斥不互斥就是锁的兼容性，这在以后再说明)。</p>
+<p>    排它锁定发生在对数据增加、删除、修改时，事务开始以后语句申请并设置排它锁定(前提是没有其它互斥锁定存在)，以明确告知其它进程对当前数据不可以查询或修改，等待事务结束后其它进程才可以查询或修改。</p>
+<p>    更新锁定是一个介于共享与排它之间的中继锁定，比如我们带where条件的update语句，在查询要更新的记录时是设置共享锁定，当要更新数据时这时锁定必须由共享锁定升级成更新锁定继而升级为排它锁定，当排它锁定设置成功才可以进行数据修改操作。显然也是要要求在锁升级的过程中没有互斥锁定的存在。简单的理解更新锁定是一个中继闸一样，把升级成排它锁定进程“序列化”，以解决死锁。最后重点说明一下，数据更新阶段是要对数据排它锁定不是更新锁定，不要被字面意思训导哦。</p>
+<p>    最后说一下在上述锁定模式下的互斥，共享锁定只与排它锁定互斥，更新锁定只与共享锁定不互斥。</p>
+<p>    在进行具体实例前我们一定要有一个工具来对我们实例过程进行监控，好，下面我写了一个过程，在需要时直接调用就行，过程如下：</p>
+<p> </p>
+<p>Create Proc sp_us_lockinfo</p>
+<p>---------------------------------------------------------------------</p>
+<p>-- Author : HappyFlyStone</p>
+<p>-- Date   : 2009-10-03 15:30:00</p>
+<p>-- BLOG   : <a href="http://blog.csdn.net/happyflystone">http://blog.csdn.net/happyflystone</a></p>
+<p>-- 申明    ：请保留作者信息，转载注明出处</p>
+<p>---------------------------------------------------------------------</p>
+<p>AS</p>
+<p>BEGIN</p>
+<p>    SELECT</p>
+<p>        DB_NAME(t1.resource_database_id) AS [数据库名],</p>
+<p>        t1.resource_type AS [资源类型],</p>
+<p>    --    t1.request_type AS [请求类型],</p>
+<p>        t1.request_status AS [请求状态],</p>
+<p>    --    t1.resource_description AS [资源说明],</p>
+<p>       CASE t1.request_owner_type WHEN 'TRANSACTION' THEN '事务所有'</p>
+<p>                                WHEN 'CURSOR' THEN '游标所有'</p>
+<p>                                WHEN 'SESSION' THEN '用户会话所有'</p>
+<p>                                WHEN 'SHARED_TRANSACTION_WORKSPACE' THEN '事务工作区的共享所有'</p>
+<p>                                WHEN 'EXCLUSIVE_TRANSACTION_WORKSPACE' THEN '事务工作区的独占所有'</p>
+<p>                                ELSE ''</p>
+<p>       END AS [拥有请求的实体类型],</p>
+<p>       CASE WHEN T1.resource_type = 'OBJECT'</p>
+<p>           THEN OBJECT_NAME(T1.resource_ASsociated_entity_id)</p>
+<p>           ELSE  T1.resource_type+':'+ISNULL(LTRIM(T1.resource_ASsociated_entity_id),'')</p>
+<p>           END AS [锁定的对象],</p>
+<p>        t4.[name] AS [索引],</p>
+<p>        t1.request_mode AS [锁定类型],</p>
+<p>        t1.request_session_id AS [当前spid],    </p>
+<p>        t2.blocking_session_id AS [锁定spid],</p>
+<p>    --    t3.snapshot_isolation_state AS [快照隔离状态],</p>
+<p>        t3.snapshot_isolation_state_desc AS [快照隔离状态描述],</p>
+<p>        t3.is_read_committed_snapshot_on AS [已提交读快照隔离]</p>
+<p>     </p>
+<p>    FROM</p>
+<p>        sys.dm_tran_locks AS t1</p>
+<p>    left join</p>
+<p>        sys.dm_os_waiting_tasks AS t2</p>
+<p>    ON</p>
+<p>        t1.lock_owner_address = t2.resource_address</p>
+<p>    left join</p>
+<p>        sys.databases AS t3</p>
+<p>    ON t1.resource_database_id = t3.database_id</p>
+<p>    left join</p>
+<p>       (</p>
+<p>        SELECT rsc_text,rsc_indid,rsc_objid,b.[name]</p>
+<p>       FROM</p>
+<p>           sys.syslockinfo a</p>
+<p>       JOIN</p>
+<p>           sys.indexes b</p>
+<p>       ON a.rsc_indid = b.index_id and b.object_id = a.rsc_objid) t4</p>
+<p>    ON t1.resource_description = t4.rsc_text</p>
+<p>END</p>
+<p>GO</p>
+<p>/*</p>
+<p>调用示例：exec sp_us_lockinfo</p>
+<p>*/</p>
+<p>exec sp_us_lockinfo</p>
+<p>/*</p>
+<p><img fetchpriority="high" decoding="async" src="/wp-content/uploads/2011/12/cbb7_read_committed.JPG" alt="" width="928" height="313"></p>
+<p>*/</p>
+<p>drop proc sp_us_lockinfo</p>
+<p>最后介绍一个隔离等级设置命令：</p>
+<p>SET TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED</p>
+<p>                                 | READ COMMITTED</p>
+<p>                                 | REPEATABLE READ</p>
+<p>                                 | SNAPSHOT</p>
+<p>                                 | SERIALIZABLE}[;]</p>
+<p>好，下面开始实例“快乐”之旅了。</p>
+<p> </p>
+<p>五、隔离等级实例</p>
+<p>测试数据准备：</p>
+<p>CREATE DATABASE testcsdn;</p>
+<p>GO</p>
+<p>CREATE TABLE TA(TCID INT PRIMARY KEY,TCNAME VARCHAR(20))</p>
+<p>INSERT TA SELECT 1,'AA'</p>
+<p>INSERT TA SELECT 2,'AA'</p>
+<p>INSERT TA SELECT 3,'AA'</p>
+<p>INSERT TA SELECT 4,'BB'</p>
+<p>INSERT TA SELECT 5,'CC'</p>
+<p>INSERT TA SELECT 6,'DD'</p>
+<p>INSERT TA SELECT 7,'DD'</p>
+<p>GO</p>
+<p>约定：以下提及的查询N，都是打开一个新连接执行查询</p>
+<p>1、 未提交读（uncommitted Read）</p>
+<p>概念回顾：未提交读是最低等级的隔离，允许其它进程读取本进程未提交的数据行，也就是读取数据时不设置共享锁定直接读取，忽略已经存在的互斥锁定。很显然未提交读这种隔离级别不会造成丢失更新，但是其它意外行为还是可以发生的。它和select 加锁定提示NOLOCK效果相当。</p>
+<p>测试实例：</p>
+<p>查询一：</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>BEGIN TRAN</p>
+<p>UPDATE TA</p>
+<p>SET TCNAME = 'TA'</p>
+<p>WHERE TCID = 1</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p> </p>
+<p>SELECT @@SPID</p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           AA</p>
+<p>(1 行受影响)</p>
+<p>(1 行受影响)</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           TA</p>
+<p>(1 行受影响)</p>
+<p>SPID</p>
+<p>------</p>
+<p>54</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>查询二：</p>
+<p>SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           TA</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>--显然未提交读模式我们读到SPID=54未提交的数据。</p>
+<p>查询三：</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>--查询一直进行中…… 无结果</p>
+<p>--因为缺省下已提交读级别，所以修改数据设置了排它锁定必须等到SPID=54的事务结束</p>
+<p>查询四：</p>
+<p>--查看当前的锁定信息</p>
+<p>exec sp_us_lockinfo</p>
+<p> </p>
+<p>/*</p>
+<p><img fetchpriority="high" decoding="async" src="/wp-content/uploads/2011/12/cbb7_read_committed.JPG" alt="" width="928" height="313"></p>
+<p>*/</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> <br>这个时候如果我们回头到查询一里执行commit tran ，你会发现查询三会得到结果，并且是查询一修改后的结果，如果你改用rollback ,那么结果就是原来的值不变，这个你们自己再测试。</p>
+<p> </p>
+<p>1、 已提交读(Read Committed)</p>
+<p>概念回顾：已提交读是SQL SERVER的缺省隔离级别，悲观模型下是用锁定，乐观模型下使用行版本控制器。这个设置可以通过SET READ_CIMMITTED_SNAPSHOT来修改。在悲观模型下对于读取来说设置共享锁定仅阻止排它锁定，并在数据读取结束自动释放，其它进程方可进行修改操作。也就是说读不会阻止其它进程设置共享及更新锁定，仅阻止排它锁定。在悲观模型下对于修改数据来说设置排锁定阻止所有锁定请示，必须等到排它锁定释放。这个级别的隔离解决了脏读的意外行为。</p>
+<p> </p>
+<p> </p>
+<p>A、       READ_COMMITTED_SNAPSHOT为OFF的情况(缺省)</p>
+<p>I、读数据测试</p>
+<p> </p>
+<p>查询一：</p>
+<p>BEGIN TRAN</p>
+<p>--用锁定提示模拟共享锁定，并强制共享锁定持续到事务结束</p>
+<p>SELECT * FROM TA with(holdlock) WHERE TCID = 1</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p>SELECT @@SPID</p>
+<p> </p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           CA</p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p> </p>
+<p>------</p>
+<p>54</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>查询二：悲观模型下已提交读级别</p>
+<p>SET TRANSACTION ISOLATION LEVEL READ COMMITTED</p>
+<p>UPDATE TA</p>
+<p>SET TCNAME = 'TA'</p>
+<p>WHERE TCID = 1</p>
+<p>--查询一直没有结果，显然我们验证了共享锁定阻止了排它锁定。</p>
+<p>查询三：</p>
+<p>exec sp_us_lockinfo</p>
+<p>--结果大家自己运行看结果。</p>
+<p>II、修改数据测试</p>
+<p> </p>
+<p>查询一：</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>BEGIN TRAN</p>
+<p>UPDATE TA</p>
+<p>SET TCNAME = 'READ COMMITTED LOCK'</p>
+<p>WHERE TCID = 1</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p>SELECT @@SPID</p>
+<p> </p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           TA</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p> </p>
+<p>------</p>
+<p>54</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>查询二：</p>
+<p>SET TRANSACTION ISOLATION LEVEL READ COMMITTED</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>/*</p>
+<p>--查询一直进行中……被锁定无结果</p>
+<p>--修改数据设置了排它锁定必须等到SPID=54的事务结束</p>
+<p>*/</p>
+<p>查询三：</p>
+<p>exec sp_us_lockinfo</p>
+<p>/*</p>
+<p><img fetchpriority="high" decoding="async" src="/wp-content/uploads/2011/12/cbb7_read_committed.JPG" alt="" width="928" height="313"></p>
+<p> </p>
+<p>*/</p>
+<p> </p>
+<p> </p>
+<p>A、       READ_COMMITTED_SNAPSHOT为ON的情况</p>
+<p>先修改当前当前库的READ_COMMITTED_SNAPSHOT为ON</p>
+<p>ALTER DATABASE TESTCSDN</p>
+<p>SET READ_COMMITTED_SNAPSHOT ON</p>
+<p>GO</p>
+<p> </p>
+<p>查询一：</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>BEGIN TRAN</p>
+<p>UPDATE TA</p>
+<p>SET TCNAME = 'READ COMMITTED SNAP'</p>
+<p>WHERE TCID = 1</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p> </p>
+<p>SELECT @@SPID</p>
+<p> </p>
+<p>/*</p>
+<p>TCID        TCNAME</p>
+<p>----------- --------------------</p>
+<p>1           AA</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>------</p>
+<p>56</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>查询二：因为启用行版本控制器来锁定数据，保证其它进程读取到虽然被排它锁定但在事务开始前已经提交的保证一致性的数据。</p>
+<p>SET TRANSACTION ISOLATION LEVEL READ COMMITTED</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>/*</p>
+<p>TCID        TCNAME</p>
+<p>----------- --------------------</p>
+<p>1           AA</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>查询三：</p>
+<p>exec sp_us_lockinfo</p>
+<p>/*</p>
+<p><img decoding="async" src="/wp-content/uploads/2011/12/38f3_read_committed_snapshot.JPG" alt="" width="748" height="179"></p>
+<p>*/</p>
+<p> </p>
+<p>3、可重复读（Repeatable Read）</p>
+<p>    概念回顾：可重复读等级比已提交读多了一个约定：所有的共享锁定持续到事务结束，不是在读取完数据就释放。数据被设置了共享锁定后其它进程只能进行查询与增加不能更改，显然这个级别的隔离对程序有了更高的要求，因为可能因长时间的共享锁定影响系统的并发性能，增加死锁发生的机率。很显然是解决了不可重复读的意外行为。</p>
+<p>数据测试：</p>
+<p>查询一：</p>
+<p>SET TRANSACTION ISOLATION LEVEL REPEATABLE READ</p>
+<p> </p>
+<p>BEGIN TRAN</p>
+<p>SELECT * FROM TA WHERE TCID = 1 --可重复查询，并且读不到未提交的数据</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p>SELECT @@SPID</p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           READ COMMITTED LOCK</p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>------</p>
+<p>52</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>*/</p>
+<p>查询二：</p>
+<p>INSERT TA SELECT 9,'FF'</p>
+<p>/*</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>SELECT * FROM TA-- WITH(UPDLOCK)</p>
+<p>WHERE TCID = 1</p>
+<p> </p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           READ COMMITTED LOCK</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>*/</p>
+<p> </p>
+<p>UPDATE TA</p>
+<p>SET TCNAME = 'READ COMMITTED REP'</p>
+<p>WHERE TCID = 1</p>
+<p>/*</p>
+<p>--查询一直进行中……被锁定无结果</p>
+<p>--修改数据设置了排它锁定必须等到SPID=52的事务结束</p>
+<p> </p>
+<p>*/</p>
+<p> </p>
+<p>查询三：</p>
+<p> <img decoding="async" src="/wp-content/uploads/2011/12/4998_repeatable_read.JPG" alt="" width="803" height="179"></p>
+<p> </p>
+<p> </p>
+<p>很显然查询三中的S，Is(共享及意向共享)锁定一直没消失，因为查询一的事务没有结束，在查询二里可以发现插入与读取(包括在查询一里再次select)是不影响的，并且读取的是未修改前的数据。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>4、快照(SnapShot)</p>
+<p>    概念回顾：这是SQL SERVER2005的新功能，启用快照后所有的读操作不再受其它锁定影响，读取的数据是通过行版本管制器读取事务开始前逻辑确定并符合一致性的数据行版本。 这个级别隔离与已提交读的行版管理器的差别仅是行版本管理器里历史版本数据多久。</p>
+<p> </p>
+<p>测试数据：</p>
+<p> </p>
+<p>查询一：</p>
+<p>ALTER DATABASE TESTCSDN</p>
+<p>    SET ALLOW_SNAPSHOT_ISOLATION ON</p>
+<p>GO</p>
+<p> </p>
+<p>SELECT * FROM TA WHERE TCID = 1 --OLD数据</p>
+<p>BEGIN TRAN</p>
+<p> </p>
+<p>UPDATE TA</p>
+<p>SET TCNAME = 'SNAPSHOT'</p>
+<p>WHERE TCID = 1</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p>SELECT @@SPID</p>
+<p> </p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           READ COMMITTED REP</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>------</p>
+<p>52</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>*/</p>
+<p>查询二：</p>
+<p>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</p>
+<p>SELECT * FROM TA WHERE TCID = 1</p>
+<p>/*</p>
+<p>tcid        Tcname</p>
+<p>----------- --------------------</p>
+<p>1           READ COMMITTED REP</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>*/</p>
+<p> </p>
+<p>查询三：</p>
+<p> </p>
+<p>exec sp_us_lockinfo</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/7f83_snapshot.JPG" alt="" width="805" height="187"><br> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>5、可串行化：</p>
+<p>    概念回顾：这是交易里最健壮最严谨最高级别的隔离。通过索引键范围完全隔离其它交易的干扰，此隔离和select与锁定提示HOLDLOCK效果一样。这个级别基本解决所有的意外行为，显而易见的是并发性能下降或系统资源的损耗上升。</p>
+<p>测试数据：</p>
+<p> </p>
+<p>查询一：</p>
+<p>DROP TABLE TB</p>
+<p>GO</p>
+<p>CREATE TABLE TB (ID INT Primary Key, COL VARCHAR(10))</p>
+<p>GO</p>
+<p>INSERT INTO TB SELECT 1,'A'</p>
+<p>GO</p>
+<p> </p>
+<p>SET TRANSACTION ISOLATION LEVEL SERIALIZABLE</p>
+<p>BEGIN TRAN</p>
+<p>SELECT * FROM TB WHERE ID BETWEEN 1 AND 5--OLD数据</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p>SELECT @@SPID</p>
+<p> </p>
+<p>/*</p>
+<p>ID          COL</p>
+<p>----------- ----------</p>
+<p>1           A</p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>------</p>
+<p>52</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>查询二：</p>
+<p> </p>
+<p>SELECT * FROM TB WHERE ID = 1</p>
+<p> </p>
+<p>/*</p>
+<p>ID          COL</p>
+<p>----------- ----------</p>
+<p>1           A</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>INSERT TB SELECT 2,'EE'</p>
+<p>/*</p>
+<p>--查询一直进行中……被锁定无结果</p>
+<p>--修改数据设置了排它锁定必须等到SPID=52的事务结束</p>
+<p> </p>
+<p>*/</p>
+<p>UPDATE TB</p>
+<p>SET COL = 'SERIALIZABLE'</p>
+<p>WHERE ID = 1</p>
+<p>/*</p>
+<p>--查询一直进行中……被锁定无结果</p>
+<p>--修改数据设置了排它锁定必须等到SPID=52的事务结束</p>
+<p>*/</p>
+<p>查询三：</p>
+<p>exec sp_us_lockinfo</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/d891_serializable.JPG" alt="" width="785" height="542"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>可以明显的发现出现大量的索引键范围(RangeS-S……)，确保在当前事务未结束之前另外的用户进程无法在索引键范围内插入数据，防此幼影意外行为的发生。可串行化后，除了数据能查询外，不可以修改、增加、删除索引键范围内的任意数据行，必须等到索引上的锁定释放。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>    结论：通过以的一些测试，我们知道通过隔离等级我们可以控制并发时意外行为，在实际操作的过程中我们可以用激活事务来控制锁的粒度、影响范围，以达到控制并发机制下数据的逻辑正确及数据一致性。最后我们发现通过锁定提示(LOCK HINTS)也可以改变表级锁定类型、锁定周期，达到和设置隔离等级类似的功能。</p>
+<p> </p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/4c7d_140170_1279078143aa9q.jpg" alt="" width="676" height="196"></p>
+<p> </p>
+<p> </p>
+<p>好，到目前为止我们把事务相关的东西介绍得差不多了，并且在提前介绍了部分的锁定，在下面的文章里我们重点对锁进行介绍。</p>
+<p> </p>
+<p>       在生产交易过程中多个用户同时访问数据是不可以避免的，通过不同的隔离等级对资源与数据进行各种类型的锁定保护并在适当时候释放保证交易的正确运行，使得交易完整并保证数据的一致性。不管是锁定还是行版本控制器都决定着商业逻辑的流畅、事务的完整、数据的一致。所以我们要根据实际情况进行部署，在并发性性能与资源管理成本之间找到平衡点，怎样才能找到这个平衡点呢，那我们就得对SQLSERVER如何管理资源与锁有一个了解，SQLSERVER不但管理锁定，还要管理锁定模式之间的兼容性或升级锁定及解决死锁问题。通过SQL SERVER强大的、细致的锁定机制，使得并发性能得到最大程度的发挥，但是使用尽可能少的系统资源也是我们最希望的。</p>
+<p>       SQLSERVER本身有两种锁定体系：一种是对共享数据的锁定，这种锁定就是我们大部时间讨论的锁定；一种是对内部数据结构及处理索引，这是一种称为闩锁的轻量级锁，比第一种锁定少耗资源，在sys.dm_tran_locks中是看不到这种锁的信息。我们在数据分页上放置物理记录或压缩、折分、转移分页数据时，这种锁就会发生了。我们在前面一直在说数据的逻辑一致性，那这种逻辑上的一致性就是通过锁定来控制的，而我们新提到的闩是保证物理的一致性(这种闩是系统内部使用所以我们不重点讨论了)。</p>
+<p>       并发访问数据时，SQL Server 2005使用下列机制确保事务完整并维护数据的一致性：</p>
+<p>l         锁定<br>    每个事务对所依赖的资源（如行、页或表）请求不同类型的锁。锁可以阻止其他事务以某种可能会导致事务请求锁出错的方式修改资源。当事务不再依赖锁定的资源时，它将释放锁。</p>
+<p>l         行版本控制<br>    当启用了基于行版本控制的隔离级别时，数据库引擎 将维护修改的每一行的版本。应用程序可以指定事务使用行版本查看事务或查询开始时存在的数据，而不是使用锁保护所有读取。通过使用行版本控制，读取操作阻止其他事务的可能性将大大降低。</p>
+<p>锁定和行版本控制可以防止用户读取未提交的数据，还可以防止多个用户尝试同时更改同一数据。如果不进行锁定或行版本控制，对数据执行的查询可能会返回数据库中尚未提交的数据，从而产生意外的结果。</p>
+<p>最后说一下锁的粒度与并发性能是矛盾的，但是对管理锁定的成本却是有利的，粒度越大并发性能下降，粒度越小管理锁定成本越大。用图示例一下：</p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/2751_%E7%B2%92%E5%BA%A6%E3%80%81%E5%B9%B6%E5%8F%91%E3%80%81%E7%AE%A1%E7%90%86%E6%88%90%E6%9C%AC.JPG" alt="" width="468" height="154"></p>
+<p>六、锁定</p>
+<p>1、锁粒度和可锁定资源</p>
+<p>SQL Server2005 具有多粒度锁定，允许一个事务锁定不同类型的资源。为了尽量减少锁定的开销，数据库引擎自动将资源锁定在适合任务的级别。锁定在较小的粒度（例如行）可以提高并发度，但开销较高，因为如果锁定了许多行，则需要持有更多的锁。锁定在较大的粒度（例如表）会降低了并发度，因为锁定整个表限制了其他事务对表中任意部分的访问，但其开销较低，因为需要维护的锁较少。</p>
+<p>SQL SERVER可以锁定表、分页、行级、索引键或范围。在这我提醒大家一下，对于聚集索引的表，因为数据行就是索引的叶级，所以锁定是键锁完成而不是行锁。</p>
+<p>数据库引擎通常必须获取多粒度级别上的锁才能完整地保护资源。这组多粒度级别上的锁称为锁层次结构。例如，为了完整地保护对索引的读取，数据库引擎实例可能必须获取行上的共享锁以及页和表上的意向共享锁。</p>
+<p>下表列出了数据库引擎可以锁定的资源：</p>
+<p>查询一：</p>
+<p>SELECT *</p>
+<p>FROM MASTER..SPT_VALUES WHERE TYPE = 'LR'</p>
+<p>/*</p>
+<p>name               number      type  low         high      status</p>
+<p>--------------- ----------- ---- ------- --------- -----------</p>
+<p>LOCK RESOURCES      0           LR   NULL        NULL        0</p>
+<p>NUL                   1           LR   NULL        NULL        0</p>
+<p>DB                     2           LR   NULL        NULL        0</p>
+<p>FIL                   3           LR   NULL        NULL        0</p>
+<p>TAB                   5           LR   NULL        NULL        0</p>
+<p>PAG                   6           LR   NULL        NULL        0</p>
+<p>KEY                   7           LR   NULL        NULL        0</p>
+<p>EXT                   8           LR   NULL        NULL        0</p>
+<p>RID                   9           LR   NULL        NULL        0</p>
+<p>APP                   10          LR   NULL        NULL        0</p>
+<p>MD                     11          LR   NULL        NULL        0</p>
+<p>HBT                    12          LR   NULL        NULL        0</p>
+<p>AU                     13          LR   NULL        NULL        0</p>
+<p>(13 行受影响)</p>
+<p>*/</p>
+<p>备注：</p>
+<p>       RID        RID                  锁定堆中行的行标识符</p>
+<p>KEY         KEY                 序列化事务中的键范围行锁</p>
+<p>PAG         PAGE                数据或索引页面，8K为单位</p>
+<p>EXT         EXTENT              数据或索引页面，连续的8*page</p>
+<p>HBT         HOBT                堆或B树，保护索引或堆表页堆的锁</p>
+<p>TAB         TABLE               整个表，包括数据及索引</p>
+<p>FIL          FILE                  数据库文件</p>
+<p>APP         APPLICATION         应用程序资源</p>
+<p>MD          METADATA            元数据</p>
+<p>AU          ALLOCATION_UNIT     分配单元</p>
+<p>       DB        DATABASE          数据库</p>
+<p> </p>
+<p>注：SPT_VALUES这个大家不陌生吧，好多人用它生成一个连续的ID号的啦，当时也有人问这个表的用途，现在发现它的作用了吧。下面我们还会使用到。</p>
+<p> </p>
+<p> </p>
+<p>2、锁定模式</p>
+<p>       我们在前提面前到的共享锁定、更新锁定、排它锁定，这是为了配合前面的事务而提及的，那么SQL SERVER2005一共有多少锁定模式呢？我们通过一个简单的查询来列表：</p>
+<p> </p>
+<p>查询：</p>
+<p>SELECT *</p>
+<p>FROM MASTER..SPT_VALUES WHERE [TYPE] = 'L'</p>
+<p>/*</p>
+<p>NAME                                NUMBER      TYPE LOW         HIGH        STATUS</p>
+<p>---------------- ----------- ---- ----------- ----------- -----------</p>
+<p>LOCK TYPES                          0           L    NULL        NULL        0</p>
+<p>NULL                                1           L    NULL        NULL        0</p>
+<p>SCH-S                               2           L    NULL        NULL        0</p>
+<p>SCH-M                               3           L    NULL        NULL        0</p>
+<p>S                                   4           L    NULL        NULL        0</p>
+<p>U                                   5           L    NULL        NULL        0</p>
+<p>X                                   6           L    NULL        NULL        0</p>
+<p>IS                                  7           L    NULL        NULL        0</p>
+<p>IU                                  8           L    NULL        NULL        0</p>
+<p>IX                                  9           L    NULL        NULL        0</p>
+<p>SIU                                 10          L    NULL        NULL        0</p>
+<p>SIX                                 11          L    NULL        NULL        0</p>
+<p>UIX                                 12          L    NULL        NULL        0</p>
+<p>BU                                  13          L    NULL        NULL        0</p>
+<p>RANGES-S                            14          L    NULL        NULL        0</p>
+<p>RANGES-U                            15          L    NULL        NULL        0</p>
+<p>RANGEIN-NULL                        16          L    NULL        NULL        0</p>
+<p>RANGEIN-S                           17          L    NULL        NULL        0</p>
+<p>RANGEIN-U                           18          L    NULL        NULL        0</p>
+<p>RANGEIN-X                           19          L    NULL        NULL        0</p>
+<p>RANGEX-S                            20          L    NULL        NULL        0</p>
+<p>RANGEX-U                            21          L    NULL        NULL        0</p>
+<p>RANGEX-X                            22          L    NULL        NULL        0</p>
+<p>(23 行受影响)</p>
+<p>*/</p>
+<p> </p>
+<p>       我们可以看到一共有22种锁定模式 ，我简单的对上述[NAME]进行简单的枚举：</p>
+<p>l         S --- 共享锁定(Shared)</p>
+<p>l         U --- 更新锁定(Update)</p>
+<p>l         X --- 排它锁定(Exclusive)</p>
+<p>l         I --- 意向锁定(Intent)</p>
+<p>l         Sch --- 架构锁定(Schema)</p>
+<p>l         BU --- 大量更新(Bulk Update)</p>
+<p>l         RANGE --- 键范围(Key-Range)</p>
+<p>l         其它是在上述锁定的变种组合，比如IS --- 意向共享锁定</p>
+<p> </p>
+<p>其实对这些锁定模式没什么介绍，大家可以参考联机帮助：访问和更改数据库数据 -&gt; 锁定和行版本控制 -&gt; 数据库引擎中的锁定。其实这些锁定模式在前一篇基本都有出现，大家可以在看下面的定义再回头看看前一篇的相关内容。下面我就简单的说说：</p>
+<p>共享锁（S 锁）</p>
+<p>当我们查询(select)数据时SQL SERVER2005会尝试在数据上申请共享锁定，但是前提是在当前的数据上不存在与共享锁定互斥的锁定。资源上存在共享锁时，任何其他事务都不能修改数据但是可以读取数据。读取操作一完成，就立即释放资源上的共享锁，除非将事务隔离级别设置为可重复读或更高级别，或者在事务持续时间内用锁定提示(HOLDLOCK)保留共享锁。</p>
+<p>更新锁（U 锁）</p>
+<p>更新新是一种介于共享锁与排它锁之间的锁定，是一种中继锁定，像一个中间闸门，把从共享锁定转为排它锁的请求进行排队，有效的防止常见的死锁。在可重复读或可序列化事务中，一个事务读取数据 [获取资源（页或行）的共享锁（S 锁）]，然后修改数据 [此操作要求锁转换为排他锁（X 锁）]。如果两个事务获得了资源上的共享模式锁，然后试图同时更新数据，则一个事务尝试将锁转换为排他锁（X 锁）。共享模式到排他锁的转换必须等待一段时间，因为一个事务的排他锁与其他事务的共享模式锁不兼容；发生锁等待。第二个事务试图获取排他锁（X 锁）以进行更新。由于两个事务都要转换为排他锁（X 锁），并且每个事务都等待另一个事务释放共享模式锁，因此发生死锁。而有了更新锁则可避免这种潜在的死锁问题，在查找到要更新的数据后SQL SERVER首先给数据设置更新锁定，因为共享锁定与更新锁定不互斥，在其它事务设置共享锁定时依然可以设置更新锁定，继而因更新锁定斥的，如果其它要修改数据的事务必须等待。如果事务修改资源，则更新锁转换为排他锁（X 锁）。</p>
+<p>排他锁（X 锁）</p>
+<p>排他锁可以防止并发事务对资源进行访问。使用排他锁（X 锁）时，任何其他事务都无法修改数据；仅在使用 NOLOCK 提示或未提交读隔离级别时才会进行读取操作。</p>
+<p>数据修改语句（如 INSERT、UPDATE 和 DELETE）合并了修改和读取操作。语句在执行所需的修改操作之前首先执行读取操作以获取数据。因此，数据修改语句通常请求共享锁和排他锁。例如，UPDATE 语句可能根据与一个表的联接修改另一个表中的行。在此情况下，除了请求更新行上的排他锁之外，UPDATE 语句还将请求在联接表中读取的行上的共享锁。</p>
+<p>排他锁定随事务结束而释放。</p>
+<p>意向锁（I锁）</p>
+<p>数据库引擎使用意向锁来保护共享锁（S 锁）或排他锁（X 锁）放置在锁层次结构的底层资源上。意向锁之所以命名为意向锁，是因为在较低级别锁前可获取它们，因此会通知意向将锁放置在较低级别上。</p>
+<p>意向锁有两种用途：</p>
+<p>l         防止其他事务以会使较低级别的锁无效的方式修改较高级别资源。</p>
+<p>l         提高数据库引擎 在较高的粒度级别检测锁冲突的效率。</p>
+<p>例如，在该表的页或行上请求共享锁（S 锁）之前，在表级请求共享意向锁。在表级设置意向锁可防止另一个事务随后在包含那一页的表上获取排他锁（X 锁）。意向锁可以提高性能，因为数据库引擎仅在表级检查意向锁来确定事务是否可以安全地获取该表上的锁。而不需要检查表中的每行或每页上的锁以确定事务是否可以锁定整个表。</p>
+<p>意向锁包括意向共享 (IS)、意向排他 (IX)、意向排他共享 (SIX)、意向更新 (IU)、共享意向更新 (SIU ，S和 IU 锁的组合)、更新意向排他 (UIX，U 锁和 IX 锁的组合)。</p>
+<p>在这儿的SIX，SIU，UIX我们可以理解成一种转换锁定，并不是由SQLSERVER直接申请的，是由一种模式向另一种模式转换时中间状态。比如说SIX表示一种正持有共享锁定的进程正在企图申请意向排它锁定，或是这样理解一个持有共享锁定的资源中有部分分页或行被另一个进程的排它锁定锁定了。其它同理可以理解。</p>
+<p>为了更好的说明一点， 大家先看一个图：</p>
+<p> </p>
+<p><img decoding="async" src="/wp-content/uploads/2011/12/38f3_read_committed_snapshot.JPG" alt="" width="748" height="179"><br> </p>
+<p> </p>
+<p>这是我在TA表上加Where条件的一个更新动作，然后通过我以前写的一个工具：sp_us_lockinfo查看锁的信息，其实我的update只是影响一个行记录，但是我们发现有三个锁存在，只要当前事务不结束，其它事物对这个表申请不管是页面的锁定还是表级的锁定一定会与现在的表或页意向锁冲突，进而发生阻塞，而且我们在前面的隔离等级的实例中也有例子，你会发现它的请求状态是WAIT 而不是GRANT。</p>
+<p>架构锁（架构修改锁 Sch-M 锁、架构稳定性锁Sch-S 锁）</p>
+<p>执行表的数据定义语言 (DDL) 操作（例如添加列或删除表）时使用架构修改锁。在架构修改锁起作用的期间，会防止对表的并发访问。这意味着在释放架构修改锁（Sch-M 锁）之前，该锁之外的所有操作都将被阻止。</p>
+<p>当编译查询时，使用架构稳定性锁。架构稳定性锁不阻塞任何事务锁，包括排他锁（X 锁）。因此在编译查询时，其他事务 [包括在表上有排他锁（X 锁）的事务] 都能继续运行。但不能在表上执行 DDL 操作。</p>
+<p> </p>
+<p>大容量更新锁（BU 锁）</p>
+<p>当将数据大容量复制到表，且指定了 TABLOCK 提示或者使用 sp_tableoption 设置了 table lock on bulk 表选项时，将使用大容量更新锁。大容量更新锁允许多个线程将数据并发地大容量加载到同一表，同时防止其他不进行大容量加载数据的进程访问该表。</p>
+<p>键锁、键范围锁（Key-range锁）</p>
+<p>在SQL SERVER2005有两种类型键锁：键锁及键范围锁。采用哪种类型的键锁取决于隔离级别。对于已提交读、可重复读、快照隔离时SQLSERVER锁定实际的索引键(如果是堆表除了实际非聚集索引上的键锁同时有实际行上的行锁)，如果是可串行化隔离时就可以看到键范围锁。在早期的版本中我们实验可以看到SQLSERVER是通过分页锁定或表锁来实现的，也许键范围锁不是最完美的，但是我们应该看到它比分页或表锁定所锁定的范围要小得多，在保证不出现幻影的前提下键范围锁比以前版本采用锁定提供了更高的并发性能。</p>
+<p>键范围锁放置在索引上，指定开始键值和结束键值。此锁将阻止任何要插入、更新或删除任何带有该范围内的键值的行的尝试，因为这些操作会首先获取索引上的锁。键范围锁包括按范围-行格式指定的范围组件和行组件，是一种组合锁模式(Range范围-索引项的锁模式)。比如：RangeI-N ，RangeI 表示插入范围，N(NULL) 表示空资源，它表示在索引中插入新键之前测试范围。</p>
+<p>在SELECT * FROM MASTER..SPT_VALUES WHERE [TYPE] = 'L'查询结果的最后9条个就是键范围锁。这种锁定因持续时间比较短一般在sys.dm_tran_locks中很难见到。比如RangeI_N这个锁定，是在键范围内插入记录时获得的，在键范围内找到位置立即升级为X锁定，这个过程很短，我们在sys.dm_tran_locks中很难找到它的踪影，不过我们是可以模拟出来的，下面我们来模拟一下：</p>
+<p> </p>
+<p>查询一：</p>
+<p>DROP TABLE TB</p>
+<p>GO</p>
+<p>CREATE TABLE TB (ID INT primary key, COL VARCHAR(16))</p>
+<p>GO</p>
+<p>INSERT INTO TB SELECT 1,'A'</p>
+<p>GO</p>
+<p>SET TRANSACTION ISOLATION LEVEL SERIALIZABLE</p>
+<p>BEGIN TRAN</p>
+<p>SELECT * FROM TB WHERE id  BETWEEN 1 AND 5 --OLD数据</p>
+<p>--COMMIT TRAN --Don't commit</p>
+<p>SELECT @@SPID</p>
+<p>/*</p>
+<p>(1 行受影响)</p>
+<p>ID          COL</p>
+<p>----------- ----------------</p>
+<p>1           A</p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>------</p>
+<p>52</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>查询二：</p>
+<p> </p>
+<p>INSERT TB SELECT 2,'E'</p>
+<p>查询三：</p>
+<p>exec sp_us_lockinfo</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/d08d_%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%94%81%E5%AE%9A5%E7%9A%84%E9%94%AE%E9%94%81.JPG" alt="" width="724" height="329"></p>
+<p> </p>
+<p> </p>
+<p>在使用可序列化事务隔离级别时，对于 Transact-SQL 语句读取的记录集，键范围锁在索引获上取锁定阻止一切尝试在包含索引键值落入范围内增删改的数据行，可以隐式保护该记录集中包含的行范围。键范围锁可防止幻读。通过保护行之间键的范围，它还防止对事务访问的记录集进行幻像插入或删除。</p>
+<p>       例如我们在上面有例子的可串行化隔离级别下，选择索引键值在’1-5’的数据时，SQL SERVER 对落在1-5之间键值设置键范围锁定，避免包含在这个范围内的键值的插入及这个范围内键值的删除及更新。</p>
+<p> </p>
+<p>       最后强调一下键范围键产生的条件：</p>
+<p>1、  务隔离级别必须设置为 SERIALIZABLE。</p>
+<p>2、询处理器必须使用索引来实现范围筛选谓词。例如，SELEC中的 WHERE 子句。</p>
+<p> </p>
+<p>3、锁兼容性矩阵</p>
+<p>锁兼容性控制多个事务能否同时获取同一资源上的锁。如果资源已被另一事务锁定，则仅当请求锁的模式与现有锁的模式相兼容时，才会授予新的锁请求。如果请求锁的模式与现有锁的模式不兼容，则请求新锁的事务将等待释放现有锁或等待锁超时间隔过期。</p>
+<p> </p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/737d_%E9%94%81%E5%85%BC%E5%AE%B9%E6%80%A7%E7%9F%A9%E9%98%B5.JPG" alt="" width="661" height="438"></p>
+<p> </p>
+<p> </p>
+<p>4、深入可锁定资源及特殊锁定</p>
+<p>       可资源资源有哪些呢，我在前面已经用</p>
+<p>SELECT * FROM MASTER..SPT_VALUES WHERE TYPE = 'LR'</p>
+<p>进行了列表，一共有12种之多，其实我们从本篇的开始到现在一直在接触的行锁（RID），键锁（KEY），分页（PAG）、表（TAB）及对象(OBJECT)都是我们可锁定的资源，这几类我们已经接触到很多了，下面我就不常关注的几个进行一下说明。</p>
+<p>       EXT 这是数据或索引页面扩展。这一块如果以后有时间整理表的数据存储或索引分页的结构时可以细细说说扩展，现在我们可以简单的理解为：扩展是一个64K的分配单元，是由连续的8个8K分页组成。SQLSERVER在表或索引分配扩展时会分配8个连续的8K空间，每一个扩展的首页号是8的倍数，但是扩展间本身不一定连续哦，这个不连续就是碎片了。在扩展上也可以加锁定，其实这也好理解，在不同的表或索引需要新的扩展时，系统为了让同一扩展不被错误使用(比如两个表同时得到一个扩展，那比较恐怖哦)而进行共享或排它锁定。不过是系统自发进行的，我们一般看不到。这种物理上的一致性我们在前面提到过一种闩锁，嘿嘿有印象不？我们也可以把这个当作一种事实上的闩锁。</p>
+<p>       DB数据库(DATABAES)。其实只要我打开一个连接，如果你使用sp_us_lockinfo一定得到一条相应当前连接的DB类型的锁定。结果如图61</p>
+<p>select @@spid</p>
+<p>go</p>
+<p>exec sp_us_lockinfo</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/ff91_2983_1255918438wCyG.jpg" alt="" width="609" height="267"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>那么在DATABASE这种类型下有几种锁呢，为别对应哪些操作呢？能不能模拟出来呢？好，下面我们来模拟一些吧，比如删除库操作：</p>
+<p>1、  先打开一个managerment studio,我们先创建一个数据库，库名为dblock，建好后运行一下我们前面那个工具sp_us_lockinfo</p>
+<p>2、  打开另一个managerment studio，右击dblock进行删除操作，在弹出的窗口点确认</p>
+<p>3、  在第二步操作后迅速切换到第一个managerment staido并运行如下代码 ，并得到图63</p>
+<p>  select @@spid</p>
+<p> exec sp_us_lockinfo</p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/91d8_2983_1255918659ajJs.jpg" alt="" width="670" height="304"> </p>
+<p> </p>
+<p> </p>
+<p>       由上图很明显我们看到我们第一个打开的连接对Dblock有一个DB资源类型的共享锁定排斥了第二个删除操作的排它锁。再比如我们来把Dblock设置成只读，这个更好玩，多了几个锁定哦!先打开两个查询(一定要同时打开两个哦!!)</p>
+<p> </p>
+<p>查询一：</p>
+<p>alter database dblock SET READ_ONLY</p>
+<p> </p>
+<p>/*</p>
+<p>查询一直进行中……</p>
+<p>*/</p>
+<p> </p>
+<p>查询二：(结果图63)</p>
+<p>select @@spid</p>
+<p>exec sp_us_lockinfo</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/4102_2983_1255918661Sks6.jpg" alt="" width="657" height="305"></p>
+<p> </p>
+<p> </p>
+<p>       其它动作大家可以自己模拟 。</p>
+<p> </p>
+<p>       APP应用程序资源。有一个应用程序锁定模式与之对应。应用程序类型的资源锁定与我们前面讨论的所有锁定模式都不一样，前面所有的锁定全是SQLSERVER自己管理的，应用程序级锁定利用了SQLSERVER的检测阻塞及死锁的机制来锁定自己想要锁定的任何对象。比如我们现在想要达到这一种效果：一个表或过程同时只有一个进程能够运行。为了来模拟这种类型的锁定，先看如下语法：</p>
+<p> </p>
+<p>sp_getapplock [ @Resource = ] 'resource_name',      [ @LockMode = ] 'lock_mode'      [ , [ @LockOwner = ] 'lock_owner' ]      [ , [ @LockTimeout = ] 'value' ]     [ , [ @DbPrincipal = ] 'database_principal' ][ ; ]</p>
+<p> </p>
+<p>下面我们来模拟一下：</p>
+<p> </p>
+<p>查询一：</p>
+<p>exec sp_getapplock 'testapplock','exclusive','session';</p>
+<p>go</p>
+<p> </p>
+<p>select * from ta</p>
+<p> </p>
+<p>--sp_releaseapplock 'testapplock','session';</p>
+<p> </p>
+<p>查询二：</p>
+<p>exec sp_getapplock 'testapplock','exclusive','session';</p>
+<p>go</p>
+<p> </p>
+<p>select * from ta</p>
+<p>/*</p>
+<p>查询一直进行中。。。。。。</p>
+<p>*/</p>
+<p> </p>
+<p>查询三：结果图64</p>
+<p>--create database dblock</p>
+<p>select @@spid</p>
+<p>exec sp_us_lockinfo</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/4418_2983_1255918662Eg3f.jpg" alt="" width="671" height="305"></p>
+<p>  </p>
+<p>METADATA 元数据。这种类型的可锁定资源我们其实前面已经有看过，我们在修改当前库为只读时，看如图65</p>
+<p> </p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/eb1f_2983_12559186637a47.jpg" alt="" width="557" height="255"></p>
+<p> </p>
+<p>       好，到目前为止对可锁定的资源就说完了。嘿嘿，另外几个比如堆或B树类型锁定(HBT)不如以后整理索引时再旧事重提了。</p>
+<p> </p>
+<p> </p>
+<p>5、锁的本质、生命周期及请求锁定的实体类型</p>
+<p>       首先我告诉大家SQLSERVER并不知道(或不关心)被它锁定的对象，有时即使我们能关联到对象却无法正确解析被锁定对象的结构，你相信吗？猛一听有点吓人吧，这么重要的任务交给它管理，它不知道被管理的东西是何方神圣？呵呵，下面稍稍说一点内部的结构。</p>
+<p>       锁是SQLSERVER的一种内存结构，并不是一种物理的数据结构，所以这种元数据追踪是无法被记录的。关闭或中止一个连接相应的部分锁定信息就会消失。这个结构书上都称锁块（Lock block），用这个锁块来跟踪数据、锁定及对锁相关的信息描述。显然这些锁块是要被不同进程所拥有的，SQL有另一个叫所有者块来管理这些，所有者块与锁块之间通过所有者的指针相连。</p>
+<p>在锁块里有一个专门对锁定资源的描述结构叫资源块，资源块负责维护资源名称、锁块的指针、已经授权的所有者指针列表、转换中的所有者指针列表、等待的所有者列表。对资源块有一个类型描述，占用一个字节，这个类型描述我在前面已经通过SQL语句进行列表过：</p>
+<p> </p>
+<p>查询一：</p>
+<p> </p>
+<p>SELECT *</p>
+<p>FROM MASTER..SPT_VALUES WHERE TYPE = 'LR'</p>
+<p> </p>
+<p> </p>
+<p>       对具体的资源描述有12个字节的内存结构来记录。我们在2000下使用过一个表syslockinfo，这些信息在rsc_bin中有体现，这个字段对资源进行描述，根据类型的不同，这12个字节有着不同的分工组合。在这里我还要提醒2000下的用户，rsc_bin在2005里意义不再等同于2000，但是仅是微小的差别。为了说明我上面的论点，所以对syslockinfo进行一下深入，证明SQLSERVER对被的对象是不关心的。我们先来实际看看这个表的数据，结果集如图66</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/5a1f_2983_12559186649L98.jpg" alt="" width="444" height="255"></p>
+<p> </p>
+<p>       通过这个图我们应该看到rsc_bin的最两个字节和2000下不一样了，这两个字节交换后就是资源块的类型，这一点大家要注意哦。</p>
+<p>Query 1:</p>
+<p> </p>
+<p>CREATE TABLE TB (ID INT primary key, COL VARCHAR(16))</p>
+<p>GO</p>
+<p>INSERT INTO TB SELECT 1,'A'</p>
+<p>GO</p>
+<p>SET TRANSACTION ISOLATION LEVEL repeatable read</p>
+<p>BEGIN TRAN</p>
+<p>SELECT * FROM TB WHERE id  BETWEEN 1 AND 5</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/83c2_2983_1255918666qrpV.jpg" alt="" width="553" height="442"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>　　对上图我们很容易理解类型为objec及page的rsc_bin意义。重点说一下KEY类型的共享锁定。这一条记录在syslockinfo中rsc_bin列，前6个字节是分区ID，我们可以通过sys.partitions查找到相应的分区。紧接着的6个字节（上图用红粗线标识的部分）来头不小，是根据当前索引的所有索引列生成的中介现象哈希值，在这里对这个哈希会值是无法反推的。如果上面的表及页面我们可以查找到相应的结构的话，那个对这个键值锁定真的就是不是不想知道结构，而是真的不知道什么结构了哈。哈哈，这儿证明我上面的结论吧。其实我们不用担心，因为虽然不能反推，但是阻塞或死锁机制是还是可以查找匹配的呀，也就是如果相同时生成的哈希一样，那样SQLSERVER还知道这是相同听资源，阻塞或死锁已经发生。嘿嘿，其实只要关心被它锁定资源的标识串就足以管理阻塞或死锁，</p>
+<p>　　请求锁定的实体类型，这个在前面的几乎每一个图表里都可以看到的一列。图68</p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/ad25_2983_125591866786f3.jpg" alt="" width="535" height="187"></p>
+<p> </p>
+<p>在这个图里我们只看到两类，还有另外两类，一共四类：事务类型，游标类型、事务工作空间类型、会话类型。</p>
+<p>　　事务类型：这个就不用多说了吧，上面我们显式的开始一个事务时，此连接都会有一个事务类型的实体。</p>
+<p>　　事务工作空间类型：这是SQLSERVER2005引入的。SQLSERVER2000把所有除事务与游标类型的实体全归为会话型。通常我们看到的数据库级锁定就是空间类型的，也就是基本一个会话就对应一个工作空间，这样会话中所有的数据库级锁定会保留在相同的工作空间里，这对于绑定会话是有十分重要的意义。</p>
+<p>就绑定来说MS明确会在以后的版本不支持了。因为我们在以前版本用过，所以这儿稍微说说。</p>
+<p>先说说绑定出现的背景吧，首先明确一点锁定的阻塞是发生在不同的SQL进程间，也就是进程自己是不会把自己锁起来的。接着再明确一点何为相同进程，每一个独立的SQL连接，但是我们不要错误的认为同一个用户同一个程序就一定一个连接、一个进程。事实上同一个用户同一个应用程序拥有多个连接即进程的可能程是非常大的。那么我们显然就可以想像到同一个用户同一个程序自己可能锁定自己，因为它拥有多个连接是吧，而SQLSERVER是无法知道同一应用程序拥有哪几个连接，也不知道这些连接间怎么关联的。那么这个问题怎么解决呢。在SQL6.5以后SQL2005以前就是用绑字，当然2005也支持，但是MS明确在以后的版本可能不支持了。</p>
+<p>绑定分为本地绑字及分布式绑定，它完成不同连接在同一事务空间内的交互或不同服务器上工作单元的交互。一般绑它以第一个连接进行连接并申请“绑定令牌”，这个令牌就是一个事务空间的变量字符串，这个变量字符串可供后续的连接进行检索，并且这个变量串对应的事务空间就会被共享。</p>
+<p>下面简单的做一个测试吧！</p>
+<p> </p>
+<p>查询一：</p>
+<p> </p>
+<p>begin tran</p>
+<p>declare @token varchar(100)</p>
+<p>exec sp_getbindtoken @token output</p>
+<p>select @token</p>
+<p> </p>
+<p>select * from tb</p>
+<p>update tb</p>
+<p>set col = 'b'</p>
+<p>where id = 1</p>
+<p>/*</p>
+<p>-------------------------</p>
+<p>.Y4bBahH9aCGCj[a[0b-:-5---03E=--</p>
+<p>(1 行受影响)</p>
+<p>ID          COL</p>
+<p>----------- ----------------</p>
+<p>1           A</p>
+<p>(1 行受影响)</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>commit tran　–-这一步留到查询三执行完后执行，一定要注意</p>
+<p>/*</p>
+<p>此会话中的活动事务已由另外一个会话提交或终止。</p>
+<p>消息3902，级别16，状态1，第1 行</p>
+<p>COMMIT TRANSACTION 请求没有对应的BEGIN TRANSACTION。</p>
+<p> </p>
+<p>*/</p>
+<p>查询二：</p>
+<p>select * from tb where id = 1</p>
+<p> </p>
+<p>/*</p>
+<p>查询一直进行中……</p>
+<p>*/</p>
+<p>查询三：</p>
+<p> </p>
+<p>exec sp_bindsession '.Y4bBahH9aCGCj[a[0b-:-5---03E=--'</p>
+<p>update tb</p>
+<p>set col = 'c'</p>
+<p>where id = 1</p>
+<p>commit tran</p>
+<p>select * from tb</p>
+<p> </p>
+<p>/*</p>
+<p>(1 行受影响)</p>
+<p>ID          COL</p>
+<p>----------- ----------------</p>
+<p>1           c</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p> </p>
+<p>    在查询一里我们先是申请一个“令牌”，然后开始修改ID＝1的记录，注意　我们是更新为B，然后我们打另一连接并执行对ID＝1的查询，发现查询一直进行中，如果你打开另一连接执行sp_us_lockinfo你会发现在共离锁定。在查询三里我们先共享刚才的连接，然后进行数据的修改，注意我们修改ID＝1的COL值为c并提交事务，这时我们查询数据里的数据发现记录是第三个查询里执行修改的结果，显然这两个进程间没阻塞。如果此时我们现回到第一个查询里执行commit tran你发现这是提交操作失败，因为当前事务已经在第三个查询里提交了，所以出相应的错误。</p>
+<p>　　最后说明一下绑定理论没有个数的限制，事实上如果程序不严谨也麻烦，在2005有一个多个活动结果集配置选项，可以实现与绑定相似基本功能，默认下是关闭，大家可以自行测试。</p>
+<p> </p>
+<p> </p>
+<p>　　游标型：这个我们经常会用到，只是没有注意。这种实体必须在使用游标时显式申请，每提取一行时得到一个游标锁，直到提取下一条或关闭游标，否则即使你提交或rollback事务这个游标锁定也不会释放，这怎么来理解呢，下面我来实例：</p>
+<p> </p>
+<p> </p>
+<p>BEGIN TRAN</p>
+<p>DECLARE @f1 varchar(10)</p>
+<p>DECLARE cur CURSOR SCROLL_LOCKS</p>
+<p>    FOR SELECT f1 FROM ta FOR UPDATE</p>
+<p>OPEN cur</p>
+<p>FETCH NEXT FROM cur INTO @f1</p>
+<p>EXEC sp_us_lockinfo –　第一次图69</p>
+<p>WHILE @@FETCH_STATUS = 0</p>
+<p>BEGIN</p>
+<p>    UPDATE TA SET s1 = 0 WHERE CURRENT OF cur</p>
+<p>    EXEC sp_us_lockinfo –第二次图6a</p>
+<p>    BREAK;--只取回一条了，其它记录类同，所以不再模拟</p>
+<p>    FETCH NEXT FROM cur INTO @f1</p>
+<p>END</p>
+<p>EXEC sp_us_lockinfo—第三次图6b</p>
+<p>CLOSE cur</p>
+<p>DEALLOCATE cur</p>
+<p>EXEC sp_us_lockinfo—第四次图6c</p>
+<p>COMMIT</p>
+<p>EXEC sp_us_lockinfo—第五次图6d</p>
+<p>（图69）</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/9b88_2983_1255918668o3mZ.jpg" alt="" width="675" height="160"></p>
+<p> </p>
+<p>（图6a）大家注意这一张图，因为这是一个可更新游标，我在取出第一行记录时企图去更新当行的信息，因为此时事务型和游标型实体同时出现了。</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/1544_2983_1255918671kQdp.jpg" alt="" width="592" height="380"></p>
+<p> </p>
+<p>（图6b）</p>
+<p>图6b和图6相同，我们只是模拟一下取完所有行后数据库上的锁定行为。</p>
+<p>（图6c）这是关闭并删除游标引用后在数据库里留下的锁定，也就是在关闭游标后游标型实体锁定不存了，只有了事务型的实体，因为我们这是可更新游标，并且我在实例中有更新动作，所以最后还有事务型锁定存在。</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/0b41_2983_1255919494cjAC.jpg" alt="" width="674" height="146"></p>
+<p> </p>
+<p>（图6d）只有当前会话的事务工作空间型实体了</p>
+<p> </p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/5cb8_2983_12559186742y22.jpg" alt="" width="644" height="90"></p>
+<p> </p>
+<p> </p>
+<p>è给大家留一个课后作业：</p>
+<p> </p>
+<p>1、  对表结构作由A修改成B，会得到什么样的结果，注意哦，这时会出现一个NULL的锁定哦，这个锁的作用是为插入准备的（以上实例测试在A结构下测试的）：</p>
+<p>A：</p>
+<p>create table ta(f1 int,s1  char(10))</p>
+<p>insert into ta select 1,'a'</p>
+<p>＝＝＝＞增加一个主键，这意味着什么？</p>
+<p>B：</p>
+<p>create table ta(f1 int primary key ,s1  char(10))</p>
+<p>insert into ta select 1,'a'</p>
+<p> </p>
+<p>2、  在上一问的B结构下，执行如下SQL看看又是什么样的结果，仔细比较</p>
+<p>BEGIN TRAN</p>
+<p>DECLARE @f1 varchar(10)</p>
+<p>DECLARE cur CURSOR SCROLL_LOCKS</p>
+<p>    FOR SELECT f1 FROM ta --FOR UPDATE</p>
+<p>OPEN cur</p>
+<p>FETCH NEXT FROM cur INTO @f1</p>
+<p>EXEC sp_us_lockinfo</p>
+<p>WHILE @@FETCH_STATUS = 0</p>
+<p>BEGIN</p>
+<p>    UPDATE TA SET s1 = 0 WHERE f1 = 0</p>
+<p>    EXEC sp_us_lockinfo</p>
+<p>    BREAK;--</p>
+<p>    FETCH NEXT FROM cur INTO @f1</p>
+<p>END</p>
+<p>EXEC sp_us_lockinfo</p>
+<p>CLOSE cur</p>
+<p>DEALLOCATE cur</p>
+<p>EXEC sp_us_lockinfo</p>
+<p>COMMIT</p>
+<p>EXEC sp_us_lockinfo</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>会话型：会话型锁定必须显式的申请，在上面我介绍APP类型资源时就有明确的会话型锁定实体类型，大家可以看看篇首的APP类型资源。下面给一个图看看：</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/4418_2983_1255918662Eg3f.jpg" alt="" width="671" height="305"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>　　锁的生命周期：最后说说锁的持续时间，就像我们程序变量的生命周期一样，锁定也有一个持续时间。持续时间事实上取决于锁的模式及隔离等级，另外我们还可以使用锁定提示来改变锁的持续时间。因为这个持续时间和我们程序变量的生命周期一样，所以习惯称为生命周期。</p>
+<p>       关于锁定提示改变锁的生命周期这在以后再说，我把几个等级下常规模式的锁定做一个列表：</p>
+<p> </p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/e87d_%E9%94%81%E5%AE%9A%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.JPG" alt="" width="600" height="173"></p>
+<p> </p>
+<p>(对快照模式下锁定模式有点错误，特此更新，深表歉意)</p>
+<p> </p>
+<p> 6、锁升级 禁止升级　</p>
+<p>       锁定粒度是一个查询或更新所锁定的最小数据，粒度不同数据库的性能和并发能力是此消彼长的，怎么来理解呢？锁定的粒度越小并发的用户数越多，这是显而易的，如果这时发生一种情况，根据业务规律要锁定大量的记录行来进行更新，在保持并发用户的前提下，我们锁定的记录的行锁或键锁就很多，我们知道锁定不是免费的午餐，是要付出代价的，管理的锁定多越多系统资源开销就越大。还记得我们在前面介绍过锁块吧，锁块是一个64/128(128是64位操作系统)字节的内存块，另外对每一个申请或正持有锁块的进程还要准备一个32/64(64是64位操作系统)字节的内存块来描述这些进程，在这儿我们确定一个前提：不管锁定粒度的大小，每一个锁定都占用几乎同样的系统开销。好，比如我们要进行10W行数据更新，为了并发我们都采用行锁来锁定，按照锁块的定义那么我们就得需要64B * 100000+N*32B= 6400000B +32NB(理论更新我们取N=1相对于6400000可以忽略)&gt; 6.4M的RAM来管理这些行锁，假设并发进程(当然是不同资源上的)数量是X，那么当前数据库就得要X*6.4M的RAM用于管理锁定，显然这种对RAM需求的上升是系统无法忍受，不可能无限制的满足的这种增长，那么SQLSERVER得用一种办法来防止系统使用太多的内存来追踪锁定并且提高锁定的效率。这个任务交给了锁管理器，它负责平衡资源的使用(当然还负责从特定操作的开始到结束保持连续、逻辑完整性)，这时管理器就采取锁定升级这一明智造择，从行锁或键锁或页锁升级为表级锁定，比较6.4M和96B，显然获取一个表级锁定比持有许多行或键锁更有意义。</p>
+<p>       锁升级的意义是显而易见，使得锁定开销下降并避免系统资源耗尽。在结构引擎里我们提及锁管理器，系统分配给锁管理器的内存是有限的，锁的升级保证了锁定占用内存维持一个合理的限度。</p>
+<p>       锁升级发生的时机：</p>
+<p>1、  在一个对象上一个查询或更新持有锁的数量超过阀值。SQL2005缺省是5000个锁(记得SQL6.0只有200个，但是我们要记住SQL6.0只有页面锁定哦)。</p>
+<p>2、  锁资源占用的内存超过AWE或常规内存的40%，40%是一个约数。</p>
+<p>时机一满足SQLSERVER就会尝试锁升级，当然升级不一定会成功，当失败后在同一个对象上的锁资源再次上升到一定程度时升级会再次发生，如果升级成功SQLSERVER会释放对象上先前获得的行、键、分页锁定。升级失败发生当另外一个进程对表有行或页有排它锁定时。</p>
+<p>锁升级潜在的危险：</p>
+<p>1、  锁升级的结果一定是一个完全表级锁定，也就是不可能出现行锁升级为页锁的，最细的行级锁升级的直接结果一定是表锁定。</p>
+<p>2、  锁升级可能造成意外的阻塞(这个应该是很好理解的)</p>
+<p>3、  锁升级成功后无法降级</p>
+<p>禁止升级 我们知道锁升级是有潜在的危险，并且这种升级的结果是不可能现降级除非事务结束。所以升级不是对所有的应用都是一件好事，MS提供了两个开关项：1211和1224，我们可以通过设置跟踪标识来禁止升级。</p>
+<p>7、行锁、页锁</p>
+<p>       7.0之前的版本锁定的最小粒度就是页锁，提醒大家一下那时的页面最小单位是2K，如果细心部署一定程度上是可以满足够大的呑吐量和可以接受的响应时间。然后7.0后把分页从2KB提升为8KB时(为什么要提升呢？嘿嘿，留一个疑问给大家)，这种页面锁定对并发能力是一种挑战，也就是锁定的范围是7.0之前的4倍，这时并发及响应时间都成一个问题。SQL2005完全实现行级锁定，显然这对并发响应是可喜的，可是正如我在锁升级里给大家算的一笔帐，在有限可利用的锁定资源前提下，大量行级锁定的代价还是让人无法接受的，特别在极限的状态下。</p>
+<p>       我们知道锁定操作是一个密集型操作，一个锁定不仅要看到内存的损耗，还要看到SQLSERVER管理这些锁定对其本身来也是一种负荷。虽然SQL内部使用闩或自旋锁来降低这种负荷，但我们很容易可以想像管理一个分页锁定比管理N个行级锁定(假设页面内有N行记录)更轻松、更有效率。</p>
+<p>       比较行锁和页锁，行锁降低了并发冲突但是资源的损耗也是显然的，页锁减少必须存在锁的数量及管理这些锁定的资源损耗但是以并发能下降为代价的。到底哪个更合适，恐怕不是一句两句能说完的，因为针对不同应用、不同行业、不同并发模型、不同隔离两都各有各的优势。</p>
+<p>       在SQLSERVER2005可以用sp_indexoption来控制索引的锁定单位。关于这个设置我们可以看看联机帮助，但是一定要注意它只针对索引所以对堆表无法控制分页锁定。</p>
+<p>8、动态管理锁定</p>
+<p>       SQL造择锁定类型、粒度是基于行数、可能扫描的页面数、分页上的行数，隔离级别、进行的何种操作、可使用的系统资源等因素的影响 ，根据这些影响因素SQLSERVER选择一种合适的锁定模式这个过程称动态锁定策略(我发现策略在MS很流行)，数据库引擎(还有印象我有引擎结构中介绍的存储引擎吧)动态的管理粒度和锁定模式，控制锁定与系统资源的最佳成本效率。一个范围内的锁定所要使用的系统资源肯定小，但是系统的并发性也就降低，如果选择小范围内的锁定，那管理锁定所使用的系统资源上升，然而并发性能却得到了淋漓发挥。</p>
+<p>       一般情况我们可使用系统缺省设置(行级锁定是系统缺省的)，让系统决定是否要进行锁定的升级。这样一来简化我们对库锁定的管理，系统根据实际情况平衡负载。</p>
+<p>9、死锁</p>
+<p>首先，我们得清楚死锁与等待是两回事。等待是当前进程所需要的资源让另一个进程排它了，只要另外一个进程释放，当时进程就可以继续执行(当然如果另外这个进程已经死锁那会进入无限期等待，但是这种情况一般不会发生，因为SQLSERVER会干预死锁的。另外我们还有一个锁定超时设置 ，这方面大家可以看联机丛书)。而死锁是发生在两个进程间，在没有人为干预两个锁定的进程是都无法继续工作的一种困境。另外一个显著的地方就是死锁一旦发生，SQLSERVER就会干预进来，我们所能感知比如接收到1205号错误，健壮的应用系统会人工干预1205错误，恰当的重新提交批处理，当1205错误发生没有终止的进程获得相应的资源并处理自己的事务直至释放资源，其实这种人为的干预潜在的又为死锁提供一个外在环境。当然我们前面写的一个过程也可以查询到相应的锁定信息。</p>
+<p>接着，死锁是无法完全避免的。在一个并发的多用户系统，锁定、线程、内存、并行查询、MARS中死锁的发生是正常的、可以预见的，也是必然的。在我们能力范围内只能尽可能的在应用端或服务器上恰当的处理死锁，使得这种无法完全避免的事件给系统带来的影响降到最低。也就是我们应该明白：死锁是无法完全避免，但是我可以降低发生的次数。</p>
+<p>第三，死锁是一种末日，没有人为干预时永远退不出这种状态。一个并发的多用户系统这种竞争资源的可能性是很大的，一有竞争就会有“矛盾”发生，双方等待对方释放自己所需要的资源，必然成了无限期等待，这种等待就是我们所说的死锁。我们通过上面的介绍知道这时SQLSERVER锁管理器会干预这个过程，试想如果没有SQLSERVER锁管理器的干预那么两个进程一根筯的结果就是无限期等待，对于应用系统来说就是一个末日。SQLSERVER2005更是提供了丰富的锁有关元数据，可以很方便的侦察出锁定信息，SQLSERVER锁管理器干预的结果就是根据牺牲品的优先等级及回滚代价，把优先级低和代价最小的进程当作牺牲品，杀掉这个进程并抛出1205错误。</p>
+<p>第四，死锁大体分为三类：cycle死锁、conversion死锁、应用级死锁及不明死锁。</p>
+<p>Cycle死锁：是进程双方持有的排它性资源是另外一方想要的资源。比如说进程A拥有TA的表级排它锁这时它又想申请TB的排它锁，同时进程B先拥有TB的排它锁定也想申请TA的表级排它锁定，这是进程A想要TB的排它锁但是已经让进程B锁定，进程B想要的TA锁定也已经让进程B锁定，这时死锁发生，下面我们来模拟一下：</p>
+<p> </p>
+<p>create table ta(id int,col varchar(10))</p>
+<p>create table tb(id int,col varchar(10))</p>
+<p>go</p>
+<p> </p>
+<p>查询一：</p>
+<p> </p>
+<p>BEGIN TRAN</p>
+<p>UPDATE TB SET COL = 'A'</p>
+<p>WAITFOR DELAY '00:00:05'</p>
+<p>   </p>
+<p>UPDATE TA SET COL = 'B' </p>
+<p>--COMMIT TRAN</p>
+<p> </p>
+<p> </p>
+<p>查询二：</p>
+<p>BEGIN TRAN</p>
+<p>UPDATE TA SET COL = 'A'</p>
+<p>WAITFOR DELAY '00:00:05'</p>
+<p>EXEC SP_US_LOCKINFO　–-在死锁前获取锁的信息</p>
+<p>UPDATE TB SET COL = 'B'</p>
+<p>--COMMIT TRAN</p>
+<p> </p>
+<p>执行顺序先运行行查询一立即切换查询二执行，得死锁前的锁定信息，我们列出部分锁定信息：</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/718b_cyclelock.JPG" alt="" width="736" height="249"></p>
+<p> </p>
+<p>    由上图我们可以看得出，一开始查询一和查询二分别获得了TB　TA上的锁定，行号为20和25的记录我们可以看到分别获得了排它锁定（我仅说明RID,在表和页上也会相应的锁定），因为查询一行执行，那么5S后，它想更新TA，这时阻塞发生，我们从记录26可以看到SPID＝53的进程想要获取表TA上行的更新锁定被SPID＝52的进程阻塞，而进入等待状，注意这时不是死锁哦，是等待哦，紧接查询二5S过了开始执行更新TB上的记录行，显然这个时候TB给进程53排它锁定，这是死锁发生，因为进程52等待53释放TB上的锁定，进程53在等待52释放资源，进入了抱死状态，这就是cycle锁定。这时我们会SQLSERVER参与了干预，查询二抛出错误并回滚事务：</p>
+<p> </p>
+<p>消息1205，级别13，状态45，第8 行</p>
+<p>事务(进程ID 52)与另一个进程被死锁在锁资源上，并且已被选作死锁牺牲品。请重新运行该事务。</p>
+<p>为什么说它回滚呢，这是死锁发生时SQLSERVER自动处理的，不信你最后提交查询二的commit语句，你会发现报如下错（3902）：</p>
+<p> </p>
+<p>消息3902，级别16，状态1，第1 行</p>
+<p>COMMIT TRANSACTION 请求没有对应的BEGIN TRANSACTION。</p>
+<p> </p>
+<p>conversion死锁：转换死锁发生在不同进程在查询相同的数据后准备尝试更新刚才查询的数据时，这时大家都持相同数据的共享锁定并都准备升级为更新锁，但是都因为对方不释放共享锁定而无法获取更新锁定，这是死锁发生，我们称这个为转换死锁。好下面我们模拟一下conversion死锁。</p>
+<p>(约定：运行查询一后在3S内运行查询二)</p>
+<p>查询一：</p>
+<p> </p>
+<p>select @@spid –-53</p>
+<p>set transaction isolation level repeatable read</p>
+<p>begin tran</p>
+<p>select * from ta</p>
+<p>waitfor delay '00:00:03'</p>
+<p>   </p>
+<p>update ta</p>
+<p>    set col = 'B'</p>
+<p>where id = 1</p>
+<p>exec sp_us_lockinfo -–结果见图conversion1</p>
+<p>commit tran</p>
+<p> </p>
+<p>查询二：</p>
+<p> </p>
+<p>select @@spid –-52</p>
+<p>set transaction isolation level repeatable read</p>
+<p>begin tran</p>
+<p>    select * from ta</p>
+<p>   </p>
+<p>    waitfor delay '00:00:05'</p>
+<p>    exec sp_us_lockinfo  --结果见图conversion2</p>
+<p>    update ta</p>
+<p>       set col = 'B'</p>
+<p>    where id = 1 –-系统检测到死锁，抛出1205错误</p>
+<p>commit tran</p>
+<p> </p>
+<p>图conversion1：<img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/5692_conversion1.JPG" alt="" width="736" height="128"></p>
+<p>图conversion2：<img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/6284_conversion2.JPG" alt="" width="741" height="312"></p>
+<p> </p>
+<p>查询二死锁1205信息 ：</p>
+<p>消息1205，级别13，状态45，第7 行</p>
+<p>事务(进程ID 52)与另一个进程被死锁在锁资源上，并且已被选作死锁牺牲品。请重新运行该事务。</p>
+<p> </p>
+<p>    应用级死锁及不明死锁：这类死锁有点特殊，除了绑定外我们可能通过动态管理视图或函数是无法侦测到锁定信息，显然锁管理器可能也无法干预它。我们所能看到可能是一个长期占用的资源锁定，而这种锁定潜在造成更多死锁发生。比如说同一个应用程序的多线程间、应用程序调用外部程序等如果最终再与数据库发生联系，那显然还是数据库两个进程间的死锁，如果与非数据库联系，那么这种依赖于其它程序的状态锁定只能是无限期的等待，除非人为干预SQLSERVER是干预不了的。</p>
+<p>    我们把SQLSERVER锁管理器无法侦测的死锁称不明死锁，这类死锁可以借助SSIS来模拟，比如我们要完成一项任务就是把未导出的数据通过SSIS生成文件，并把已经导出的数据做上标识。我们用一个过程模拟插入数据，并在事务提交前启动SSIS包完成数据导出并修改标识，这时我们如果想要在一个事务里完成所有工作那是不可能的，会造成事务一直运行，并且我们锁定管理器也无法侦测。</p>
+<p> </p>
+<p>第五，锁管理器：在SQLSERVER中一有独立线程周期性的检查系统的死锁，当死锁发生时，死锁的检查周期缩小到毫秒级，直到死锁的频率降低再次恢复到默认的周期。如果侦测到锁定，管理器会权衡回滚的代价，并依据是否已经标识为回滚引起不明状态及牺牲品的优先级别选择牺牲品，杀掉进程并发送1205错误，这也就意思牺牲品所占的资源全部释放，这样其它相关的进程可以继续运行。</p>
+<p>最后提一上我们先前提到的闩及自旋锁定，它们是预防死锁而不是解决死锁，这两种轻量级的锁定之所以能预防死锁是因为MS严谨的控制达到不需要管理死锁。</p>
+<p> </p>
+<p>综上所述，死锁是无法完全避免的，对于SQLSERVER所能侦测的死锁还是比较容易处理的，恰当的做好出错后的处理使得对死锁相关的用户进程的影响降到最低。所谓的愉当就是接受到1205错误时应用程序应能够再次提交处理或提醒1205错误的用户进行相应处理。我们还可以做的一件事就是尽量回避死锁， 回避死锁可以从下面几点出发：</p>
+<p> </p>
+<p>l         事务尽可能的短，锁定时间就会短；</p>
+<p>l         应用程序做好死锁发生后处理；</p>
+<p>l         认识索引的重要性；</p>
+<p>l         保证业务规则及执行顺序的合理性、可实现性；</p>
+<p>l         根据业务规则选择合适隔离等级；</p>
+<p>l         事务有始有终(dbcc opentran &amp; set xaxt_abort on);</p>
+<p>l         避免人为干扰事务的执行(不要在事务中人机交互过程)；</p>
+<p>l         慎用锁定提示(Lock Hint)来改变锁定的粒度；</p>
+<p>l         正确认识使用绑定；</p>
+<p> </p>
+<p> </p>
+<p>锁定机制是一个很复杂的过程，它保证了并发下资源的正确、有序使用，在了解锁定的机制后对跟踪解决死锁是有相当的帮助。下面我们再梳理一下2005的行版本控制。</p>
+<p> </p>
+<p>10、行版本控制综述</p>
+<p>    行版本控制是SQLSERVER2005保证数据完整及一致的新机制。我们前面提到并发模型有两种：悲观与乐观并发，而行版本控制是乐观并发下的一种保障数据完整及一致的新技术。行版本控制和前面提及的锁定机制不大一样，它保障了写的进程与读的进程间不会阻塞，并且在保证不读到未提交的数据下又提升了数据库的并发能力，然而我们要注意的是乐观并发下写的进程还是会获取排它锁定，上面提及的一些锁定模式、锁定时间及管理死锁的方式都适用于它。</p>
+<p>    SQLSERVER2005使用行版本控制的隔离有两个：RCSI　和　SI。RCSI是相对无阻塞的已提交读模式，所谓相对无阻塞是相对于传统的已提交读模式，在这种模式下写进程不会阻塞读进程，读进程不会设置共享锁定，而是使用行版本控制读取语句级的一致性的数据，简单的说就是任何读都可以得到语句开始那一时刻最近的已经提交数据。快照隔离(SI)可以使任何读进程读取到交易级的一致性数据，简单的说就是任何读进程都可以读取到交易开始时已提交数据。</p>
+<p>    SQLSERVER2005如何做到写不阻塞读的呢？一旦启用RCSI或SI后数据库开始在tempdb中存储所有已经修改过的记录副本(记录版本，以后我们直接称行版本)，同时保证在只要有进程需要这些数据就会一直维持这些行版本，所以tempdb又被我们称为版本存储区。很显然的是启用行版本控制后tempdb得需要更多的空间来管理行版本，所以如果你的数据库使用了行版本管理，一定要管理好tempdb。行版本如何存储在版本存储区我下面再说。</p>
+<p>    好，整体上来说我们应该有这样一个概念：已经提交的数据存储在当前数据库，而当数据修改前的数据被复制到tempdb中，那么它们之间如何联系呢？这儿我们引入另一个术语：XSN，注意哦，区别于LSN哦。XSN称为事务序列号，新行通过这个XSN和tempdb里的行版本之间保持联系，是不是有点指针味道呀，哈哈，同时我们要注意了，新行XSN指向行版本区的某一旧行，同时这一旧行可能包含指向列旧的数据行XSN，SQLSERVE通过这个链表可以访问到正确的版本。</p>
+<p>    说了这么多，感觉这个行版本管理后好处多多呀，至少增强了并发能力吧，可是在更改当前数据库使用行版本管理前还是要三思而行：首先，增加了tempdb的负担，这种负担不仅仅是空间上的。接着，维护旧版的数据行必然会降低更新操作的能力，不管有没有读进程存在，只要有更新存在数据库就得为此付出代价。第三，增加的并发能力使得每一个读进程都得付出额外的开销来访问刚才我们提到的XSN链表找到合适行版本。最后我们说阻塞是不能完全避免的，就是在这种乐观模式下写写还是阻塞的。在后续我们模拟在SI下的更新冲突。</p>
+<p>       有人要问了RCSI和SI之间有什么差别呢？其实RCSI和SI行为上基本类似的，都是可以在当前数据锁定的前提下读取到当前数据已经提交的早期版本，它们的主要差别有二：一，行版本记录在行版本区保存的时效。此话怎么理解呢，我在前面说到RCSI是语句级的而SI是事务级的，这就是直接导致数据行版有多久的关键。二，RCSI是已经提交读的无阻塞的变种，而SI是存在阻塞的。下面我们会说道说道这两种行为。</p>
+<p>11、行版本区</p>
+<p>       SQLSERVER2005只要开启快照，所有更新和删除就会生成已经提交的行版本，而这些行版本是保存在行版本区，即tempdb数据库的数据分页上，随时保障快照的查询需要，换句话说只要有查询需要，行版本区数据就存在。SQLSERVER2005有一个清理线程，常规好像是一分钟就进行一次回收，对于SI隔离下的查询行版本保存事务结束，对于RCSI隔离下的查询行版本一直保存到当前查询语句结束。</p>
+<p>       这儿提到tempdb，得稍微提提这个tempdb，tempdb也是记录日志的，并不是好多人认为的不记录，它的日志是为了临时对象上的事务回滚，记住只能回滚，不能恢复或重做，当然是是题外话，一带而过。</p>
+<p>       Tempdb中有三种类型的对象：用户对象、内部对象、版本库。这个版本库的数据来源有三：一，重建索引或有快照级别的数据库上执行了DML(我们一会说这两个快照级别)；二，触发器，这有别于2000哦，2005的伪表(deleted 、inserted)是由行版本产生的；三，活动结果集。</p>
+<p>      </p>
+<p>12、已经提交读快照隔离下读写行为</p>
+<p>       RCSI我们一定要记住它是一个语句级的快照隔离级别，任何查询都可以查询到语句开始时最近的已经提交的数据。</p>
+<p>       如何开启这个级别隔离我们前面已经写过了，对，用alter database dbname set read_comm.itted_snapshot on 就行，在运行这一命令要注意时不能用户在连接数据库，如果有人在使用数据库这个命令就会阻塞。这个命令有两个开关项：with nowait 和rollback来避免阻塞和终止任何数据库连接，大家可以查查联机从书。</p>
+<p>       我在前面写隔离级别的事例时提到这个隔离级别和用锁定的已提交读具有一样的行为，下面我们用一个实例来看看：</p>
+<p> </p>
+<p>先修改当前当前库的READ_COMMITTED_SNAPSHOT为ON</p>
+<p>ALTER DATABASE TESTCSDN</p>
+<p>SET READ_COMMITTED_SNAPSHOT ON</p>
+<p>GO</p>
+<p>Exec sp_us_lockinfo</p>
+<p>Go</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/630c_8001.JPG" alt="" width="554" height="71"></p>
+<p>--test data and table</p>
+<p> </p>
+<p>create table ta(id int,col varchar(10))</p>
+<p>insert ta select 1 ,'a'</p>
+<p>union all</p>
+<p>select 2,'b'</p>
+<p>union all</p>
+<p>select 3,'c'</p>
+<p>go</p>
+<p> </p>
+<p>查询一：</p>
+<p> </p>
+<p>begin tran</p>
+<p> </p>
+<p>update ta</p>
+<p>set col = 'd'</p>
+<p>where id = 1</p>
+<p> </p>
+<p>waitfor delay '00:00:05' –故意加延时看看这个锁定是否影响查询二</p>
+<p>exec sP_us_lockinfo –查看当前锁定情况，由图我们知道在表上有排它锁定</p>
+<p>commit</p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/3b34_8002.JPG" alt="" width="640" height="121"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>查询二：</p>
+<p> </p>
+<p>begin tran</p>
+<p> </p>
+<p>waitfor delay '00:00:01'—确保表上已经有排它锁定</p>
+<p>select *</p>
+<p>from ta</p>
+<p>where id = 1 -–行版本读到最近提交的数据</p>
+<p>/*</p>
+<p>id          col</p>
+<p>----------- ----------</p>
+<p>1           a</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>waitfor delay '00:00:05'—-保证查询一已经提交数据</p>
+<p>select *</p>
+<p>from ta</p>
+<p>where id = 1 – 查询到最新行版本数据</p>
+<p>/*</p>
+<p>id          col</p>
+<p>----------- ----------</p>
+<p>1           d</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>commit</p>
+<p> </p>
+<p>回顾一下以上过程，我们发现这个已提交快照和已提交锁定方式一样的行为，但是它比锁定模式有更强的并发能力 ，因为读写进程间不再阻塞。另外我们注意到没有，不需要在每一个会话中使用SET来设置选项就可以使用RCSI，也就是我们无需对应用程序作任何修改就可以从缺省的锁定方式的已提交读切换到快照方式的已提交读，从而降低阻塞带来的并发冲突。</p>
+<p> </p>
+<p> </p>
+<p>12、快照隔离下的读写行为</p>
+<p>       SI是SQLSERVER2005引入的一个新的隔离，要启用必须在两个地方同时启用：1、启用Allow_SNAPSHOW_ISOLATION；2、在会话中使用SET TRANSACTION ISOLATION LEVEL命令为每一个会话设置隔离。我们在前面说过它是一个乐观模式的隔离，类似于已提交读快照隔离，但是又有些差别。</p>
+<p>       启用命令：</p>
+<p>ALTER DATABASE DB_NAME SET ALLOW_SNAPSHOT_ISOLATION ON；</p>
+<p>       当我们使用这个命令时，如果有活动连接时它不会像RCSI阻塞，但是如果有活动事务时还是会被阻塞。这个命令运行后数据的状态不会立即成ON状态 ，而是经历一个IN_TRANSITION_TO_ON的状态，这时数据库处于等待数据库中所有事务结束并开始为更新和删除产生版本数据，一旦在alter命令开始时已经进行的事务一结束，数据库就会进入ON状态。同理我修改为OFF时数据的库状态也会经历一个中间状态IN_TRANSITION_TO_OFF,等待活动的事务结束。一旦所有的活动事务结束数据库就会变为OFF状态。好下面我们来模拟启动过程，关闭的过程大家自己模拟吧。</p>
+<p> </p>
+<p>我们模拟打开的过程：</p>
+<p>查询一：开始一个事务，记住不要提交可回滚</p>
+<p>BEGIN TRAN</p>
+<p> </p>
+<p>UPDATE TA</p>
+<p>    SET COL = 'B' WHERE ID = 1</p>
+<p> </p>
+<p> </p>
+<p>查询二：开启快照</p>
+<p> </p>
+<p>ALTER DATABASE DBlock SET ALLOW_SNAPSHOT_ISOLATION on;</p>
+<p> </p>
+<p>/*</p>
+<p>查询一直进行中……</p>
+<p>*/  </p>
+<p> </p>
+<p>查询三：</p>
+<p>exec sp_us_lockinfo</p>
+<p>--大家可以看到当前数据处于中间态：IN_TRANSITION_TO_ON</p>
+<p><img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/5bdf_8003.JPG" alt="" width="554" height="105"></p>
+<p> </p>
+<p>查询四：</p>
+<p>--我们模拟这时开启SI进行数据访问，看看会是什么结果</p>
+<p>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</p>
+<p> </p>
+<p>BEGIN TRAN</p>
+<p>SELECT * FROM TA WHERE ID = 1</p>
+<p> /*</p>
+<p>id          col</p>
+<p>----------- ----------</p>
+<p>消息3956，级别16，状态1，第4 行</p>
+<p>快照隔离事务未能在数据库'dblock' 中启动，因为用于启用此数据库的快照隔离的</p>
+<p> ALTER DATABASE 命令尚未完成。数据库正在转换到挂起ON 状态。您必须等待，</p>
+<p>直到ALTER DATABASE 命令成功完成。</p>
+<p> </p>
+<p>*/</p>
+<p> </p>
+<p>接着，我们在查询一里 增加一句：COMMIT;然后我们再运行查询三：</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/289b_8004.JPG" alt="" width="554" height="105"></p>
+<p> </p>
+<p>       那好，我们通过上面的命令已经学会使用这个隔离级别。SI保证事务级的数据一致性，任何读操作都可以得到事务开始时最近已经提交的数据版本。下面我们再模拟一下查询快照数据：</p>
+<p> </p>
+<p>查询一：</p>
+<p> </p>
+<p>SELECT * FROM TA</p>
+<p>/*</p>
+<p>id          col</p>
+<p>----------- ----------</p>
+<p>1           B</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>BEGIN TRAN</p>
+<p> </p>
+<p>UPDATE TA</p>
+<p>    SET COL = 'C' WHERE ID = 1</p>
+<p> </p>
+<p>WAITFOR DELAY '00:00:05'</p>
+<p>exec sp_us_lockinfo</p>
+<p>/*</p>
+<p> <img loading="lazy" decoding="async" src="/wp-content/uploads/2011/12/8398_8005.JPG" alt="" width="554" height="105"></p>
+<p> </p>
+<p> */</p>
+<p>COMMIT</p>
+<p> </p>
+<p>查询二：</p>
+<p>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</p>
+<p> </p>
+<p>BEGIN TRAN</p>
+<p>SELECT * FROM TA WHERE ID = 1</p>
+<p>/*</p>
+<p>id          col</p>
+<p>----------- ----------</p>
+<p>1           B</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>waitfor delay '00:00:05'</p>
+<p> </p>
+<p>SELECT * FROM TA WHERE ID = 1</p>
+<p>/*</p>
+<p>id          col</p>
+<p>----------- ----------</p>
+<p>1           B</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p>commit tran</p>
+<p> </p>
+<p> </p>
+<p>SELECT * FROM TA WHERE ID = 1</p>
+<p> </p>
+<p> </p>
+<p>/*</p>
+<p> id          col</p>
+<p>----------- ----------</p>
+<p>1           C</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p> </p>
+<p>       还记得我在前面说过SI是有冲突阻塞(错误：3960)的哦， 下面我们模拟一下，这也是在提醒大家使用SI模式时一定要潜在的阻塞，好看下面的实例：</p>
+<p> </p>
+<p>查询一：</p>
+<p>SET TRANSACTION ISOLATION LEVEL SNAPSHOT</p>
+<p> </p>
+<p> </p>
+<p>BEGIN TRAN</p>
+<p>SELECT * FROM TA where id = 1</p>
+<p> </p>
+<p>WAITFOR DELAY '00:00:05'</p>
+<p> </p>
+<p>UPDATE TA</p>
+<p>    SET COL = 'c' WHERE ID = 1</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>/*</p>
+<p> </p>
+<p>消息3960，级别16，状态2，第9 行</p>
+<p>快照隔离事务由于更新冲突而中止。您无法在数据库'dblock'中使用快照隔离来直接</p>
+<p>或间接访问表'dbo.TA'，以便更新、删除或插入已由其他事务修改或删除的行。请重</p>
+<p>试该事务或更改update/delete 语句的隔离级别。</p>
+<p> </p>
+<p>*/</p>
+<p> </p>
+<p>查询二：</p>
+<p> </p>
+<p>WAITFOR DELAY '00:00:02'</p>
+<p> </p>
+<p>BEGIN TRAN</p>
+<p>UPDATE TA</p>
+<p>    SET COL = 'd' WHERE ID = 1</p>
+<p>commit tran</p>
+<p> </p>
+<p> </p>
+<p>SELECT * FROM TA WHERE ID = 1</p>
+<p> </p>
+<p> </p>
+<p>/*</p>
+<p> id          col</p>
+<p>----------- ----------</p>
+<p>1           d</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p> </p>
+<p> </p>
+<p>13、锁定提示(LOCK HINTS)</p>
+<p>       隔离级别是会话级别的，在会话内内对持有锁、阻塞 、锁的生命周期产生影响。然而，必要时我们使用表级锁定提示来改变这种默认锁定行为，但是我们一定要注意这种操作不当会影响并发性能。</p>
+<p>       我们一定要记住使用锁定提示是表级提示，因为我们一般是在From子句中使用wth指定。另外SQLSERVER2005推荐使用With(Locktype),不带with语法尽量不要使用。</p>
+<p> </p>
+<p>下面枚举一下锁定提示的关键字(申明太晚了，我直接复制了以前收藏的)：</p>
+<p> </p>
+<p>SELECT au_lname FROM authors WITH (NOLOCK)</p>
+<p> </p>
+<p>锁定提示                                 描述 </p>
+<p>HOLDLOCK       将共享锁保留到事务完成，而不是在相应的表、行或数据页不再需要</p>
+<p>时就立即释放锁。它等同于SERIALIZABLE，只不过仅作用于表级。</p>
+<p>NOLOCK         不发出共享锁，并且不要提供排它锁。当此选项生效时，可能会读取未提交的事务或一组在读取中间回滚的页面。有可能发生脏读。仅应用于 SELECT语句，显然相当于未提交读级别。       </p>
+<p>PAGLOCK        在通常使用单个表锁的地方采用页锁。       </p>
+<p>READCOMMITTED 用与运行在提交读隔离级别的事务相同的锁语义执行扫描。默认情况</p>
+<p>下，SQL Server 2000 在此隔离级别上操作。       </p>
+<p>READPAST        跳过锁定行。此选项导致事务跳过由其它事务锁定的行（这些行平常</p>
+<p>会显示在结果集内），而不是阻塞该事务，使其等待其它事务释放在这</p>
+<p>些行上的锁。READPAST锁提示仅适用于运行在提交读隔离级别的事</p>
+<p>务，并且只在行级锁之后读取。仅适用于SELECT语句。       </p>
+<p>READUNCOMMITTED        等同于NOLOCK。       </p>
+<p>REPEATABLEREAD  用与运行在可重复读隔离级别的事务相同的锁语义执行扫描。       </p>
+<p>ROWLOCK          使用行级锁，而不使用粒度更粗的页级锁和表级锁。       </p>
+<p>SERIALIZABLE      用与运行在可串行读隔离级别的事务相同的锁语义执行扫描。</p>
+<p>等同于HOLDLOCK。       </p>
+<p>TABLOCK       使用表锁代替粒度更细的行级锁或页级锁。在语句结束前，SQL Server 一直持有该锁。但是，如果同时指定 HOLDLOCK，那么在事务结束之前，锁将被一直持有。       </p>
+<p>TABLOCKX     使用表的排它锁。该锁可以防止其它事务读取或更新表，并在语句或事务结束前一直持有。它和TABLOCKG与XLOCK连用的效果一样。</p>
+<p>UPDLOCK      读取表时使用更新锁，而不使用共享锁，并将锁一直保留到语句或事务的结束。UPDLOCK的优点是允许您读取数据（不阻塞其它事务）并在以后更新数据，同时确保自从上次读取数据后数据没有被更改。消除转换类型的死锁重要技术。</p>
+<p>XLOCK         提示SQLSERVER在语句使用的全部数据上使用排它锁，并一直保持到</p>
+<p>事务结束时。可以使用 PAGLOCK或TABLOCK指定该锁，这种情况下</p>
+<p>排它锁适用于适当级别的粒度</p>
+<p> </p>
+<p> </p>
+<p>14、锁定超时</p>
+<p>       SET LOCK_TIMEOUT n；</p>
+<p>晕，这个看联机从书就行了，不能再写了。</p>
+<p> </p>
+<p>15、详述行版本存储区</p>
+<p> </p>
+<p>    前面说了好多的行版知识，那在这两种隔离等级下，数据有什么表现呢，这一节我们来详细的说说。</p>
+<p>    为了更好的分析行版的记录行，先说点相关的知识点。有如下相关的知识我们来学习行版会轻松点。</p>
+<p>A、 如何查看数据页面（DBCC PAGE、DBCC TRACEON ）</p>
+<p>我们可以通过DBCC来查看数据页面内容，这个命令可以看到数据库中的页面报头、数据行及行偏移表。虽然这个命令只是系统管理员才可以执行，但是一般操作人员也不会去看页面内容。</p>
+<p> </p>
+<p>DBCC PAGE的命令格式如下：</p>
+<p>DBCC PAGE({dbid|dbname},filenum,pagenum[,printopt])</p>
+<p>Dbid|dbname  数据库ID或库名</p>
+<p>Filenum       页面的文件号</p>
+<p>Pagenum       指定文件内的页面号</p>
+<p>Printopt      输出选项：0－默认值，缓冲报头及页面报头</p>
+<p>　　　　　　　　　　　　　1－对每记录行分别输出缓冲及页面报头，行偏离表</p>
+<p>　　　　　　　　　　　　　2－整体的缓冲、页面报头及行偏离表</p>
+<p>　　　　　　　　　　　　　3－完整的报头、行偏离表并可看到行中的各列值</p>
+<p> </p>
+<p>DBCC TRACEON格式：</p>
+<p>DBCC TRACEON(3604)</p>
+<p>必须先打开跟踪3604来让DBCC PAGE的结果输出给客户端。</p>
+<p> </p>
+<p>我们来看看一个DBCC PAGE的结果(表TA只二条记录)：</p>
+<p> </p>
+<p>PAGE: (1:89)</p>
+<p>BUFFER:</p>
+<p>BUF @0x02BFFDF0</p>
+<p>bpage = 0x04938000                   bhash = 0x00000000                   bpageno = (1:89)</p>
+<p>bdbid = 8                            breferences = 0                      bUse1 = 23490</p>
+<p>bstat = 0xc00009                     blog = 0x21432159                    bnext = 0x00000000</p>
+<p>PAGE HEADER:</p>
+<p>Page @0x04938000</p>
+<p>m_pageId = (1:89)                    m_headerVersion = 1                  m_type = 1</p>
+<p>m_typeFlagBits = 0x4                 m_level = 0                          m_flagBits = 0xa200</p>
+<p>m_objId (AllocUnitId.idObj) = 86     m_indexId (AllocUnitId.idInd) = 256 </p>
+<p>Metadata: AllocUnitId = 72057594043564032                                </p>
+<p>Metadata: PartitionId = 72057594038583296                        Metadata: IndexId = 0</p>
+<p>Metadata: ObjectId = 21575115        m_prevPage = (0:0)                   m_nextPage = (0:0)</p>
+<p>pminlen = 18                         m_slotCnt = 2                        m_freeCnt = 8022</p>
+<p>m_freeData = 166                     m_reservedCnt = 0                    m_lsn = (45:288:2)</p>
+<p>m_xactReserved = 0                   m_xdesId = (0:0)                     m_ghostRecCnt = 0</p>
+<p>m_tornBits = -1441945315            </p>
+<p>Allocation Status</p>
+<p>GAM (1:2) = ALLOCATED                SGAM (1:3) = ALLOCATED              </p>
+<p>PFS (1:1) = 0x61 MIXED_EXT ALLOCATED  50_PCT_FULL                         DIFF (1:6) = CHANGED</p>
+<p>ML (1:7) = NOT MIN_LOGGED           </p>
+<p>DATA:</p>
+<p>Slot 0, Offset 0x60, Length 35, DumpStyle BYTE</p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP VERSIONING_INFO</p>
+<p>Memory Dump @0x3432C060</p>
+<p>00000000:   50001200 01000000 61616161 61616161 †P.......aaaaaaaa        </p>
+<p>00000010:   61610200 fc000000 00000000 000c0000 †aa..............        </p>
+<p>00000020:   000000†††††††††††††††††††††††††††††††... </p>
+<p>--删除了一条记录信息                   </p>
+<p>OFFSET TABLE:</p>
+<p>Row - Offset                        </p>
+<p>1 (0x1) - 131 (0x83)                </p>
+<p>0 (0x0) - 96 (0x60)   </p>
+<p>Buffer:当前页面调入内存时，要为了便于管理内存中这个页面生成的一种结构。</p>
+<p>Page Head:报头。(部分解释如下)</p>
+<p>m_pageId当前页面的文件号及页面号。</p>
+<p>m_level当前页面在索引中的级数。</p>
+<p>AllocUnitId 分配单元ID，</p>
+<p>PartitionId 分区ID，</p>
+<p>ObjectId所属对象的ID。</p>
+<p>IndexId页面的索引ID。</p>
+<p>m_prevPage前一页面指针，</p>
+<p>m_nextPage下一页面指针。</p>
+<p>Pminlen 行定长部分字节数。</p>
+<p>m_freeData页面第一个空闲字节偏移量。</p>
+<p>m_slotCnt总记录数。</p>
+<p>m_freeCnt 页面空闲字节数。</p>
+<p>DATA：记录每一个行的信息。</p>
+<p>                     Slot 0 行号</p>
+<p>Offset 0x60 行在页面的偏移量</p>
+<p>Length 35 记录长度,</p>
+<p>Record Type 记录类型</p>
+<p>Record Attributes 属性描述 VERSIONING_INFO行版</p>
+<p>              OFFSET TABLE：行偏移矩阵内容</p>
+<p>                     1 (0x1) – 131 (0x83) </p>
+<p>0 (0x0) – 96 (0x60)</p>
+<p>B、 数据页面</p>
+<p>数据页面显然也是一种结构，它其中包含了表中用户数据，它固定为8K大小(8192byte)。一共有三种类型的页面(行内数据IN_ROW_DATA，行溢出数据ROW_OVERFLOW_DATA，大数据LOB页面LOB_DATA)，而每一个页面是有三部分级成(报头，数据行，行偏移矩阵)，这三部分我们在刚才上面的报告输出有所体现。 页面报头总是占用页面的前96个字节，所以我们页面只有8096个字节用于数据行及行偏移存储，这个以后估算表大小时一定要注意。</p>
+<p>96个字节后的区域是真正的行数据部分，对于行内数据来说一个行的最大为8060个字节。对于行固定的表来说，每一个页面上存储的记录数总是一定的，如果变长时要根据输入的数据而定。从减少IO及缓存命中率来说，我们要尽量使得页面容纳尽量多的记录。</p>
+<p>行偏移矩阵是2个字节的块，以两个字节为单位，每一个行就有两个字节的块，矩阵体现了记录在页面上的逻辑顺序，在这儿得注意一下，有聚集索引的表，SQLSERVER按索引键值来存储，不是意思着页面上的物理存储也一定是键值的顺序哦，实际上这个顺序是由矩阵的逻辑顺序来保证的，下面我做一个测试 给大家看看：</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>create table ta(</p>
+<p>id int primary key ,</p>
+<p>col3 char(1))</p>
+<p>insert into ta select  1,'a'</p>
+<p>insert into ta select  2,'a'</p>
+<p>insert into ta select  3,'a'</p>
+<p>insert into ta select  4,'a'</p>
+<p>insert into ta select  5,'a'</p>
+<p>insert into ta select  6,'a'</p>
+<p>insert into ta select  11,'a'</p>
+<p>insert into ta select  21,'a'</p>
+<p>insert into ta select  31,'a'</p>
+<p>insert into ta select  41,'a'</p>
+<p>insert into ta select  51,'a'</p>
+<p>insert into ta select  61,'a'</p>
+<p>insert into ta select 10 ,'b'</p>
+<p> </p>
+<p>go</p>
+<p>dbcc ind(testcsdn,'ta',-1) –227</p>
+<p>go</p>
+<p>dbcc traceon(3604)</p>
+<p>go</p>
+<p>dbcc page('testcsdn',1,227,1)</p>
+<p>go</p>
+<p>/*</p>
+<p>DATA:</p>
+<p> </p>
+<p>Slot 0, Offset 0x60, Length 12, DumpStyle BYTE</p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP     Memory Dump @0x443CC060</p>
+<p>00000000:   10000900 01000000 610200fc ††††††††††........a...           </p>
+<p>。。。。。。--省略了中间的行记录</p>
+<p> </p>
+<p>00000000:   10000900 06000000 610200fc ††††††††††........a...            </p>
+<p> </p>
+<p>Slot 6, Offset 0xf0, Length 12, DumpStyle BYTE</p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP    </p>
+<p>Memory Dump @0x443CC0F0</p>
+<p>00000000:   10000900 0a000000 620200fc ††††††††††........b...            </p>
+<p> </p>
+<p>Slot 7, Offset 0xa8, Length 12, DumpStyle BYTE</p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP    </p>
+<p>Memory Dump @0x443CC0A8</p>
+<p>00000000:   10000900 0b000000 610200fc ††††††††††........a...            </p>
+<p>。。。。。。--省略</p>
+<p>OFFSET TABLE:</p>
+<p>Row - Offset                        </p>
+<p>12 (0xc) - 228 (0xe4)               </p>
+<p>11 (0xb) - 216 (0xd8)               </p>
+<p>10 (0xa) - 204 (0xcc)               </p>
+<p>9 (0x9) - 192 (0xc0)                </p>
+<p>8 (0x8) - 180 (0xb4)                </p>
+<p>7 (0x7) - 168 (0xa8)                </p>
+<p>6 (0x6) - 240 (0xf0)                </p>
+<p>5 (0x5) - 156 (0x9c)                </p>
+<p>4 (0x4) - 144 (0x90)                </p>
+<p>3 (0x3) - 132 (0x84)                </p>
+<p>2 (0x2) - 120 (0x78)                </p>
+<p>1 (0x1) - 108 (0x6c)                </p>
+<p>0 (0x0) - 96 (0x60) </p>
+<p>*/    </p>
+<p>注意报表的结果的红色部分。</p>
+<p>C、 数据行结构</p>
+<p>上面的页面结构里我们已经看到数据行的结构，只是我们没有对行的数据做介绍，下面就是一个行的数据，我们来详细说说行的结构。</p>
+<p>insert into ta select 10 ,'b'</p>
+<p> </p>
+<p>Slot 6, Offset 0xf0, Length 12, DumpStyle BYTE</p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP    </p>
+<p>Memory Dump @0x443CC0F0</p>
+<p>00000000:   10000900 0a000000 620200fc ††††††††††........b... </p>
+<p>在这儿我们只讨论固定长度列的行结构，变长列的行结构不讨论。</p>
+<p>我们先说行的长度，我们假设固定列类型基本长度和为N，固定列的列数为M，那么长度的基本公式为：N+ceiling(M/8)+6。上面的报告报头我可以看得出长度是12，那用这个公式来试试：5+ceiling( 2/8) + 6 = 12 .</p>
+<p>好，行的结构究竟是什么样呢？（仅考虑固定列长）</p>
+<p>B状态1 + B状态2 + W列偏移 +　L数据 + W列数 + NULL状态位</p>
+<p>B　　　　　　　－　1　个字节</p>
+<p>W　　　　　　　－　2　个字节</p>
+<p>L　　　　　　　－　变长</p>
+<p>NULL状态位　　－　Ceiling(W列数/8)</p>
+<p>那好，我们根据上面的行结构来解释一下slot 6记录，第一个字节0x10 ,第四个bit位是1　表示存在NULL状态位，第5个Bit位是表示有无变长列，0表示行无变长列（其它bit位不介绍了）。第二个字节是状态2,暂未使用。第三、四字节对调为0x0009表示列位移量，那对于这个行记录列偏移量怎么是9的呢？　好，我们看列数据真正是从第5个字节开始的，一个整形（4个字节）＋一个长度为1的字符（1个字节）共5个字节，5＋4　＝　9　，　所以得到列当前的偏移为9。第10、11个字节对调后是0x0002表示有两个列，第12个字节表示的NULL状态位，这个正好和第一个字节的第四个bit位对应上，一个Bit表示一个列的NULL特性，Ceiling(2数/8) = 1，当前值是0xfc,即11111100（B），BIT位表示是否为NULL从高到低的顺序显示，本例中只有两列最后全是0　表示都不为空（1代表当前对应的列为NULL）。</p>
+<p>根据上面的说明大家可以自己试试。　</p>
+<p>D、 如何得到页面号(pagenum)</p>
+<p>上面说了这么多我们有一个关键的东东没说，什么呢，那就是如何得到当前表的页面号呢？好，那我们在这儿可以介绍两种办法：</p>
+<p>1、 DBCC IND()</p>
+<p> </p>
+<p>DBCC IND<br>(　</p>
+<p>['dbname'|dbid], -- 数据库名或ID<br>　　tbname, -- 表名</p>
+<p>Printopt｜noclustered index_id [, --输出选项</p>
+<p>Partition_num] –-指定分区号，主要兼容2000</p>
+<p>)</p>
+<p>Printopt : --输出选项（常用的）</p>
+<p>-- noclustered index_id  　所有IAM、数据及指定索引的分页信息  </p>
+<p>-- -2   所有IAM页面</p>
+<p>-- -1   所有的数据、索引、IAM、行溢出及LOB页面</p>
+<p>--  0   行内数据、行内数据的IAM页面</p>
+<p>--  1   聚集索引及所有数据、IAM、LOB页面</p>
+<p>Partition_num：</p>
+<p>--主要是兼容2000，缺省0为所有分区，在2005里我们可以指定特定的分区号</p>
+<p> </p>
+<p> </p>
+<p>2、  从system_internals_allocation_units取到first_page</p>
+<p> </p>
+<p>---------------------------------------------------------------------</p>
+<p>--            查询表的文件号及页面号</p>
+<p>-- Author : HappyFlyStone</p>
+<p>-- Date   : 2009-11-19 13:23:02</p>
+<p>-- Version: Microsoft SQL Server 2005 - 9.00.2047.00 (Intel X86)</p>
+<p>--      Apr 14 2006 01:12:25</p>
+<p>--      Copyright (c) 1988-2005 Microsoft Corporation</p>
+<p>--      Enterprise Edition on Windows NT 5.2 (Build 3790: Service Pack 2)</p>
+<p>--   blog : <a href="http://blog.csdn.net/happyflystone">http://blog.csdn.net/happyflystone</a>          </p>
+<p>--　　　　　 转载注明出处及相关信息</p>
+<p>---------------------------------------------------------------------</p>
+<p> </p>
+<p>;WITH T1</p>
+<p>AS</p>
+<p>(</p>
+<p>    SELECT OBJECT_NAME(OBJECT_ID) AS NAME,TYPE_DESC,FIRST_PAGE</p>
+<p>    FROM SYS.SYSTEM_INTERNALS_ALLOCATION_UNITS U</p>
+<p>    JOIN SYS.PARTITIONS P</p>
+<p>    ON U.CONTAINER_ID = P.PARTITION_ID</p>
+<p>    WHERE [OBJECT_ID] = OBJECT_ID('TA')</p>
+<p>)</p>
+<p>SELECT *,CAST(</p>
+<p>           CONVERT(INT,SUBSTRING(FIRST_PAGE,6,1)) * POWER(2,8)</p>
+<p>         + CONVERT(INT,SUBSTRING(FIRST_PAGE,5,1))</p>
+<p>           AS VARCHAR)+':'+CAST(</p>
+<p>          (CONVERT(INT,SUBSTRING(FIRST_PAGE,4,1)) * POWER(2,24))</p>
+<p>         + (CONVERT(INT,SUBSTRING(FIRST_PAGE,3,1)) * POWER(2,16))</p>
+<p>         + (CONVERT(INT,SUBSTRING(FIRST_PAGE,2,1)) * POWER(2,8 ))</p>
+<p>         + (CONVERT(INT,SUBSTRING(FIRST_PAGE,1,1))) AS VARCHAR) AS 'FILE:PAGE_NUM'</p>
+<p>         </p>
+<p>FROM T1</p>
+<p> </p>
+<p>/*</p>
+<p>name    type_desc      first_page     File:page_num</p>
+<p>----- --------------- -------------- ----------------</p>
+<p>ta     IN_ROW_DATA    0x590000000100     1:89</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>*/</p>
+<p> </p>
+<p>       对于上述CTE大家可以封装成函数，在需要时调用。</p>
+<p> </p>
+<p>3、 DBCC　IND输出的相关列名介绍</p>
+<p> </p>
+<p> </p>
+<p>PageFID － 页面的文件号 <br>PagePID － 页面号 <br>IAMFID  － IAM所在文件号，如果是IAM页面此项为空 <br>IAMPID  － 对应的IAM页面号，对于IAM为NULL <br>ObjectID －　页面所属对象ID <br>IndexID – 索引的ID号 <br>PartitionNumber – 分区号 <br>PartitionID – 分区ID <br>iam_chain_type – 2005有如下几种类型： <br>1.         IN_ROW_DATA 　</p>
+<p>2.         LOB_DATA　</p>
+<p>3.       ROW_OVERFLOW_DATA 　</p>
+<p>PageType – 页面类型 <br>1 - data page</p>
+<p>2 - index page</p>
+<p>3 and 4 - text pages</p>
+<p>8 - GAM page</p>
+<p>9 - SGAM page</p>
+<p>10 - IAM page</p>
+<p>11 - PFS page</p>
+<p>IndexLevel – 这个对应页面报头部分的m_level，l当前页面在索引中的级数 <br> </p>
+<p>16、详述行版本存储区二</p>
+<p> </p>
+<p>    好，下面具体来看行版数据的结构。建议大家先关注这几个动态管理视图(DWV)。</p>
+<p> </p>
+<p>select * from sys.dm_tran_version_store</p>
+<p>select * from sys.dm_tran_current_transaction</p>
+<p>select * from sys.dm_tran_transactions_snapshot</p>
+<p>go</p>
+<p> </p>
+<p>sys.dm_tran_version_store 返回一个可显示版本存储区中所有版本记录的虚拟表。其中有几个字段要了解一下：</p>
+<p>列名<br> 说明<br> <br>transaction_sequence_num<br> 生成该记录版本的事务的序列号<br> <br>version_sequence_num<br> 版本记录序列号。此值在生成事务的版本中是唯一的。<br> <br>status<br> 指示有版本控制的记录是否已拆分为两个记录。如果此值为 0，则记录存储在一页中。如果此值为 1，则记录拆分为两个记录，且存储在两个不同页上。<br> <br>min_length_in_bytes<br> 记录的最小长度（字节）。<br> <br>record_image_first_part<br> 版本记录的第一部分的二进制图像。<br> <br>record_image_second_part<br> 版本记录的第二部分的二进制图像。<br> </p>
+<p>dm_tran_current_transaction显示当前会话中的事务状态信息。</p>
+<p>    首先我们来看一下当前库快照状态：</p>
+<p>select name,snapshot_isolation_state_desc,is_read_committed_snapshot_on</p>
+<p>from sys.databases</p>
+<p>where name = 'dblock'</p>
+<p>/*</p>
+<p>name               snapshot_isolation_state_desc           is_read_committed_snapshot_on</p>
+<p>------------- -------------------------------   -----------------------------</p>
+<p>dblock              OFF                                                          1</p>
+<p>(1 行受影响)</p>
+<p>*/</p>
+<p> </p>
+<p> </p>
+<p>    好吧，我下面准备部分数据并用前面但要查看页面信息的命令先看看页面内容：</p>
+<p> </p>
+<p>drop table ta</p>
+<p> </p>
+<p>create table ta(id int,col char(10))</p>
+<p>insert into ta select 1,'aaaaaaaaaa'</p>
+<p>insert into ta select 1,'bbbbbbbbbb'</p>
+<p>dbcc ind(dblock,'ta',-1) --73</p>
+<p>dbcc traceon(3604)</p>
+<p>dbcc page('dblock',1,89,1)</p>
+<p>00000000:   50001200 01000000 63636363 63636363 †P.......cccccccc        </p>
+<p>00000010:   63200200 fcc80000 00010000 00120000 †c ..............        </p>
+<p>00000020:   000000†††††††††††††††††††††††††††††††...                     </p>
+<p> </p>
+<p>Slot 1, Offset 0x83, Length 35, DumpStyle BYTE</p>
+<p> </p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP VERSIONING_INFO</p>
+<p> </p>
+<p>Memory Dump @0x433BC083</p>
+<p> </p>
+<p>00000000:   50001200 01000000 63636363 63636363 †P.......cccccccc        </p>
+<p>00000010:   63200200 fcc80000 00010001 00120000 †c ..............        </p>
+<p>00000020:   000000†††††††††††††††††††††††††††††††...         </p>
+<p>---------------------------------------------------------------</p>
+<p>Slot 0, Offset 0x60, Length 35, DumpStyle BYTE</p>
+<p> </p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP VERSIONING_INFO</p>
+<p> </p>
+<p>Memory Dump @0x444CC060</p>
+<p> </p>
+<p>00000000:   50001200 01000000 64646464 64646464 †P.......dddddddd        </p>
+<p>00000010:   64640200 fcd00000 00010000 00130000 †dd..............        </p>
+<p>00000020:   000000†††††††††††††††††††††††††††††††...                     </p>
+<p> </p>
+<p>Slot 1, Offset 0x83, Length 35, DumpStyle BYTE</p>
+<p> </p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP VERSIONING_INFO</p>
+<p> </p>
+<p>Memory Dump @0x444CC083</p>
+<p> </p>
+<p>00000000:   50001200 01000000 64646464 64646464 †P.......dddddddd        </p>
+<p>00000010:   64640200 fcd00000 00010001 00130000 †dd..............        </p>
+<p>00000020:   000000†††††††††††††††††††††††††††††††...                     </p>
+<p>           </p>
+<p> </p>
+<p>至少上面显示的行信息不用我介绍了吧，直接用我上面介绍的，因为当前没有产生版本信息，我们用两个select来验证：</p>
+<p>select * from sys.dm_tran_version_store</p>
+<p>select * from sys.dm_tran_current_transaction</p>
+<p>两个SQL没有返回任何信息，下面更新记录生成版本信息。</p>
+<p> </p>
+<p>update ta</p>
+<p>set col = 'ddddddddd' where id = 1</p>
+<p>select * from sys.dm_tran_version_store</p>
+<p>select * from sys.dm_tran_current_transaction</p>
+<p> </p>
+<p>transaction_sequence_num version_sequence_num database_id rowset_id            status min_length_in_bytes record_length_first_part_in_bytes record_image_first_part                                                                                                                                                                                                                                            record_length_second_part_in_bytes record_image_second_part</p>
+<p>---------------------------------------------------------------------</p>
+<p>29     1  8      72057594038714368    0      18     35 0x5000120001000000616161616161616161610200FC0000000000000000100000000000        0        NULL</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p> </p>
+<p>transaction_id       transaction_sequence_num transaction_is_snapshot first_snapshot_sequence_num last_transaction_sequence_num first_useful_sequence_num</p>
+<p>-------------------- --------- -------- -----  -------------------  </p>
+<p>4872     18           0             NULL            29                21</p>
+<p> </p>
+<p>(1 行受影响)</p>
+<p>如果这时我们再查看原来的TA里的slot0信息：</p>
+<p> </p>
+<p>Slot 0, Offset 0x60, Length 35, DumpStyle BYTE</p>
+<p> </p>
+<p>Record Type = PRIMARY_RECORD         Record Attributes =  NULL_BITMAP VERSIONING_INFO</p>
+<p> </p>
+<p>Memory Dump @0x445EC060</p>
+<p> </p>
+<p>00000000:   50001200 01000000 64646464 64646464 †P.......dddddddd        </p>
+<p>00000010:   64200200 fcc00000 00010001 001d0000 †d ..............        </p>
+<p>00000020:   000000†††††††††††††††††††††††††††††††...   </p>
+<p>    前面26个字节不用解释了吧，那这(c00000 00010001 001d0000 000000)14个字节是什么意思呢？大家是记得前面介绍过XSN啦，这就是14个字节指针信息，用于跟踪行版本信息的。sys.dm_tran_current_transaction 表返回的first_useful_sequence_num列就是是大XSN行版本。XSN的如下：</p>
+<p>第一部分 8bytes<br> 第二部分 6bytes<br> <br>c00000 00010001 00<br> 1d0000 000000<br> <br>在tempdb中的文件号、页面号、slot号<br> 记录版本的事务的序列号<br> <br>exec sp_us_FPSinfo 0xc000000001000100</p>
+<p>FILE_NUM:PAGE_ID:SLOT_ID</p>
+<p>----------------------------</p>
+<p>1       : 192   : 1<br> 1d è 29</p>
+<p>每一个事务都会分配一个独立并不断增加的XSN值<br> </p>
+<p>    验证一下在tempdb中的内容 (注意红色部分)：</p>
+<p> </p>
+<p>dbcc page('tempdb',1,192,1)</p>
+<p> </p>
+<p>Slot 1, Offset 0xc8, Length 104, DumpStyle BYTE</p>
+<p>Record Type = INDEX_RECORD           Record Attributes =  VARIABLE_COLUMNS</p>
+<p>Memory Dump @0x441FC0C8</p>
+<p> </p>
+<p>00000000:   26010068 0000851f 44f77f1b 01140000 †&amp;..h....D.......    </p>
+<p>00000010:   00000000 00010000 00000000 0008001f †................    </p>
+<p>00000020:   44000005 a000000c 00000000 0112001f †D...............    </p>
+<p>00000030:   441c5b1b 0180861f 441c0800 00000000 †D.[.....D.......    </p>
+<p>00000040:   00000000 00500012 00010000 00616161 †.....P.......aaa    </p>
+<p>00000050:   61616161 61616102 00fc0000 00000000 †aaaaaaa.........    </p>
+<p>00000060:   00001000 00000000 †††††††††††††††††††........</p>
+<p> </p>
+<p>17、版本区大小的管理</p>
+<p>       首先版本区的大小是SQLSERVER自行管理的，它有一个清理线程在活动，确保版本保留的时效。对于SI模式来说版本保留到事务结束，对于RCSI模式来说在Select结束线程就会移除版本数据。</p>
+<p>       清理线程活动周期以分钟计，但是有一个例外，那就是如果周期未到而tempdb没有可用空间时，清理线程就会提前调用。在极端的情况下如果磁盘已经满，版本就无法生成，查询即失败，这是使用版本控制的一个注意事项。</p>
+<p>出处：<span lang="EN-US"><a href="http://blog.csdn.net/happyflystone">http://blog.csdn.net/happyflystone</a></span></p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/sql" rel="tag">sql</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/11/16/%E8%8B%B9%E6%9E%9C%E7%B3%BB%E7%BB%9F%E6%9C%89%E7%97%85%E6%AF%92%E5%90%97%EF%BC%9F.html" rel="prev">苹果系统有病毒吗？</a><br>【下篇】<a href="/2011/11/16/sql-des%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B.html" rel="next">SQL des加密算法存储过程</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2017/05/23/linqtodb%E6%89%A7%E8%A1%8Csql%E8%AF%AD%E5%8F%A5.html">LinqToDB执行SQL语句</a></li><li> · <a href="/2016/12/09/sql%E5%8E%BB%E6%8E%89%E5%9B%9E%E8%BD%A6%E7%AD%89asccii%E5%AD%97%E7%AC%A6.html">sql去掉回车等ASCCII字符</a></li><li> · <a href="/2016/11/23/simple-sql-with-using-cte.html">SQL中使用WITH AS提高性能－使用公用表表达式（CTE）简化嵌套SQL</a></li><li> · <a href="/2016/11/03/sql%E6%89%B9%E9%87%8F%E5%A2%9E%E5%8A%A0%E5%88%97.html">sql批量增加列</a></li><li> · <a href="/2013/10/27/%E8%BF%94%E5%9B%9E%E8%A1%A5%E8%80%83%E8%AF%BE%E7%A8%8B%E5%90%8D%E7%A7%B0%E5%AD%97%E7%AC%A6%E4%B8%B2.html">返回补考课程名称字符串</a></li><li> · <a href="/2013/09/21/sql%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F.html">SQL插入数据的几种方式</a></li><li> · <a href="/2013/04/08/%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BE%93%E5%87%BAxml%E8%8F%9C%E5%8D%95.html">根据数据库输出XML菜单</a></li><li> · <a href="/2012/07/24/sql%E4%BC%98%E5%8C%96%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%934.html">SQL优化经验总结4</a></li><li> · <a href="/2012/07/05/sql%E6%A0%91%E5%9E%8B%E6%B1%82%E5%92%8C.html">SQL树型求和</a></li><li> · <a href="/2012/07/05/sql%E9%98%B2%E6%AD%A2%E6%95%B0%E6%8D%AE%E8%84%8F%E8%AF%BB%E8%84%8F%E5%86%99.html">SQL防止数据脏读脏写</a></li><li> · <a href="/2011/12/31/sql%E5%8F%96%E5%9B%9E%E8%A1%A8%E4%B8%AD%E5%AD%97%E6%AE%B5.html">SQL取回表中字段</a></li><li> · <a href="/2011/11/25/sql-server%E4%B8%AD%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90guid-c-net%E4%B8%AD%E5%A6%82%E4%BD%95%E7%94%9F%E6%88%90%E5%92%8C%E4%BD%BF%E7%94%A8guid.html">SQL Server中如何生成GUID  C#.NET中如何生成和使用GUID</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年11月16日发表在<a href="/category/sql-server" rel="category tag">SQL Server</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/11/16/sql2005%E4%B8%AD%E7%9A%84%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%94%81%E5%AE%9A.html" rel="bookmark" title="本文固定链接 /2011/11/16/sql2005%e4%b8%ad%e7%9a%84%e4%ba%8b%e5%8a%a1%e4%b8%8e%e9%94%81%e5%ae%9a.html">SQL2005中的事务与锁定 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/11/16/sql2005%e4%b8%ad%e7%9a%84%e4%ba%8b%e5%8a%a1%e4%b8%8e%e9%94%81%e5%ae%9a.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/11/16/sql2005%E4%B8%AD%E7%9A%84%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%94%81%E5%AE%9A.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="7" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="5d744cd827"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="130"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.088 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:32 -->

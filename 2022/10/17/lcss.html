@@ -1,0 +1,651 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>曲线(轨迹)相似度算法——LCSS最长公共子序列算法 | Bruce's Blog</title> 
+<meta name="description" content="上一篇，我们用DTW解决两条曲线相似度的算法，但是这个算法有一个明显的BUG，就是：">
+<meta name="keywords" content="DTW,LCSS,曲线相似度算法,相似度算法">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2022 年 10 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="5" class="pad"> </td><td>1</td><td>2</td>
+	</tr>
+	<tr>
+		<td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td><a href="/2022/10/08" aria-label="2022年10月8日 发布的文章">8</a></td><td>9</td>
+	</tr>
+	<tr>
+		<td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/10/17" aria-label="2022年10月17日 发布的文章">17</a></td><td><a href="/2022/10/18" aria-label="2022年10月18日 发布的文章">18</a></td><td><a href="/2022/10/19" aria-label="2022年10月19日 发布的文章">19</a></td><td>20</td><td>21</td><td>22</td><td>23</td>
+	</tr>
+	<tr>
+		<td>24</td><td>25</td><td><a href="/2022/10/26" aria-label="2022年10月26日 发布的文章">26</a></td><td>27</td><td>28</td><td>29</td><td>30</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/10/31" aria-label="2022年10月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="6"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2022/09">« 9 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2022/11">11 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#7eeb54;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#ba1d32;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#f89394;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#83adb2;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#1dec3f;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#3d736f;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#96846e;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#32cd0b;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#f8f808;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#65c358;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#782e5a;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#d74983;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#a94d56;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#e91655;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#6ed643;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#c5a661;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#2a0670;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#f02d69;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#1ce21c;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#8fa68d;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#f70c75;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#ba69de;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#2a07c9;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#108280;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#1f05b3;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#a9cac9;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#5945b3;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#38b840;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#9132b;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#a12bb0;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#da8cac;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#fa5545;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#135c52;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#fb220c;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#99657d;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#985795;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#a313f7;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#5f40ef;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#c71769;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#fd33fa;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#e4cdb8;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#e5b80d;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#d8731d;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#d05e7d;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#2a26d8;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/python" rel="category tag">Python</a>, <a href="/category/unity3d" rel="category tag">Unity3D</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">曲线(轨迹)相似度算法——LCSS最长公共子序列算法</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2022-10-17 15:43</span>
+			<span class="category">  <a href="/category/python" rel="category tag">Python</a>, <a href="/category/unity3d" rel="category tag">Unity3D</a></span>
+			<span class="article_comment"><a href="/2022/10/17/lcss.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>1,541</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>上一篇，我们用<a href="/2022/10/17/python-dtw.html">DTW解决两条曲线相似度的算法</a>，但是这个算法有一个明显的BUG，就是：</p>
+<p><em><span class="wp_keywordlink_affiliate"><a href="/tag/dtw" title="View all posts in DTW" target="_blank">DTW</a></span>和欧式距离对轨迹的个别点差异性非常敏感，如果两个时间序列在大多数时间段具有相似的形态，<strong>仅仅在很短的时间具有一定的差异</strong>，（即很小的差异也会对相似度衡量产生影响）欧式距离和<span class="wp_keywordlink_affiliate"><a href="/tag/dtw" title="View all posts in DTW" target="_blank">DTW</a></span>无法准确衡量这两个时间序列的相似度。<span class="wp_keywordlink_affiliate"><a href="/tag/lcss" title="View all posts in LCSS" target="_blank">LCSS</a></span>能处理这种问题</em></p>
+<p>为了解决这个问题，我找到了专注用于轨迹相似度的算法<span class="wp_keywordlink_affiliate"><a href="/tag/lcss" title="View all posts in LCSS" target="_blank">LCSS</a></span>:</p>
+<h2 id="0论文基本介绍以及相关内容"><strong>0、LCSS基本介绍以及相关内容</strong></h2>
+<ul>
+<li>分析移动用户位置的相似性，提取移动用户的相似路径在出行路径预测、兴趣区域发现、轨迹聚类、个性化路径推荐等领域具有广泛的应用。</li>
+<li>重点：<strong>利用移动用户定位数据找到合适轨迹的表示方法，如何高效计算移动用户轨迹间的相似性</strong>成为热点。</li>
+</ul>
+<pre class="highlighter-hljs"><code class="language-markdown,material highlighter-hljs hljs language-markdown">本文---基于改进LCSS的移动用户轨迹相似性查询算法研究：
+（1）移动用户原始轨迹数据-&amp;gt;抽取位置序列-&amp;gt;映射为具有时间和地理位置信息的序列。
+解决移动用户轨迹数据的稀疏性导致相似度算法效率低下的问题。
+（2）FP-tree频繁模式树的加权频繁模式挖掘移动用户轨迹的频繁序列。
+解决由于用户轨迹随机性和繁杂性而导致的算法效率低下的问题。
+（3）通过改进LCSS算法
+结合时间和地理因素衡量用户轨迹的相似性。
+</code></pre>
+<ul>
+<li>衡量相似度的方法有很多：欧式距离，动态时间规划<span class="wp_keywordlink_affiliate"><a href="/tag/dtw" title="View all posts in DTW" target="_blank">DTW</a></span>，编辑距离EDR，最长公共子序列，最大时间出现法MCT，余弦相似性，Hausdorff距离。其中基于轨迹数据衡量相似度的算法有三种：欧式距离，DTW算法，LCSS算法。</li>
+</ul>
+<h2 id="1欧式距离关键输入时间位置用户"><strong>1、欧式距离</strong>（关键输入：时间，位置，用户）</h2>
+<ul>
+<li>欧氏距离是指通过计算每个时间点上轨迹所对应的两个点的欧式距离，然后再对所有点的欧式距离进行综合处理，包括取平均值、求和、取中位数等。</li>
+</ul>
+<p><img fetchpriority="high" decoding="async" width="748" height="102" class="wp-image-6170 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted.png" srcset="/wp-content/uploads/2022/10/Pasted.png 748w, /wp-content/uploads/2022/10/Pasted-300x41.png 300w" sizes="(max-width: 748px) 100vw, 748px"></p>
+<p>其中<span class="math inline"><span id="MathJax-Element-2-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;d&lt;/mi&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/math&gt;"><span id="MathJax-Span-84" class="math"><span id="MathJax-Span-85" class="mrow"><span id="MathJax-Span-86" class="mi"></span><span id="MathJax-Span-87" class="mi"></span><span id="MathJax-Span-88" class="mi"></span><span id="MathJax-Span-89" class="mi"></span><span id="MathJax-Span-90" class="mo">(</span><span id="MathJax-Span-91" class="msubsup"><span id="MathJax-Span-92" class="mi"></span><span id="MathJax-Span-93" class="texatom"><span id="MathJax-Span-94" class="mrow"><span id="MathJax-Span-95" class="mi"></span></span></span><span id="MathJax-Span-96" class="texatom"><span id="MathJax-Span-97" class="mrow"><span id="MathJax-Span-98" class="mi"></span></span></span></span><span id="MathJax-Span-99" class="mo">,</span><span id="MathJax-Span-100" class="msubsup"><span id="MathJax-Span-101" class="mi"></span><span id="MathJax-Span-102" class="texatom"><span id="MathJax-Span-103" class="mrow"><span id="MathJax-Span-104" class="mi"></span></span></span><span id="MathJax-Span-105" class="texatom"><span id="MathJax-Span-106" class="mrow"><span id="MathJax-Span-107" class="mi"></span></span></span></span><span id="MathJax-Span-108" class="mo">)</span></span></span><span class="MJX_Assistive_MathML" role="presentation">dist(pkA,pkB)</span></span></span>表示用户A和B在某时间段内的距离，<span class="math inline"><span id="MathJax-Element-3-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;/math&gt;"><span id="MathJax-Span-109" class="math"><span id="MathJax-Span-110" class="mrow"><span id="MathJax-Span-111" class="msubsup"><span id="MathJax-Span-112" class="mi"></span><span id="MathJax-Span-113" class="texatom"><span id="MathJax-Span-114" class="mrow"><span id="MathJax-Span-115" class="mi"></span></span></span><span id="MathJax-Span-116" class="texatom"><span id="MathJax-Span-117" class="mrow"><span id="MathJax-Span-118" class="mi"></span></span></span></span><span id="MathJax-Span-119" class="mo">,</span><span id="MathJax-Span-120" class="msubsup"><span id="MathJax-Span-121" class="mi"></span><span id="MathJax-Span-122" class="texatom"><span id="MathJax-Span-123" class="mrow"><span id="MathJax-Span-124" class="mi"></span></span></span><span id="MathJax-Span-125" class="texatom"><span id="MathJax-Span-126" class="mrow"><span id="MathJax-Span-127" class="mi"></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">pkA,pkB</span></span></span>表示A和B在k时刻的位置，<span class="math inline"><span id="MathJax-Element-4-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;/math&gt;"><span id="MathJax-Span-128" class="math"><span id="MathJax-Span-129" class="mrow"><span id="MathJax-Span-130" class="msubsup"><span id="MathJax-Span-131" class="mi"></span><span id="MathJax-Span-132" class="texatom"><span id="MathJax-Span-133" class="mrow"><span id="MathJax-Span-134" class="mi"></span></span></span><span id="MathJax-Span-135" class="texatom"><span id="MathJax-Span-136" class="mrow"><span id="MathJax-Span-137" class="mi"></span><span id="MathJax-Span-138" class="mo">,</span><span id="MathJax-Span-139" class="mi"></span></span></span></span><span id="MathJax-Span-140" class="mo">−</span><span id="MathJax-Span-141" class="msubsup"><span id="MathJax-Span-142" class="mi"></span><span id="MathJax-Span-143" class="texatom"><span id="MathJax-Span-144" class="mrow"><span id="MathJax-Span-145" class="mi"></span></span></span><span id="MathJax-Span-146" class="texatom"><span id="MathJax-Span-147" class="mrow"><span id="MathJax-Span-148" class="mi"></span><span id="MathJax-Span-149" class="mo">,</span><span id="MathJax-Span-150" class="mi"></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">pk,xA−pk,xB</span></span></span>表示用户A和用户B在x维度的位置，同理，<span class="math inline"><span id="MathJax-Element-5-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;y&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;msubsup&gt;&lt;mi&gt;p&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;y&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;/mrow&gt;&lt;/msubsup&gt;&lt;/math&gt;"><span id="MathJax-Span-151" class="math"><span id="MathJax-Span-152" class="mrow"><span id="MathJax-Span-153" class="msubsup"><span id="MathJax-Span-154" class="mi"></span><span id="MathJax-Span-155" class="texatom"><span id="MathJax-Span-156" class="mrow"><span id="MathJax-Span-157" class="mi"></span></span></span><span id="MathJax-Span-158" class="texatom"><span id="MathJax-Span-159" class="mrow"><span id="MathJax-Span-160" class="mi"></span><span id="MathJax-Span-161" class="mo">,</span><span id="MathJax-Span-162" class="mi"></span></span></span></span><span id="MathJax-Span-163" class="mo">−</span><span id="MathJax-Span-164" class="msubsup"><span id="MathJax-Span-165" class="mi"></span><span id="MathJax-Span-166" class="texatom"><span id="MathJax-Span-167" class="mrow"><span id="MathJax-Span-168" class="mi"></span></span></span><span id="MathJax-Span-169" class="texatom"><span id="MathJax-Span-170" class="mrow"><span id="MathJax-Span-171" class="mi"></span><span id="MathJax-Span-172" class="mo">,</span><span id="MathJax-Span-173" class="mi"></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">pk,yA−pk,yB</span></span></span>表示用户A和B在y维度上的位置。因此欧式距离为：</p>
+<p><img decoding="async" width="382" height="120" class="wp-image-6171 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted-1.png" srcset="/wp-content/uploads/2022/10/Pasted-1.png 382w, /wp-content/uploads/2022/10/Pasted-1-300x94.png 300w" sizes="(max-width: 382px) 100vw, 382px"></p>
+<p> </p>
+<ul>
+<li>欧式距离的缺点：容易受到噪音的影响，尤其是现实中两个移动用户的轨迹在时间和个数上都存在很大差异（缺失，异常），因此需要提前对移动用户的轨迹进行预处理才能使用欧氏距离。</li>
+</ul>
+<h2 id="2动态时间规划dtw算法关键输入两个时间序列包含时间位置"><strong>2、动态时间规划DTW算法</strong>（关键输入：两个时间序列，包含时间、位置）</h2>
+<ul>
+<li>动态时间规划采用重复点之前的记录点填补对应空缺的方式，以求出的最小距离最为轨迹的相似度量，解决了欧式距离对采样过于苛刻的要求。假设有两个轨迹空间域的离散采样<code>P=&lt;p_{1}, p_{2}, ..., p_{m}&gt;</code>和<code>Q=&lt;q_{1}, q_{2}, ..., q_{m}&gt;</code>，基于DTW对两条轨迹的采样点数量没有任何的要求，那么两条轨迹之间每两个点的相似度公式为：</li>
+</ul>
+<p><img decoding="async" width="848" height="80" class="wp-image-6172 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted-2.png" srcset="/wp-content/uploads/2022/10/Pasted-2.png 848w, /wp-content/uploads/2022/10/Pasted-2-300x28.png 300w, /wp-content/uploads/2022/10/Pasted-2-768x72.png 768w" sizes="(max-width: 848px) 100vw, 848px"></p>
+<p>其中<span class="math inline"><span id="MathJax-Element-8-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo stretchy=&quot;false&quot;&gt;|&lt;/mo&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo stretchy=&quot;false&quot;&gt;|&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo stretchy=&quot;false&quot;&gt;|&lt;/mo&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo stretchy=&quot;false&quot;&gt;|&lt;/mo&gt;&lt;/mrow&gt;&lt;/math&gt;"><span id="MathJax-Span-276" class="math"><span id="MathJax-Span-277" class="mrow"><span id="MathJax-Span-278" class="texatom"><span id="MathJax-Span-279" class="mrow"><span id="MathJax-Span-280" class="mo">|</span></span></span><span id="MathJax-Span-281" class="texatom"><span id="MathJax-Span-282" class="mrow"><span id="MathJax-Span-283" class="mo">|</span></span></span><span id="MathJax-Span-284" class="mo">.</span><span id="MathJax-Span-285" class="texatom"><span id="MathJax-Span-286" class="mrow"><span id="MathJax-Span-287" class="mo">|</span></span></span><span id="MathJax-Span-288" class="texatom"><span id="MathJax-Span-289" class="mrow"><span id="MathJax-Span-290" class="mo">|</span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">||.||</span></span></span>为两点坐标的二范数，也就是两点之间的欧式距离。<span class="math inline"><span id="MathJax-Element-9-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;D&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/math&gt;"><span id="MathJax-Span-291" class="math"><span id="MathJax-Span-292" class="mrow"><span id="MathJax-Span-293" class="mi"></span><span id="MathJax-Span-294" class="mo">(</span><span id="MathJax-Span-295" class="mi"></span><span id="MathJax-Span-296" class="mo">,</span><span id="MathJax-Span-297" class="mi"></span><span id="MathJax-Span-298" class="mo">)</span></span></span><span class="MJX_Assistive_MathML" role="presentation">D(i,j)</span></span></span>一般也采用欧氏距离，或者其他路径函数也行。因此两条轨迹之间的相似度为：</p>
+<p><img loading="lazy" decoding="async" width="430" height="116" class="wp-image-6173 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted-3.png" srcset="/wp-content/uploads/2022/10/Pasted-3.png 430w, /wp-content/uploads/2022/10/Pasted-3-300x81.png 300w" sizes="auto, (max-width: 430px) 100vw, 430px"></p>
+<p> </p>
+<h2 id="3最长公共子序列lcss两个时间序列包含时间位置"><strong>3、最长公共子序列LCSS</strong>（两个时间序列，包含：时间，位置）</h2>
+<ul>
+<li>来源：DTW和欧式距离对轨迹的个别点差异性非常敏感，如果两个时间序列在大多数时间段具有相似的形态，<strong>仅仅在很短的时间具有一定的差异</strong>，（即很小的差异也会对相似度衡量产生影响）欧式距离和DTW无法准确衡量这两个时间序列的相似度。LCSS能处理这种问题。</li>
+<li>原理：假设现在有两个长度分别为n何m的时间序列数据A和B，那么最长公共子序列的长度为：</li>
+</ul>
+<p><img loading="lazy" decoding="async" width="1154" height="184" class="wp-image-6174 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted-4.png" srcset="/wp-content/uploads/2022/10/Pasted-4.png 1154w, /wp-content/uploads/2022/10/Pasted-4-300x48.png 300w, /wp-content/uploads/2022/10/Pasted-4-1024x163.png 1024w, /wp-content/uploads/2022/10/Pasted-4-768x122.png 768w" sizes="auto, (max-width: 1154px) 100vw, 1154px"></p>
+<p>其中，<span class="math inline"><span id="MathJax-Element-12-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;&amp;#x03B3;&lt;/mi&gt;&lt;/math&gt;"><span id="MathJax-Span-454" class="math"><span id="MathJax-Span-455" class="mrow"><span id="MathJax-Span-456" class="mi"></span></span></span><span class="MJX_Assistive_MathML" role="presentation">γ</span></span></span>为一个成员相似阈值，<span class="math inline"><span id="MathJax-Element-13-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;/math&gt;"><span id="MathJax-Span-457" class="math"><span id="MathJax-Span-458" class="mrow"><span id="MathJax-Span-459" class="mi"></span><span id="MathJax-Span-460" class="mo">=</span><span id="MathJax-Span-461" class="mn">1</span><span id="MathJax-Span-462" class="mo">,</span><span id="MathJax-Span-463" class="mn">2</span><span id="MathJax-Span-464" class="mo">,</span><span id="MathJax-Span-465" class="mo">.</span><span id="MathJax-Span-466" class="mo">.</span><span id="MathJax-Span-467" class="mo">.</span><span id="MathJax-Span-468" class="mo">,</span><span id="MathJax-Span-469" class="mi"></span></span></span><span class="MJX_Assistive_MathML" role="presentation">t=1,2,...,n</span></span></span>；<span class="math inline"><span id="MathJax-Element-14-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mi&gt;m&lt;/mi&gt;&lt;/math&gt;"><span id="MathJax-Span-470" class="math"><span id="MathJax-Span-471" class="mrow"><span id="MathJax-Span-472" class="mi"></span><span id="MathJax-Span-473" class="mo">=</span><span id="MathJax-Span-474" class="mn">1</span><span id="MathJax-Span-475" class="mo">,</span><span id="MathJax-Span-476" class="mn">2</span><span id="MathJax-Span-477" class="mo">,</span><span id="MathJax-Span-478" class="mo">.</span><span id="MathJax-Span-479" class="mo">.</span><span id="MathJax-Span-480" class="mo">.</span><span id="MathJax-Span-481" class="mo">,</span><span id="MathJax-Span-482" class="mi"></span></span></span><span class="MJX_Assistive_MathML" role="presentation">i=1,2,...,m</span></span></span>。基于上<img loading="lazy" decoding="async" width="708" height="76" class="wp-image-6175 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted-5.png" srcset="/wp-content/uploads/2022/10/Pasted-5.png 708w, /wp-content/uploads/2022/10/Pasted-5-300x32.png 300w" sizes="auto, (max-width: 708px) 100vw, 708px"></p>
+<p> </p>
+<ul>
+<li>LCSS算法可以计算两个子序列之间的最长公共子序列。（子序列是有序的，但不一定是连续的，作用对象是序列）</li>
+<li>例如：序列X= &lt;B,C,D,B&gt;是序列Y = &lt;A,B,C,B,D,A,B&gt;的子序列，对应的下标序列为&lt;2,3,5,7&gt;。
+<ul>
+<li>匹配：<code>L(&lt;AGGTAB&gt;, &lt;GXTXAYB&gt;) = 1 + L(&lt;AGGTA&gt;, &lt;GXTXAY&gt;)</code></li>
+<li>不匹配：<code>L(&lt;ABCDGH&gt;, &lt;AEDFHR&gt;) = MAX ( L(&lt;ABCDG&gt;, &lt;AEDFHR&gt;), L(&lt;ABCDGH&gt;, &lt;AEDFH&gt;) )</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="4改进的lcss算法关键输入两个时间序列包含时间位置"><strong>4、改进的LCSS算法</strong>（关键输入：两个时间序列，包含时间、位置）</h2>
+<ul>
+<li>改进LCSS的三个步骤：
+<ol>
+<li>抽取位置序列：将位置序列映射为具有时间和地理位置信息的序列，以发生时间的序列表示移动用户的轨迹。</li>
+<li>采用FP-Growth算法挖掘移动用户轨迹的频繁序列。</li>
+<li><strong>结合时间和地理因素，采用改进LCSS方法衡量用户轨迹的相似性</strong>。</li>
+</ol>
+</li>
+</ul>
+<p><strong>4.1 抽取位置序列</strong></p>
+<ul>
+<li>移动用户时间序列为：</li>
+</ul>
+<div class="math display">
+<div class="MathJax_Display"><span id="MathJax-Element-16-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: center; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;&gt;&lt;mi&gt;T&lt;/mi&gt;&lt;msub&gt;&lt;mi&gt;r&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mo fence=&quot;false&quot; stretchy=&quot;false&quot;&gt;{&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo fence=&quot;false&quot; stretchy=&quot;false&quot;&gt;}&lt;/mo&gt;&lt;/math&gt;"><span id="MathJax-Span-530" class="math"><span id="MathJax-Span-531" class="mrow"><span id="MathJax-Span-532" class="mi"></span><span id="MathJax-Span-533" class="msubsup"><span id="MathJax-Span-534" class="mi"></span><span id="MathJax-Span-535" class="texatom"><span id="MathJax-Span-536" class="mrow"><span id="MathJax-Span-537" class="mi"></span></span></span></span><span id="MathJax-Span-538" class="mo">=</span><span id="MathJax-Span-539" class="mo">{</span><span id="MathJax-Span-540" class="mo">(</span><span id="MathJax-Span-541" class="msubsup"><span id="MathJax-Span-542" class="mi"></span><span id="MathJax-Span-543" class="texatom"><span id="MathJax-Span-544" class="mrow"><span id="MathJax-Span-545" class="mn">1</span></span></span></span><span id="MathJax-Span-546" class="mo">,</span><span id="MathJax-Span-547" class="msubsup"><span id="MathJax-Span-548" class="mi"></span><span id="MathJax-Span-549" class="texatom"><span id="MathJax-Span-550" class="mrow"><span id="MathJax-Span-551" class="mn">1</span></span></span></span><span id="MathJax-Span-552" class="mo">)</span><span id="MathJax-Span-553" class="mo">,</span><span id="MathJax-Span-554" class="mo">(</span><span id="MathJax-Span-555" class="msubsup"><span id="MathJax-Span-556" class="mi"></span><span id="MathJax-Span-557" class="texatom"><span id="MathJax-Span-558" class="mrow"><span id="MathJax-Span-559" class="mn">2</span></span></span></span><span id="MathJax-Span-560" class="mo">,</span><span id="MathJax-Span-561" class="msubsup"><span id="MathJax-Span-562" class="mi"></span><span id="MathJax-Span-563" class="texatom"><span id="MathJax-Span-564" class="mrow"><span id="MathJax-Span-565" class="mn">2</span></span></span></span><span id="MathJax-Span-566" class="mo">)</span><span id="MathJax-Span-567" class="mo">,</span><span id="MathJax-Span-568" class="mo">.</span><span id="MathJax-Span-569" class="mo">.</span><span id="MathJax-Span-570" class="mo">.</span><span id="MathJax-Span-571" class="mo">,</span><span id="MathJax-Span-572" class="mo">(</span><span id="MathJax-Span-573" class="msubsup"><span id="MathJax-Span-574" class="mi"></span><span id="MathJax-Span-575" class="texatom"><span id="MathJax-Span-576" class="mrow"><span id="MathJax-Span-577" class="mi"></span></span></span></span><span id="MathJax-Span-578" class="mo">,</span><span id="MathJax-Span-579" class="msubsup"><span id="MathJax-Span-580" class="mi"></span><span id="MathJax-Span-581" class="texatom"><span id="MathJax-Span-582" class="mrow"><span id="MathJax-Span-583" class="mi"></span></span></span></span><span id="MathJax-Span-584" class="mo">)</span><span id="MathJax-Span-585" class="mo">,</span><span id="MathJax-Span-586" class="mo">.</span><span id="MathJax-Span-587" class="mo">.</span><span id="MathJax-Span-588" class="mo">.</span><span id="MathJax-Span-589" class="mo">,</span><span id="MathJax-Span-590" class="mo">(</span><span id="MathJax-Span-591" class="msubsup"><span id="MathJax-Span-592" class="mi"></span><span id="MathJax-Span-593" class="texatom"><span id="MathJax-Span-594" class="mrow"><span id="MathJax-Span-595" class="mi"></span></span></span></span><span id="MathJax-Span-596" class="mo">,</span><span id="MathJax-Span-597" class="msubsup"><span id="MathJax-Span-598" class="mi"></span><span id="MathJax-Span-599" class="texatom"><span id="MathJax-Span-600" class="mrow"><span id="MathJax-Span-601" class="mi"></span></span></span></span><span id="MathJax-Span-602" class="mo">)</span><span id="MathJax-Span-603" class="mo">}</span></span></span><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation">Tri={(L1,t1),(L2,t2),...,(Li,ti),...,(Ln,tn)}</span></span></div>
+</div>
+<p>其中<span class="math inline"><span id="MathJax-Element-17-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/math&gt;"><span id="MathJax-Span-604" class="math"><span id="MathJax-Span-605" class="mrow"><span id="MathJax-Span-606" class="mo">(</span><span id="MathJax-Span-607" class="msubsup"><span id="MathJax-Span-608" class="mi"></span><span id="MathJax-Span-609" class="texatom"><span id="MathJax-Span-610" class="mrow"><span id="MathJax-Span-611" class="mi"></span></span></span></span><span id="MathJax-Span-612" class="mo">,</span><span id="MathJax-Span-613" class="msubsup"><span id="MathJax-Span-614" class="mi"></span><span id="MathJax-Span-615" class="texatom"><span id="MathJax-Span-616" class="mrow"><span id="MathJax-Span-617" class="mi"></span></span></span></span><span id="MathJax-Span-618" class="mo">)</span></span></span><span class="MJX_Assistive_MathML" role="presentation">(Li,ti)</span></span></span>表示用户出现在某个基站的位置<span class="math inline"><span id="MathJax-Element-18-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-619" class="math"><span id="MathJax-Span-620" class="mrow"><span id="MathJax-Span-621" class="msubsup"><span id="MathJax-Span-622" class="mi"></span><span id="MathJax-Span-623" class="texatom"><span id="MathJax-Span-624" class="mrow"><span id="MathJax-Span-625" class="mi"></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">Li</span></span></span>对应的时间<span class="math inline"><span id="MathJax-Element-19-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-626" class="math"><span id="MathJax-Span-627" class="mrow"><span id="MathJax-Span-628" class="msubsup"><span id="MathJax-Span-629" class="mi"></span><span id="MathJax-Span-630" class="texatom"><span id="MathJax-Span-631" class="mrow"><span id="MathJax-Span-632" class="mi"></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">ti</span></span></span>。</p>
+<ul>
+<li>移动用户轨迹为：</li>
+</ul>
+<div class="math display">
+<div class="MathJax_Display"><span id="MathJax-Element-20-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: center; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;&gt;&lt;mi&gt;T&lt;/mi&gt;&lt;msub&gt;&lt;mi&gt;r&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mo fence=&quot;false&quot; stretchy=&quot;false&quot;&gt;{&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;3&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;3&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;.&lt;/mo&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo&gt;&amp;#x2212;&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;mo fence=&quot;false&quot; stretchy=&quot;false&quot;&gt;}&lt;/mo&gt;&lt;/math&gt;"><span id="MathJax-Span-633" class="math"><span id="MathJax-Span-634" class="mrow"><span id="MathJax-Span-635" class="mi"></span><span id="MathJax-Span-636" class="msubsup"><span id="MathJax-Span-637" class="mi"></span><span id="MathJax-Span-638" class="texatom"><span id="MathJax-Span-639" class="mrow"><span id="MathJax-Span-640" class="mi"></span></span></span></span><span id="MathJax-Span-641" class="mo">=</span><span id="MathJax-Span-642" class="mo">{</span><span id="MathJax-Span-643" class="mo">(</span><span id="MathJax-Span-644" class="msubsup"><span id="MathJax-Span-645" class="mi"></span><span id="MathJax-Span-646" class="texatom"><span id="MathJax-Span-647" class="mrow"><span id="MathJax-Span-648" class="mn">1</span></span></span></span><span id="MathJax-Span-649" class="mo">,</span><span id="MathJax-Span-650" class="msubsup"><span id="MathJax-Span-651" class="mi"></span><span id="MathJax-Span-652" class="texatom"><span id="MathJax-Span-653" class="mrow"><span id="MathJax-Span-654" class="mn">2</span></span></span></span><span id="MathJax-Span-655" class="mo">,</span><span id="MathJax-Span-656" class="msubsup"><span id="MathJax-Span-657" class="mi"></span><span id="MathJax-Span-658" class="texatom"><span id="MathJax-Span-659" class="mrow"><span id="MathJax-Span-660" class="mn">1</span></span></span></span><span id="MathJax-Span-661" class="mo">,</span><span id="MathJax-Span-662" class="msubsup"><span id="MathJax-Span-663" class="mi"></span><span id="MathJax-Span-664" class="texatom"><span id="MathJax-Span-665" class="mrow"><span id="MathJax-Span-666" class="mn">2</span></span></span></span><span id="MathJax-Span-667" class="mo">)</span><span id="MathJax-Span-668" class="mo">,</span><span id="MathJax-Span-669" class="mo">(</span><span id="MathJax-Span-670" class="msubsup"><span id="MathJax-Span-671" class="mi"></span><span id="MathJax-Span-672" class="texatom"><span id="MathJax-Span-673" class="mrow"><span id="MathJax-Span-674" class="mn">2</span></span></span></span><span id="MathJax-Span-675" class="mo">,</span><span id="MathJax-Span-676" class="msubsup"><span id="MathJax-Span-677" class="mi"></span><span id="MathJax-Span-678" class="texatom"><span id="MathJax-Span-679" class="mrow"><span id="MathJax-Span-680" class="mn">3</span></span></span></span><span id="MathJax-Span-681" class="mo">,</span><span id="MathJax-Span-682" class="msubsup"><span id="MathJax-Span-683" class="mi"></span><span id="MathJax-Span-684" class="texatom"><span id="MathJax-Span-685" class="mrow"><span id="MathJax-Span-686" class="mn">2</span></span></span></span><span id="MathJax-Span-687" class="mo">,</span><span id="MathJax-Span-688" class="msubsup"><span id="MathJax-Span-689" class="mi"></span><span id="MathJax-Span-690" class="texatom"><span id="MathJax-Span-691" class="mrow"><span id="MathJax-Span-692" class="mn">3</span></span></span></span><span id="MathJax-Span-693" class="mo">)</span><span id="MathJax-Span-694" class="mo">,</span><span id="MathJax-Span-695" class="mo">.</span><span id="MathJax-Span-696" class="mo">.</span><span id="MathJax-Span-697" class="mo">.</span><span id="MathJax-Span-698" class="mo">,</span><span id="MathJax-Span-699" class="mo">(</span><span id="MathJax-Span-700" class="msubsup"><span id="MathJax-Span-701" class="mi"></span><span id="MathJax-Span-702" class="texatom"><span id="MathJax-Span-703" class="mrow"><span id="MathJax-Span-704" class="mi"></span></span></span></span><span id="MathJax-Span-705" class="mo">,</span><span id="MathJax-Span-706" class="msubsup"><span id="MathJax-Span-707" class="mi"></span><span id="MathJax-Span-708" class="texatom"><span id="MathJax-Span-709" class="mrow"><span id="MathJax-Span-710" class="mi"></span><span id="MathJax-Span-711" class="mo">+</span><span id="MathJax-Span-712" class="mn">1</span></span></span></span><span id="MathJax-Span-713" class="mo">,</span><span id="MathJax-Span-714" class="msubsup"><span id="MathJax-Span-715" class="mi"></span><span id="MathJax-Span-716" class="texatom"><span id="MathJax-Span-717" class="mrow"><span id="MathJax-Span-718" class="mi"></span></span></span></span><span id="MathJax-Span-719" class="mo">,</span><span id="MathJax-Span-720" class="msubsup"><span id="MathJax-Span-721" class="mi"></span><span id="MathJax-Span-722" class="texatom"><span id="MathJax-Span-723" class="mrow"><span id="MathJax-Span-724" class="mi"></span><span id="MathJax-Span-725" class="mo">+</span><span id="MathJax-Span-726" class="mn">1</span></span></span></span><span id="MathJax-Span-727" class="mo">)</span><span id="MathJax-Span-728" class="mo">,</span><span id="MathJax-Span-729" class="mo">.</span><span id="MathJax-Span-730" class="mo">.</span><span id="MathJax-Span-731" class="mo">.</span><span id="MathJax-Span-732" class="mo">,</span><span id="MathJax-Span-733" class="mo">(</span><span id="MathJax-Span-734" class="msubsup"><span id="MathJax-Span-735" class="mi"></span><span id="MathJax-Span-736" class="texatom"><span id="MathJax-Span-737" class="mrow"><span id="MathJax-Span-738" class="mi"></span><span id="MathJax-Span-739" class="mo">−</span><span id="MathJax-Span-740" class="mn">1</span></span></span></span><span id="MathJax-Span-741" class="mo">,</span><span id="MathJax-Span-742" class="msubsup"><span id="MathJax-Span-743" class="mi"></span><span id="MathJax-Span-744" class="texatom"><span id="MathJax-Span-745" class="mrow"><span id="MathJax-Span-746" class="mi"></span></span></span></span><span id="MathJax-Span-747" class="mo">,</span><span id="MathJax-Span-748" class="msubsup"><span id="MathJax-Span-749" class="mi"></span><span id="MathJax-Span-750" class="texatom"><span id="MathJax-Span-751" class="mrow"><span id="MathJax-Span-752" class="mi"></span><span id="MathJax-Span-753" class="mo">−</span><span id="MathJax-Span-754" class="mn">1</span></span></span></span><span id="MathJax-Span-755" class="mo">,</span><span id="MathJax-Span-756" class="msubsup"><span id="MathJax-Span-757" class="mi"></span><span id="MathJax-Span-758" class="texatom"><span id="MathJax-Span-759" class="mrow"><span id="MathJax-Span-760" class="mi"></span></span></span></span><span id="MathJax-Span-761" class="mo">)</span><span id="MathJax-Span-762" class="mo">}</span></span></span><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation">Tri={(L1,L2,t1,t2),(L2,L3,t2,t3),...,(Li,Li+1,ti,ti+1),...,(Ln−1,Ln,tn−1,tn)}</span></span></div>
+</div>
+<p>其中序列<span class="math inline"><span id="MathJax-Element-21-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/math&gt;"><span id="MathJax-Span-763" class="math"><span id="MathJax-Span-764" class="mrow"><span id="MathJax-Span-765" class="mo">(</span><span id="MathJax-Span-766" class="msubsup"><span id="MathJax-Span-767" class="mi"></span><span id="MathJax-Span-768" class="texatom"><span id="MathJax-Span-769" class="mrow"><span id="MathJax-Span-770" class="mn">1</span></span></span></span><span id="MathJax-Span-771" class="mo">,</span><span id="MathJax-Span-772" class="msubsup"><span id="MathJax-Span-773" class="mi"></span><span id="MathJax-Span-774" class="texatom"><span id="MathJax-Span-775" class="mrow"><span id="MathJax-Span-776" class="mn">2</span></span></span></span><span id="MathJax-Span-777" class="mo">,</span><span id="MathJax-Span-778" class="msubsup"><span id="MathJax-Span-779" class="mi"></span><span id="MathJax-Span-780" class="texatom"><span id="MathJax-Span-781" class="mrow"><span id="MathJax-Span-782" class="mn">1</span></span></span></span><span id="MathJax-Span-783" class="mo">,</span><span id="MathJax-Span-784" class="msubsup"><span id="MathJax-Span-785" class="mi"></span><span id="MathJax-Span-786" class="texatom"><span id="MathJax-Span-787" class="mrow"><span id="MathJax-Span-788" class="mn">2</span></span></span></span><span id="MathJax-Span-789" class="mo">)</span></span></span><span class="MJX_Assistive_MathML" role="presentation">(L1,L2,t1,t2)</span></span></span>表示移动用户在时刻<span class="math inline"><span id="MathJax-Element-22-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-790" class="math"><span id="MathJax-Span-791" class="mrow"><span id="MathJax-Span-792" class="msubsup"><span id="MathJax-Span-793" class="mi"></span><span id="MathJax-Span-794" class="texatom"><span id="MathJax-Span-795" class="mrow"><span id="MathJax-Span-796" class="mn">1</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">t1</span></span></span>出现在基站<span class="math inline"><span id="MathJax-Element-23-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-797" class="math"><span id="MathJax-Span-798" class="mrow"><span id="MathJax-Span-799" class="msubsup"><span id="MathJax-Span-800" class="mi"></span><span id="MathJax-Span-801" class="texatom"><span id="MathJax-Span-802" class="mrow"><span id="MathJax-Span-803" class="mn">1</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">L1</span></span></span>，然后在时刻<span class="math inline"><span id="MathJax-Element-24-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;t&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-804" class="math"><span id="MathJax-Span-805" class="mrow"><span id="MathJax-Span-806" class="msubsup"><span id="MathJax-Span-807" class="mi"></span><span id="MathJax-Span-808" class="texatom"><span id="MathJax-Span-809" class="mrow"><span id="MathJax-Span-810" class="mn">2</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">t2</span></span></span>离开基站<span class="math inline"><span id="MathJax-Element-25-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-811" class="math"><span id="MathJax-Span-812" class="mrow"><span id="MathJax-Span-813" class="msubsup"><span id="MathJax-Span-814" class="mi"></span><span id="MathJax-Span-815" class="texatom"><span id="MathJax-Span-816" class="mrow"><span id="MathJax-Span-817" class="mn">1</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">L1</span></span></span>前往基站<span class="math inline"><span id="MathJax-Element-26-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-818" class="math"><span id="MathJax-Span-819" class="mrow"><span id="MathJax-Span-820" class="msubsup"><span id="MathJax-Span-821" class="mi"></span><span id="MathJax-Span-822" class="texatom"><span id="MathJax-Span-823" class="mrow"><span id="MathJax-Span-824" class="mn">2</span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">L2</span></span></span>。</p>
+<p><strong>4.2 采用FP-Growth算法挖掘移动用户轨迹的频繁序列</strong></p>
+<ul>
+<li>移动轨迹的数据的频繁模式定义：<span class="math inline"><span id="MathJax-Element-27-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;i&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mo stretchy=&quot;false&quot;&gt;&amp;#x2192;&lt;/mo&gt;&lt;msub&gt;&lt;mi&gt;L&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mi&gt;j&lt;/mi&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;/math&gt;"><span id="MathJax-Span-825" class="math"><span id="MathJax-Span-826" class="mrow"><span id="MathJax-Span-827" class="msubsup"><span id="MathJax-Span-828" class="mi"></span><span id="MathJax-Span-829" class="texatom"><span id="MathJax-Span-830" class="mrow"><span id="MathJax-Span-831" class="mi"></span></span></span></span><span id="MathJax-Span-832" class="mo">→</span><span id="MathJax-Span-833" class="msubsup"><span id="MathJax-Span-834" class="mi"></span><span id="MathJax-Span-835" class="texatom"><span id="MathJax-Span-836" class="mrow"><span id="MathJax-Span-837" class="mi"></span></span></span></span></span></span><span class="MJX_Assistive_MathML" role="presentation">Li→Lj</span></span></span></li>
+<li>移动用户频繁轨迹提取是从移动用户移动轨迹数据集中<strong>提取支持度大于最小支持度阈值的集合</strong>。移动用户频繁模式反映了移动用户群体在移动行为上具有相同特征或是规律。</li>
+<li>通过引入闭合频繁项集保证了移动用户行为信息量最全面且数据规模最小。具体过程如下：
+<ol>
+<li>首先，以基站平均逗留时间作为项目权重，以各项目count值降序依次为头结点和其他节点，生成条件模式基；</li>
+<li>然后，采用条件模式基构造对应的加权条件FP树；</li>
+<li>最后按照设定加权支持度的阈值判断相应的频繁模式。</li>
+</ol>
+</li>
+</ul>
+<p><strong>4.3 基于改进LCSS的移动用户轨迹相似性查询算法</strong></p>
+<ul>
+<li>TP树获得用户常驻区域模式后，以时间系数来反映所有用户在邻近时间相同地理位置的比例。时间相似性系数公式为：</li>
+</ul>
+<p><img loading="lazy" decoding="async" width="854" height="272" class="wp-image-6176 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted-6.png" srcset="/wp-content/uploads/2022/10/Pasted-6.png 854w, /wp-content/uploads/2022/10/Pasted-6-300x96.png 300w, /wp-content/uploads/2022/10/Pasted-6-768x245.png 768w" sizes="auto, (max-width: 854px) 100vw, 854px"></p>
+<div class="math display"></div>
+<pre class="highlighter-hljs"><code class="highlighter-hljs hljs language-ruby">其中，&lt;span class=&quot;hljs-variable&quot;&gt;$\&lt;/span&gt;Delta T&lt;span class=&quot;hljs-variable&quot;&gt;$为&lt;/span&gt;精度（一般设为&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;个小时），&lt;span class=&quot;hljs-variable&quot;&gt;$T_&lt;/span&gt;{i}(u)&lt;span class=&quot;hljs-variable&quot;&gt;$表&lt;/span&gt;示移动用户u在某一个时间精度内到达某一个基站&lt;span class=&quot;hljs-variable&quot;&gt;$L_&lt;/span&gt;{i}(u)&lt;span class=&quot;hljs-variable&quot;&gt;$的&lt;/span&gt;时刻，&lt;span class=&quot;hljs-variable&quot;&gt;$T_&lt;/span&gt;{j}(v)&lt;span class=&quot;hljs-variable&quot;&gt;$表&lt;/span&gt;示移动用户v在某一个时间精度内到达某一个基站&lt;span class=&quot;hljs-variable&quot;&gt;$L_&lt;/span&gt;{j}(v)&lt;span class=&quot;hljs-variable&quot;&gt;$的&lt;/span&gt;时刻，&lt;span class=&quot;hljs-variable&quot;&gt;$\&lt;/span&gt;delta (L_{i}(u), L_{j}(v))&lt;span class=&quot;hljs-variable&quot;&gt;$是&lt;/span&gt;一个重合性公式，当两个用户的基站重合时，值为&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;，否则为&lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;。
+- 用户重合度：指一个网站内的多少访问者同时浏览器了其他网站。即同时访问两个网站的用户中有多大比例是重合的。假设A和B分别为需要计算用户重合度的&lt;span class=&quot;hljs-number&quot;&gt;2&lt;/span&gt;个网站的独立用户数，则重合度计算公式为：
+</code></pre>
+<p> </p>
+<div class="math display">
+<div class="MathJax_Display"><span id="MathJax-Element-29-Frame" class="MathJax" style="margin: 0px; padding: 0px; display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 14px; text-indent: 0px; text-align: center; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; position: relative;" tabindex="0" role="presentation" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;&amp;#x7528;&lt;/mo&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;&amp;#x6237;&lt;/mo&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;&amp;#x91CD;&lt;/mo&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;&amp;#x5408;&lt;/mo&gt;&lt;/mrow&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;&amp;#x5EA6;&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mo&gt;&amp;#x2229;&lt;/mo&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;/&lt;/mo&gt;&lt;/mrow&gt;&lt;mi&gt;A&lt;/mi&gt;&lt;mo&gt;&amp;#x222A;&lt;/mo&gt;&lt;mi&gt;B&lt;/mi&gt;&lt;mo&gt;&amp;#x2217;&lt;/mo&gt;&lt;mn&gt;100&lt;/mn&gt;&lt;/math&gt;"><span id="MathJax-Span-975" class="math"><span id="MathJax-Span-976" class="mrow"><span id="MathJax-Span-977" class="texatom"><span id="MathJax-Span-978" class="mrow"><span id="MathJax-Span-979" class="mo">用</span></span></span><span id="MathJax-Span-980" class="texatom"><span id="MathJax-Span-981" class="mrow"><span id="MathJax-Span-982" class="mo">户</span></span></span><span id="MathJax-Span-983" class="texatom"><span id="MathJax-Span-984" class="mrow"><span id="MathJax-Span-985" class="mo">重</span></span></span><span id="MathJax-Span-986" class="texatom"><span id="MathJax-Span-987" class="mrow"><span id="MathJax-Span-988" class="mo">合</span></span></span><span id="MathJax-Span-989" class="texatom"><span id="MathJax-Span-990" class="mrow"><span id="MathJax-Span-991" class="mo">度</span></span></span><span id="MathJax-Span-992" class="mo">=</span><span id="MathJax-Span-993" class="mi"></span><span id="MathJax-Span-994" class="mo">∩</span><span id="MathJax-Span-995" class="mi"></span><span id="MathJax-Span-996" class="texatom"><span id="MathJax-Span-997" class="mrow"><span id="MathJax-Span-998" class="mo">/</span></span></span><span id="MathJax-Span-999" class="mi"></span><span id="MathJax-Span-1000" class="mo">∪</span><span id="MathJax-Span-1001" class="mi"></span><span id="MathJax-Span-1002" class="mo">∗</span><span id="MathJax-Span-1003" class="mn">100</span></span></span><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation">用户重合度=A∩B/A∪B∗100</span></span></div>
+</div>
+<p> </p>
+<ul>
+<li>结合时间因素，改进的LCSS<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95" title="View all posts in 相似度算法" target="_blank">相似度算法</a></span>为：</li>
+</ul>
+<p><img loading="lazy" decoding="async" width="1404" height="400" class="wp-image-6177 size-full aligncenter" src="/wp-content/uploads/2022/10/Pasted-7.png" srcset="/wp-content/uploads/2022/10/Pasted-7.png 1404w, /wp-content/uploads/2022/10/Pasted-7-300x85.png 300w, /wp-content/uploads/2022/10/Pasted-7-1024x292.png 1024w, /wp-content/uploads/2022/10/Pasted-7-768x219.png 768w" sizes="auto, (max-width: 1404px) 100vw, 1404px"></p>
+<p>其中，公式的第一部分表示用户u和用户v一天的最长公共子序列，第二部分表示在每一个时间精度下，两位用户在邻近时间相同的地理位置的比例。</p>
+<p><strong>4.4 改进LCSS算法与LCSS算法的优缺点</strong></p>
+<ul>
+<li>优点：结合了<strong>时间</strong>和地理因素，衡量用户轨迹的相似性，因此提高了相似度计算的准确性。</li>
+<li>缺点：改进之后，需要抽取时间序列、构造用户轨迹的频繁序列，然后才能用改进的LCSS<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95" title="View all posts in 相似度算法" target="_blank">相似度算法</a></span>计算用户轨迹的相似度，因此算法模型过程相对比较复杂。</li>
+</ul>
+<p><strong>参考：</strong><br>
+1、LCSS论文：<a href="http://www.cs.bu.edu/groups/dblab/pub_pdfs/icde02.pdf" target="_blank" rel="noopener">http://www.cs.bu.edu/groups/dblab/pub_pdfs/icde02.pdf</a><br>
+2、基于改进LCSS的移动用户轨迹相似性查询算法研究：<a href="https://www.sohu.com/a/133750116_354885" target="_blank" rel="noopener">https://www.sohu.com/a/133750116_354885</a><br>
+3、简书：LCSS实现：<a href="https://www.jianshu.com/p/d7b8db280a01" target="_blank" rel="noopener">https://www.jianshu.com/p/d7b8db280a01</a><br>
+4、博客之用户重合度：<a href="https://blog.csdn.net/zyy160alex5/article/details/8791864" target="_blank" rel="noopener">https://blog.csdn.net/zyy160alex5/article/details/8791864</a></p>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/dtw" rel="tag">DTW</a>, <a href="/tag/lcss" rel="tag">LCSS</a>, <a href="/tag/%E6%9B%B2%E7%BA%BF%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95" rel="tag">曲线相似度算法</a>, <a href="/tag/%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95" rel="tag">相似度算法</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2022/10/17/python-dtw.html" rel="prev">python版DTW动态时间规划算法</a><br>【下篇】<a href="/2022/10/18/python.html" rel="next">python 四元数 转 欧拉角</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2022/10/17/python-dtw.html">python版DTW动态时间规划算法</a></li><li> · <a href="/2014/04/02/c%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%AE%97%E6%B3%95.html">C#字符串相似度算法</a></li><li> · <a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li><li> · <a href="/2025/08/13/authentic-roles.html">authentic如何把roles返回给sso客户端</a></li><li> · <a href="/2025/06/06/docker-fastapi.html">Docker 快速部署 FastAPI 项目</a></li><li> · <a href="/2022/11/03/unity3d-mysql-error-the-given-key-was-not-present-in-the-dictionary.html">unity3d mysql error: The given key was not present in the dictionary.</a></li><li> · <a href="/2022/10/18/python.html">python 四元数 转 欧拉角</a></li><li> · <a href="/2022/09/23/macos-charles-4-x.html">macOS Charles 4.x版本的安装及使用（含破解激活）</a></li><li> · <a href="/2022/09/23/centos-install-chrome-chromedriver.html">centos安装chrome+chromedriver</a></li><li> · <a href="/2022/09/20/pyqt5-demo.html">PyQt5 demo</a></li><li> · <a href="/2022/09/08/unity3d-loadscencesync.html">unity3d异步加载场景</a></li><li> · <a href="/2022/08/30/unity-show-model-on-ui.html">Unity中将3D模型显示在UI上或者显示在UI前面</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2022年10月17日发表在<a href="/category/python" rel="category tag">Python</a>, <a href="/category/unity3d" rel="category tag">Unity3D</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2022/10/17/lcss.html" rel="bookmark" title="本文固定链接 /2022/10/17/lcss.html">曲线(轨迹)相似度算法——LCSS最长公共子序列算法 | Bruce's Blog</a><a href="#" onclick="copy_code('/2022/10/17/lcss.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2022/10/17/lcss.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="6169" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="9196f45377"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="214"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.074 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:46:42 -->

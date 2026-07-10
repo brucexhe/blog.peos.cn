@@ -1,0 +1,800 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>centos安装配置hive | Bruce's Blog</title> 
+<meta name="description" content="本文开篇，附 Hive 相关内容地址：">
+<meta name="keywords" content="Hadoop,hive">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2022 年 5 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="6" class="pad"> </td><td>1</td>
+	</tr>
+	<tr>
+		<td>2</td><td><a href="/2022/05/03" aria-label="2022年5月3日 发布的文章">3</a></td><td>4</td><td><a href="/2022/05/05" aria-label="2022年5月5日 发布的文章">5</a></td><td>6</td><td><a href="/2022/05/07" aria-label="2022年5月7日 发布的文章">7</a></td><td>8</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/05/09" aria-label="2022年5月9日 发布的文章">9</a></td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td>
+	</tr>
+	<tr>
+		<td>16</td><td><a href="/2022/05/17" aria-label="2022年5月17日 发布的文章">17</a></td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/05/23" aria-label="2022年5月23日 发布的文章">23</a></td><td><a href="/2022/05/24" aria-label="2022年5月24日 发布的文章">24</a></td><td><a href="/2022/05/25" aria-label="2022年5月25日 发布的文章">25</a></td><td><a href="/2022/05/26" aria-label="2022年5月26日 发布的文章">26</a></td><td><a href="/2022/05/27" aria-label="2022年5月27日 发布的文章">27</a></td><td>28</td><td>29</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/05/30" aria-label="2022年5月30日 发布的文章">30</a></td><td>31</td>
+		<td class="pad" colspan="5"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2022/04">« 4 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2022/06">6 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#184973;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#2026ba;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#bbbc9e;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#21fc4e;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#b205e6;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#d941a;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#a39ec0;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#e41715;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#207646;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#b11b27;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#dc9618;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#da6440;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#810b51;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#b47465;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#330ee6;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#fac846;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#12c135;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#8e8812;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#f15cc2;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#9c93b0;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#66877e;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#63a7c8;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#97ff37;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#f6100b;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#6332b4;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#d4df4e;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#d60122;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#2fd39d;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#714217;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#3a4954;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#13754e;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#3b9d11;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#e2c692;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#a1e9da;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#377141;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#4de092;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#dd6d56;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#9f3c09;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#b7fcc7;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#939493;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#a9591b;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#95091a;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#e326cb;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#52c507;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#f57f2;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/bigdata" rel="category tag">大数据</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">centos安装配置hive</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2022-05-05 14:53</span>
+			<span class="category">  <a href="/category/bigdata" rel="category tag">大数据</a></span>
+			<span class="article_comment"><a href="/2022/05/05/hive.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>483</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>本文开篇，附 Hive 相关内容地址：</p>
+<p>Hive官网：http://<span class="wp_keywordlink_affiliate"><a href="/tag/hive" title="View all posts in hive" target="_blank">hive</a></span>.apache.org<br>
+Hive官方参考文档：https://cwiki.apache.org/confluence/display/Hive/GettingStarted<br>
+Hive各版本下载地址：http://arc<span class="wp_keywordlink_affiliate"><a href="/tag/hive" title="View all posts in hive" target="_blank">hive</a></span>.apache.org/dist/<span class="wp_keywordlink_affiliate"><a href="/tag/hive" title="View all posts in hive" target="_blank">hive</a></span><br>
+Hive GitHub地址：https://github.com/apache/hive</p>
+<p> </p>
+<p>1.前提<br>
+hive 安装之前，需要以 <span class="wp_keywordlink_affiliate"><a href="/tag/hadoop" title="View all posts in Hadoop" target="_blank">Hadoop</a></span> 集群为前提，Hive 是执行在 <span class="wp_keywordlink_affiliate"><a href="/tag/hadoop" title="View all posts in Hadoop" target="_blank">Hadoop</a></span>集群上的。Hadoop集群安装，参考：</p>
+<p>CentOS 7.7 安装 Hadoop 2.10.1集群<br>
+CentOS 7.7 安装 Hadoop 3.1.3集群<br>
+Hadoop HA版集群安装(待补充)<br>
+已安装好的 MySQL数据库，可参考：CentOS 6.2 安装 MySQL 5.7.28<br>
+Hadoop集群部署配置信息如下：<br>
+2.Hive安装<br>
+Ⅰ.下载tar.gz包<br>
+下载：apache-hive-3.1.2-bin.tar.gz ，本文 Hive 安装至 /opt/module/目录下。将下载好的 hive.tar.gz 上传至 Linux 服务器，使用命令 tar -zxvf apache-hive-3.1.2-bin.tar.gz -C /opt/module/ 解压缩至指定目录下。同时重命名为 hive-3.1.2。<br>
+<img fetchpriority="high" decoding="async" class="alignnone size-full wp-image-5709" src="/wp-content/uploads/2022/05/2021051814161247.png" width="473" height="107" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/2021051814161247.png 473w, /wp-content/uploads/2022/05/2021051814161247-300x68.png 300w" sizes="(max-width: 473px) 100vw, 473px"></p>
+<p> </p>
+<p>Ⅱ.环境变量配置<br>
+备注：my_env.sh 是我们自定义的一个文件，在该文件中可编辑我们自己需要的环境变量，这样可与系统默认的环境变量区分开，也方便编写。环境变量的配置方式有如下几种方式，参考：Linux设置全局变量</p>
+<p>修改/etc/profile.d/my_env.sh，添加环境变量，如图所示【本机已配置好jdk、Hadoop】</p>
+<p><img decoding="async" class="alignnone size-full wp-image-5710" src="/wp-content/uploads/2022/05/20210518142142402.png" width="367" height="188" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518142142402.png 367w, /wp-content/uploads/2022/05/20210518142142402-300x154.png 300w" sizes="(max-width: 367px) 100vw, 367px"></p>
+<pre class="prettyprint"><code class="prism language-powershell has-numbering">&lt;span class=&quot;token comment&quot;&gt;#HIVE_HOME&lt;/span&gt;
+export HIVE_HOME=&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;opt&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;module&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;hive
+export PATH=&lt;span class=&quot;token variable&quot;&gt;$PATH&lt;/span&gt;:&lt;span class=&quot;token variable&quot;&gt;$HIVE_HOME&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;bin</code></pre>
+<p>1</p>
+<p>Ⅲ.初始化元数据库<br>
+Hive中元数据，默认存储在 Derby 中。使用如下命令，初始化 Derby 元数据。（由于Derby数据库的缺陷，本文选择 MySQL进行元数据存储，本步可省略）</p>
+<p>bin/schematool -dbType derby -initSchema<br>
+1<br>
+由于Derby数据库存在如下2个缺点，所以，需要将 Derby 换成 MySQL 来存储元数据</p>
+<p>Derby中的数据没有可视化界面，不方便数据的查看<br>
+Derby 默认是单用户模式，只支持一个用户使用 。<br>
+初始化元数据库后，便可以通过 bin/hive 命令方式登录。此处选择 MySQL 作为 Hive元数据库，继续向下看</p>
+<p>Ⅳ.Hive 元数据配置到 MySQL<br>
+1.准备MySQL的JDBC驱动<br>
+下载对应版本 MySQL的 JDBC 驱动包，本文使用 MySQL版本为：5.7.28，使用 mysql-connector-java-5.1.37.jar 驱动包，下载地址：https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.37</p>
+<p><img decoding="async" class="alignnone size-full wp-image-5711" src="/wp-content/uploads/2022/05/20210518145433628.png" width="1105" height="489" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518145433628.png 1105w, /wp-content/uploads/2022/05/20210518145433628-300x133.png 300w, /wp-content/uploads/2022/05/20210518145433628-1024x453.png 1024w, /wp-content/uploads/2022/05/20210518145433628-768x340.png 768w" sizes="(max-width: 1105px) 100vw, 1105px"></p>
+<h3><a name="t8"></a><a id="2_Hive__lib__60"></a>2.将驱动拷贝到 Hive 的 lib 目录下</h3>
+<blockquote><p><strong>cp</strong> <span style="color: blue;">/xxx/mysql-connector-java5.1.37.jar</span> <span style="color: green;"><strong>$HIVE_HOME/lib</strong></span></p></blockquote>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-5712" src="/wp-content/uploads/2022/05/20210518145528195.png" width="455" height="74" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518145528195.png 455w, /wp-content/uploads/2022/05/20210518145528195-300x49.png 300w" sizes="auto, (max-width: 455px) 100vw, 455px"></p>
+<p>3.配置 Metastore 到 MySQL<br>
+Hive 的 conf 目录下都是相关配置文件。Hive 中的配置文件是 hive-default.xml，这个文件中包含hive所有的默认配置，里面的配置贼多，不方便查看。</p>
+<p>我们可以在 conf 目录下，vim 方式自定义一个 hive-site.xml文件，Hive在启动时会动态的去加载 hive-site.xml 中自定义的配置信息，该文件就是用户自定义的一个配置文件，类似于 hdfs-site.xml 。</p>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="pun">&lt;?</span><span class="pln">xml version</span><span class="pun">=</span><span class="str">"1.0"</span><span class="pun">?&gt;</span></li>
+<li class="L1"><span class="pun">&lt;?</span><span class="pln">xml</span><span class="pun">-</span><span class="pln">stylesheet type</span><span class="pun">=</span><span class="str">"text/xsl"</span><span class="pln"> href</span><span class="pun">=</span><span class="str">"configuration.xsl"</span><span class="pun">?&gt;</span></li>
+<li class="L2"><span class="tag">&lt;configuration&gt;</span></li>
+<li class="L3"><span class="com">&lt;!-- jdbc 连接的 URL --&gt;</span></li>
+<li class="L4"><span class="tag">&lt;property&gt;</span></li>
+<li class="L5"><span class="tag">&lt;name&gt;</span><span class="pln">javax.jdo.option.ConnectionURL</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L6"><span class="tag">&lt;value&gt;</span><span class="pln">jdbc:mysql://hadoop201:3306/metastore?useSSL=false</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L7"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L8"><span class="com">&lt;!-- jdbc 连接的 Driver--&gt;</span></li>
+<li class="L9"><span class="tag">&lt;property&gt;</span></li>
+<li class="L0"><span class="tag">&lt;name&gt;</span><span class="pln">javax.jdo.option.ConnectionDriverName</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L1"><span class="tag">&lt;value&gt;</span><span class="pln">com.mysql.jdbc.Driver</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L2"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L3"><span class="com">&lt;!-- jdbc 连接的 username(MySQL用户名)--&gt;</span></li>
+<li class="L4"><span class="tag">&lt;property&gt;</span></li>
+<li class="L5"><span class="tag">&lt;name&gt;</span><span class="pln">javax.jdo.option.ConnectionUserName</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L6"><span class="tag">&lt;value&gt;</span><span class="pln">root</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L7"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L8"><span class="com">&lt;!-- jdbc 连接的 password(MySQL密码) --&gt;</span></li>
+<li class="L9"><span class="tag">&lt;property&gt;</span></li>
+<li class="L0"><span class="tag">&lt;name&gt;</span><span class="pln">javax.jdo.option.ConnectionPassword</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L1"><span class="tag">&lt;value&gt;</span><span class="pln">111111</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L2"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L3"><span class="com">&lt;!-- Hive 元数据存储版本的验证(Hive元数据默认是存储在Derby中，正常开启时它会去校验Derby，现在要使用MySQL存储元数据，</span></li>
+<li class="L4"><span class="com">     就需要把这个关闭即可，如果开启，MySQL和Derby会导致Hive启动不起来的) --&gt;</span></li>
+<li class="L5"><span class="tag">&lt;property&gt;</span></li>
+<li class="L6"><span class="tag">&lt;name&gt;</span><span class="pln">hive.metastore.schema.verification</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L7"><span class="tag">&lt;value&gt;</span><span class="pln">false</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L8"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L9"><span class="com">&lt;!--元数据存储授权--&gt;</span></li>
+<li class="L0"><span class="tag">&lt;property&gt;</span></li>
+<li class="L1"><span class="tag">&lt;name&gt;</span><span class="pln">hive.metastore.event.db.notification.api.auth</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L2"><span class="tag">&lt;value&gt;</span><span class="pln">false</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L3"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L4"><span class="com">&lt;!-- Hive 默认在 HDFS 的工作目录(可以不配置，因为默认就是/user/hive/warehouse，如果不使用默认的位置，可以手动修改) --&gt;</span></li>
+<li class="L5"><span class="tag">&lt;property&gt;</span></li>
+<li class="L6"><span class="tag">&lt;name&gt;</span><span class="pln">hive.metastore.warehouse.dir</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L7"><span class="tag">&lt;value&gt;</span><span class="pln">/user/hive/warehouse</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L8"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L9"><span class="tag">&lt;/configuration&gt;</span></li>
+</ol>
+</div>
+<p> </p>
+<p>4.在MySQL中创建 metastore数据库<br>
+进入数据库，使用命令创建 metastore 数据库</p>
+<p>create database metastore;</p>
+<p>5.初始化 Hive 元数据库（MySQL）<br>
+命令： bin/schematool -initSchema -dbType mysql -verbose  (-verbose 是显示详情的意思，可省略)</p>
+<p>3.启动Hive客户端(命令行方式启动):  hive</p>
+<p>注意： 因为 Hive 依赖于HDFS、MapReduce、Yarn的。所以需要先启动Hadoop集群</p>
+<p><strong>判断 Hive 安装是否成功</strong><br>
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-5713" src="/wp-content/uploads/2022/05/2021051815222170.png" width="688" height="341" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/2021051815222170.png 688w, /wp-content/uploads/2022/05/2021051815222170-300x149.png 300w" sizes="auto, (max-width: 688px) 100vw, 688px"></p>
+<h2>Ⅰ.Hive日志所在目录</h2>
+<p>如果在配置时，没有修改 hive 日志打印位置，默认是在 <code>/tmp/当前用户名/hive.log</code> 目录下<br>
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-5714" src="/wp-content/uploads/2022/05/20210518153338174.png" width="789" height="410" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518153338174.png 789w, /wp-content/uploads/2022/05/20210518153338174-300x156.png 300w, /wp-content/uploads/2022/05/20210518153338174-768x399.png 768w" sizes="auto, (max-width: 789px) 100vw, 789px"></p>
+<p>Hive如何配置日志路径</p>
+<p>进入到 hive 的 conf 目录下；<br>
+将 hive-log4j2.properties.template 文件名修改为 hive-log4j2.properties<br>
+vim 打开文件<br>
+修改 property.hive.log.dir = /opt/module/hive/logs (日志文件路径)</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-5715" src="/wp-content/uploads/2022/05/20210518153913985.png" width="523" height="174" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518153913985.png 523w, /wp-content/uploads/2022/05/20210518153913985-300x100.png 300w" sizes="auto, (max-width: 523px) 100vw, 523px"></p>
+<p>修改后日志所在路径，如下图：</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-5716" src="/wp-content/uploads/2022/05/20210518154108110.png" width="542" height="289" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518154108110.png 542w, /wp-content/uploads/2022/05/20210518154108110-300x160.png 300w" sizes="auto, (max-width: 542px) 100vw, 542px"></p>
+<p> </p>
+<p>v</p>
+<h2>Ⅱ.bin 目录命令介绍</h2>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-5717" src="/wp-content/uploads/2022/05/20210518152416589.png" width="813" height="165" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518152416589.png 813w, /wp-content/uploads/2022/05/20210518152416589-300x61.png 300w, /wp-content/uploads/2022/05/20210518152416589-768x156.png 768w" sizes="auto, (max-width: 813px) 100vw, 813px"></p>
+<blockquote><p>1.<strong>schematool</strong> 初始化元数据 命令</p>
+<p>2.<strong>hive</strong> 在本地启动一个 hive 客户端</p>
+<p>3.以下两个是通过JDBC方式来访问Hive使用的<br>
+<strong>hiveserver2</strong> 服务端<br>
+<strong>beeline</strong> 客户端</p></blockquote>
+<p>4.其他方式访问 Hive<br>
+通过 bin/hive 命令行方式连接 Hive客户端，这种方式只能在Linux客户端使用 Hive。</p>
+<p>如果我们需要在 IDEA、第三方框架中使用 Hive，此时就完全不能够使用。Hive也没有启动任何服务，也没有启任何端口，外部服务第三方框架如果要想去操作 Hive，此时就没法来连接了。（之前要连Hadoop，连接 NameNode 就可以，要连接Yarn，连接 ResourceManager 即可，起码都有一个端口可以去允许连接，这种情况下只能在Linux客户端进行使用，如果要第三方框架用 Hive 进行一些数据处理，不好意思，用不了！！！）</p>
+<p>4.1 使用 Metastore 方式访问 Hive<br>
+除了 Linux 通过 bin/hive 方式连接到 Hive客户端，第二种连接方式，就是给 Hive 启动一个元数据服务，如果第三方想要使用，将第三方连接到元数据服务，即可连接到 Hive 的服务。（因为元数据中存储着数据输在的位置，映射等内容，只要能够连接到元数据，就能够找到数据所在位置，即可使用 Hive 服务了）具体配置如下：</p>
+<p>1.在 hive-site.xml 中添加如下配置，指定元数据服务地址</p>
+<p>&lt;!-- 指定存储元数据要连接的地址，默认端口号是9083(元数据存储在MySQL，MySQL在 Hadoop201 【192.168.204.201】节点) --&gt;</p>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="tag">&lt;property&gt;</span></li>
+<li class="L1"><span class="tag">&lt;name&gt;</span><span class="pln">hive.metastore.uris</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L2"><span class="tag">&lt;value&gt;</span><span class="pln">thrift://hadoop201:9083</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L3"><span class="tag">&lt;/property&gt;</span></li>
+</ol>
+</div>
+<p>2.启动 metastore 服务</p>
+<p>9083端口配置好后，就可以启动元数据服务，提供9083服务供三方等调用。</p>
+<p>启动命令：hive --service metastore</p>
+<p>注意：元数据服务是一个前台进程，启动后会将当前窗口占用，导致当前窗口无法进行其他操作，后续可以将元数据服务以后台方式启动，继续向下看。</p>
+<p>3.启动 bin/hive 客户端服务</p>
+<p>提供了9083端口，此时可以供三方调用元数据服务了。如果配置了9083端口，但是没有启动元数据服务，那么通过 bin/hive 方式连接，前台显示连接hive成功，但是后台日志已经在报错，它会尝试去连接9083端口。配置了9083端口，bin/hive 就必须使用元数据服务的方式去连接，必须开启元数据服务。。</p>
+<p>这样有个好处，可能对本地服务启动比较麻烦点，每次都需要启动 metastore 元数据服务，但是对于第三方来说，就可以连接到 hive 的元数据服务了，就可以来使用 Hive了。这样就将 Hive 变成了一个服务，可供外界通过9083端口访问了。</p>
+<p> </p>
+<p>4.2 使用 JDBC 方式访问 Hive（beeline客户端访问）<br>
+除使用 Metastore 元数据服务方式访问 Hive 外，在 Hive 中还提供了 JDBC 方式来连接。我们只需要给它一个Driver驱动、username、url 地址，也能连接到 Hive 上。</p>
+<p>在 Hive 中关于 JDBC 相关的服务，叫做 hiveserver2，现在使用JDBC方式连接到 Hive，除了 hiveserver2 需要启动，metastore元数据服务也得启动。</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-5718" src="/wp-content/uploads/2022/05/20210518172213178.png" width="796" height="635" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518172213178.png 796w, /wp-content/uploads/2022/05/20210518172213178-300x239.png 300w, /wp-content/uploads/2022/05/20210518172213178-768x613.png 768w" sizes="auto, (max-width: 796px) 100vw, 796px"></p>
+<p> </p>
+<p>启动一个 hiverserver2 服务，它会去调用 metastore 元数据服务，metastore 提供元数据再通过 JDBC 的方式，连接MySQL，Client 再通过 JDBC 方式，连接到 hiveserver2上。</p>
+<p>这个过程一共用到2个JDBC。Client 连接 hiverserver2 使用的是 Hive 的 JDBC 驱动，metastore 通过 JDBC 连接MySQL数据库，使用的是 MySQL 的 JDBC 驱动。这样，客户端就可以通过发送SQL的方式，去一步步执行，有点绕。这块有两个地方需要 JDBC 的访问。</p>
+<p>具体配置如下：</p>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="com">&lt;!-- 指定 hiveserver2 连接的 host --&gt;</span></li>
+<li class="L1"><span class="tag">&lt;property&gt;</span></li>
+<li class="L2"><span class="pln">    </span><span class="tag">&lt;name&gt;</span><span class="pln">hive.server2.thrift.bind.host</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L3"><span class="pln">    </span><span class="tag">&lt;value&gt;</span><span class="pln">hadoop201</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L4"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L5"><span class="com">&lt;!-- 指定 hiveserver2 连接的端口号 --&gt;</span></li>
+<li class="L6"><span class="tag">&lt;property&gt;</span></li>
+<li class="L7"><span class="pln">    </span><span class="tag">&lt;name&gt;</span><span class="pln">hive.server2.thrift.port</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L8"><span class="pln">    </span><span class="tag">&lt;value&gt;</span><span class="pln">10000</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L9"><span class="tag">&lt;/property&gt;</span><span class="pln"> </span></li>
+</ol>
+</div>
+<p>2.<strong>启动 hiveserver2 服务</strong></p>
+<p>10000端口配置好后，就可以启动 hiveserver2 服务</p>
+<p>启动命令：<strong>hive --service hiveserver2</strong></p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-5719" src="/wp-content/uploads/2022/05/20210518173847549.png" width="832" height="82" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210518173847549.png 832w, /wp-content/uploads/2022/05/20210518173847549-300x30.png 300w, /wp-content/uploads/2022/05/20210518173847549-768x76.png 768w" sizes="auto, (max-width: 832px) 100vw, 832px"></p>
+<p> </p>
+<p>注意：元数据服务是一个前台进程，启动后会将当前窗口占用，导致当前窗口无法进行其他操作，后续可以将元数据服务以后台方式启动，继续向下看。</p>
+<p>提示：开启hiveserver2服务，一共有2种方式</p>
+<p>①使用本身提供的命令 bin/hiveserver2<br>
+在 Hive 2.x 中，MR 引擎已经标记为过时，建议使用Spark、Tez 引擎。使用 bin/hiveserver2 方式启动，它会去校验2次，在日志中间会有2次报错，提示 Tez 相关class类找不到。报错并不会影响hive启动，找不到 Tez 后最终会使用 MR 引擎，只是说 2 次校验，需要等待的时间比较长。</p>
+<p>②另一种方式，和启动元数据服务一样，通过命令 hive --service hiveserver2 启动<br>
+这种方式启动 hiveserver2 ，会校验1次。相对于校验 2次 来说，等待时间会比较短点。其他没啥任何区别。</p>
+<p> </p>
+<h1>5.Hive 服务启动脚本</h1>
+<p>命令hive --service metastore，启动 Metastore 元数据服务；命令hive --service hiveserver2，用来启动 hiveserver2 服务，但是这两个命令都是前台进程，前台进程会占用当前窗口导致我们无法操作，也没法关闭窗口。此时就需要将前台进程挂载到后台进程去运行。</p>
+<p>前台启动的方式导致需要打开多个 shell 窗口，可以使用如下方式后台方式启动：</p>
+<p>nohup：放在命令开头，表示不挂起，也就是关闭终端进程也继续保持运行状态<br>
+/dev/null：是 Linux 文件系统中的一个文件，被称为黑洞，所有写入改文件的内容都会被自动丢弃<br>
+2&gt;&amp;1 ：表示将错误重定向到标准输出上（Shell 中 0 是标准输入(键盘输入) 1、2 都是输出 1是标准输出 2是错误输出，标准输出和错误输出，默认都是输出在控制台上）<br>
+&amp;：放在命令结尾，表示后台运行</p>
+<p>一般会组合使用：nohup [xxx 命令操作]&gt; file 2&gt;&amp;1 &amp;，表示将 xxx 命令运行的结果输出到 file 中，并保持命令启动的进程在后台运行。</p>
+<p>后台进程方式运行命令：<br>
+metastore服务：nohup hive --service metastore 2&gt;&amp;1 &amp;<br>
+hiveserver2服务：nohup hive --service hiveserver2 2&gt;&amp;1 &amp;</p>
+<p>通过后台方式运行后，虽然会将当前窗口空出来，但是在需要关闭某个服务时，就不知道哪个端口到底对应哪个服务了。因为 hiveserver2、metastore、bin\hive 启动的进程名都叫做 RunJar，这种方式关闭服务，如果不知道进程ID，就只能猜，还不是太方便。</p>
+<p> </p>
+<p>Ⅰ.编写脚本<br>
+为了方便 Hive 服务的启停、使用，可以直接编写脚本来管理服务的启动和关闭。该脚本支持 4个参数，start 启动服务，stop 关闭服务，restart 重启服务，status 查看启动服务状态。脚本内容如下所示：</p>
+<p>编写脚本：vim $HIVE_HOME/bin/hiveservices.sh<br>
+添加执行权限：chmod +x $HIVE_HOME/bin/hiveservices.sh<br>
+启动Hive服务：hiveservices.sh start</p>
+<p>脚本内容如下：</p>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L2">#!/bin/bash<br>
+HIVE_LOG_DIR=$HIVE_HOME/logs<br>
+if [ ! -d $HIVE_LOG_DIR ]<br>
+then<br>
+mkdir -p $HIVE_LOG_DIR<br>
+fi<br>
+#检查进程是否运行正常，参数1为进程名，参数2为进程端口<br>
+function check_process()<br>
+{<br>
+pid=$(ps -ef 2&gt;/dev/null | grep -v grep | grep -i $1 | awk '{print $2}')<br>
+ppid=$(netstat -nltp 2&gt;/dev/null | grep $2 | awk '{print $7}' | cut -d '/' -f 1)<br>
+echo $pid<br>
+[[ "$pid" =~ "$ppid" ]] &amp;&amp; [ "$ppid" ] &amp;&amp; return 0 || return 1<br>
+}function hive_start()<br>
+{<br>
+metapid=$(check_process HiveMetastore 9083)<br>
+cmd="nohup hive --service metastore &gt;$HIVE_LOG_DIR/metastore.log 2&gt;&amp;1 &amp;"<br>
+cmd=$cmd" sleep 4; hdfs dfsadmin -safemode wait &gt;/dev/null 2&gt;&amp;1"<br>
+[ -z "$metapid" ] &amp;&amp; eval $cmd || echo "Metastroe服务已启动"<br>
+server2pid=$(check_process HiveServer2 10000)<br>
+cmd="nohup hive --service hiveserver2 &gt;$HIVE_LOG_DIR/hiveServer2.log 2&gt;&amp;1 &amp;"<br>
+[ -z "$server2pid" ] &amp;&amp; eval $cmd || echo "HiveServer2服务已启动"<br>
+}
+<p>function hive_stop()<br>
+{<br>
+metapid=$(check_process HiveMetastore 9083)<br>
+[ "$metapid" ] &amp;&amp; kill $metapid || echo "Metastore服务未启动"<br>
+server2pid=$(check_process HiveServer2 10000)<br>
+[ "$server2pid" ] &amp;&amp; kill $server2pid || echo "HiveServer2服务未启动"<br>
+}</p>
+<p>case $1 in<br>
+"start")<br>
+hive_start<br>
+;;<br>
+"stop")<br>
+hive_stop<br>
+;;<br>
+"restart")<br>
+hive_stop<br>
+sleep 2<br>
+hive_start<br>
+;;<br>
+"status")<br>
+check_process HiveMetastore 9083 &gt;/dev/null &amp;&amp; echo "Metastore服务运行正常" || echo "Metastore服务运行异常"<br>
+check_process HiveServer2 10000 &gt;/dev/null &amp;&amp; echo "HiveServer2服务运行正常" || echo "HiveServer2服务运行异常"<br>
+;;<br>
+*)<br>
+echo Invalid Args!<br>
+echo 'Usage: '$(basename $0)' start|stop|restart|status'<br>
+;;<br>
+esac</p></li>
+</ol>
+</div>
+<h2>Ⅱ.脚本方式启动服务(MetaStore + hiveserver2服务)</h2>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-5720" src="/wp-content/uploads/2022/05/20210519144113566.png" width="1109" height="399" alt="在这里插入图片描述" srcset="/wp-content/uploads/2022/05/20210519144113566.png 1109w, /wp-content/uploads/2022/05/20210519144113566-300x108.png 300w, /wp-content/uploads/2022/05/20210519144113566-1024x368.png 1024w, /wp-content/uploads/2022/05/20210519144113566-768x276.png 768w" sizes="auto, (max-width: 1109px) 100vw, 1109px"></p>
+<p> </p>
+<p>Ⅲ.打印当前 库 和 表头<br>
+在使用 bin/hive 进入 Hive 客户端后，我们只能看到一个 hive&gt;这样一个标签，在进行一系列操作之后，然而1.我们并不知道目前所处在哪个库操作，2.在进行 select 查询时也不显示每一列代表什么字段，这样用起来也有些不是很方便，所以我们可以在 hive-site.xml 中对其进行配置，来显示库名 和 表头信息。</p>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="pln">在 hive-site.xml 中，加入如下 2 个配置即可：</span></li>
+<li class="L1"><span class="pln"> </span></li>
+<li class="L2"><span class="com">&lt;!-- 打印表头--&gt;</span></li>
+<li class="L3"><span class="tag">&lt;property&gt;</span></li>
+<li class="L4"><span class="pln">    </span><span class="tag">&lt;name&gt;</span><span class="pln">hive.cli.print.header</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L5"><span class="pln">    </span><span class="tag">&lt;value&gt;</span><span class="pln">true</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L6"><span class="tag">&lt;/property&gt;</span></li>
+<li class="L7"><span class="com">&lt;!-- 打印当前库名--&gt;</span></li>
+<li class="L8"><span class="tag">&lt;property&gt;</span></li>
+<li class="L9"><span class="pln">    </span><span class="tag">&lt;name&gt;</span><span class="pln">hive.cli.print.current.db</span><span class="tag">&lt;/name&gt;</span></li>
+<li class="L0"><span class="pln">    </span><span class="tag">&lt;value&gt;</span><span class="pln">true</span><span class="tag">&lt;/value&gt;</span></li>
+<li class="L1"><span class="tag">&lt;/property&gt;</span><span class="pln"> </span></li>
+</ol>
+</div>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/hadoop" rel="tag">Hadoop</a>, <a href="/tag/hive" rel="tag">hive</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2022/05/05/docker-mysql57.html" rel="prev">docker安装Mysql5.7</a><br>【下篇】<a href="/2022/05/07/hive-site.html" rel="next">hive权限配置注意事项2</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2022/05/17/hive3-1-2-on-spark.html">hive3.1.2 on spark</a></li><li> · <a href="/2022/05/09/idea-scala-2-12-spark-3-0-2.html">idea 配置 scala 2.12 spark 3.0.2 开发环境</a></li><li> · <a href="/2022/05/07/hive-site.html">hive权限配置注意事项2</a></li><li> · <a href="/2022/05/03/deepin-hadoop.html">deepin单节点启动hadoop</a></li><li> · <a href="/2017/09/26/windows-install-hadoop.html">在windows环境下安装hadoop</a></li><li> · <a href="/2017/09/20/hadoop%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B%EF%BC%88%E4%B8%80%EF%BC%89-wordcount.html">Hadoop入门案例（一） wordcount</a></li><li> · <a href="/2017/09/20/build-hadoop2-8-and-spark2-1.html">分布式搭建hadoop2.8和spark2.1环境</a></li><li> · <a href="/2017/09/19/hadoop%E5%AD%A6%E4%B9%A0%E6%95%99%E7%A8%8B%E4%BA%8C-centos%E4%B8%8B%E5%AE%89%E8%A3%85jdk.html">Hadoop学习教程(二) —- CentOS下安装JDK</a></li><li> · <a href="/2024/01/20/linux-nfs.html">Linux安装NFS</a></li><li> · <a href="/2023/09/18/kibana-query-usage.html">kibana查询统计</a></li><li> · <a href="/2023/02/11/efk.html">linux快速搭建轻量级efk日志系统</a></li><li> · <a href="/2022/09/23/centos-install-chrome-chromedriver.html">centos安装chrome+chromedriver</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2022年05月05日发表在<a href="/category/bigdata" rel="category tag">大数据</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2022/05/05/hive.html" rel="bookmark" title="本文固定链接 /2022/05/05/hive.html">centos安装配置hive | Bruce's Blog</a><a href="#" onclick="copy_code('/2022/05/05/hive.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2022/05/05/hive.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="5691" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="e19a571cf1"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="223"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.069 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:46:50 -->

@@ -1,0 +1,905 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>C#函数式程序编程2 | Bruce's Blog</title> 
+<meta name="description" content="主要内容">
+<meta name="keywords" content="Action,c#,Func,LINQ">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2013 年 4 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr><td><a href="/2013/04/01" aria-label="2013年4月1日 发布的文章">1</a></td><td><a href="/2013/04/02" aria-label="2013年4月2日 发布的文章">2</a></td><td>3</td><td><a href="/2013/04/04" aria-label="2013年4月4日 发布的文章">4</a></td><td>5</td><td>6</td><td><a href="/2013/04/07" aria-label="2013年4月7日 发布的文章">7</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2013/04/08" aria-label="2013年4月8日 发布的文章">8</a></td><td>9</td><td>10</td><td>11</td><td><a href="/2013/04/12" aria-label="2013年4月12日 发布的文章">12</a></td><td>13</td><td>14</td>
+	</tr>
+	<tr>
+		<td>15</td><td>16</td><td><a href="/2013/04/17" aria-label="2013年4月17日 发布的文章">17</a></td><td>18</td><td>19</td><td><a href="/2013/04/20" aria-label="2013年4月20日 发布的文章">20</a></td><td>21</td>
+	</tr>
+	<tr>
+		<td>22</td><td><a href="/2013/04/23" aria-label="2013年4月23日 发布的文章">23</a></td><td><a href="/2013/04/24" aria-label="2013年4月24日 发布的文章">24</a></td><td><a href="/2013/04/25" aria-label="2013年4月25日 发布的文章">25</a></td><td>26</td><td><a href="/2013/04/27" aria-label="2013年4月27日 发布的文章">27</a></td><td>28</td>
+	</tr>
+	<tr>
+		<td>29</td><td>30</td>
+		<td class="pad" colspan="5"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2013/03">« 3 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2013/05">5 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#8f1f00;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#559ca6;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#4b81d1;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#f6bb0b;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#56977c;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#6f02be;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#36e28d;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#85b4ea;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#c665ff;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#3d0b91;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#3672b6;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#e4cd20;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#44efd;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#70cb5e;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#5a934f;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#7106ed;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#c2891f;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#c26997;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#bea33b;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#dbc16e;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#661c84;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#3359fb;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#d11ce8;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#42204b;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#dc7f2b;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#3dd9e8;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#57e50b;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#7a3d77;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#28366c;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#517ce2;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#931423;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#166d5d;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#424c04;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#1c211e;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#ae7e5e;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#a16654;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#f65249;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#a0db0d;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#f46866;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#76a6db;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#b4b520;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#43aef9;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#bd61d9;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#7980d7;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#36724f;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">C#函数式程序编程2</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2013-04-23 13:38</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2013/04/23/c%E5%87%BD%E6%95%B0%E5%BC%8F%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A8%8B2.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,380</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p><strong><span style="color: #000000;">主要内容</span></strong></p>
+<p><strong><span style="color: #000000;">　　</span></strong><span style="color: #000000;"><span class="wp_keywordlink_affiliate"><a href="/tag/action" title="View all posts in Action" target="_blank">Action</a></span>与<span class="wp_keywordlink_affiliate"><a href="/tag/func" title="View all posts in Func" target="_blank">Func</a></span>类型介绍，在函数内部定义函数与返回函数，闭包与函数柯里化，高阶函数与Linq应用。</span></p>
+<p> </p>
+<p><strong><span style="color: #000000;">第一部分 <span class="wp_keywordlink_affiliate"><a href="/tag/action" title="View all posts in Action" target="_blank">Action</a></span>与<span class="wp_keywordlink_affiliate"><a href="/tag/func" title="View all posts in Func" target="_blank">Func</a></span>类型介绍</span></strong></p>
+<p><span style="color: #000000;">　　近来有一些人问我<span class="wp_keywordlink_affiliate"><a href="/tag/action" title="View all posts in Action" target="_blank">Action</a></span>和<span class="wp_keywordlink_affiliate"><a href="/tag/func" title="View all posts in Func" target="_blank">Func</a></span>类型是什么意思，为了整篇文章知识体系的完整性，先来给大家做一番介绍（如果你熟悉这两个类型，请跳过这部分）。</span></p>
+<p>首先来看这样一个JavaScript函数：</p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">function</span><span class="pln"> sum</span><span class="pun">(</span><span class="pln">n1</span><span class="pun">,</span><span class="pln"> n2</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span></li>
+<li class="L1"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> n1 </span><span class="pun">+</span><span class="pln"> n2</span><span class="pun">;</span></li>
+<li class="L2"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p>我们知道，在JavaScript当中，函数是可以赋值为一个变量的，即：</p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">var</span><span class="pln"> sum </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">n1</span><span class="pun">,</span><span class="pln"> n2</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span></li>
+<li class="L1"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> n1 </span><span class="pun">+</span><span class="pln"> n2</span><span class="pun">;</span></li>
+<li class="L2"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p>定义这个“变量”之后，我们可以通过sum(1,2)的方式调用这个函数。那么，如果javaScript是一种强类型语言的话，这个var是什么类型呢？</p>
+<p><span style="color: #000000;">来看一下这个函数的C#代码：</span></p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> </span><span class="typ">Sum</span><span class="pun">(</span><span class="typ">int</span><span class="pln"> n1</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> n2</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> n1 </span><span class="pun">+</span><span class="pln"> n2</span><span class="pun">;</span></li>
+<li class="L3"><span class="pun">}</span></li>
+</ol>
+</div>
+</div>
+<p>注意到这个函数接收了两个int型参数，返回了一个int值。那么，它的类型就是Func&lt;int,int,int&gt;，即它的等效代码为：</p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="typ">Func</span><span class="pun">&lt;</span><span class="typ">int</span><span class="pun">,</span><span class="typ">int</span><span class="pun">,</span><span class="typ">int</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">Sum</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="pun">(</span><span class="typ">int</span><span class="pln"> n1</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> n2</span><span class="pun">)</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="pun">{</span></li>
+<li class="L1"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> n1 </span><span class="pun">+</span><span class="pln"> n2</span><span class="pun">;</span></li>
+<li class="L2"><span class="pun">};</span></li>
+</ol>
+</div>
+</div>
+<p>我们可以F12一下，看到Func类的定义如下：</p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">public</span><span class="pln"> delegate </span><span class="typ">TResult</span><span class="pln"> </span><span class="typ">Func</span><span class="pun">&lt;</span><span class="pln">in T1</span><span class="pun">,</span><span class="pln"> in T2</span><span class="pun">,</span><span class="pln"> out </span><span class="typ">TResult</span><span class="pun">&gt;(</span><span class="pln">T1 arg1</span><span class="pun">,</span><span class="pln"> T2 arg2</span><span class="pun">);</span></li>
+</ol>
+</div>
+</div>
+<p>这个类型实质上是一个委托，返回值是个泛型的TResult，从定义的参数表可以看出，前两个类型T1和T2是传入参数的类型，第三个类型是返回值类型。</p>
+<p>根据这个道理，假设有一个Func&lt;int,string,bool&gt;型的变量，它表示一个委托，这个委托内包含了这样一个函数： 该函数的两个参数是int和string类型，返回值为bool。当Func&lt;TResult&gt;只有一个类型参数时，TResult表示返回 值类型，即Func&lt;bool&gt;表示一个委托，它的参数表为空，返回值为bool类型。为了方便说明，下文将委托与函数两个概念通通使用“函 数”来表示。</p>
+<p>猜猜看Func&lt;object, Func&lt;string,bool&gt;&gt;表示什么呢？它表示一个函数，接受一个object类型的参数，返回一个 Func&lt;string,bool&gt;。这里可以看出，函数也是可以作为函数的返回值的。</p>
+<p>接下来看Action，我们F12一下看Action&lt;T&gt;的定义：</p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">public</span><span class="pln"> delegate </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">Action</span><span class="pun">&lt;</span><span class="pln">in T</span><span class="pun">&gt;(</span><span class="pln">T obj</span><span class="pun">);</span></li>
+</ol>
+</div>
+</div>
+<p>注意到委托的返回值为void，那么实际上Action就是一个没有返回值，只有参数表的委托，即Action&lt;T1,T2&gt;等价于Func&lt;T1,T2,void&gt;。</p>
+<p>最后来说一下Predicate&lt;T&gt;，当我们写Linq方法的Where()时，可以看到它要求传入了一个Predicate类型的参数，它实际上就是一个bool型委托，等价于Func&lt;T,bool&gt;。</p>
+<p>这里只是对这几个委托关键字做一个铺垫性的介绍，大家可以去网上搜这两个关键字的用法相关的帖子，如果没搞懂请不要往下看。</p>
+<p> </p>
+<p><strong>第二部分 在函数内部定义函数与返回函数</strong></p>
+<p>那么有人该问了，好好的一个函数，干嘛非写成Func这样蹩脚的形式呢？下面来看一个例子：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">DoSth</span><span class="pun">()</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    </span><span class="com">//前置逻辑</span></li>
+<li class="L3"><span class="pln">    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="typ">Validate</span><span class="pun">())</span></li>
+<li class="L4"><span class="pln">    </span><span class="pun">{</span><span class="pln"> </span></li>
+<li class="L5"><span class="pln">        </span><span class="com">//后续逻辑</span></li>
+<li class="L6"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L7"><span class="pun">}</span></li>
+<li class="L8"><span class="pln"> </span></li>
+<li class="L9"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">bool</span><span class="pln"> </span><span class="typ">Validate</span><span class="pun">()</span></li>
+<li class="L0"><span class="pun">{</span></li>
+<li class="L1"><span class="pln">    </span><span class="com">//校验逻辑</span></li>
+<li class="L2"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span></li>
+<li class="L3"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>也许这个例子不够恰当，但是足以说明问题，我想略有经验的程序员都明白将校验方法（或者说，比较方法，嗯）重构到一个新函数里，这样能让程序脉 络清晰，《重构》当中也提到了这一手段，但是有没有意识到这种做法有一个诟病：这两个方法处于一个类环境当中，通常来说DoSth方法是publish 的，那么为了重构，我们不得不在这个类环境当中搞出一个private方法来支撑这个public方法，显然这个private方法没有什么可复用性可 言，而且它污染了整个类空间，再说从面向对象的角度来看，校验成了我这个类要承担的职责，这岂不是很诡异？</p>
+<p>那么我要做的，就是在提取这个Validate方法的前提下，保证这个方法别污染类空间。那么一个切实可行的办法，就是把这个校验函数定义在DoSth的内部，代码如下：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">DoSth</span><span class="pun">()</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    </span><span class="typ">Func</span><span class="str">&lt;bool&gt;</span><span class="pln"> </span><span class="typ">Validate</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="pun">{</span></li>
+<li class="L3"><span class="pln">        </span><span class="com">//校验逻辑</span></li>
+<li class="L4"><span class="pln">        </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span></li>
+<li class="L5"><span class="pln">    </span><span class="pun">};</span></li>
+<li class="L6"><span class="pln"> </span></li>
+<li class="L7"><span class="pln">    </span><span class="com">//前置逻辑</span></li>
+<li class="L8"><span class="pln">    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="typ">Validate</span><span class="pun">())</span></li>
+<li class="L9"><span class="pln">    </span><span class="pun">{</span><span class="pln"> </span></li>
+<li class="L0"><span class="pln">        </span><span class="com">//后续逻辑</span></li>
+<li class="L1"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L2"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>这段代码把校验函数定义为了DoSth内部的一个变量，它的生存期就在DoSth内部，这样一来就丝毫不会影响类的结构了。这就是Func的应用之一——在函数内部定义局部函数。</p>
+<p>但是这样还是让人觉得很啰嗦，这个Validate完全可以在其他地方定义，然后作为参数传进来，比如这样：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">DoSth</span><span class="pun">(</span><span class="typ">Func</span><span class="str">&lt;bool&gt;</span><span class="pln"> </span><span class="typ">Validate</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    </span><span class="com">//前置逻辑</span></li>
+<li class="L3"><span class="pln">    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="typ">Validate</span><span class="pun">())</span></li>
+<li class="L4"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L5"><span class="pln">        </span><span class="com">//后续逻辑</span></li>
+<li class="L6"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L7"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>如此一来，这个校验方法就可以定义在其他地方了，这就给我们做一些面向对象方面的方便（比如通过依赖注入搞到这个函数），当然也可以在调用的时候直接在参数里写lambda表达式：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">Main</span><span class="pun">(</span><span class="pln">string</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    </span><span class="typ">DoSth</span><span class="pun">(()</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span></li>
+<li class="L3"><span class="pln">        </span><span class="com">//校验逻辑</span></li>
+<li class="L4"><span class="pln">        </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span></li>
+<li class="L5"><span class="pln">    </span><span class="pun">});</span></li>
+<li class="L6"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>可能这个“校验”的例子举得不是很恰当，但是这已经足够说明Func作为参数的用法。</p>
+<p>如果你怀疑这种手段的实际价值，想想JavaScript里的SetTimeout的第二个参数吧！所谓的回调函数，就是一种由框架调用由客户端实现的函数，用这种写法可以大大增加客户端代码的直观性与灵活性！</p>
+<p>既然Func类型可以作为函数的参数，那么它可不可以作为函数返回值呢？答案必然是肯定的，我们还是来看一个加法例子：</p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="typ">Func</span><span class="pun">&lt;</span><span class="typ">int</span><span class="pun">,</span><span class="pln"> </span><span class="typ">Func</span><span class="pun">&lt;</span><span class="typ">int</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pun">&gt;&gt;</span><span class="pln"> </span><span class="typ">Sum</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> n1 </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="pun">{</span></li>
+<li class="L1"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> n2 </span><span class="pun">=&gt;</span><span class="pln"> n1 </span><span class="pun">+</span><span class="pln"> n2</span><span class="pun">;</span></li>
+<li class="L2"><span class="pun">};</span></li>
+</ol>
+</div>
+</div>
+<p>观察返回值类型Func&lt;int, Func&lt;int,int&gt;&gt;，它表示这个函数接受一个int型参数，返回一个Func&lt;int,int&gt;，也就是返回一 个接受int类型参数，返回int类型值的函数。即，Sum是一个返回函数的函数。</p>
+<p>那么这个函数如何使用呢？观察下列主函数：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">Main</span><span class="pun">(</span><span class="pln">string</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    var </span><span class="typ">Sum5</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Sum</span><span class="pun">(</span><span class="lit">5</span><span class="pun">);</span></li>
+<li class="L3"><span class="pln">    </span><span class="typ">int</span><span class="pln"> result </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Sum5</span><span class="pun">(</span><span class="lit">10</span><span class="pun">);</span></li>
+<li class="L4"><span class="pln"> </span></li>
+<li class="L5"><span class="pln">    </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="pln">result</span><span class="pun">);</span></li>
+<li class="L6"><span class="pln">    </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">ReadKey</span><span class="pun">();</span></li>
+<li class="L7"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>首先，我们通过Sum(5)的方式，返回了一个Sum5变量，这个变量的类型是Func&lt;int,int&gt;，也就是说，我们通过Sum 函数返回了Sum5函数。接下来调用这个新函数Sum5(10)，得到了答案15。当然，接下来我还可以调用Sum5(20)得到25。</p>
+<p>自然地，这个调用可以写成Sum(5)(10)，与原本的Sum(5,10)相比，新的写法将两个参数拆解到了多个括号之中分部调用。聪明的你 一定能发现这么做的好处，就是把这个参数解耦，让各个算法（函数）之间有更高的灵活性和可复用性。但是要注意的是，要得到最终的结果，参数的数量依旧是一 个都不能少的。</p>
+<p>另外，你有没有从这里嗅出一些“重载”的味道？</p>
+<p> </p>
+<p><strong>第三部分 闭包与函数柯里化</strong></p>
+<p><strong>　　</strong>不要被这个标题吓倒，嗯！我们来改写一下刚才的代码：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">Main</span><span class="pun">(</span><span class="pln">string</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    var </span><span class="typ">Sum5</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Sum</span><span class="pun">();</span></li>
+<li class="L3"><span class="pln">    </span><span class="typ">int</span><span class="pln"> result </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Sum5</span><span class="pun">(</span><span class="lit">10</span><span class="pun">);</span></li>
+<li class="L4"><span class="pln"> </span></li>
+<li class="L5"><span class="pln">    </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="pln">result</span><span class="pun">);</span></li>
+<li class="L6"><span class="pln">    </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">ReadKey</span><span class="pun">();</span></li>
+<li class="L7"><span class="pun">}</span></li>
+<li class="L8"><span class="pln"> </span></li>
+<li class="L9"><span class="kwd">static</span><span class="pln"> </span><span class="typ">Func</span><span class="pun">&lt;</span><span class="typ">Func</span><span class="pun">&lt;</span><span class="typ">int</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pun">&gt;&gt;</span><span class="pln"> </span><span class="typ">Sum</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="pun">()</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="pun">{</span></li>
+<li class="L0"><span class="pln">    </span><span class="typ">int</span><span class="pln"> n1 </span><span class="pun">=</span><span class="pln"> </span><span class="lit">5</span><span class="pun">;</span></li>
+<li class="L1"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> n2 </span><span class="pun">=&gt;</span><span class="pln"> n1 </span><span class="pun">+</span><span class="pln"> n2</span><span class="pun">;</span></li>
+<li class="L2"><span class="pun">};</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>这次我们让Sum不再接收第一个参数了，而把n1定义在Sum方法的内部，调用就变成了Sum()(10)，大家可以试一下，结果依旧输出15，一切看似很自然，不过请你反复读一读Sum的定义，是不敢觉得似乎少了点什么？希望你停下来多读几遍再往下看！</p>
+<p>问题就出在n1的定义，请回答一个问题，变量n1的生存范围是多大？Sum函数返回的时候，n1既然是Sum的内部的局部变量，应该就被释放掉了，那么我调用Sum5(10)的时候，被释放掉的5是从哪里来的呢？</p>
+<p>在解释这个问题之前，我想你应该可以理解“Func&lt;Func&lt;int,int&gt;&gt; Sum = xxx”这种写法，等价于“Func&lt;int,int&gt; Sum() { xxx }”，如果不理解，请停下来，把上面的部分再看一遍。</p>
+<p>我们打开反编译器对这个Sum的定义，可以看到：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="pun">[</span><span class="typ">CompilerGenerated</span><span class="pun">]</span></li>
+<li class="L1"><span class="kwd">private</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="typ">Func</span><span class="pun">&lt;</span><span class="typ">int</span><span class="pun">,</span><span class="pln"> </span><span class="typ">int</span><span class="pun">&gt;</span><span class="pln"> </span><span class="pun">&lt;.</span><span class="pln">cctor</span><span class="pun">&gt;</span><span class="pln">b__0</span><span class="pun">()</span></li>
+<li class="L2"><span class="pun">{</span></li>
+<li class="L3"><span class="pln">    </span><span class="pun">&lt;&gt;</span><span class="pln">c__DisplayClass3 CS$</span><span class="pun">&lt;&gt;</span><span class="lit">8</span><span class="pln">__locals4</span><span class="pun">;</span></li>
+<li class="L4"><span class="pln">   </span></li>
+</ol>
+</div>
+<pre> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Func&lt;<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>&gt;(CS$&lt;&gt;8__locals4, (IntPtr) <span style="color: #0000ff;">this</span>.&lt;.cctor&gt;<span style="color: #000000;">b__1);
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>奇怪的是，在这个函数的第一句话，定义了一个“&lt;&gt;c__DisplayClass3”匿名类的对象，也就是说，Sum5这个函数的内部携带着这个对象，想必5这个数字就保存在这个类里，来看这个类的定义：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="pun">[</span><span class="typ">CompilerGenerated</span><span class="pun">]</span></li>
+<li class="L1"><span class="kwd">private</span><span class="pln"> sealed </span><span class="kwd">class</span><span class="pln"> </span><span class="pun">&lt;&gt;</span><span class="pln">c__DisplayClass3</span></li>
+<li class="L2"><span class="pun">{</span></li>
+<li class="L3"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> n1</span><span class="pun">;</span></li>
+<li class="L4"><span class="pln"> </span></li>
+<li class="L5"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">int</span><span class="pln"> </span><span class="pun">&lt;.</span><span class="pln">cctor</span><span class="pun">&gt;</span><span class="pln">b__1</span><span class="pun">(</span><span class="typ">int</span><span class="pln"> n2</span><span class="pun">)</span></li>
+<li class="L6"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L7"><span class="pln">        </span><span class="kwd">return</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">n1 </span><span class="pun">+</span><span class="pln"> n2</span><span class="pun">);</span></li>
+<li class="L8"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L9"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>看到这里我想我不用再解释什么了吧。</p>
+<p>观察我们的函数n2=&gt;n1+n2，它能够拿到外部函数Sum中的n1，而Sum却不能拿到它内部的n2，这一类的函数，起个名字——闭包。于是现在你稍微理解JavaScript中那个叫作用域链的东西了吗？</p>
+<p>嗯，这部分的标题上提到了函数的柯里化，那什么是柯里化呢？其实刚才已经看过了，把Sum(5,10,15,20)写成Sum(5)(10) (15)(20)就叫柯里化，或者说把Func&lt;int,int,int&gt;搞成Func&lt;int, Func&lt;int,int&gt;&gt;就叫柯里化，也是起个名字唬人的，就像“面向切面编程”这个名字一样！</p>
+<p> </p>
+<p><strong>第四部分 高阶函数与Linq应用</strong></p>
+<p><strong>　　</strong>现在进入理论篇的最后一部分，神马叫高阶函数？还就是起个名字而已，以其他函数做参数、或者返回一个函数的 函数，就叫高阶函数，刚才的Sum就是高阶函数。至此大家已经了解了如何在函数中调用一个作为参数的函数，为了给后面的应用篇做铺垫，这里介绍几个经典的 高阶函数，希望大家都能理解。</p>
+<p>（1）Map函数：接受一个转换函数和一个集合，对这个集合中的每个元素，延迟返回它执行转换函数后的值。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">TR</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">Map</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;(</span><span class="typ">Converter</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;</span><span class="pln"> select</span><span class="pun">,</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    foreach </span><span class="pun">(</span><span class="pln">T val in </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L3"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L4"><span class="pln">        yield </span><span class="kwd">return</span><span class="pln"> select</span><span class="pun">(</span><span class="pln">val</span><span class="pun">);</span></li>
+<li class="L5"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L6"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>其中Converter是一个委托，它接受一种类型的参数，返回另一种类型的参数，也就是说如果有一个Converter类型的函数，其作用就是将一种类型转换为另一种类型，当然，在使用的时候，我们可以传递一个很复杂的类，返回其中的某个字段。</p>
+<div class="cnblogs_code">
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">public</span><span class="pln"> delegate </span><span class="typ">TOutput</span><span class="pln"> </span><span class="typ">Converter</span><span class="pun">&lt;</span><span class="pln">in </span><span class="typ">TInput</span><span class="pun">,</span><span class="pln"> out </span><span class="typ">TOutput</span><span class="pun">&gt;(</span><span class="typ">TInput</span><span class="pln"> input</span><span class="pun">);</span></li>
+</ol>
+</div>
+</div>
+<p>（2）Filter函数：接受一个布尔函数作为判断条件，作用在一个集合上，延迟返回这个集合当中满足条件的元素。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">Filter</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;(</span><span class="typ">Predicate</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> selector</span><span class="pun">,</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    foreach </span><span class="pun">(</span><span class="pln">T val in </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L3"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L4"><span class="pln">        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">selector</span><span class="pun">(</span><span class="pln">val</span><span class="pun">))</span></li>
+<li class="L5"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L6"><span class="pln">            yield </span><span class="kwd">return</span><span class="pln"> val</span><span class="pun">;</span></li>
+<li class="L7"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L8"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L9"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>（3）Fold函数：接受一个返回TR类型的算法函数，一个TR类型的起始值，及一个集合，对这个集合中的所有值应用这一算法，并”折叠“到返回值上返回。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> TR </span><span class="typ">Fold</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;(</span><span class="typ">Func</span><span class="pun">&lt;</span><span class="pln">TR</span><span class="pun">,</span><span class="pln"> T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;</span><span class="pln"> accumulator</span><span class="pun">,</span><span class="pln"> TR startVal</span><span class="pun">,</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    TR result </span><span class="pun">=</span><span class="pln"> startVal</span><span class="pun">;</span></li>
+<li class="L3"><span class="pln">    foreach </span><span class="pun">(</span><span class="pln">T val in </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L4"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L5"><span class="pln">        result </span><span class="pun">=</span><span class="pln"> accumulator</span><span class="pun">(</span><span class="pln">result</span><span class="pun">,</span><span class="pln"> val</span><span class="pun">);</span></li>
+<li class="L6"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L7"><span class="pln">    </span><span class="kwd">return</span><span class="pln"> result</span><span class="pun">;</span></li>
+<li class="L8"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>大家有没有看出这三个函数有什么猫腻？它们都有一个IEnumerable&lt;T&gt;的参数，那么下面我们就把他们改造为扩展方法，并且改个名：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> partial </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">Enumerable</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">TR</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">Select</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;(</span><span class="kwd">this</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">list</span><span class="pun">,</span><span class="pln"> </span><span class="typ">Converter</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;</span><span class="pln"> selectField</span><span class="pun">)</span></li>
+<li class="L3"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L4"><span class="pln">        foreach </span><span class="pun">(</span><span class="pln">T val in </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L5"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L6"><span class="pln">            yield </span><span class="kwd">return</span><span class="pln"> selectField</span><span class="pun">(</span><span class="pln">val</span><span class="pun">);</span></li>
+<li class="L7"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L8"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L9"><span class="pln"> </span></li>
+<li class="L0"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">Where</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;(</span><span class="kwd">this</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">list</span><span class="pun">,</span><span class="pln"> </span><span class="typ">Predicate</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> selector</span><span class="pun">)</span></li>
+<li class="L1"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L2"><span class="pln">        foreach </span><span class="pun">(</span><span class="pln">T val in </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L3"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L4"><span class="pln">            </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">selector</span><span class="pun">(</span><span class="pln">val</span><span class="pun">))</span></li>
+<li class="L5"><span class="pln">            </span><span class="pun">{</span></li>
+<li class="L6"><span class="pln">                yield </span><span class="kwd">return</span><span class="pln"> val</span><span class="pun">;</span></li>
+<li class="L7"><span class="pln">            </span><span class="pun">}</span></li>
+<li class="L8"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L9"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L0"><span class="pln"> </span></li>
+<li class="L1"><span class="pln">    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> TR </span><span class="typ">Sum</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;(</span><span class="kwd">this</span><span class="pln"> </span><span class="typ">IEnumerable</span><span class="pun">&lt;</span><span class="pln">T</span><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">list</span><span class="pun">,</span><span class="pln"> </span><span class="typ">Func</span><span class="pun">&lt;</span><span class="pln">TR</span><span class="pun">,</span><span class="pln"> T</span><span class="pun">,</span><span class="pln"> TR</span><span class="pun">&gt;</span><span class="pln"> accumulator</span><span class="pun">,</span><span class="pln"> TR startVal</span><span class="pun">)</span></li>
+<li class="L2"><span class="pln">    </span><span class="pun">{</span></li>
+<li class="L3"><span class="pln">        TR result </span><span class="pun">=</span><span class="pln"> startVal</span><span class="pun">;</span></li>
+<li class="L4"><span class="pln">        foreach </span><span class="pun">(</span><span class="pln">T val in </span><span class="typ">list</span><span class="pun">)</span></li>
+<li class="L5"><span class="pln">        </span><span class="pun">{</span></li>
+<li class="L6"><span class="pln">            result </span><span class="pun">=</span><span class="pln"> accumulator</span><span class="pun">(</span><span class="pln">result</span><span class="pun">,</span><span class="pln"> val</span><span class="pun">);</span></li>
+<li class="L7"><span class="pln">        </span><span class="pun">}</span></li>
+<li class="L8"><span class="pln">        </span><span class="kwd">return</span><span class="pln"> result</span><span class="pun">;</span></li>
+<li class="L9"><span class="pln">    </span><span class="pun">}</span></li>
+<li class="L0"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>我们可以这样使用：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">Main</span><span class="pun">(</span><span class="pln">string</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span></li>
+<li class="L1"><span class="pun">{</span></li>
+<li class="L2"><span class="pln">    </span><span class="typ">IEnumerable</span><span class="str">&lt;int&gt;</span><span class="pln"> </span><span class="typ">list</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">List</span><span class="str">&lt;int&gt;</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span><span class="pln"> </span><span class="lit">2</span><span class="pun">,</span><span class="pln"> </span><span class="lit">3</span><span class="pun">,</span><span class="pln"> </span><span class="lit">4</span><span class="pun">,</span><span class="pln"> </span><span class="lit">5</span><span class="pun">,</span><span class="pln"> </span><span class="lit">6</span><span class="pun">,</span><span class="pln"> </span><span class="lit">7</span><span class="pun">,</span><span class="pln"> </span><span class="lit">8</span><span class="pln"> </span><span class="pun">};</span></li>
+<li class="L3"><span class="pln"> </span></li>
+<li class="L4"><span class="pln">    </span><span class="typ">list</span><span class="pun">.</span><span class="typ">Where</span><span class="pun">(</span><span class="pln">num </span><span class="pun">=&gt;</span><span class="pln"> num </span><span class="pun">%</span><span class="pln"> </span><span class="lit">2</span><span class="pln"> </span><span class="pun">==</span><span class="pln"> </span><span class="lit">0</span><span class="pun">)</span></li>
+<li class="L5"><span class="pln">        </span><span class="pun">.</span><span class="typ">Select</span><span class="pun">(</span><span class="pln">num </span><span class="pun">=&gt;</span><span class="pln"> num</span><span class="pun">)</span></li>
+<li class="L6"><span class="pln">        </span><span class="pun">.</span><span class="typ">ToList</span><span class="pun">().</span><span class="typ">ForEach</span><span class="pun">(</span><span class="pln">num </span><span class="pun">=&gt;</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  </span><span class="com">//这里就直接调用Linq了</span></li>
+<li class="L7"><span class="pln">            </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="pln">num</span><span class="pun">);</span></li>
+<li class="L8"><span class="pln">        </span><span class="pun">});</span></li>
+<li class="L9"><span class="pln"> </span></li>
+<li class="L0"><span class="pln">    </span><span class="typ">int</span><span class="pln"> sum </span><span class="pun">=</span><span class="pln"> </span><span class="typ">list</span><span class="pun">.</span><span class="typ">Where</span><span class="pun">(</span><span class="pln">num </span><span class="pun">=&gt;</span><span class="pln"> num </span><span class="pun">%</span><span class="pln"> </span><span class="lit">2</span><span class="pln"> </span><span class="pun">==</span><span class="pln"> </span><span class="lit">0</span><span class="pun">)</span></li>
+<li class="L1"><span class="pln">        </span><span class="pun">.</span><span class="typ">Sum</span><span class="pun">((</span><span class="pln">x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">=&gt;</span><span class="pln"> x </span><span class="pun">+</span><span class="pln"> y</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">);</span></li>
+<li class="L2"><span class="pln">    </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="str">"sum="</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> sum</span><span class="pun">);</span></li>
+<li class="L3"><span class="pln"> </span></li>
+<li class="L4"><span class="pln">    </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">ReadKey</span><span class="pun">();</span></li>
+<li class="L5"><span class="pun">}</span></li>
+</ol>
+</div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></a></span></div>
+</div>
+<p>这基本和Linq没有什么差别了，嗯，其实Linq里就是这么搞的，只是它更加丰富和严谨，依旧不用多解释了。</p>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/action" rel="tag">Action</a>, <a href="/tag/c" rel="tag">c#</a>, <a href="/tag/func" rel="tag">Func</a>, <a href="/tag/linq" rel="tag">LINQ</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2013/04/23/func%E5%92%8Caction%E7%9A%84%E5%8C%BA%E5%88%AB.html" rel="prev">Func和Action的区别</a><br>【下篇】<a href="/2013/04/24/firefox%E7%94%A8%E4%BB%A3%E7%90%86%E5%90%8E%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEhttps%E7%AB%99%E7%82%B9.html" rel="next">Firefox用代理后无法访问https站点</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2018/03/28/block-chain-bitcoin.html">区块链实现简易比特币C#.NET版</a></li><li> · <a href="/2018/03/28/block-chain-demo.html">区块链demo C#.NET版</a></li><li> · <a href="/2017/09/19/cef%E8%8E%B7%E5%8F%96%E9%9A%8F%E6%9C%BA%E6%95%B0%E6%8D%AE.html">C#/EF获取随机数据</a></li><li> · <a href="/2017/07/05/c%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8demo.html">C#深度学习快速入门demo</a></li><li> · <a href="/2017/06/14/c%E8%8E%B7%E5%8F%96%E5%AF%B9%E8%B1%A1%E5%8D%A0%E7%94%A8%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F.html">C#获取对象占用内存大小</a></li><li> · <a href="/2017/03/29/c-webbrowser-tab.html">C# webBrowser tab</a></li><li> · <a href="/2017/01/30/linq2db-6.html">轻量级ORM框架（六）：处理表达式树</a></li><li> · <a href="/2017/01/30/linq2db-2-query.html">轻量级ORM框架（二）：LinqToDB查询</a></li><li> · <a href="/2017/01/17/c-net%E8%8E%B7%E5%8F%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E4%B8%AA%E6%95%B0%E3%80%81%E6%89%80%E5%9C%A8%E4%BD%8D%E7%BD%AE%E4%B8%8E%E6%9B%BF.html">C#,.net获取字符串中指定字符串的个数、所在位置与替换字符串</a></li><li> · <a href="/2016/12/09/c%E5%8E%BB%E6%8E%89%E5%9B%9E%E8%BD%A6%E7%AD%89asccii%E7%A0%81%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6.html">C#去掉回车等ASCCII码特殊字符</a></li><li> · <a href="/2016/11/07/npoi-excel-winform.html">NPOI导出EXCEL C#（winform）版</a></li><li> · <a href="/2016/11/05/c-net%E8%A7%A3%E6%9E%90xml%EF%BC%88%E4%BD%BF%E7%94%A8%E5%B1%9E%E6%80%A7%E6%8E%A7%E5%88%B6-xml-%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%89.html">C#.NET解析XML（使用属性控制 XML 序列化）</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2013年04月23日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2013/04/23/c%E5%87%BD%E6%95%B0%E5%BC%8F%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A8%8B2.html" rel="bookmark" title="本文固定链接 /2013/04/23/c%e5%87%bd%e6%95%b0%e5%bc%8f%e7%a8%8b%e5%ba%8f%e7%bc%96%e7%a8%8b2.html">C#函数式程序编程2 | Bruce's Blog</a><a href="#" onclick="copy_code('/2013/04/23/c%e5%87%bd%e6%95%b0%e5%bc%8f%e7%a8%8b%e5%ba%8f%e7%bc%96%e7%a8%8b2.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2013/04/23/c%E5%87%BD%E6%95%B0%E5%BC%8F%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A8%8B2.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2918" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="2a0ea6d0e4"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="7"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.080 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:48:39 -->

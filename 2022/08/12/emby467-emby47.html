@@ -1,0 +1,1200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>重新学习并解锁破解emby4.6.7,4.7.*版本 | Bruce's Blog</title> 
+<meta name="description" content="PS: 已转正，5人合租永久仅 150RMB，推荐转正，少折腾~">
+<meta name="keywords" content="Emby,emby 破解,Emby4.7,emby4.7破解,emby解锁">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2022 年 8 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr><td><a href="/2022/08/01" aria-label="2022年8月1日 发布的文章">1</a></td><td>2</td><td>3</td><td>4</td><td><a href="/2022/08/05" aria-label="2022年8月5日 发布的文章">5</a></td><td>6</td><td>7</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/08/08" aria-label="2022年8月8日 发布的文章">8</a></td><td>9</td><td>10</td><td>11</td><td><a href="/2022/08/12" aria-label="2022年8月12日 发布的文章">12</a></td><td>13</td><td>14</td>
+	</tr>
+	<tr>
+		<td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td><a href="/2022/08/20" aria-label="2022年8月20日 发布的文章">20</a></td><td>21</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/08/22" aria-label="2022年8月22日 发布的文章">22</a></td><td>23</td><td>24</td><td><a href="/2022/08/25" aria-label="2022年8月25日 发布的文章">25</a></td><td>26</td><td>27</td><td>28</td>
+	</tr>
+	<tr>
+		<td><a href="/2022/08/29" aria-label="2022年8月29日 发布的文章">29</a></td><td><a href="/2022/08/30" aria-label="2022年8月30日 发布的文章">30</a></td><td>31</td>
+		<td class="pad" colspan="4"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2022/07">« 7 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2022/09">9 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#836647;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#61916d;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#ef2fa7;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#cf57fb;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#403e22;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#16d964;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#681f2a;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#6f71ce;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#538d25;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#e0f52c;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#7ac6bc;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#20b11;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#ad835f;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#d0dc76;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#1bcc26;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#2fc4c;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#1852dc;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#86642c;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#52e82;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#a212b2;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#5e9e54;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#12299;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#96458e;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#c911e6;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#2951bb;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#d04bfa;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#9600e3;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#95df25;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#c29e19;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#69e90f;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#c3d3d0;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#222c8f;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#3ac7d1;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#634804;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#89f0f6;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#a98cae;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#8e0b23;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#3406e0;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#d948fd;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#abc02a;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#6bf643;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#31e78e;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#33e64;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#b0992;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#714154;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a>, <a href="/category/synology" rel="category tag">群晖</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">重新学习并解锁破解emby4.6.7,4.7.*版本</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2022-08-12 19:45</span>
+			<span class="category">  <a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a>, <a href="/category/synology" rel="category tag">群晖</a></span>
+			<span class="article_comment"><a href="/2022/08/12/emby467-emby47.html#comments">评论(15)</a></span>
+			 <span class="article_view grayline">阅读(<span>10,688</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<h2><span style="color: #ff0000;">PS: 已转正，5人合租永久仅 150RMB，推荐转正，少折腾~</span></h2>
+<p>(PS2:  五个人可各自用5个设备，共计25个设备。)</p>
+<p> </p>
+<h2><span style="color: #ff0000;">警告！！！</span></h2>
+<p><strong>pojie其他组织的软件不利于官方社区的发展，试用的老铁建议以后争取入正，省去不能升级或将来有可能被和谐等麻烦。</strong></p>
+<p><span style="text-decoration: underline;"><strong>教程来自互联网，仅供参考学习，本人不对其付任何法律责任。</strong></span>文章采用 <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer noopener">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可, 但是不建议使用文章内容进行经济活动, 你的行为会对圈子和原开发者造成极大的伤害<em><strong>！！！</strong></em></p>
+<p><u>如果试用会员功能觉得满意的话，你应该 <strong>购买官方正版</strong>！！！</u></p>
+<p><u>如果你想使用升级带来的新功能，你应该 <strong>购买官方正版</strong>！！！</u></p>
+<p><u>如果你的经济条件允许，你应该 <strong>购买官方正版</strong>！！！</u></p>
+<p>最后，如果可以，你可以支持一下官方的工作，价格毕竟也不贵，还能得到官方社区的技术支持，后续版本升级也方便。</p>
+<p> </p>
+<p> </p>
+<h2><strong><span style="color: #ff0000;">本文主要讲【服务端】pojie思路，方法随版本更新可能已失效，懒人直接 看最后！！！</span></strong></h2>
+<p> </p>
+<p>本文关键 词：</p>
+<ul class="tagchecklist" role="list">
+<li><span class="wp_keywordlink_affiliate"><a href="/tag/emby" title="View all posts in Emby" target="_blank">Emby</a></span> 4.7</li>
+<li><span class="wp_keywordlink_affiliate"><a href="/tag/emby-%E7%A0%B4%E8%A7%A3" title="View all posts in emby 破解" target="_blank">emby 破解</a></span></li>
+<li>emby 解锁</li>
+<li><span class="wp_keywordlink_affiliate"><a href="/tag/emby4-7%E7%A0%B4%E8%A7%A3" title="View all posts in emby4.7破解" target="_blank">emby4.7破解</a></span></li>
+<li>emby开心版</li>
+</ul>
+<p> </p>
+<p> </p>
+<h2 id="前言"><span id="i-2">前言</span></h2>
+<p>以前，emby开心用户靠neko.re老哥的第三方激活服务器和加速套件得以存活，今天，发现老哥的服务器已经全关了，意料之中，早晚的事，幸亏能用的时候就备份了老哥原来的返回格式。</p>
+<div class="highlightText">
+<ol class="linenums">
+<li class="L0"><span class="pln">//https://mb3admin.com/admin/service/registration/validateDevice</span></li>
+<li class="L1"><span class="pln">//https://crackemby.mb6.top/admin/service/registration/validateDevice.php?</span></li>
+<li class="L2"><span class="pln">{"cacheExpirationDays": 365,"message": "Device Valid","resultCode": "GOOD"}</span></li>
+<li class="L4"><span class="pln">//https://crackemby.mb6.top/admin/service/registration/getStatus.php</span></li>
+<li class="L5"><span class="pln">{"deviceStatus":"0","planType":"Lifetime","subscriptions":{}}</span></li>
+<li class="L7"><span class="pln">//https://crackemby.mb6.top/4670/registration/validate.php</span></li>
+<li class="L8"><span class="pln">{"featId":"MBSupporter","registered":true,"expDate":"2030-01-01","key":114514}</span></li>
+</ol>
+</div>
+<p>搜索一番，发现并没有老哥接手，所以做了这个帖子。</p>
+<p>不想看原理的话，可以用我的激活服务器试用一下，直接跳到文章末尾。</p>
+<p>当初保存了neko老哥的一个页面快照，要是下文看不懂的话，可以进去看看老哥原来咋写的，文中大部分方法已经失效或过时。</p>
+<p>https://act.jiawei.xin:8090/ns/sharing/B1EhF</p>
+<p> </p>
+<h2 id="搭建激活服务器"><span id="i-3">搭建激活服务器</span></h2>
+<p>首先，关闭emby服务器。</p>
+<p><s>windows系统运行ipconfig /flushdns来清除dns缓存，为屏蔽更新做准备。</s></p>
+<p><s>屏蔽更新，屏蔽以下网址来屏蔽emby的更新，防止更新后pojie失效。方法请自行百度。</s></p>
+<p><s>https://emby.media/community/index.php?/blog/rss/1-media-browser-developers-blog</s></p>
+<p>屏蔽请求的拦截成功率太低，放弃这种方法，已经在pojie文件里完成禁止后台更新。</p>
+<p>屏蔽https请求有时候会失效，所以还修改了一个windows端负责更新的<span class="wp_keywordlink_affiliate"><a href="/tag/emby" title="View all posts in Emby" target="_blank">Emby</a></span>.Server.Updater.dll，只是不自动更新，但是还是有提示更新的。如果愿意，可以把这个也替换进去。屏蔽emby更新，并不会屏蔽插件更新。</p>
+<p>配置服务器，并<strong>设置允许跨域请求</strong></p>
+<p><img fetchpriority="high" decoding="async" class="alignnone wp-image-5996 " src="/wp-content/uploads/2022/08/Pasted-2.png" width="860" height="338" srcset="/wp-content/uploads/2022/08/Pasted-2.png 1265w, /wp-content/uploads/2022/08/Pasted-2-300x118.png 300w, /wp-content/uploads/2022/08/Pasted-2-1024x402.png 1024w, /wp-content/uploads/2022/08/Pasted-2-768x302.png 768w" sizes="(max-width: 860px) 100vw, 860px"></p>
+<p> </p>
+<p><img decoding="async" class="alignnone wp-image-5998 " src="/wp-content/uploads/2022/08/Pasted-3.png" width="875" height="339" srcset="/wp-content/uploads/2022/08/Pasted-3.png 1200w, /wp-content/uploads/2022/08/Pasted-3-300x116.png 300w, /wp-content/uploads/2022/08/Pasted-3-1024x397.png 1024w, /wp-content/uploads/2022/08/Pasted-3-768x298.png 768w" sizes="(max-width: 875px) 100vw, 875px"></p>
+<p> </p>
+<ol>
+<li>修改Emby.Web.dll的官方认证链接为自建服务器地址，pojie网页端。</li>
+</ol>
+<p><img decoding="async" class="alignnone wp-image-6034 " src="/wp-content/uploads/2022/08/Pasted-16.png" width="892" height="526" srcset="/wp-content/uploads/2022/08/Pasted-16.png 1253w, /wp-content/uploads/2022/08/Pasted-16-300x177.png 300w, /wp-content/uploads/2022/08/Pasted-16-1024x604.png 1024w, /wp-content/uploads/2022/08/Pasted-16-768x453.png 768w" sizes="(max-width: 892px) 100vw, 892px"></p>
+<p> </p>
+<p>2. 修改MediaBrowser.Model.dll来显示激活页面（属于强迫症了，非要能显示这个页面。其实不做这步也能使用）</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" width="880" height="502" class="alignnone wp-image-6035 size-full" src="/wp-content/uploads/2022/08/Pasted-17.png" srcset="/wp-content/uploads/2022/08/Pasted-17.png 880w, /wp-content/uploads/2022/08/Pasted-17-300x171.png 300w, /wp-content/uploads/2022/08/Pasted-17-768x438.png 768w" sizes="auto, (max-width: 880px) 100vw, 880px"></p>
+<p> </p>
+<p>3. 更改embypremiere.js内的认证地址为自建服务器地址，pojie网页播放器</p>
+<p><img loading="lazy" decoding="async" width="785" height="565" class="alignnone wp-image-6037 size-full" src="/wp-content/uploads/2022/08/Pasted-18.png" srcset="/wp-content/uploads/2022/08/Pasted-18.png 785w, /wp-content/uploads/2022/08/Pasted-18-300x216.png 300w, /wp-content/uploads/2022/08/Pasted-18-768x553.png 768w" sizes="auto, (max-width: 785px) 100vw, 785px"></p>
+<p> </p>
+<p>4.Emby.Server.Implementations.dll 暂时不写了，这个需要改IL，挺麻烦。这个文件必须替换进去. 授权客户端, 硬解, 照片备份, 离线视频等.</p>
+<p>如果想要尝试可以参考 <a href="https://act.jiawei.xin:8090/ns/sharing/imDUa" target="_blank" rel="noreferrer noopener">这篇群友提供的笔记</a> 由群友@Four seasons提供.</p>
+<p>5.插件加速代理暂时不做了，安装离线包ba。</p>
+<h2 id="emby-server端pojie文件的替换"><span id="emby-serverpojie">emby-server端pojie文件的替换</span></h2>
+<p><strong>windows服务器</strong></p>
+<p>所有需要替换的关键dll都在安装目录Emby-Server\system下。</p>
+<p>embypremiere.js在你的安装目录Emby-Server\system\dashboard-ui\embypremiere下。</p>
+<p>connectionmanager.js在system\dashboard-ui\bower_components\emby-apiclient\下。</p>
+<p>之后去激活页面随便填个激活码，重启emby服务器，就可以试用了。</p>
+<h2 id="emby-client端的解决方案"><span id="i-4">客户端的解决方案</span></h2>
+<p>安卓客户端请依然使用emby白嫖小秘的方案，针对小米机型还加入了魔改。</p>
+<p>ios用户请花30块购买单设备永久授权, 来支持emby官方的开发 https://emby.media/premiere.html 或者其他方法? 八仙过海各显神通.</p>
+<p>电脑用户无需pojie，请使用网页版。或者exe吧，emby小秘的。</p>
+<p><strong>关于浏览器端</strong></p>
+<p><strong>替换完成启动之前需要清除浏览器缓存</strong>，可以参考此视频：清除emby网页缓存 ，不然的话出不了金徽章。有时候使用本地回环地址访问(127.0.0.1,localhost)也会出现跨域问题，需要ssl或者非回环地址访问才能解决。建议使用Chrome最新版。</p>
+<h2 id="下载直接可以用的server替换文件和各个pojie客户端"><span id="i-5">整合网盘，服务端替换文件</span></h2>
+<p><mark class="has-inline-color has-luminous-vivid-amber-color">整合网盘</mark>：https://act.jiawei.xin:10086/tmp/?dir=emby/</p>
+<p><mark class="has-inline-color has-luminous-vivid-amber-color">服务端历史版本</mark>: https://github.com/MediaBrowser/Emby.Releases/releases/</p>
+<p><strong>解锁的emby插件</strong>： 插件安装目录元数据文件夹里，\programdata\plugins，一般这个目录是挂载出来的。</p>
+<p>https://github.com/AlifeLine/Emby.Plugins.Douban 可以参考豆瓣插件的安装方法。</p>
+<p>LDAP插件可以让emby和群晖公用同一套账号 剩下一个插件是剧院模式插件。</p>
+<p>https://act.jiawei.xin:10086/tmp/?dir=emby%2Fplugins</p>
+<p><strong>美化包</strong> (从4.7.1版本开始不再提供所谓的美化包)</p>
+<p>4.6.7版本：https://act.jiawei.xin:10086/tmp/emby/4.6.7.0/beautify01.7z</p>
+<p>4.7.0版本：https://act.jiawei.xin:10086/tmp/emby/4.7.0.60/beautify.zip</p>
+<p>4.7.1.0版本: https://act.jiawei.xin:10086/tmp/emby/4.7.1.0/beautify.7z</p>
+<p><strong>客户端apk：</strong>不再提供，请使用电报emby小秘的资源.</p>
+<p><strong>windows64位替换文件</strong></p>
+<p>4.6.7版本：https://act.jiawei.xin:10086/tmp/emby/4.6.7.0/win64-4.6.7.7z</p>
+<p>4.7.5.0版本: https://act.jiawei.xin:10086/tmp/emby/4.7.5.0/win64_4.7.5.7z</p>
+<p>4.7.6.0版本之后网盘自己翻翻吧</p>
+<p><strong>linux x64通用替换文件</strong></p>
+<p>4.6.7版本：https://act.jiawei.xin:10086/tmp/emby/4.6.7.0/linux64-4.6.7.7z</p>
+<p>4.7.5.0版本: https://act.jiawei.xin:10086/tmp/emby/4.7.5.0/linux64_docker64_4.7.5.7z</p>
+<p>4.7.6.0版本之后网盘自己翻翻吧</p>
+<p><strong>ubuntu-x64一键pojie脚本</strong><em> </em><em>(4.7.1.0版本后不再提供,请尝试手动替换)</em></p>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.6.7版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.6.7.0/ubuntu_crack.sh<br>
+sudo bash ubuntu_crack.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.1.0版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.7.1.0/ubuntu_crack_4.7.1.sh<br>
+sudo bash ubuntu_crack_4.7.1.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>DSM替换脚本</strong></p>
+<p>推荐<strong>优先使用wget</strong>执行：</p>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2</div>
+</td>
+<td>
+<div class="text codecolorer">#4.6.7.0版本<br>
+curl https://act.jiawei.xin:10086/tmp/emby/4.6.7.0/synology6_7crack.sh | bash</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2</div>
+</td>
+<td>
+<div class="text codecolorer">#4.7.1.0版本<br>
+curl https://act.jiawei.xin:10086/tmp/emby/4.7.1.0/synology6-7crack_4.7.1.sh | bash</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.2.0版本<br>
+curl https://act.jiawei.xin:10086/tmp/emby/4.7.2.0/synology6-7crack_4.7.2.sh | bash</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.4.0版本<br>
+curl https://act.jiawei.xin:10086/tmp/emby/4.7.4.0/synology6-7crack_4.7.4.sh | bash</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.5.0版本<br>
+curl https://act.jiawei.xin:10086/tmp/emby/4.7.5.0/synology6-7crack_4.7.5.sh | bash</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.6.0版本<br>
+curl https://act.jiawei.xin:10086/tmp/emby/4.7.6.0/synology6-7crack_4.7.6.sh | bash</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>wget方式：</p>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.6.7版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.6.7.0/synology6_7crack.sh<br>
+sudo bash synology6_7crack.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.1.0版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.7.1.0/synology6-7crack_4.7.1.sh<br>
+sudo bash synology6-7crack_4.7.1.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.2.0版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.7.2.0/synology6-7crack_4.7.2.sh<br>
+sudo bash synology6-7crack_4.7.2.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.4.0版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.7.4.0/synology6-7crack_4.7.4.sh<br>
+sudo bash synology6-7crack_4.7.4.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.5.0版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.7.5.0/synology6-7crack_4.7.5.sh<br>
+sudo bash synology6-7crack_4.7.5.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3</div>
+</td>
+<td>
+<div class="text codecolorer"># 4.7.6.0版本<br>
+wget https://act.jiawei.xin:10086/tmp/emby/4.7.6.0/synology6-7crack_4.7.6.sh<br>
+sudo bash synology6-7crack_4.7.6.sh</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><del><s>DSM 解锁套件: 移步矿神论坛: https://imnks.com/1780.html</s></del></p>
+<p><strong>docker-x64</strong></p>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1</div>
+</td>
+<td>
+<div class="text codecolorer">docker pull xinjiawei1/emby_unlockd:latest</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>docker-arm64</strong></p>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1</div>
+</td>
+<td>
+<div class="text codecolorer">docker pull codion/emby_crack:4.7.5.0-ARM</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>UNRAID</strong> (6.9.2版本才能用, 之后版本给阉了)</p>
+<p>6.10.*版本请参考此项目的方法打开.</p>
+<p>https://github.com/shuosiw/unraid#unraid-610x-%E7%89%88%E6%9C%AC</p>
+<p>unraid模板 ：https://github.com/xinjiawei/unraidtemplates</p>
+<h2 id="发现的问题"><span id="i-6">发现的问题</span></h2>
+<p>零丶黑裙转码问题 参考矿神论坛 https://imnks.com/385.html</p>
+<p>一丶</p>
+<pre class="wp-block-preformatted">日志中出现报错:Error in Directory watcher for: "/media/movies" System.IO.IOException: The configured user limit (8192) on the number of inotify watches has been reached.</pre>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3<br>
+4<br>
+5<br>
+6<br>
+7</div>
+</td>
+<td>
+<div class="text codecolorer"># 群晖为例,保守修改为20480,别的例子都是修改为204800. 改大之后耗费内存.<br>
+root@XeIrs:~# cat /proc/sys/fs/inotify/max_user_watches<br>
+8192<br>
+root@XeIrs:~# echo 20480 &amp;gt; /proc/sys/fs/inotify/max_user_watches<br>
+root@XeIrs:~# cat /proc/sys/fs/inotify/max_user_watches<br>
+20480<br>
+root@XeIrs:~# echo "fs.inotify.max_user_instances = 256" &amp;gt;&amp;gt; /etc/sysctl.conf</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>二丶</p>
+<pre id="block-d4fe0174-b9f5-4956-bf6d-4e6d1bf5de47" class="wp-block-preformatted">日志中出现报错:System.IO.IOException: System.IO.IOException: The configured user limit (128) on the number of inotify instances has been reached, or the per-process limit on the number of open file descriptors has been reached.</pre>
+<div class="codecolorer-container text default">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br>
+2<br>
+3<br>
+4<br>
+5<br>
+6<br>
+7</div>
+</td>
+<td>
+<div class="text codecolorer"># 群晖为例,保守修改为256,别的例子都是修改为1000. 改大之后耗费内存.<br>
+root@XeIrs:~# cat /proc/sys/fs/inotify/max_user_instances<br>
+128<br>
+root@XeIrs:~# echo 256 &amp;gt; /proc/sys/fs/inotify/max_user_instances<br>
+root@XeIrs:~# cat /proc/sys/fs/inotify/max_user_instances<br>
+256<br>
+root@XeIrs:~# echo "fs.inotify.max_user_instances = 256" &amp;gt;&amp;gt; /etc/sysctl.conf</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>三，群晖执行脚本报错：</p>
+<p>erro: could not open HSTS store at ‘/root/.wget-hsts’. HSTS will be disabled.</p>
+<p>此错误无影响。</p>
+<p><strong>问题还有很多，欢迎评论指出或修复。</strong></p>
+<p> </p>
+<p> </p>
+<hr>
+<h1><strong><span style="color: #ff0000;">懒人福利</span></strong></h1>
+<p><img loading="lazy" decoding="async" width="861" height="79" class="alignnone wp-image-6041 size-full" src="/wp-content/uploads/2022/08/Pasted-19.png" srcset="/wp-content/uploads/2022/08/Pasted-19.png 861w, /wp-content/uploads/2022/08/Pasted-19-300x28.png 300w, /wp-content/uploads/2022/08/Pasted-19-768x70.png 768w" sizes="auto, (max-width: 861px) 100vw, 861px"></p>
+<p> </p>
+<p><img loading="lazy" decoding="async" class="border:1px solid #333 alignnone wp-image-6397" src="/wp-content/uploads/2022/08/Pasted-27.png" alt="" width="675" height="180" srcset="/wp-content/uploads/2022/08/Pasted-27.png 829w, /wp-content/uploads/2022/08/Pasted-27-300x80.png 300w, /wp-content/uploads/2022/08/Pasted-27-768x205.png 768w" sizes="auto, (max-width: 675px) 100vw, 675px"></p>
+<p>xinjiawei1/emby_unlocked:stable</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-6395 " src="/wp-content/uploads/2022/08/Pasted-25.png" width="733" height="145" srcset="/wp-content/uploads/2022/08/Pasted-25.png 1136w, /wp-content/uploads/2022/08/Pasted-25-300x59.png 300w, /wp-content/uploads/2022/08/Pasted-25-1024x203.png 1024w, /wp-content/uploads/2022/08/Pasted-25-768x152.png 768w" sizes="auto, (max-width: 733px) 100vw, 733px"></p>
+<p> </p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-6396 " src="/wp-content/uploads/2022/08/Pasted-26.png" width="749" height="162" srcset="/wp-content/uploads/2022/08/Pasted-26.png 1039w, /wp-content/uploads/2022/08/Pasted-26-300x65.png 300w, /wp-content/uploads/2022/08/Pasted-26-1024x222.png 1024w, /wp-content/uploads/2022/08/Pasted-26-768x166.png 768w" sizes="auto, (max-width: 749px) 100vw, 749px"></p>
+<p> </p>
+<p> </p>
+<p>【客户端】破解，参考 /2024/11/23/emby.html</p>
+<hr>
+<h2><span style="color: #ff0000;">警告！！！</span></h2>
+<p><strong>pojie其他组织的软件不利于官方社区的发展，试用的老铁建议以后争取入正，省去不能升级或将来有可能被和谐等麻烦。</strong></p>
+<p><span style="text-decoration: underline;"><strong>教程来自互联网，仅供参考学习，本人不对其付任何法律责任。</strong></span>文章采用 <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer noopener">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可, 但是不建议使用文章内容进行经济活动, 你的行为会对圈子和原开发者造成极大的伤害<em><strong>！！！</strong></em></p>
+<p><u>如果试用会员功能觉得满意的话，你应该<strong>购买官方正版</strong>！！！</u></p>
+<p><u>如果你想使用升级带来的新功能，你应该<strong>购买官方正版</strong>！！！</u></p>
+<p><u>如果你的经济条件允许，你应该<strong>购买官方正版</strong>！！！</u></p>
+<p>最后，如果可以，你可以支持一下官方的工作，价格毕竟也不贵，还能得到官方社区的技术支持，后续版本升级也方便。</p>
+<p> </p>
+<h2><span style="color: #ff0000;">最后，推荐大家合租上车，永久更新最新版，数据不丢失！</span></h2>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/emby" rel="tag">Emby</a>, <a href="/tag/emby-%E7%A0%B4%E8%A7%A3" rel="tag">emby 破解</a>, <a href="/tag/emby4-7" rel="tag">Emby4.7</a>, <a href="/tag/emby4-7%E7%A0%B4%E8%A7%A3" rel="tag">emby4.7破解</a>, <a href="/tag/emby%E8%A7%A3%E9%94%81" rel="tag">emby解锁</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2022/08/12/emby-server-implementations-dll.html" rel="prev">Emby破解教程（1）：Emby.Server.Implementations.dll 修改</a><br>【下篇】<a href="/2022/08/20/emby-client-download.html" rel="next">emby tv/安卓/ios/windows/pc破解客户端下载</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2024/12/11/emby-excluding-files-folders.html">Emby 如何设置排除项，排除某个文件夹</a></li><li> · <a href="/2024/11/23/emby.html">Emby全平台开心版、认证服务器搭建方法(自建认证服务器)</a></li><li> · <a href="/2022/08/20/emby-client-download.html">emby tv/安卓/ios/windows/pc破解客户端下载</a></li><li> · <a href="/2022/08/12/emby-server-implementations-dll.html">Emby破解教程（1）：Emby.Server.Implementations.dll 修改</a></li><li> · <a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li><li> · <a href="/2025/04/21/rr-boot.html">RR引导教程</a></li><li> · <a href="/2025/02/06/vue3-html5-pdf.html">html5预览PDF（vue3）</a></li><li> · <a href="/2024/12/26/dsm7-desktop-icon.html">DSM7自定义 桌面图标</a></li><li> · <a href="/2024/12/25/filebeat-zincsearch.html">Filebeat + ZincSearch 轻量级日志</a></li><li> · <a href="/2024/12/18/synology-photos.html">群晖6.2升级7.2后，相册权限问题解决思路</a></li><li> · <a href="/2024/11/13/qywx-development.html">企业微信开发之代开发应用</a></li><li> · <a href="/2024/10/28/vue3-html2canvas-png.html">vue3  html2canvas导出透明png图片</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2022年08月12日发表在<a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a>, <a href="/category/synology" rel="category tag">群晖</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2022/08/12/emby467-emby47.html" rel="bookmark" title="本文固定链接 /2022/08/12/emby467-emby47.html">重新学习并解锁破解emby4.6.7,4.7.*版本 | Bruce's Blog</a><a href="#" onclick="copy_code('/2022/08/12/emby467-emby47.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+<!-- 引用 -->	
+	<div class="tab_comment">
+		<h2 id="comments">重新学习并解锁破解emby4.6.7,4.7.*版本：目前有15 条留言</h2>	
+	</div>
+	<ol class="commentlist">   <li class="comment even thread-even depth-1" id="comment-37496">
+   <div id="div-comment-37496">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/83a7cb90628e7d822f9649bab13a91f1a20410ee4bcdb214ab877621fca86c5e?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/83a7cb90628e7d822f9649bab13a91f1a20410ee4bcdb214ab877621fca86c5e?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>zjahon</strong> :
+			<span class="datetime">2023年02月01日下午 8:49</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37496#respond" data-commentid="37496" data-postid="5989" data-belowelement="div-comment-37496" data-respondelement="respond" data-replyto="回复给 zjahon" aria-label="回复给 zjahon">回复</a></span>
+		</div>
+				<p>能再提供一下群晖下embyserver4.7.11的破解文件吗？<br>
+另外请问一下群晖下的破解文件和windows下的是一样的吗？ ❓</p>
+	<div class="clear"></div>
+  </div>
+</li>   <li class="comment odd alt thread-odd thread-alt depth-1" id="comment-37500">
+   <div id="div-comment-37500">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/7b1d6383372b266d10945bb73c48121c483dc9fb707e867823c7e38cfc723620?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/7b1d6383372b266d10945bb73c48121c483dc9fb707e867823c7e38cfc723620?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>xiba</strong> :
+			<span class="datetime">2023年02月03日上午 10:53</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37500#respond" data-commentid="37500" data-postid="5989" data-belowelement="div-comment-37500" data-respondelement="respond" data-replyto="回复给 xiba" aria-label="回复给 xiba">回复</a></span>
+		</div>
+				<p>请问懒人福利登录emby的用户名和密码多少,多谢</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment byuser comment-author-admin bypostauthor even depth-2" id="comment-37526">
+   <div id="div-comment-37526">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>Bruce</strong> :
+			<span class="datetime">2023年02月07日上午 11:48</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37526#respond" data-commentid="37526" data-postid="5989" data-belowelement="div-comment-37526" data-respondelement="respond" data-replyto="回复给 Bruce" aria-label="回复给 Bruce">回复</a></span>
+		</div>
+				<p>首次使用会设置</p>
+	<div class="clear"></div>
+  </div>
+</li></ul><!-- .children -->
+</li>   <li class="comment odd alt thread-even depth-1" id="comment-37519">
+   <div id="div-comment-37519">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/80907677e59b14e150133343d45399c03edbc2d98effddaf2417170012d9f78a?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/80907677e59b14e150133343d45399c03edbc2d98effddaf2417170012d9f78a?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>wuki</strong> :
+			<span class="datetime">2023年02月06日上午 9:54</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37519#respond" data-commentid="37519" data-postid="5989" data-belowelement="div-comment-37519" data-respondelement="respond" data-replyto="回复给 wuki" aria-label="回复给 wuki">回复</a></span>
+		</div>
+				<p>网站打不开啦</p>
+	<div class="clear"></div>
+  </div>
+</li>   <li class="comment even thread-odd thread-alt depth-1" id="comment-37712">
+   <div id="div-comment-37712">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/fe6b9a2b3a2b87eb3888bb7f9153d3fad95d1fea936e173a3449066bc02e0cad?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/fe6b9a2b3a2b87eb3888bb7f9153d3fad95d1fea936e173a3449066bc02e0cad?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>jiaoyuan</strong> :
+			<span class="datetime">2023年03月14日下午 11:08</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37712#respond" data-commentid="37712" data-postid="5989" data-belowelement="div-comment-37712" data-respondelement="respond" data-replyto="回复给 jiaoyuan" aria-label="回复给 jiaoyuan">回复</a></span>
+		</div>
+				<p>emby4.8.0.21的sh文件有吗，看了一下整合网盘没有这个 ❓</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment byuser comment-author-admin bypostauthor odd alt depth-2" id="comment-37783">
+   <div id="div-comment-37783">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>Bruce</strong> :
+			<span class="datetime">2023年04月18日下午 3:36</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37783#respond" data-commentid="37783" data-postid="5989" data-belowelement="div-comment-37783" data-respondelement="respond" data-replyto="回复给 Bruce" aria-label="回复给 Bruce">回复</a></span>
+		</div>
+				<p>没有</p>
+	<div class="clear"></div>
+  </div>
+</li></ul><!-- .children -->
+</li>   <li class="comment even thread-even depth-1" id="comment-37722">
+   <div id="div-comment-37722">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/d1bdae41a4ca5a0b899b6155763c854d9f4c1e05f79799bba842e8a02d0c831a?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/d1bdae41a4ca5a0b899b6155763c854d9f4c1e05f79799bba842e8a02d0c831a?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>pangdafu</strong> :
+			<span class="datetime">2023年03月17日上午 11:37</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37722#respond" data-commentid="37722" data-postid="5989" data-belowelement="div-comment-37722" data-respondelement="respond" data-replyto="回复给 pangdafu" aria-label="回复给 pangdafu">回复</a></span>
+		</div>
+				<p>您好，请问一下懒人福利支持11代核显硬解么？谢谢</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment byuser comment-author-admin bypostauthor odd alt depth-2" id="comment-37781">
+   <div id="div-comment-37781">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>Bruce</strong> :
+			<span class="datetime">2023年04月18日下午 2:20</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37781#respond" data-commentid="37781" data-postid="5989" data-belowelement="div-comment-37781" data-respondelement="respond" data-replyto="回复给 Bruce" aria-label="回复给 Bruce">回复</a></span>
+		</div>
+				<p>没有试过哦</p>
+	<div class="clear"></div>
+  </div>
+</li></ul><!-- .children -->
+</li>   <li class="comment even thread-odd thread-alt depth-1" id="comment-37754">
+   <div id="div-comment-37754">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/45bc8119c52f80d1bda9fa8b0b4f87e8f13f0fa892c8e90255cdf7806bf034a5?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/45bc8119c52f80d1bda9fa8b0b4f87e8f13f0fa892c8e90255cdf7806bf034a5?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>samsum</strong> :
+			<span class="datetime">2023年03月25日上午 12:07</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37754#respond" data-commentid="37754" data-postid="5989" data-belowelement="div-comment-37754" data-respondelement="respond" data-replyto="回复给 samsum" aria-label="回复给 samsum">回复</a></span>
+		</div>
+				<p>按你的教程修改后变成您拥有一个 +15 天的Emby Premiere试用。评估结束如果满意，请支持emby: emby官方购买。目前已暂时激活 Emby Premiere 计划且您的设备数未达到最大限制数量。而且+15天还会按天减少，这是什么情况呢？</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment byuser comment-author-admin bypostauthor odd alt depth-2" id="comment-37782">
+   <div id="div-comment-37782">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>Bruce</strong> :
+			<span class="datetime">2023年04月18日下午 2:24</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37782#respond" data-commentid="37782" data-postid="5989" data-belowelement="div-comment-37782" data-respondelement="respond" data-replyto="回复给 Bruce" aria-label="回复给 Bruce">回复</a></span>
+		</div>
+				<p>时间太久远，可能程序有更新，推荐使用 懒人福利</p>
+	<div class="clear"></div>
+  </div>
+</li></ul><!-- .children -->
+</li>   <li class="comment even thread-even depth-1" id="comment-37818">
+   <div id="div-comment-37818">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/9b06a2f3e6f85277e5f6dd2a5cb88a9a2b17cc4ed7b8992a3a940aaec050afa1?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/9b06a2f3e6f85277e5f6dd2a5cb88a9a2b17cc4ed7b8992a3a940aaec050afa1?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>ywjdlq</strong> :
+			<span class="datetime">2023年06月29日下午 7:04</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37818#respond" data-commentid="37818" data-postid="5989" data-belowelement="div-comment-37818" data-respondelement="respond" data-replyto="回复给 ywjdlq" aria-label="回复给 ywjdlq">回复</a></span>
+		</div>
+				<p>大佬，有办法pojie 安卓版本的server吗</p>
+	<div class="clear"></div>
+  </div>
+</li>   <li class="comment odd alt thread-odd thread-alt depth-1" id="comment-37819">
+   <div id="div-comment-37819">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/9b06a2f3e6f85277e5f6dd2a5cb88a9a2b17cc4ed7b8992a3a940aaec050afa1?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/9b06a2f3e6f85277e5f6dd2a5cb88a9a2b17cc4ed7b8992a3a940aaec050afa1?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>ywjdlq</strong> :
+			<span class="datetime">2023年06月30日上午 11:42</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37819#respond" data-commentid="37819" data-postid="5989" data-belowelement="div-comment-37819" data-respondelement="respond" data-replyto="回复给 ywjdlq" aria-label="回复给 ywjdlq">回复</a></span>
+		</div>
+				<p>大佬,安卓emby server端有办法吗</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment byuser comment-author-admin bypostauthor even depth-2" id="comment-37852">
+   <div id="div-comment-37852">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>Bruce</strong> :
+			<span class="datetime">2023年08月24日下午 8:24</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=37852#respond" data-commentid="37852" data-postid="5989" data-belowelement="div-comment-37852" data-respondelement="respond" data-replyto="回复给 Bruce" aria-label="回复给 Bruce">回复</a></span>
+		</div>
+				<p>root后安装 docker</p>
+	<div class="clear"></div>
+  </div>
+</li></ul><!-- .children -->
+</li>   <li class="comment odd alt thread-even depth-1" id="comment-38083">
+   <div id="div-comment-38083">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/d74f8022c4d88326201f5dd7c7abd839408f661baeb8b2abc291fa6e07797d82?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/d74f8022c4d88326201f5dd7c7abd839408f661baeb8b2abc291fa6e07797d82?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong>hotspot</strong> :
+			<span class="datetime">2024年06月03日下午 10:40</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=38083#respond" data-commentid="38083" data-postid="5989" data-belowelement="div-comment-38083" data-respondelement="respond" data-replyto="回复给 hotspot" aria-label="回复给 hotspot">回复</a></span>
+		</div>
+				<p>用了DSM替换脚本法破解4.8.8.0，前面一切正常，到最后一步输入任意密钥不起作用，请问大佬如何操作？</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment byuser comment-author-admin bypostauthor even depth-2" id="comment-38167">
+   <div id="div-comment-38167">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>Bruce</strong> :
+			<span class="datetime">2024年11月13日上午 11:31</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2022/08/12/emby467-emby47.html?replytocom=38167#respond" data-commentid="38167" data-postid="5989" data-belowelement="div-comment-38167" data-respondelement="respond" data-replyto="回复给 Bruce" aria-label="回复给 Bruce">回复</a></span>
+		</div>
+				<p>不用自己动手，docker有同步官方版本更新，无损数据</p>
+	<div class="clear"></div>
+  </div>
+</li></ul><!-- .children -->
+</li></ol>
+
+	<div class="navigation_c">
+		<div class="previous"></div>
+	</div>
+
+ 		<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2022/08/12/emby467-emby47.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="5989" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="78aec86abc"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="180"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.079 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:46:45 -->

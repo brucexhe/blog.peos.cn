@@ -1,0 +1,877 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>Linux下进程管理工具推荐：supervisor | Bruce's Blog</title> 
+<meta name="description" content="Supervisor (http://supervisord.org) 是一个用 Python 写的进程管理工具，可以很方便的用来启动、重启、关闭进程（不仅仅是 Python 进程）。除了对单个进程的控制，还可以同时启动、关闭多个进程，比如很不幸的服务器出问题导致所有应用程序都被杀死，此时可以用 supervisor 同时启动所有应用程序而不是一个一个地敲命令启动。">
+<meta name="keywords" content="Linux,Supervisor,守护进程,进程管理">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2017 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="4" class="pad"> </td><td><a href="/2017/12/01" aria-label="2017年12月1日 发布的文章">1</a></td><td><a href="/2017/12/02" aria-label="2017年12月2日 发布的文章">2</a></td><td>3</td>
+	</tr>
+	<tr>
+		<td>4</td><td><a href="/2017/12/05" aria-label="2017年12月5日 发布的文章">5</a></td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+	</tr>
+	<tr>
+		<td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td>
+	</tr>
+	<tr>
+		<td><a href="/2017/12/18" aria-label="2017年12月18日 发布的文章">18</a></td><td><a href="/2017/12/19" aria-label="2017年12月19日 发布的文章">19</a></td><td>20</td><td><a href="/2017/12/21" aria-label="2017年12月21日 发布的文章">21</a></td><td><a href="/2017/12/22" aria-label="2017年12月22日 发布的文章">22</a></td><td>23</td><td><a href="/2017/12/24" aria-label="2017年12月24日 发布的文章">24</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2017/12/25" aria-label="2017年12月25日 发布的文章">25</a></td><td><a href="/2017/12/26" aria-label="2017年12月26日 发布的文章">26</a></td><td>27</td><td><a href="/2017/12/28" aria-label="2017年12月28日 发布的文章">28</a></td><td><a href="/2017/12/29" aria-label="2017年12月29日 发布的文章">29</a></td><td>30</td><td>31</td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2017/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2018/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#2fac5;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#e33be1;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#cb6b04;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#af0dd5;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#592e8c;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#ec8681;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#19dece;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#9feeb8;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#f86920;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#d713e6;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#b5a2a8;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#59c77;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#367241;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#cc7a21;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#a8c7c8;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#35a510;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#5c0a41;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#231875;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#32e05f;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#339ec8;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#fa8dfc;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#fba8b7;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#6e459b;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#202837;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#d1ff3b;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#97cd9c;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#394b46;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#169478;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#fe9fb7;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#305f31;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#29491c;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#d1596a;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#a7f04b;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#cb7f5a;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#6d609f;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#bf3903;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#3df526;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#8ec035;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#389683;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#e38c9;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#1ad642;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#9ea9f4;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#3f4ee4;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#21c107;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#38c4fe;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/linux" rel="category tag">LINUX</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">Linux下进程管理工具推荐：supervisor</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2017-12-21 10:01</span>
+			<span class="category">  <a href="/category/linux" rel="category tag">LINUX</a></span>
+			<span class="article_comment"><a href="/2017/12/21/linux-process-tool-supervisor.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>783</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p><span class="wp_keywordlink_affiliate"><a href="/tag/supervisor" title="View all posts in Supervisor" target="_blank">Supervisor</a></span> (http://supervisord.org) 是一个用 Python 写的<span class="wp_keywordlink_affiliate"><a href="/tag/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86" title="View all posts in 进程管理" target="_blank">进程管理</a></span>工具，可以很方便的用来启动、重启、关闭进程（不仅仅是 Python 进程）。除了对单个进程的控制，还可以同时启动、关闭多个进程，比如很不幸的服务器出问题导致所有应用程序都被杀死，此时可以用 supervisor 同时启动所有应用程序而不是一个一个地敲命令启动。</p>
+<h2 id="安装:0374c09b00e8eddcfa304907db4e0a23">安装</h2>
+<p><span class="wp_keywordlink_affiliate"><a href="/tag/supervisor" title="View all posts in Supervisor" target="_blank">Supervisor</a></span> 可以运行在 <span class="wp_keywordlink_affiliate"><a href="/tag/linux-2" title="View all posts in Linux" target="_blank">Linux</a></span>、Mac OS X 上。如前所述，supervisor 是 Python 编写的，所以安装起来也很方便，可以直接用 pip :</p>
+<div id="crayon-5a3b15799485a653447572" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b15799485a653447572-1">1</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b15799485a653447572-1" class="crayon-line"><span class="crayon-e">sudo </span><span class="crayon-e">pip </span><span class="crayon-e">install </span><span class="crayon-v">supervisor</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>如果是 Ubuntu 系统，还可以使用 apt-get 安装。</p>
+<h2 id="supervisord-配置:0374c09b00e8eddcfa304907db4e0a23">supervisord 配置</h2>
+<p><span class="wp_keywordlink_affiliate"><a href="/tag/supervisor" title="View all posts in Supervisor" target="_blank">Supervisor</a></span> 相当强大，提供了很丰富的功能，不过我们可能只需要用到其中一小部分。安装完成之后，可以编写配置文件，来满足自己的需求。为了方便，我们把配置分成两部分：supervisord（supervisor 是一个 C/S 模型的程序，这是 server 端，对应的有 client 端：supervisorctl）和应用程序（即我们要管理的程序）。</p>
+<p>首先来看 supervisord 的配置文件。安装完 supervisor 之后，可以运行<code>echo_supervisord_conf</code> 命令输出默认的配置项，也可以重定向到一个配置文件里：</p>
+<div id="crayon-5a3b157994861357282961" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b157994861357282961-1">1</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b157994861357282961-1" class="crayon-line"><span class="crayon-v">echo_supervisord_conf</span> <span class="crayon-o">&gt;</span> <span class="crayon-o">/</span><span class="crayon-v">etc</span><span class="crayon-o">/</span><span class="crayon-v">supervisord</span><span class="crayon-sy">.</span><span class="crayon-v">conf</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>去除里面大部分注释和“不相关”的部分，我们可以先看这些配置：</p>
+<div id="crayon-5a3b157994864868920865" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-1">1</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-2">2</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-3">3</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-4">4</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-5">5</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-6">6</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-7">7</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-8">8</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-9">9</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-10">10</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-11">11</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-12">12</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-13">13</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-14">14</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-15">15</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-16">16</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-17">17</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-18">18</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-19">19</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-20">20</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-21">21</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-22">22</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-23">23</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-24">24</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-25">25</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-26">26</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-27">27</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-28">28</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-29">29</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-30">30</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-31">31</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994864868920865-32">32</div>
+<div class="crayon-num" data-line="crayon-5a3b157994864868920865-33">33</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b157994864868920865-1" class="crayon-line"><span class="crayon-sy">[</span><span class="crayon-v">unix_http_server</span><span class="crayon-sy">]</span></div>
+<div id="crayon-5a3b157994864868920865-2" class="crayon-line crayon-striped-line"><span class="crayon-v">file</span><span class="crayon-o">=</span><span class="crayon-o">/</span><span class="crayon-v">tmp</span><span class="crayon-o">/</span><span class="crayon-v">supervisor</span><span class="crayon-sy">.</span><span class="crayon-i">sock</span><span class="crayon-h">   </span><span class="crayon-sy">;</span> <span class="crayon-e">UNIX </span><span class="crayon-i">socket</span> 文件，<span class="crayon-i">supervisorctl</span> 会使用</div>
+<div id="crayon-5a3b157994864868920865-3" class="crayon-line"><span class="crayon-sy">;</span><span class="crayon-v">chmod</span><span class="crayon-o">=</span><span class="crayon-cn">0700</span><span class="crayon-h">                 </span><span class="crayon-sy">;</span> <span class="crayon-i">socket</span> 文件的 <span class="crayon-i">mode</span>，默认是 <span class="crayon-cn">0700</span></div>
+<div id="crayon-5a3b157994864868920865-4" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span><span class="crayon-v">chown</span><span class="crayon-o">=</span><span class="crayon-v">nobody</span><span class="crayon-o">:</span><span class="crayon-i">nogroup</span><span class="crayon-h">       </span><span class="crayon-sy">;</span> <span class="crayon-i">socket</span> 文件的 <span class="crayon-i">owner</span>，格式： <span class="crayon-v">uid</span><span class="crayon-o">:</span><span class="crayon-i">gid</span></div>
+<div id="crayon-5a3b157994864868920865-5" class="crayon-line"></div>
+<div id="crayon-5a3b157994864868920865-6" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span><span class="crayon-sy">[</span><span class="crayon-v">inet_http_server</span><span class="crayon-sy">]</span><span class="crayon-h">         </span><span class="crayon-sy">;</span> <span class="crayon-i">HTTP</span> 服务器，提供 <span class="crayon-i">web</span> 管理界面</div>
+<div id="crayon-5a3b157994864868920865-7" class="crayon-line"><span class="crayon-sy">;</span><span class="crayon-v">port</span><span class="crayon-o">=</span><span class="crayon-cn">127.0.0.1</span><span class="crayon-o">:</span><span class="crayon-cn">9001</span><span class="crayon-h">        </span><span class="crayon-sy">;</span> <span class="crayon-i">Web</span> 管理后台运行的 <span class="crayon-i">IP</span> 和端口，如果开放到公网，需要注意安全性</div>
+<div id="crayon-5a3b157994864868920865-8" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span><span class="crayon-v">username</span><span class="crayon-o">=</span><span class="crayon-i">user</span><span class="crayon-h">              </span><span class="crayon-sy">;</span> 登录管理后台的用户名</div>
+<div id="crayon-5a3b157994864868920865-9" class="crayon-line"><span class="crayon-sy">;</span><span class="crayon-v">password</span><span class="crayon-o">=</span><span class="crayon-cn">123</span><span class="crayon-h">               </span><span class="crayon-sy">;</span> 登录管理后台的密码</div>
+<div id="crayon-5a3b157994864868920865-10" class="crayon-line crayon-striped-line"></div>
+<div id="crayon-5a3b157994864868920865-11" class="crayon-line"><span class="crayon-sy">[</span><span class="crayon-v">supervisord</span><span class="crayon-sy">]</span></div>
+<div id="crayon-5a3b157994864868920865-12" class="crayon-line crayon-striped-line"><span class="crayon-v">logfile</span><span class="crayon-o">=</span><span class="crayon-o">/</span><span class="crayon-v">tmp</span><span class="crayon-o">/</span><span class="crayon-v">supervisord</span><span class="crayon-sy">.</span><span class="crayon-i">log</span> <span class="crayon-sy">;</span> 日志文件，默认是 <span class="crayon-sy">$</span><span class="crayon-v">CWD</span><span class="crayon-o">/</span><span class="crayon-v">supervisord</span><span class="crayon-sy">.</span><span class="crayon-e">log</span></div>
+<div id="crayon-5a3b157994864868920865-13" class="crayon-line"><span class="crayon-v">logfile_maxbytes</span><span class="crayon-o">=</span><span class="crayon-cn">50MB</span><span class="crayon-h">        </span><span class="crayon-sy">;</span> 日志文件大小，超出会 <span class="crayon-i">rotate</span>，默认 <span class="crayon-cn">50MB</span></div>
+<div id="crayon-5a3b157994864868920865-14" class="crayon-line crayon-striped-line"><span class="crayon-v">logfile_backups</span><span class="crayon-o">=</span><span class="crayon-cn">10</span><span class="crayon-h">           </span><span class="crayon-sy">;</span> 日志文件保留备份数量默认 <span class="crayon-cn">10</span></div>
+<div id="crayon-5a3b157994864868920865-15" class="crayon-line"><span class="crayon-v">loglevel</span><span class="crayon-o">=</span><span class="crayon-i">info</span><span class="crayon-h">                </span><span class="crayon-sy">;</span> 日志级别，默认 <span class="crayon-i">info</span>，其它<span class="crayon-o">:</span> <span class="crayon-v">debug</span><span class="crayon-sy">,</span><span class="crayon-v">warn</span><span class="crayon-sy">,</span><span class="crayon-e">trace</span></div>
+<div id="crayon-5a3b157994864868920865-16" class="crayon-line crayon-striped-line"><span class="crayon-v">pidfile</span><span class="crayon-o">=</span><span class="crayon-o">/</span><span class="crayon-v">tmp</span><span class="crayon-o">/</span><span class="crayon-v">supervisord</span><span class="crayon-sy">.</span><span class="crayon-i">pid</span> <span class="crayon-sy">;</span> <span class="crayon-i">pid</span> 文件</div>
+<div id="crayon-5a3b157994864868920865-17" class="crayon-line"><span class="crayon-v">nodaemon</span><span class="crayon-o">=</span><span class="crayon-t">false</span><span class="crayon-h">               </span><span class="crayon-sy">;</span> 是否在前台启动，默认是 <span class="crayon-t">false</span>，即以 <span class="crayon-i">daemon</span> 的方式启动</div>
+<div id="crayon-5a3b157994864868920865-18" class="crayon-line crayon-striped-line"><span class="crayon-v">minfds</span><span class="crayon-o">=</span><span class="crayon-cn">1024</span><span class="crayon-h">                  </span><span class="crayon-sy">;</span> 可以打开的文件描述符的最小值，默认 <span class="crayon-cn">1024</span></div>
+<div id="crayon-5a3b157994864868920865-19" class="crayon-line"><span class="crayon-v">minprocs</span><span class="crayon-o">=</span><span class="crayon-cn">200</span><span class="crayon-h">                 </span><span class="crayon-sy">;</span> 可以打开的进程数的最小值，默认 <span class="crayon-cn">200</span></div>
+<div id="crayon-5a3b157994864868920865-20" class="crayon-line crayon-striped-line"></div>
+<div id="crayon-5a3b157994864868920865-21" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">the </span><span class="crayon-e">below </span><span class="crayon-e">section </span><span class="crayon-e">must </span><span class="crayon-e">remain </span><span class="crayon-st">in</span> <span class="crayon-e">the </span><span class="crayon-e">config </span><span class="crayon-e">file </span><span class="crayon-st">for</span> <span class="crayon-i">RPC</span></div>
+<div id="crayon-5a3b157994864868920865-22" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-sy">(</span><span class="crayon-v">supervisorctl</span><span class="crayon-o">/</span><span class="crayon-e">web </span><span class="crayon-t">interface</span><span class="crayon-sy">)</span> <span class="crayon-st">to</span> <span class="crayon-v">work</span><span class="crayon-sy">,</span> <span class="crayon-e">additional </span><span class="crayon-e">interfaces </span><span class="crayon-e">may </span><span class="crayon-i">be</span></div>
+<div id="crayon-5a3b157994864868920865-23" class="crayon-line"><span class="crayon-sy">;</span> <span class="crayon-e">added </span><span class="crayon-e">by </span><span class="crayon-e">defining </span><span class="crayon-e">them </span><span class="crayon-st">in</span> <span class="crayon-e">separate </span><span class="crayon-v">rpcinterface</span><span class="crayon-o">:</span> <span class="crayon-i">sections</span></div>
+<div id="crayon-5a3b157994864868920865-24" class="crayon-line crayon-striped-line"><span class="crayon-sy">[</span><span class="crayon-v">rpcinterface</span><span class="crayon-o">:</span><span class="crayon-v">supervisor</span><span class="crayon-sy">]</span></div>
+<div id="crayon-5a3b157994864868920865-25" class="crayon-line"><span class="crayon-v">supervisor</span><span class="crayon-sy">.</span><span class="crayon-v">rpcinterface_factory</span> <span class="crayon-o">=</span> <span class="crayon-v">supervisor</span><span class="crayon-sy">.</span><span class="crayon-v">rpcinterface</span><span class="crayon-o">:</span><span class="crayon-v">make_main</span><span class="crayon-sy">_</span>rpcinterface</div>
+<div id="crayon-5a3b157994864868920865-26" class="crayon-line crayon-striped-line"></div>
+<div id="crayon-5a3b157994864868920865-27" class="crayon-line"><span class="crayon-sy">[</span><span class="crayon-v">supervisorctl</span><span class="crayon-sy">]</span></div>
+<div id="crayon-5a3b157994864868920865-28" class="crayon-line crayon-striped-line"><span class="crayon-v">serverurl</span><span class="crayon-o">=</span><span class="crayon-v">unix</span><span class="crayon-o">:</span><span class="crayon-c">///tmp/supervisor.sock ; 通过 UNIX socket 连接 supervisord，路径与 unix_http_server 部分的 file 一致</span></div>
+<div id="crayon-5a3b157994864868920865-29" class="crayon-line"><span class="crayon-sy">;</span><span class="crayon-v">serverurl</span><span class="crayon-o">=</span><span class="crayon-v">http</span><span class="crayon-o">:</span><span class="crayon-c">//127.0.0.1:9001 ; 通过 HTTP 的方式连接 supervisord</span></div>
+<div id="crayon-5a3b157994864868920865-30" class="crayon-line crayon-striped-line"></div>
+<div id="crayon-5a3b157994864868920865-31" class="crayon-line"><span class="crayon-sy">;</span> 包含其他的配置文件</div>
+<div id="crayon-5a3b157994864868920865-32" class="crayon-line crayon-striped-line"><span class="crayon-sy">[</span><span class="crayon-v">include</span><span class="crayon-sy">]</span></div>
+<div id="crayon-5a3b157994864868920865-33" class="crayon-line"><span class="crayon-v">files</span> <span class="crayon-o">=</span> <span class="crayon-v">relative</span><span class="crayon-o">/</span><span class="crayon-v">directory</span><span class="crayon-o">/</span><span class="crayon-o">*</span><span class="crayon-sy">.</span><span class="crayon-i">ini</span><span class="crayon-h">    </span><span class="crayon-sy">;</span> 可以是 <span class="crayon-o">*</span><span class="crayon-sy">.</span><span class="crayon-i">conf</span> 或 <span class="crayon-o">*</span><span class="crayon-sy">.</span><span class="crayon-v">ini</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>我们把上面这部分配置保存到 /etc/supervisord.conf（或其他任意有权限访问的文件），然后启动 supervisord（通过 -c 选项指定配置文件路径，如果不指定会按照这个顺序查找配置文件：$CWD/supervisord.conf, $CWD/etc/supervisord.conf, /etc/supervisord.conf）：</p>
+<div id="crayon-5a3b157994867703582526" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b157994867703582526-1">1</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b157994867703582526-1" class="crayon-line"><span class="crayon-v">supervisord</span> <span class="crayon-o">-</span><span class="crayon-v">c</span> <span class="crayon-o">/</span><span class="crayon-v">etc</span><span class="crayon-o">/</span><span class="crayon-v">supervisord</span><span class="crayon-sy">.</span><span class="crayon-v">conf</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="program-配置:0374c09b00e8eddcfa304907db4e0a23">program 配置</h2>
+<p>上面我们已经把 supervisrod 运行起来了，现在可以添加我们要管理的进程的配置文件。可以把所有配置项都写到 supervisord.conf 文件里，但并不推荐这样做，而是通过 include 的方式把不同的程序（组）写到不同的配置文件里。</p>
+<p>为了举例，我们新建一个目录 /etc/supervisor/ 用于存放这些配置文件，相应的，把 /etc/supervisord.conf 里 include 部分的的配置修改一下：</p>
+<div id="crayon-5a3b157994869956926371" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b157994869956926371-1">1</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994869956926371-2">2</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b157994869956926371-1" class="crayon-line"><span class="crayon-sy">[</span><span class="crayon-v">include</span><span class="crayon-sy">]</span></div>
+<div id="crayon-5a3b157994869956926371-2" class="crayon-line crayon-striped-line"><span class="crayon-v">files</span> <span class="crayon-o">=</span> <span class="crayon-o">/</span><span class="crayon-v">etc</span><span class="crayon-o">/</span><span class="crayon-v">supervisor</span><span class="crayon-o">/</span><span class="crayon-o">*</span><span class="crayon-sy">.</span><span class="crayon-v">conf</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>假设有个用 Python 和 Flask 框架编写的用户中心系统，取名 usercenter，用 gunicorn (http://gunicorn.org/) 做 web 服务器。项目代码位于 <code>/home/leon/projects/usercenter</code>，gunicorn 配置文件为 <code>gunicorn.py</code>，WSGI callable 是 wsgi.py 里的 app 属性。所以直接在命令行启动的方式可能是这样的：</p>
+<div id="crayon-5a3b15799486d071879985" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b15799486d071879985-1">1</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486d071879985-2">2</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b15799486d071879985-1" class="crayon-line"><span class="crayon-v">cd</span> <span class="crayon-o">/</span><span class="crayon-v">home</span><span class="crayon-o">/</span><span class="crayon-v">leon</span><span class="crayon-o">/</span><span class="crayon-v">projects</span><span class="crayon-o">/</span><span class="crayon-e">usercenter</span></div>
+<div id="crayon-5a3b15799486d071879985-2" class="crayon-line crayon-striped-line"><span class="crayon-v">gunicorn</span> <span class="crayon-o">-</span><span class="crayon-i">c</span> <span class="crayon-v">gunicorn</span><span class="crayon-sy">.</span><span class="crayon-e">py </span><span class="crayon-v">wsgi</span><span class="crayon-o">:</span><span class="crayon-v">app</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>现在编写一份配置文件来管理这个进程（<strong>需要注意：用 supervisord 管理时，gunicorn 的 daemon 选项需要设置为 False</strong>）：</p>
+<div id="crayon-5a3b15799486e946620282" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-1">1</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-2">2</div>
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-3">3</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-4">4</div>
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-5">5</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-6">6</div>
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-7">7</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-8">8</div>
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-9">9</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-10">10</div>
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-11">11</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-12">12</div>
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-13">13</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-14">14</div>
+<div class="crayon-num" data-line="crayon-5a3b15799486e946620282-15">15</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b15799486e946620282-16">16</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b15799486e946620282-1" class="crayon-line"><span class="crayon-sy">[</span><span class="crayon-v">program</span><span class="crayon-o">:</span><span class="crayon-v">usercenter</span><span class="crayon-sy">]</span></div>
+<div id="crayon-5a3b15799486e946620282-2" class="crayon-line crayon-striped-line"><span class="crayon-v">directory</span> <span class="crayon-o">=</span> <span class="crayon-o">/</span><span class="crayon-v">home</span><span class="crayon-o">/</span><span class="crayon-v">leon</span><span class="crayon-o">/</span><span class="crayon-v">projects</span><span class="crayon-o">/</span><span class="crayon-i">usercenter</span> <span class="crayon-sy">;</span> 程序的启动目录</div>
+<div id="crayon-5a3b15799486e946620282-3" class="crayon-line"><span class="crayon-v">command</span> <span class="crayon-o">=</span> <span class="crayon-v">gunicorn</span> <span class="crayon-o">-</span><span class="crayon-i">c</span> <span class="crayon-v">gunicorn</span><span class="crayon-sy">.</span><span class="crayon-e">py </span><span class="crayon-v">wsgi</span><span class="crayon-o">:</span><span class="crayon-i">app</span><span class="crayon-h">  </span><span class="crayon-sy">;</span> 启动命令，可以看出与手动在命令行启动的命令是一样的</div>
+<div id="crayon-5a3b15799486e946620282-4" class="crayon-line crayon-striped-line"><span class="crayon-v">autostart</span> <span class="crayon-o">=</span> <span class="crayon-t">true</span><span class="crayon-h">     </span><span class="crayon-sy">;</span> 在 <span class="crayon-i">supervisord</span> 启动的时候也自动启动</div>
+<div id="crayon-5a3b15799486e946620282-5" class="crayon-line"><span class="crayon-v">startsecs</span> <span class="crayon-o">=</span> <span class="crayon-cn">5</span><span class="crayon-h">        </span><span class="crayon-sy">;</span> 启动 <span class="crayon-cn">5</span> 秒后没有异常退出，就当作已经正常启动了</div>
+<div id="crayon-5a3b15799486e946620282-6" class="crayon-line crayon-striped-line"><span class="crayon-v">autorestart</span> <span class="crayon-o">=</span> <span class="crayon-t">true</span><span class="crayon-h">   </span><span class="crayon-sy">;</span> 程序异常退出后自动重启</div>
+<div id="crayon-5a3b15799486e946620282-7" class="crayon-line"><span class="crayon-v">startretries</span> <span class="crayon-o">=</span> <span class="crayon-cn">3</span><span class="crayon-h">     </span><span class="crayon-sy">;</span> 启动失败自动重试次数，默认是 <span class="crayon-cn">3</span></div>
+<div id="crayon-5a3b15799486e946620282-8" class="crayon-line crayon-striped-line"><span class="crayon-v">user</span> <span class="crayon-o">=</span> <span class="crayon-i">leon</span><span class="crayon-h">          </span><span class="crayon-sy">;</span> 用哪个用户启动</div>
+<div id="crayon-5a3b15799486e946620282-9" class="crayon-line"><span class="crayon-v">redirect_stderr</span> <span class="crayon-o">=</span> <span class="crayon-t">true</span><span class="crayon-h">  </span><span class="crayon-sy">;</span> 把 <span class="crayon-i">stderr</span> 重定向到 <span class="crayon-i">stdout</span>，默认 <span class="crayon-t">false</span></div>
+<div id="crayon-5a3b15799486e946620282-10" class="crayon-line crayon-striped-line"><span class="crayon-v">stdout_logfile_maxbytes</span> <span class="crayon-o">=</span> <span class="crayon-cn">20MB</span><span class="crayon-h">  </span><span class="crayon-sy">;</span> <span class="crayon-i">stdout</span> 日志文件大小，默认 <span class="crayon-cn">50MB</span></div>
+<div id="crayon-5a3b15799486e946620282-11" class="crayon-line"><span class="crayon-v">stdout_logfile_backups</span> <span class="crayon-o">=</span> <span class="crayon-cn">20</span><span class="crayon-h">     </span><span class="crayon-sy">;</span> <span class="crayon-i">stdout</span> 日志文件备份数</div>
+<div id="crayon-5a3b15799486e946620282-12" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-i">stdout</span> 日志文件，需要注意当指定目录不存在时无法正常启动，所以需要手动创建目录（<span class="crayon-i">supervisord</span> 会自动创建日志文件）</div>
+<div id="crayon-5a3b15799486e946620282-13" class="crayon-line"><span class="crayon-v">stdout_logfile</span> <span class="crayon-o">=</span> <span class="crayon-o">/</span><span class="crayon-v">data</span><span class="crayon-o">/</span><span class="crayon-v">logs</span><span class="crayon-o">/</span><span class="crayon-v">usercenter_stdout</span><span class="crayon-sy">.</span><span class="crayon-i">log</span></div>
+<div id="crayon-5a3b15799486e946620282-14" class="crayon-line crayon-striped-line"></div>
+<div id="crayon-5a3b15799486e946620282-15" class="crayon-line"><span class="crayon-sy">;</span> 可以通过 <span class="crayon-i">environment</span> 来添加需要的环境变量，一种常见的用法是修改 <span class="crayon-i">PYTHONPATH</span></div>
+<div id="crayon-5a3b15799486e946620282-16" class="crayon-line crayon-striped-line"><span class="crayon-sy">;</span> <span class="crayon-v">environment</span><span class="crayon-o">=</span><span class="crayon-v">PYTHONPATH</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-v">PYTHONPATH</span><span class="crayon-o">:</span><span class="crayon-o">/</span><span class="crayon-v">path</span><span class="crayon-o">/</span><span class="crayon-st">to</span><span class="crayon-o">/</span><span class="crayon-v">somewhere</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>一份配置文件至少需要一个 <code>[program:x]</code> 部分的配置，来告诉 supervisord 需要管理那个进程。<code>[program:x]</code> 语法中的 <code>x</code> 表示 program name，会在客户端（supervisorctl 或 web 界面）显示，在 supervisorctl 中通过这个值来对程序进行 start、restart、stop 等操作。</p>
+<h2 id="使用-supervisorctl:0374c09b00e8eddcfa304907db4e0a23">使用 supervisorctl</h2>
+<p>Supervisorctl 是 supervisord 的一个命令行客户端工具，启动时需要指定与 supervisord 使用同一份配置文件，否则与 supervisord 一样按照顺序查找配置文件。</p>
+<div id="crayon-5a3b157994871541767949" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b157994871541767949-1">1</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b157994871541767949-1" class="crayon-line"><span class="crayon-v">supervisorctl</span> <span class="crayon-o">-</span><span class="crayon-v">c</span> <span class="crayon-o">/</span><span class="crayon-v">etc</span><span class="crayon-o">/</span><span class="crayon-v">supervisord</span><span class="crayon-sy">.</span><span class="crayon-v">conf</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>上面这个命令会进入 supervisorctl 的 shell 界面，然后可以执行不同的命令了：</p>
+<div id="crayon-5a3b157994873916385270" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b157994873916385270-1">1</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994873916385270-2">2</div>
+<div class="crayon-num" data-line="crayon-5a3b157994873916385270-3">3</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994873916385270-4">4</div>
+<div class="crayon-num" data-line="crayon-5a3b157994873916385270-5">5</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994873916385270-6">6</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b157994873916385270-1" class="crayon-line"><span class="crayon-o">&gt;</span> <span class="crayon-v">status</span><span class="crayon-h">    </span><span class="crayon-p"># 查看程序状态</span></div>
+<div id="crayon-5a3b157994873916385270-2" class="crayon-line crayon-striped-line"><span class="crayon-o">&gt;</span> <span class="crayon-e">stop </span><span class="crayon-v">usercenter</span><span class="crayon-h">   </span><span class="crayon-p"># 关闭 usercenter 程序</span></div>
+<div id="crayon-5a3b157994873916385270-3" class="crayon-line"><span class="crayon-o">&gt;</span> <span class="crayon-e">start </span><span class="crayon-v">usercenter</span><span class="crayon-h">  </span><span class="crayon-p"># 启动 usercenter 程序</span></div>
+<div id="crayon-5a3b157994873916385270-4" class="crayon-line crayon-striped-line"><span class="crayon-o">&gt;</span> <span class="crayon-e">restart </span><span class="crayon-v">usercenter</span><span class="crayon-h">    </span><span class="crayon-p"># 重启 usercenter 程序</span></div>
+<div id="crayon-5a3b157994873916385270-5" class="crayon-line"><span class="crayon-o">&gt;</span> <span class="crayon-i">reread</span><span class="crayon-h">    </span>＃ 读取有更新（增加）的配置文件，不会启动新添加的程序</div>
+<div id="crayon-5a3b157994873916385270-6" class="crayon-line crayon-striped-line"><span class="crayon-o">&gt;</span> <span class="crayon-i">update</span><span class="crayon-h">    </span>＃ 重启配置文件修改过的程序</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>上面这些命令都有相应的输出，除了进入 supervisorctl 的 shell 界面，也可以直接在 bash 终端运行：</p>
+<div id="crayon-5a3b157994875981423734" class="crayon-syntax crayon-theme-visual-assist crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover">
+<div class="crayon-plain-wrap"></div>
+<div class="crayon-main">
+<table class="crayon-table">
+<tbody>
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="hide">
+<div class="crayon-nums-content">
+<div class="crayon-num" data-line="crayon-5a3b157994875981423734-1">1</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994875981423734-2">2</div>
+<div class="crayon-num" data-line="crayon-5a3b157994875981423734-3">3</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994875981423734-4">4</div>
+<div class="crayon-num" data-line="crayon-5a3b157994875981423734-5">5</div>
+<div class="crayon-num crayon-striped-num" data-line="crayon-5a3b157994875981423734-6">6</div>
+</div>
+</td>
+<td class="crayon-code">
+<div class="crayon-pre">
+<div id="crayon-5a3b157994875981423734-1" class="crayon-line"><span class="crayon-sy">$</span> <span class="crayon-e">supervisorctl </span><span class="crayon-i">status</span></div>
+<div id="crayon-5a3b157994875981423734-2" class="crayon-line crayon-striped-line"><span class="crayon-sy">$</span> <span class="crayon-e">supervisorctl </span><span class="crayon-e">stop </span><span class="crayon-i">usercenter</span></div>
+<div id="crayon-5a3b157994875981423734-3" class="crayon-line"><span class="crayon-sy">$</span> <span class="crayon-e">supervisorctl </span><span class="crayon-e">start </span><span class="crayon-i">usercenter</span></div>
+<div id="crayon-5a3b157994875981423734-4" class="crayon-line crayon-striped-line"><span class="crayon-sy">$</span> <span class="crayon-e">supervisorctl </span><span class="crayon-e">restart </span><span class="crayon-i">usercenter</span></div>
+<div id="crayon-5a3b157994875981423734-5" class="crayon-line"><span class="crayon-sy">$</span> <span class="crayon-e">supervisorctl </span><span class="crayon-i">reread</span></div>
+<div id="crayon-5a3b157994875981423734-6" class="crayon-line crayon-striped-line"><span class="crayon-sy">$</span> <span class="crayon-e">supervisorctl </span><span class="crayon-v">update</span></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="其它:0374c09b00e8eddcfa304907db4e0a23">其它</h2>
+<p>除了 supervisorctl 之外，还可以配置 supervisrod 启动 web 管理界面，这个 web 后台使用 Basic Auth 的方式进行身份认证。</p>
+<p>除了单个进程的控制，还可以配置 group，进行分组管理。</p>
+<p>经常查看日志文件，包括 supervisord 的日志和各个 pragram 的日志文件，程序 crash 或抛出异常的信息一半会输出到 stderr，可以查看相应的日志文件来查找问题。</p>
+<p>Supervisor 有很丰富的功能，还有其他很多项配置，可以在官方文档获取更多信息：<a href="http://supervisord.org/index.html" rel="external nofollow">http://supervisord.org/index.html</a></p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/linux-2" rel="tag">Linux</a>, <a href="/tag/supervisor" rel="tag">Supervisor</a>, <a href="/tag/%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B" rel="tag">守护进程</a>, <a href="/tag/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86" rel="tag">进程管理</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2017/12/21/linux-nginx-net-core-2-0.html" rel="prev">Linux下配置 nginx + .net core 2.0</a><br>【下篇】<a href="/2017/12/21/nginx-goole-agent.html" rel="next">nginx反向代理搭建谷歌镜像</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2018/07/03/linux-shell-daemon.html">linux shell守护进程（daemon）</a></li><li> · <a href="/2017/12/21/linux-nginx-net-core-2-0.html">Linux下配置 nginx + .net core 2.0</a></li><li> · <a href="/2017/04/25/%E8%BD%AC-net%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%AE%9E%E8%B7%B5%EF%BC%9A%E7%94%A8c%E5%BC%80%E5%8F%91linux%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B.html">[转].NET跨平台实践：用C#开发Linux守护进程</a></li><li> · <a href="/2025/03/31/linux-mv.html">linux无法删除和修改乱码文件名</a></li><li> · <a href="/2025/03/19/nginx-service.html">nginx开机启动脚本 nginx.service</a></li><li> · <a href="/2025/03/15/codium-server.html">codium-server.service</a></li><li> · <a href="/2025/03/06/windows-ssh-wsl.html">windows下利用wsl+sshpass 自动发布脚本</a></li><li> · <a href="/2025/02/28/single-server-rolling-hot-upgrade.html">单台服务器应用不中断服务热部署滚动更新方案</a></li><li> · <a href="/2025/02/28/code-server.html">docker安装code-server</a></li><li> · <a href="/2025/02/28/centos8.html">centos8安装源</a></li><li> · <a href="/2025/02/06/caddy.html">SSL 证书免费，自动续期的web服务器Caddy</a></li><li> · <a href="/2024/11/20/centos-yum-install-node18.html">centos安装node18</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2017年12月21日发表在<a href="/category/linux" rel="category tag">LINUX</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2017/12/21/linux-process-tool-supervisor.html" rel="bookmark" title="本文固定链接 /2017/12/21/linux-process-tool-supervisor.html">Linux下进程管理工具推荐：supervisor | Bruce's Blog</a><a href="#" onclick="copy_code('/2017/12/21/linux-process-tool-supervisor.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/12/21/linux-process-tool-supervisor.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4543" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="0bb6acc338"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="161"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.070 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:33 -->

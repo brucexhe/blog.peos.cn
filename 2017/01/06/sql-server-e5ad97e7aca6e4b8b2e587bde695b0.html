@@ -1,0 +1,855 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>SQL Server 字符串函数 | Bruce's Blog</title> 
+<meta name="description" content="SQL Server 字符串函数">
+<meta name="keywords" content="SQL Server,字符串函数">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2017 年 1 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="6" class="pad"> </td><td>1</td>
+	</tr>
+	<tr>
+		<td>2</td><td>3</td><td>4</td><td>5</td><td><a href="/2017/01/06" aria-label="2017年1月6日 发布的文章">6</a></td><td>7</td><td>8</td>
+	</tr>
+	<tr>
+		<td><a href="/2017/01/09" aria-label="2017年1月9日 发布的文章">9</a></td><td>10</td><td>11</td><td>12</td><td><a href="/2017/01/13" aria-label="2017年1月13日 发布的文章">13</a></td><td>14</td><td>15</td>
+	</tr>
+	<tr>
+		<td><a href="/2017/01/16" aria-label="2017年1月16日 发布的文章">16</a></td><td><a href="/2017/01/17" aria-label="2017年1月17日 发布的文章">17</a></td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td>
+	</tr>
+	<tr>
+		<td>23</td><td>24</td><td>25</td><td><a href="/2017/01/26" aria-label="2017年1月26日 发布的文章">26</a></td><td>27</td><td>28</td><td>29</td>
+	</tr>
+	<tr>
+		<td><a href="/2017/01/30" aria-label="2017年1月30日 发布的文章">30</a></td><td><a href="/2017/01/31" aria-label="2017年1月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="5"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2016/12">« 12 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2017/02">2 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#3b82d8;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#7331e5;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#c5abad;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#cb164a;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#634ed0;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#c8f603;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#3ac201;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#be0024;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#fbf725;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#2b00a0;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#e7e2d7;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#97a585;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#fe4608;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#cc0190;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#11e087;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#29a7d8;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#706139;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#38c00f;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#256beb;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#8e53a6;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#8d04b1;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#95d343;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#ecfe9c;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#d51087;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#f163;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#a088f4;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#6bc4e6;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#4185b1;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#9edacd;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#2aaea;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#6d9102;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#d80a90;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#b3f21d;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#86774b;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#438990;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#6907ad;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#46813c;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#9d7d38;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#90f052;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#6ebe99;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#4433a2;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#5769ba;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#41192d;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#5fa0b;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#d886e0;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/sql-server" rel="category tag">SQL Server</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">SQL Server 字符串函数</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2017-01-06 14:56</span>
+			<span class="category">  <a href="/category/sql-server" rel="category tag">SQL Server</a></span>
+			<span class="article_comment"><a href="/2017/01/06/sql-server-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>1,366</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div class="postTitle"><span class="wp_keywordlink_affiliate"><a href="/tag/sql-server" title="View all posts in SQL Server" target="_blank">SQL Server</a></span> <span class="wp_keywordlink_affiliate"><a href="/tag/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0" title="View all posts in 字符串函数" target="_blank">字符串函数</a></span></div>
+<div class="postText">
+<div id="cnblogs_post_body">
+<h1><span class="wp_keywordlink_affiliate"><a href="/tag/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0" title="View all posts in 字符串函数" target="_blank">字符串函数</a></span></h1>
+<p>在开发T-SQL时，经常会需要对字符串进行各种各样的操作，下面介绍常用的字符串函数。</p>
+<p><strong>1、获取字符的ASCII码 ASCII</strong></p>
+<p>ASCII码是对字符的标准编码。要获取字符的ASCII码就可以通过调用ASCII函数来实现。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　ASCII(espression)</pre>
+</div>
+<p>这里的expression是一个返回char或varchar数据类型的表达式，ASCII函数仅对表达式最左侧的字符返回ASCII码值。</p>
+<p>返回值：int数据类型。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select ASCII('f')    --输出 102</pre>
+</div>
+<p>注意如果是多个字符的字符串，也只是返回第一个字符的ASCII码值。</p>
+<p><strong>2、获取ASCII码对应的字符 Char</strong></p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　char(integer_expression)</pre>
+</div>
+<p>返回值类型：char型字符</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select char(102)    -- 输出f</pre>
+</div>
+<p><strong>3、获取字符的unicode编码 Unicode</strong></p>
+<p>unicode函数可以获得字符的unicode编码。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　unicode('ncharacter_expression')</pre>
+</div>
+<p>这里的ncharacter_expression是nchar或nvarchar类型的表达式。函数仅会返回第一个字符的unicode编码。</p>
+<p>返回值：int类型数据</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　SELECT Unicode('飞')    -- 输出 39134</pre>
+</div>
+<p><strong>4、获取unicode编码对应的字符nchar</strong></p>
+<p>nchar能够根据unicode标准的定义，返回具有指定的整数代码的unicode字符。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　nchar(integer_expression)</pre>
+</div>
+<p>返回值：unicode字符</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　SELECT nchar(39134)        -- 输出 飞</pre>
+</div>
+<p><strong>5、获取字符串第一次出现位置PatIndex</strong></p>
+<p>patindex函数返回指定表达式中某模式第一次出现的其实位置；如果在全部有效的文本和字符数据类型中没有找到该模式则返回0。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　patindex( '%pattenr%' , expression )</pre>
+</div>
+<p>参数说明：</p>
+<p>pattern：一个文本字符串。可以使用通配符，但pattern之前和之后必须有%字符(搜索第一个或自后一个字符时除外)。因为在T-SQL中，%代表模式匹配。</p>
+<p>返回值：如果expression的数据类型为varchar(max)或nvarchar(max)，则为bigint，否则int，即pattern指定的字符串在expression中第一次出现的位置。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select patindex('%llo%','hello world')    --输出3，第一次出现llo是在第3个字符位置</pre>
+</div>
+<p><strong>6、生成空格字符串SPACE</strong></p>
+<p>space函数可以生成任意多个空格组成的字符串。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　space ( integer_expression )</pre>
+</div>
+<p>这里的integer_expression为指示空格个数的正整数。如果要在unicode数据中包含空格或超过8000个以上的空格。需要使用replicate函数。</p>
+<p>返回值：char数据类型的字符。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select ('hello' + space(5) + 'world')    --输出 hello     world</pre>
+</div>
+<p><strong>7、按指定次数重复生成字符串REPLICATE</strong></p>
+<p>replicate函数可以按照指定的整数次数，重复生成一个字符串形式的表达式，结果为字符串。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　replicate( character_expression,integer_expression )</pre>
+</div>
+<p>参数说明：</p>
+<p>character_expression：字符数据的字母数字表达式，或者可隐式转换为varchar的数据类型的字母数字表达式。</p>
+<p>integer_expression：一个正整数。如果integer_expression为负，则会返回错误。integer_expression可以使bigint类型。</p>
+<p>返回值：与character_expression相同数据类型的字符串。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select replicate('hello',5)    --输出hellohellohellohellohello</pre>
+</div>
+<p><strong>8、截取字符串SUBSTRING</strong></p>
+<p>substring函数可以对字符串进行字串的截取操作。</p>
+<p>语法结构:</p>
+<div class="cnblogs_code">
+<pre>　　substring( expression,start,length)</pre>
+</div>
+<p><em>　　　　</em>参数说明：</p>
+<p>expression：是字符串、二进制字符串、文本、图像、列或包含列的表达式，但不要使用包含聚合函数的表达式。</p>
+<p>start：指定子字符串开始位置的整数，start可以使bigint类型。</p>
+<p>length：一个正整数，指定要返回的expression的字符数或字节数。如果length为负，则会返回错误。length可以使bigint数据类型。</p>
+<p>返回值：</p>
+<p>如果expression是受支持的字符数据类型，则返回字符数据。</p>
+<p>如果expression是受支持的binary数据类型，则返回二进制数据。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select substring('hello',1,2)    --输出 he 与C#有点不同，它第一个字符是从1开始的</pre>
+</div>
+<p><strong>9、获取字符串长度LEN</strong></p>
+<p>len函数用于获取字符串的长度(字符数)，但不包括右边的空格。左边的空格和右边的空格计算在内。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　len( string_expression )</pre>
+</div>
+<p>参数说明：</p>
+<p>string_expression：要计算长度的字符串。</p>
+<p>返回值：expression数据类型为varchar(max)、nvarchar(max)或varbinary(max)，则为bigint。否则为int。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select len('天下之大，无奇不有')    -- 输出 9</pre>
+</div>
+<p><strong>10、替换字符串内容STUFF</strong></p>
+<p>stuff函数用于在指定的字符串中删除指定长度的字符，并在起点处插入另外一组字符。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　stuff(source_character_expression，start，length，destination_character_expression)</pre>
+</div>
+<p>参数说明：</p>
+<p>source_character_expression：源字符串。可以是常量、变量，也可以使字符列或二进制数据列。</p>
+<p>start：一个整数，指定删除和插入的开始位置。如果start或length为负，则返回空字符串。如果start比第一个character_expression长，则返回空字符串。　　　　　　　　　　start可以是bingint类型。</p>
+<p>length：一个赠书，指定要删除的字符个数。如果length比第一个charter_expression长，则最多删除到最后一个character_expression中最后一个字符。　　　　　　　　　　length可以是bigint类型。</p>
+<p>destination_character_expression：目的字符串。可以是常量、变量，也可以使字符列或二进制数据列。将在源字符串中执行插入。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select stuff('123456789',5,2,'xyz')    --输出1234xyz780    从第5个字符开始，将第5 6两个字符替换成xyz字符串</pre>
+</div>
+<p><strong>11、指定位置搜索字符串中的内容CHARINDEX</strong></p>
+<p>charindex函数用于在指定的字符串中搜索特定的字符串，并可以指定开始搜索的位置，返回第一次找到目标字符串的字符数。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　charindex ( expression1 , expression2 [ , start_location] )</pre>
+</div>
+<p>参数说明：</p>
+<p>expression1：一个字符串数据类型的表达式，其中包含要查找的字符的序列。</p>
+<p>expression2：一个字符串数据类型的表达式，通常是一个为指定序列搜索的列。</p>
+<p>start_location：开始在expression2中搜索expression1是的字符位置。如果start_location未被指定、是一个负数或零，则将从expression2的开头开始搜索。　　　　　　start_location可以是bingint类型。</p>
+<p>返回值：如果expression2的数据类型为varchar(max)、nvarchar(max)或varbinary(max)，则为bigint，否则为int。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　　　select charindex('456','123456789')    -- 输出 4    从123456789中检索456出现的位置
+　　　　select charindex('456','123456789',4)    -- 输出 4</pre>
+</div>
+<p><strong>12、生成带分隔符的unicode字符串 QUOTENAME</strong></p>
+<p>QUOTENAME函数用于生成带有分隔符的Unicode字符串。</p>
+<p>(1)、分隔符</p>
+<p>可以是单引号(')、左右方括号([])或者英文双引号(")。如果不指定，则使用方括号。带有方括号的Unicode字符串如：[hello]。</p>
+<p>(2)、语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　　　quotename( 'character_string' [ , 'quote_character'] )</pre>
+</div>
+<p>参数说明：</p>
+<p>character_string：Unicode字符串数据构成的字符串。</p>
+<p>quote_character：用做分隔符的单字符字符串。</p>
+<p>(3)、返回值</p>
+<p>nvarchar(258)，生成带有分隔符的字符串长度不能超过258</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　　　select quotename('我是一个兵')    -- 输出[我是一个兵]
+　　　　select quotename('我是一个兵','"')    -- 输出"我是一个兵"</pre>
+</div>
+<p><strong>13、转换浮点数字为字符串 STR</strong></p>
+<p>str函数用于将浮点数转换为字符串</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　str(float_expression[,length[,decimal]])</pre>
+</div>
+<p>float_espression：带小数点的近似数字(float)数据类型的表达式。</p>
+<p>length：总长度。它包括小数点、符号、数字以及空格。默认值为10.</p>
+<p>decimal：小数点后的位数。decimal必须小于或等于16.如果decimal大于16，则会截断结果，使其保持为小数点后只有16位。</p>
+<p>返回值：</p>
+<p>char：定长字符串。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　　　select str(123.456789)    -- 输出 123
+　　　　select str(123.456789,7) --输出    123    注意前面的是4个空格，因为不写小数点后保留多少位，所以自动填充空格
+　　　　select str(123.456789,7,3)    -- 输出123.457    最后一位 四舍五入了，总长度为7小数点后保留3位</pre>
+</div>
+<p><strong>14、截取左边字符串 LEFT</strong></p>
+<p>left函数用于截取从左边第一个字符开始，指定长度的字符串。其执行效果等于substring(expression,1,length)。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　left(character_expression,integer_expression)</pre>
+</div>
+<p>参数说明：</p>
+<p>character_expression：字符或二进制表达式，可以是常量、变量或表达式。</p>
+<p>integer_expression：正整数，指定返回的字符数。</p>
+<p>返回值：</p>
+<p>varchar或nvarchar，变长字符串。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select left('123456789',3)    --输出 123</pre>
+</div>
+<p><strong>15、截取右边字符串RIGHT</strong></p>
+<p>RIGHT函数用于截取从右边第一个字符开始，指定长度的字符串。其执行效果等于SUNSTRING(expression,len(expression)-length+1,length)。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　right(character_expression,integer_expression)</pre>
+</div>
+<p>参数说明：</p>
+<p>character_expression：字符或二进制表达式，可以是常量、变量或表达式。</p>
+<p>integer_expression：正整数，指定返回的字符数。</p>
+<p>返回值：</p>
+<p>varchar或nvarchar，变长字符串。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select right('123456789',3)    --输出 789</pre>
+</div>
+<p><strong>16、清除左边空格LTRIM</strong></p>
+<p>如果字符串的字一个字符为空格，LTRIM函数用于清除连续的左边空格。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　　　ltrim(character_expression)</pre>
+</div>
+<p>character_expression为字符或二进制数据表达式，可以是常量、变量或数据列。</p>
+<p>返回值：</p>
+<p>varchar或nvarchar，变长字符串。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select ltrim('    123456789')  --输出 123456789，注意左边的空格已被删除了，输出字符串左边是没空格的</pre>
+</div>
+<p><strong>17、清除右边空格RTRIM</strong></p>
+<p>RTRIM函数用于清空右边连续的空格。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　rtrim(character_expression)</pre>
+</div>
+<p>character_expression为字符或二进制数据表达式，可以是常量、变量或数据列。</p>
+<p>返回值：</p>
+<p>varchar或nvarchar，变长字符串。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　select rtrim('123456789   ')    --输出123456789，注意右边的空格已经被清除了</pre>
+</div>
+<p><strong>18、转换为小写字符串LOWER</strong></p>
+<p>lower函数将字符串全部转换为小写字符后返回。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　　　lower(character_expression)</pre>
+</div>
+<p>返回值：</p>
+<p>varchar或nvarchar，变长字符串</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　　　select lower('ABCDEFG')    --输出 abcdefg 已经全部转换为小写了</pre>
+</div>
+<p><strong>19、转换为大写字符串UPPER</strong></p>
+<p>upper函数用于将字符串全部转换为大写字符后返回。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　upper(character_expression)</pre>
+</div>
+<p>character_expression为字符或二进制表达式，可以是常量，变量或数据列。</p>
+<p>返回值：</p>
+<p>varchar或nvarchar，变长字符串。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select upper('abcdefg')    --输出 ABCDEFG 留意到已经全部转换为大写了</pre>
+</div>
+<p><strong>20、反序字符串REVERSE</strong></p>
+<p>reverse函数用于将字符串内容反序后返回。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　reverse(character_expression)</pre>
+</div>
+<p>character_expression：为二进制或二进制数据表达式，可以是常量、变量或数据列。</p>
+<p>返回值：</p>
+<p>varchar或nvarchar，变长字符串</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　select reverse('123456789')    --输出 987654321 注意到顺序已经反转过来了</pre>
+</div>
+<p><strong>21、获取字符串字节数DATALENGTH</strong></p>
+<p>datalength函数用于获取字符串的字节数，而不是字符数。该函数不仅适合字符串数据，还适合文本(text、ntext)、二进制数据(varbinary、binary)和图像(image)等任意类型的数据。</p>
+<p>语法结构：</p>
+<div class="cnblogs_code">
+<pre>　　datalength(expression)</pre>
+</div>
+<p>返回值：</p>
+<p>如果expression数据类型为varchar(max)、nvarchar(max)或varbinary(max)数据类型，则返回bigint；否则返回int。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>　　　　select datalength('我是一个兵')    --输出 10
+　　　　select len('我是一个兵')    --输出 5
+　　　　select datalength('abcde')    --输出5
+　　　　select len('abcde')    --输出5</pre>
+</div>
+<p><strong>22、SOUNDEX</strong></p>
+<p>返回一个由四个字符组成的代码 (SOUNDEX)，用于评估两个字符串的相似性。</p>
+<div class="cnblogs_code">
+<pre>　　SELECT SOUNDEX('ABCDE')    --A120
+　　SELECT SOUNDEX('ABCDR') --A121</pre>
+</div>
+<p><strong>23、REPLACE</strong></p>
+<p>用另一个字符串值替换出现的所有指定字符串值。</p>
+<p>语法如下：</p>
+<div class="cnblogs_code">
+<pre>　　REPLACE ( string_expression1 , string_expression2 , string_expression3 )</pre>
+</div>
+<p>参数<br>
+string_expression1:要搜索的字符串表达式。string_expression1 可以是字符或二进制数据类型。<br>
+string_expression2:要查找的子字符串。string_expression2 可以是字符或二进制数据类型。<br>
+string_expression3:替换字符串。string_expression3 可以是字符或二进制数据类型。</p>
+<div class="cnblogs_code">
+<pre>　　SELECT REPLACE('abcde','abc','xxx')    --xxxde</pre>
+</div>
+<p><strong>24、DIFFERENCE</strong></p>
+<p>返回一个整数值，指示两个字符表达式的 SOUNDEX 值之间的差异。</p>
+<div class="cnblogs_code">
+<pre>　　SELECT DIFFERENCE('abcde','abc')    --4</pre>
+</div>
+<p> </p>
+</div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: SQLServer：系统函数</div>
+</div>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/sql-server" rel="tag">SQL Server</a>, <a href="/tag/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0" rel="tag">字符串函数</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2017/01/06/clear-sqlserver2014-log.html" rel="prev">SQLServer2014删除log文件和清空日志的方案</a><br>【下篇】<a href="/2017/01/09/vs2013-key.html" rel="next">vs2013 密钥</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2020/05/08/log-or-data.html">数据库先写日志还是先写数据？</a></li><li> · <a href="/2017/09/14/sql-server-auto-backup.html">SQL Server数据库定时自动备份并自动删除旧的备份</a></li><li> · <a href="/2016/11/01/%E8%A7%A3%E5%86%B3the-underlying-provider-failed-on-open.html">解决The underlying provider failed on Open</a></li><li> · <a href="/2016/09/12/%E9%80%9A%E8%BF%87vs-2015svn%E4%B8%BAsql-server%E6%8F%90%E4%BE%9B%E6%95%B0%E6%8D%AE%E5%BA%93%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86.html">通过VS 2015+SVN为SQL Server提供数据库版本管理</a></li><li> · <a href="/2016/06/02/%E9%80%9A%E8%BF%87sqlserver%E6%97%A5%E5%BF%97%E6%81%A2%E5%A4%8D%E8%AF%AF%E5%88%A0%E9%99%A4%E7%9A%84%E6%95%B0%E6%8D%AE.html">通过sqlserver日志恢复误删除的数据</a></li><li> · <a href="/2016/04/19/sql-server-demo.html">SQL Server表分区完整示例DEMO</a></li><li> · <a href="/2015/04/04/sql-server-%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98.html">sql server *= 兼容问题</a></li><li> · <a href="/2013/09/27/sql-server-business-level-dirty-read.html">SQL Server 中的事务与事务隔离级别以及脏读</a></li><li> · <a href="/2013/09/21/sql-server%E4%B8%AD%E6%97%A5%E5%BF%97%E7%9A%84%E7%9A%84%E4%BD%9C%E7%94%A8.html">SQL Server中日志的的作用</a></li><li> · <a href="/2013/05/21/sql-server-%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%88%86%E6%9E%90%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%94%81.html">SQL SERVER 查询性能优化之分析事务与锁</a></li><li> · <a href="/2013/03/18/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AF%94%E8%BE%83.html">数据库比较</a></li><li> · <a href="/2013/01/16/sql-server%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86.html">Sql Server编译原理</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2017年01月06日发表在<a href="/category/sql-server" rel="category tag">SQL Server</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2017/01/06/sql-server-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0.html" rel="bookmark" title="本文固定链接 /2017/01/06/sql-server-%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%87%bd%e6%95%b0.html">SQL Server 字符串函数 | Bruce's Blog</a><a href="#" onclick="copy_code('/2017/01/06/sql-server-%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%87%bd%e6%95%b0.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/01/06/sql-server-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4123" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="f644f910b3"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="214"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.073 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:51 -->

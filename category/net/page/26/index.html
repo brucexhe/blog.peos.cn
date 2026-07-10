@@ -1,0 +1,646 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>.NET | Bruce's Blog</title> 
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-menu-item menu-item-3991"><a href="/category/net" aria-current="page">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10 current-cat"><a aria-current="page" href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2026 年 7 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
+	</tr>
+	<tr>
+		<td>6</td><td>7</td><td>8</td><td>9</td><td id="today">10</td><td>11</td><td>12</td>
+	</tr>
+	<tr>
+		<td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td>
+	</tr>
+	<tr>
+		<td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2026/03">« 3 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"> </span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#f0e80c;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#89eca2;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#ff418d;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#378410;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#87e9ff;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#212b84;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#fd0918;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#ccd270;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#dc0b3a;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#dc67a1;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#cce9fb;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#8e31a4;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#c42868;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#98c7c7;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#667883;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#2e1554;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#246ec1;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#aa7db3;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#854335;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#dfa1bf;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#47f12a;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#12f650;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#ecf627;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#931025;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#bded76;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#bbe2cf;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#d7a6c1;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#5fb484;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#90dd16;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#68e924;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#33aa85;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#59a400;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#5f6ea3;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#dea1e8;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#abbf0c;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#4ba27a;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#aafe8b;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#13cc8f;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#282671;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#75277a;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#e6f9a3;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#b2c088;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#c7d22d;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#cc44a6;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#968cf2;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<div id="content">
+	<!-- menu -->
+	<div class="post_nav_block_wrapper">
+		<ul class="post_nav_block">
+			<li><a href="/">首页</a></li>
+			<li><a href="/?order=commented">热门文章</a></li>
+			<li><a href="/?order=rand">随便看看</a></li>
+			<li><a href="/category/net/page/26" class="current_nav">
+				                
+								所有属于.NET分类文章
+								</a>
+			</li>
+		</ul> 
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>
+		<div class="clear"></div>
+    </div>
+	<!-- end: menu -->
+	<div class="navigation"><div class="pagination"><a href="/category/net/page/25">上一页</a><a href="/category/net/page/20" class="inactive">20</a><a href="/category/net/page/21" class="inactive">21</a><a href="/category/net/page/22" class="inactive">22</a><a href="/category/net/page/23" class="inactive">23</a><a href="/category/net/page/24" class="inactive">24</a><a href="/category/net/page/25" class="inactive">25</a><span class="current">26</span><a href="/category/net/page/27" class="inactive">27</a><a href="/category/net/page/28" class="inactive">28</a><a href="/category/net/page/29" class="inactive">29</a><a href="/category/net/page/30" class="inactive">30</a><a href="/category/net/page/31" class="inactive">31</a><a href="/category/net/page/32" class="inactive">32</a><a href="/category/net/page/27">下一页</a><a href="/category/net/page/46">最后</a></div>
+</div>
+    <div class="clear"></div>
+ 	<!-- end: navigation -->
+ 	<!-- archive_box -->
+	<div id="post-list">
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">20</span>
+				<span class="postyear">02/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/02/20/win2003%E4%B8%8B%E5%BB%BA%E7%AB%8B-%E5%88%B0asp-net%E7%9A%84%E6%98%A0%E5%B0%84.html" class="titlelnk" title="win2003下建立*.*到asp.net的映射">win2003下建立*.*到asp.net的映射</a></h3>
+			<p class="post_item_summary">
+				 
+
+
+
+
+
+
+
+准备自己架一个blog，于是下了CNBlogsDotText，在安装说明上要求把web项目建立*.*到asp.net的映射，着实在这里费了一番周折。估计很多用win2003的朋友在这里会和我一样卡住，我把详细的过程写在这里，供参考。
+1.从iis里找到给.text设置的虚拟目录或网站，右键属性后，翻到“主目录”选项卡
+2.点击“删除”下面的“配置”，进入“应用程序配置”
+3.点击“通配符应用程序映射（执行顺序）”处的“插入”，进入“添加/编辑应用程序扩展名映射”。
+
+4.选择asp.net使用的执行文件，一般是C:\WINDOWS\Microsoft.NET\Fra...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-02-20 00:09</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/02/20/win2003%E4%B8%8B%E5%BB%BA%E7%AB%8B-%E5%88%B0asp-net%E7%9A%84%E6%98%A0%E5%B0%84.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,582</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">18</span>
+				<span class="postyear">02/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/02/18/iis7-isapi%E5%92%8Ccgi-%E9%99%90%E5%88%B6-%E9%94%99%E8%AF%AF.html" class="titlelnk" title="IIS7-ISAPI和CGI 限制 错误">IIS7-ISAPI和CGI 限制 错误</a></h3>
+			<p class="post_item_summary">
+				详细错误：HTTP 错误 404.2 - Not Found. 由于 Web 服务器上的“ISAPI 和 CGI 限制”列表设置，无法提供您请求的页面.
+出现环境：win7 + IIS7.0
+解决办法：IIS的根节点-&gt;右侧“ISAPI和CGI限制”-&gt;把禁止的DotNet版本项设置为允许，即可~
+
+
+			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-02-18 21:54</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/02/18/iis7-isapi%E5%92%8Ccgi-%E9%99%90%E5%88%B6-%E9%94%99%E8%AF%AF.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>4,141</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">13</span>
+				<span class="postyear">02/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/02/13/datagridview%E7%BB%91%E5%AE%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E5%90%8E%E5%88%A0%E9%99%A4%E3%80%81%E6%B7%BB%E5%8A%A0%E8%A1%8C.html" class="titlelnk" title="datagridview绑定数据源后删除、添加行">datagridview绑定数据源后删除、添加行</a></h3>
+			<p class="post_item_summary">
+				datagridview添加行，在已经绑定数据源的情况下
+(否则会报错误: 当控件被数据绑定时，无法以编程方式向 DataGridView 的行集合中添加行)
+DataRow dr = ((DataTable)dataGridView1.DataSource).NewRow();((DataTable)dataGridView1.DataSource).Rows.Add(dr);
+			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-02-13 16:31</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/02/13/datagridview%E7%BB%91%E5%AE%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E5%90%8E%E5%88%A0%E9%99%A4%E3%80%81%E6%B7%BB%E5%8A%A0%E8%A1%8C.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>4,573</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">12</span>
+				<span class="postyear">02/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/02/12/%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5%E5%88%B0asp-net-development-server-%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html" class="titlelnk" title="无法连接到Asp.net Development Server 的解决办法">无法连接到Asp.net Development Server 的解决办法</a></h3>
+			<p class="post_item_summary">
+				最近用Vs2010调试Web时，Vs2010报出了"无法连接到Asp.net Development Server”的问题。可之前一直使用都还是好的。之后经过分析感觉应该是防火墙的原因，使得Vs2010的调试程序无法挂接到Asp.net Development Server。把Windows防火墙关掉后，问题解决。
+			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-02-12 21:25</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/02/12/%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5%E5%88%B0asp-net-development-server-%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>3,431</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">09</span>
+				<span class="postyear">02/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/02/09/c%E4%BD%BF%E7%94%A8sqlite%E7%A4%BA%E4%BE%8B.html" class="titlelnk" title="C#使用Sqlite示例">C#使用Sqlite示例</a></h3>
+			<p class="post_item_summary">
+				首先下载SQLite-1.0.66.0-setup.exe，下面简单说下用法：
+打开vs2008，打开 视图——服务器资源管理器
+
+右键点击 数据连接，选择 添加连接
+
+在弹出的窗体中点击 更改
+
+这时在数据源一栏可以看到 SQLite database File,选中它即可
+
+在接下来的操作不用我说了吧~，可以打开Sqlite的数据库也可以新创建一个
+有了Sqlite数据库之后就可以在VS上调用了：
+首先要引用System.Data.Sqlite这个命名空间，装完开发包就已经有了的，不用再去找
+然后就可以像操作SQL一样操作SQLite了，只是类名得改改哈，之前的Sqlconnection改成S...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-02-09 16:41</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a>, <a href="/category/sqlite" rel="category tag">SQLite</a></span>
+				<span class="article_comment"><a href="/2012/02/09/c%E4%BD%BF%E7%94%A8sqlite%E7%A4%BA%E4%BE%8B.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>4,994</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">08</span>
+				<span class="postyear">02/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/02/08/fastreport-net%E5%AF%BC%E5%87%BAword%E3%80%81excel.html" class="titlelnk" title="FASTREPORT .NET导出WORD、EXCEL">FASTREPORT .NET导出WORD、EXCEL</a></h3>
+			<p class="post_item_summary">
+				FASTREPORT .NET导出WORD，EXCEL
+一直没找到方法，最后使用  report1.Show();//就是预览
+然后就可以打印和保存了。
+任何格式都可以！
+			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-02-08 17:56</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/02/08/fastreport-net%E5%AF%BC%E5%87%BAword%E3%80%81excel.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>4,097</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">04</span>
+				<span class="postyear">02/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/02/04/c%E8%AF%BB%E5%86%99ini%E6%96%87%E4%BB%B6-2.html" class="titlelnk" title="C#读写INI文件">C#读写INI文件</a></h3>
+			<p class="post_item_summary">
+				最近在编写一些小程序的时候要用到一些配置文件，以前一直用XML或者CONFIG文件，但是发现INI文件特别好用！所以记下来~~~以下内容来自网络整理！
+由于C#的类库中并不包含读取INI文件的类，用C#读取INI文件必须要用到windows的API函数，所以在声明windows的API函数时必须这样声明一下。
+[DllImport("kernel32")]
+            private static extern bool WritePrivateProfileString(
+            string lpAppName,
+            string lpKeyName,
+            string lpString,
+            string lpFileName
+   ...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-02-04 10:31</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/02/04/c%E8%AF%BB%E5%86%99ini%E6%96%87%E4%BB%B6-2.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>4,511</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">20</span>
+				<span class="postyear">01/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/01/20/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F%E7%B3%BB%E5%88%976-%E8%A3%85%E7%AE%B1%E5%92%8C%E6%8B%86%E7%AE%B1%E4%BC%98%E5%8C%96.html" class="titlelnk" title="改善您的C#程序系列(14)-装箱和拆箱优化">改善您的C#程序系列(14)-装箱和拆箱优化</a></h3>
+			<p class="post_item_summary">
+				值类型是数据的容器，它们不具备多太性。另一方面就是说，.Net框架被设计成单一继承的引用类型，System.Object，在整个继承关系中做为根对象存在。设计这两种类型的目的是截然不同的，.Net框架使用了装箱与拆箱来链接两种不同类型的数据。装箱是把一个值类型数据放置在一个无类型的引用对象上，从而使一个值类型在须要时可以当成引用类型来使用。拆箱则是额外的从“箱”上拷贝一份值类型数据。装箱和拆箱可以让你在须要使用System.Object对象的地方使用值类型数据。但装箱与拆箱操作却是性能的强盗，在些时候装箱与...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-01-20 16:34</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/01/20/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F%E7%B3%BB%E5%88%976-%E8%A3%85%E7%AE%B1%E5%92%8C%E6%8B%86%E7%AE%B1%E4%BC%98%E5%8C%96.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,552</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">20</span>
+				<span class="postyear">01/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/01/20/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F%E7%B3%BB%E5%88%9713-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6.html" class="titlelnk" title="改善您的C#程序系列(13)-垃圾回收">改善您的C#程序系列(13)-垃圾回收</a></h3>
+			<p class="post_item_summary">
+				垃圾回收器对内存管理表现的非常出色，并且它以非常高效的方法移除不再使用的对象。但不管你怎样看它，申请和释放一个基于堆内存的对象总比申请和释放一个不基于堆内存的对象要花上更多的处理器时间。你可以给出一些严重的性能问题，例如应用程序在某个方法内分配过量的引用对象。
+你不应该让垃圾回收器超负荷的工作，为了程序的效率，你可以使用一些简单的技巧来减少垃圾回收器的工作。所有的引用类型，即使是局部变量，都是在堆上分配的。所有引用类型的局部变量在函数退出后马上成为垃圾，一个最常见的“垃圾”做...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-01-20 16:33</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/01/20/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F%E7%B3%BB%E5%88%9713-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,848</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">17</span>
+				<span class="postyear">01/12</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2012/01/17/linq%E6%9F%A5%E8%AF%A2%E6%95%88%E7%8E%87%E6%B5%8B%E8%AF%95.html" class="titlelnk" title="linq查询效率测试">linq查询效率测试</a></h3>
+			<p class="post_item_summary">
+				最近不时看到一些对Linq感兴趣或者不感兴趣的人经常拿Linq的对数据库操作效率说事，一旦我问道：“你们做测试了嘛，还是人云亦云？”他们往往则东扯西扯，拿不出真凭实据。那么与其在那边猜测，怀疑，倒不如去做个测试，而且这个测试又极其简单。
+                    机器配置及开发工具：CPU/P E5200 2.5GHZ
+ 
+                    内存/2G
+ 
+                    操作系统/Microsoft WINDOWS XP SP3
+ 
+                    数据库/Microsoft SQL SERVER 2005
+ 
+                    Framewor...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2012-01-17 11:37</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2012/01/17/linq%E6%9F%A5%E8%AF%A2%E6%95%88%E7%8E%87%E6%B5%8B%E8%AF%95.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>4,596</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		</div>
+ 	<!-- navigation -->
+    <div class="navigation_b"><div class="pagination"><a href="/category/net/page/25">上一页</a><a href="/category/net/page/20" class="inactive">20</a><a href="/category/net/page/21" class="inactive">21</a><a href="/category/net/page/22" class="inactive">22</a><a href="/category/net/page/23" class="inactive">23</a><a href="/category/net/page/24" class="inactive">24</a><a href="/category/net/page/25" class="inactive">25</a><span class="current">26</span><a href="/category/net/page/27" class="inactive">27</a><a href="/category/net/page/28" class="inactive">28</a><a href="/category/net/page/29" class="inactive">29</a><a href="/category/net/page/30" class="inactive">30</a><a href="/category/net/page/31" class="inactive">31</a><a href="/category/net/page/32" class="inactive">32</a><a href="/category/net/page/27">下一页</a><a href="/category/net/page/46">最后</a></div>
+</div>
+ 	<!-- end: navigation -->
+	<div class="clear"></div>
+</div>
+<!-- end: content -->
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.158 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 21:00:20 -->

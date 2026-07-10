@@ -1,0 +1,743 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>SQLSERVER主键与外键 | Bruce's Blog</title> 
+<meta name="description" content="主键与外键">
+<meta name="keywords" content="主键,主键与外键,外键">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2011/12/01" aria-label="2011年12月1日 发布的文章">1</a></td><td><a href="/2011/12/02" aria-label="2011年12月2日 发布的文章">2</a></td><td><a href="/2011/12/03" aria-label="2011年12月3日 发布的文章">3</a></td><td><a href="/2011/12/04" aria-label="2011年12月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/05" aria-label="2011年12月5日 发布的文章">5</a></td><td><a href="/2011/12/06" aria-label="2011年12月6日 发布的文章">6</a></td><td><a href="/2011/12/07" aria-label="2011年12月7日 发布的文章">7</a></td><td><a href="/2011/12/08" aria-label="2011年12月8日 发布的文章">8</a></td><td><a href="/2011/12/09" aria-label="2011年12月9日 发布的文章">9</a></td><td><a href="/2011/12/10" aria-label="2011年12月10日 发布的文章">10</a></td><td><a href="/2011/12/11" aria-label="2011年12月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/12" aria-label="2011年12月12日 发布的文章">12</a></td><td><a href="/2011/12/13" aria-label="2011年12月13日 发布的文章">13</a></td><td><a href="/2011/12/14" aria-label="2011年12月14日 发布的文章">14</a></td><td><a href="/2011/12/15" aria-label="2011年12月15日 发布的文章">15</a></td><td><a href="/2011/12/16" aria-label="2011年12月16日 发布的文章">16</a></td><td><a href="/2011/12/17" aria-label="2011年12月17日 发布的文章">17</a></td><td><a href="/2011/12/18" aria-label="2011年12月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/19" aria-label="2011年12月19日 发布的文章">19</a></td><td><a href="/2011/12/20" aria-label="2011年12月20日 发布的文章">20</a></td><td><a href="/2011/12/21" aria-label="2011年12月21日 发布的文章">21</a></td><td><a href="/2011/12/22" aria-label="2011年12月22日 发布的文章">22</a></td><td><a href="/2011/12/23" aria-label="2011年12月23日 发布的文章">23</a></td><td><a href="/2011/12/24" aria-label="2011年12月24日 发布的文章">24</a></td><td><a href="/2011/12/25" aria-label="2011年12月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/26" aria-label="2011年12月26日 发布的文章">26</a></td><td><a href="/2011/12/27" aria-label="2011年12月27日 发布的文章">27</a></td><td><a href="/2011/12/28" aria-label="2011年12月28日 发布的文章">28</a></td><td><a href="/2011/12/29" aria-label="2011年12月29日 发布的文章">29</a></td><td><a href="/2011/12/30" aria-label="2011年12月30日 发布的文章">30</a></td><td><a href="/2011/12/31" aria-label="2011年12月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2011/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#c5d67a;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#60614a;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#87b6e6;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#233813;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#8772c2;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#ba920;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#2a4cc4;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#f8004a;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#ad551f;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#39c40;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#891241;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#de2f22;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#7dc610;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#b15360;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#b5a392;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#9d348e;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#9e6f4b;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#5e824f;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#2d3b80;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#19f354;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#52d9b4;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#69ddaa;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#a92360;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#6cdd7c;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#17d301;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#f67d40;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#a50e56;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#5b5910;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#162d65;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#1ca918;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#4bf4ed;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#6cb2c2;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#cf07d4;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#c64110;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#c229e1;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#7e5ccb;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#31e515;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#48dd38;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#a3d7dd;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#4f473b;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#3e4401;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#4f5739;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#1f9f0;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#4ac28f;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#4f06c4;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/sql-server" rel="category tag">SQL Server</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">SQLSERVER主键与外键</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-12-28 21:48</span>
+			<span class="category">  <a href="/category/sql-server" rel="category tag">SQL Server</a></span>
+			<span class="article_comment"><a href="/2011/12/28/sqlserver%E4%B8%BB%E9%94%AE%E4%B8%8E%E5%A4%96%E9%94%AE.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>6,015</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<pre class="postTitle" style="font-size: 14.7px; margin-bottom: 10px; color: #4b4b4b; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; background-color: #ffffff;">主键与外键</pre>
+<pre style="margin-top: 0px; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 26px; font-family: arial; font-size: 12px; background-color: #ffffff; padding: 0px;">主键是定义一个表中起主要作用的数据项，这些数据项的数据在表中是唯一的，同时系统按主键为表建立索引。</pre>
+<pre style="margin-top: 0px; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 26px; font-family: arial; font-size: 12px; background-color: #ffffff; padding: 0px;">外键是定义一个表中的某数据项的数据，要参照另一个表的主键数据。既没有在另一个表的主键数据中出现的数据，</pre>
+<pre style="margin-top: 0px; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 26px; font-family: arial; font-size: 12px; background-color: #ffffff; padding: 0px;">不允许在这个表的外键数据项中出现。</pre>
+<p> </p>
+<h1 style="margin-top: 10px; margin-right: 0px; margin-bottom: 10px; margin-left: 0px; font-size: 14.7px; color: #666666; text-align: left;"></h1>
+<p>一、什么是<span class="wp_keywordlink_affiliate"><a href="/tag/%E4%B8%BB%E9%94%AE" title="View all posts in 主键" target="_blank">主键</a></span>、<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%A4%96%E9%94%AE" title="View all posts in 外键" target="_blank">外键</a></span>：</p>
+<p style="font-size: 14.7px;"><span class="Apple-style-span" style="line-height: 21px; color: #000000; font-family: verdana, sans-serif; font-weight: normal; font-size: 14px;">关系型数据库中的一条记录中有若干个属性，若其中</span><span class="Apple-style-span" style="line-height: 21px; font-family: verdana, sans-serif; font-weight: normal; font-size: 14px; color: #ff0000;">某一个属性组(注意是组)能唯一标识一条记录</span><span class="Apple-style-span" style="line-height: 21px; color: #000000; font-family: verdana, sans-serif; font-weight: normal; font-size: 14px;">，该属性组就可以成为一个<span class="wp_keywordlink_affiliate"><a href="/tag/%E4%B8%BB%E9%94%AE" title="View all posts in 主键" target="_blank">主键</a></span><br>
+比如<br>
+学生表(学号，姓名，性别，班级)<br>
+其中每个学生的学号是唯一的，学号就是一个<span class="wp_keywordlink_affiliate"><a href="/tag/%E4%B8%BB%E9%94%AE" title="View all posts in 主键" target="_blank">主键</a></span><br>
+课程表(课程编号,课程名,学分)<br>
+其中课程编号是唯一的,课程编号就是一个主键<br>
+成绩表(学号,课程号,成绩)<br>
+成绩表中单一一个属性无法唯一标识一条记录，学号和课程号的组合才可以唯一标识一条记录，所以 </span><span class="Apple-style-span" style="line-height: 21px; font-family: verdana, sans-serif; font-weight: normal; font-size: 14px; color: #ff0000;">学号和课程号的属性组是一个主键</span></p>
+<p style="font-size: 14.7px;"><span class="Apple-style-span" style="line-height: 21px; font-family: verdana, sans-serif; font-weight: normal; font-size: 14px; color: #ff0000;">成绩表中的学号不是成绩表的主键，但它和学生表中的学号相对应，并且学生表中的学号是学生表的主键，则称成绩表中的学号是学生表的<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%A4%96%E9%94%AE" title="View all posts in 外键" target="_blank">外键</a></span> </span></p>
+<p style="font-size: 14.7px;">同理 成绩表中的课程号是课程表的外键</p>
+<p style="font-size: 14.7px;">定义主键和外键主要是为了维护关系数据库的完整性，总结一下：<br>
+<span id="reply_content_113489832" style="color: #0000ff;">主键是能确定一条记录的唯一标识</span><span id="reply_content_113489832">，比如，一条记录包括身份正号，姓名，年龄。身份证号是唯一能确定你这个人的，其他都可能有重复，所以，身份证号是主键。<br>
+</span><span id="reply_content_113489832" style="color: #ff0000;">外键用于与另一张表的关联</span><span id="reply_content_113489832">。是能确定另一张表记录的字段，</span><span id="reply_content_113489832" style="color: #ff0000;">用于保持数据的一致性</span><span>。比如，A表中的一个字段，是B表的主键，那他就可以是A表的外键。</span></p>
+<p style="font-size: 14.7px;"><span><br>
+二、  主键、外键和索引的区别  </span></p>
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">主键、外键和索引的区别？</span></span></p>
+<table class="MsoTableGrid" style="margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; border-collapse: collapse; border-width: medium; border-color: initial; border-style: none;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 50.4pt; background-color: transparent; border-width: 1pt; border-color: windowtext; border-style: solid;" valign="top" width="67">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: ˎ̥;" lang="EN-US"><span style="color: #000000; font-family: 'Courier New';"> </span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: 1pt; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: windowtext; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 126pt; background-color: transparent;" valign="top" width="168">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">主键</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: 1pt; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: windowtext; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 141.4pt; background-color: transparent;" valign="top" width="189">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">外键</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: 1pt; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: windowtext; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 108.3pt; background-color: transparent;" valign="top" width="144">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">索引</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: 1pt; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: windowtext; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 50.4pt; background-color: transparent;" valign="top" width="67">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">定义：</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 126pt; background-color: transparent;" valign="top" width="168">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">唯一标识一条记录，不能有重复的，不允许为空</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 141.4pt; background-color: transparent;" valign="top" width="189">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">表的外键是另一表的主键</span><span style="font-family: 'Courier New';"><span style="line-height: 21px; font-family: ˎ̥;" lang="EN-US">,</span><span style="line-height: 21px; font-family: ˎ̥;" lang="EN-US"> </span></span><span style="line-height: 21px; font-family: 宋体;">外键可以</span><span style="line-height: 21px; font-family: 宋体;">有重复的</span><span style="line-height: 21px; font-family: ˎ̥;" lang="EN-US"><span style="font-family: 'Courier New';">, </span></span><span style="line-height: 21px; font-family: 宋体;">可以是</span><span style="line-height: 21px; font-family: 宋体;">空值</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 108.3pt; background-color: transparent;" valign="top" width="144">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">该字段没有重复值，但可以有一个空值</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: 1pt; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: windowtext; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 50.4pt; background-color: transparent;" valign="top" width="67">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">作用：</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 126pt; background-color: transparent;" valign="top" width="168">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">用来保证数据完整性</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 141.4pt; background-color: transparent;" valign="top" width="189">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">用来和其他表建立联系用的</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 108.3pt; background-color: transparent;" valign="top" width="144">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">是提高查询排序的速度</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: 1pt; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: windowtext; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 50.4pt; background-color: transparent;" valign="top" width="67">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">个数：</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 126pt; background-color: transparent;" valign="top" width="168">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">主键只能有一个</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 141.4pt; background-color: transparent;" valign="top" width="189">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">一个表可以有多个外键</span></span></p>
+</td>
+<td style="font-size: 12px; color: #454545; font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; border-top-width: initial; border-right-width: 1pt; border-bottom-width: 1pt; border-left-width: initial; border-top-style: initial; border-right-style: solid; border-bottom-style: solid; border-left-style: initial; border-top-color: #d4d0c8; border-right-color: windowtext; border-bottom-color: windowtext; border-left-color: #d4d0c8; border-collapse: collapse; padding-top: 0cm; padding-right: 5.4pt; padding-bottom: 0cm; padding-left: 5.4pt; width: 108.3pt; background-color: transparent;" valign="top" width="144">
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">一个表可以有多个惟一索引</span></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">聚集索引和非聚集索引的区别？</span></span></p>
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="color: #000000;"><span style="line-height: 21px; font-family: 宋体;">聚集索引一定是唯一索引。但唯一索引不一定是聚集索引。</span><span style="line-height: 21px; font-family: ˎ̥;" lang="EN-US"><span style="font-family: 'Courier New';">  </span></span></span></p>
+<p class="MsoNormal" style="line-height: 19px; margin-top: 0cm; margin-right: 0cm; margin-bottom: 0pt; margin-left: 0cm; font-size: 13px; padding: 0px;"><span style="line-height: 21px; font-family: 宋体;"><span style="color: #000000;">聚集索引，在索引页里直接存放数据，而非聚集索引在索引页里存放的是索引，这些索引指向专门的数据页的数据。</span></span></p>
+<p> </p>
+<p style="line-height: 22px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">三、数据库中主键和外键的设计原则</p>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">主键和外键是把多个表组织为一个有效的关系数据库的粘合剂。主键和外键的设计对物理数据库的性能和可用性都有着决定性的影响。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">必须将数据库模式从理论上的逻辑设计转换为实际的物理设计。而主键和外键的结构是这个设计过程的症结所在。一旦将所设计的数据库用于了生产环境，就很难对这些键进行修改，所以在开发阶段就设计好主键和外键就是非常必要和值得的。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">主键：</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">  关系数据库依赖于主键---它是数据库物理模式的基石。主键在物理层面上只有两个用途：</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">        1. 惟一地标识一行。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">        2. 作为一个可以被外键有效引用的对象。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">  基于以上这两个用途，下面给出了我在设计物理层面的主键时所遵循的一些原则：</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">        1. 主键应当是对用户没有意义的。如果用户看到了一个表示多对多关系的连接表中的数据，并抱怨它没有什么用处，那就证明它的主键设计地很好。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">        2. 主键应该是单列的，以便提高连接和筛选操作的效率。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">      <strong> 注：</strong>使用复合键的人通常有两个理由为自己开脱，而这两个理由都是错误的。其一是主键应当具有实际意义，然而，让主键具有意义只不过是给人为地破坏数据库提供了方便。其二是利用这种方法可以在描述多对多关系的连接表中使用两个外部键来作为主键，我也反对这种做法，理由是：复合主键常常导致不良的外键，即当连接表成为另一个从表的主表，而依据上面的第二种方法成为这个表主键的一部分，然，这个表又有可能再成为其它从表的主表，其主键又有可能成了其它从表主键的一部分，如此传递下去，越靠后的从表，其主键将会包含越多的列了。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">        3. 永远也不要更新主键。实际上，因为主键除了惟一地标识一行之外，再没有其他的用途了，所以也就没有理由去对它更新。如果主键需要更新，则说明主键应对用户无意义的原则被违反了。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">       <strong>注：</strong>这项原则对于那些经常需要在数据转换或多数据库合并时进行数据整理的数据并不适用。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">        4. 主键不应包含动态变化的数据，如时间戳、创建时间列、修改时间列等。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">        5. 主键应当有计算机自动生成。如果由人来对主键的创建进行干预，就会使它带有除了惟一标识一行以外的意义。一旦越过这个界限，就可能产生认为修改主键的动机，这样，这种系统用来链接记录行、管理记录行的关键手段就会落入不了解数据库设计的人的手中。</pre>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;"><span class="Apple-style-span" style="line-height: 18px; color: #000000; font-family: 'Microsoft yahei', verdana, sans-serif; font-size: 15px; font-weight: bold;">四、数据库主键选取策略</span></pre>
+<pre style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">我们在建立数据库的时候，需要为每张表指定一个主键，所谓主键就是能够唯一标识表中某一行的属性或属性组，一个表只能有一个主键，但可以有多个候选索引。因为主键可以唯一标识某一行记录，所以可以确保执行数据更新、删除的时候不会出现张冠李戴的错误。当然，其它字段可以辅助我们在执行这些操作时消除共享冲突，不过就不在这里讨论了。主键除了上述作用外，常常与外键构成参照完整性约束，防止出现数据不一致。所以数据库在设计时，主键起到了很重要的作用。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">常见的数据库主键选取方式有：</pre>
+<ul style="list-style-type: none; list-style-position: initial; list-style-image: initial; margin-top: 5px; margin-right: 0px; margin-left: 35px; margin-bottom: 5px; font-size: 12px; padding: 0px;">
+<li style="list-style: inherit; padding-top: 2px; padding-right: 0px; padding-bottom: 2px; padding-left: 0px; list-style-type: disc; margin: 0px;">
+<pre>自动增长字段</pre>
+</li>
+<li style="list-style: inherit; padding-top: 2px; padding-right: 0px; padding-bottom: 2px; padding-left: 0px; list-style-type: disc; margin: 0px;">
+<pre>手动增长字段</pre>
+</li>
+<li style="list-style: inherit; padding-top: 2px; padding-right: 0px; padding-bottom: 2px; padding-left: 0px; list-style-type: disc; margin: 0px;">
+<pre>UniqueIdentifier</pre>
+</li>
+<li style="list-style: inherit; padding-top: 2px; padding-right: 0px; padding-bottom: 2px; padding-left: 0px; list-style-type: disc; margin: 0px;">
+<pre>“COMB（Combine）”类型</pre>
+</li>
+</ul>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;"><strong><span style="font-size: medium;">1自动增长型字段</span></strong></pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">很多数据库设计者喜欢使用自动增长型字段，因为它使用简单。自动增长型字段允许我们在向数据库添加数据时，不考虑主键的取值，记录插入后，数据库系统会自动为其分配一个值，确保绝对不会出现重复。如果使用SQL Server数据库的话，我们还可以在记录插入后使用<span style="color: #000080;">@@IDENTITY</span>全局变量获取系统分配的主键键值。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">尽管自动增长型字段会省掉我们很多繁琐的工作，但使用它也存在潜在的问题，那就是在数据缓冲模式下，很难预先填写主键与外键的值。假设有两张表：</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">Order(<span style="text-decoration: underline;">OrderID</span>, OrderDate)
+ OrderDetial(<span style="text-decoration: underline;">OrderID, LineNum</span>, ProductID, Price)</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">Order表中的OrderID是自动增长型的字段。现在需要我们录入一张订单，包括在Order表中插入一条记录以及在OrderDetail表中插入若干条记录。因为Order表中的OrderID是自动增长型的字段，那么我们在记录正式插入到数据库之前无法事先得知它的取值，只有在更新后才能知道数据库为它分配的是什么值。这会造成以下矛盾发生：</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">首先，为了能在OrderDetail的OrderID字段中添入正确的值，必须先更新Order表以获取到系统为其分配的OrderID值，然后再用这个OrderID填充OrderDetail表。最后更新OderDetail表。但是，为了确保数据的一致性，Order与OrderDetail在更新时必须在事务保护下同时进行，即确保两表同时更行成功。显然它们是相互矛盾的。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">除此之外，当我们需要在多个数据库间进行数据的复制时（SQL Server的数据分发、订阅机制允许我们进行库间的数据复制操作），自动增长型字段可能造成数据合并时的主键冲突。设想一个数据库中的Order表向另一个库中的Order表复制数据库时，OrderID到底该不该自动增长呢？</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">ADO.NET允许我们在DataSet中将某一个字段设置为自动增长型字段，但千万记住，这个自动增长字段仅仅是个占位符而已，当数据库进行更新时，数据库生成的值会自动取代ADO.NET分配的值。所以为了防止用户产生误解，建议大家将ADO.NET中的自动增长初始值以及增量都设置成-1。此外，在ADO.NET中，我们可以为两张表建立DataRelation，这样存在级联关系的两张表更新时，一张表更新后另外一张表对应键的值也会自动发生变化，这会大大减少了我们对存在级联关系的两表间更新时自动增长型字段带来的麻烦。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;"><strong><span style="font-size: medium;">2手动增长型字段</span></strong></pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">既然自动增长型字段会带来如此的麻烦，我们不妨考虑使用手动增长型的字段，也就是说主键的值需要自己维护，通常情况下需要建立一张单独的表存储当前主键键值。还用上面的例子来说，这次我们新建一张表叫IntKey，包含两个字段，KeyName以及KeyValue。就像一个HashTable，给一个KeyName，就可以知道目前的KeyValue是什么，然后手工实现键值数据递增。在SQL Server中可以编写这样一个存储过程，让取键值的过程自动进行。代码如下：</pre>
+<p><span><img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #ff0000;">[</span><span style="color: #ff0000;">GetKey</span><span style="color: #ff0000;">]</span><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top">@KeyName <span style="font-weight: bold;">char</span>(<span style="font-weight: bold; color: #800000;">10</span>),<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top">@KeyValue <span style="font-weight: bold;">int</span> OUTPUT<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">AS</span><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">UPDATE</span> IntKey <span style="color: #0000ff;">SET</span> @KeyValue <span style="color: #808080;">=</span> KeyValue <span style="color: #808080;">=</span> KeyValue <span style="color: #808080;">+</span> <span style="font-weight: bold; color: #800000;">1</span> <span style="color: #0000ff;">WHERE</span> KeyName <span style="color: #808080;">=</span> @KeyName<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">GO</span><img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"></span></p>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">这样，通过调用存储过程，我们可以获得最新键值，确保不会出现重复。若将OrderID字段设置为手动增长型字段，我们的程序可以由以下几步来实现：首先调用存储过程，获得一个OrderID，然后使用这个OrderID填充Order表与OrderDetail表，最后在事务保护下对两表进行更新。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">使用手动增长型字段作为主键在进行数据库间数据复制时，可以确保数据合并过程中不会出现键值冲突，只要我们为不同的数据库分配不同的主键取值段就行了。但是，使用手动增长型字段会增加网络的RoundTrip，我们必须通过增加一次数据库访问来获取当前主键键值，这会增加网络和数据库的负载，当处于一个低速或断开的网络环境中时，这种做法会有很大的弊端。同时，手工维护主键还要考虑并发冲突等种种因素，这更会增加系统的复杂程度。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;"><span style="font-size: medium;"><strong>3使用UniqueIdentifier</strong></span></pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">SQL Server为我们提供了UniqueIdentifier数据类型，并提供了一个生成函数NEWID( )，使用NEWID( )可以生成一个唯一的UniqueIdentifier。UniqueIdentifier在数据库中占用16个字节，出现重复的概率非常小，以至于可以认为是0。我们经常从注册表中看到类似</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;"><span style="color: #000080;">{45F0EB02-0727-4F2E-AAB5-E8AEDEE0CEC5}</span></pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">的东西实际上就是一个UniqueIdentifier，Windows用它来做COM组件以及接口的标识，防止出现重复。在.NET里管UniqueIdentifier称之为GUID（Global Unique Identifier）。在C#中可以使用如下命令生成一个GUID：</pre>
+<p><span><img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top">Guid u = System.Guid.NewGuid();</span></p>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">对于上面提到的Order与OrderDetail的程序，如果选用UniqueIdentifier作为主键的话，我们完全可以避免上面提到的增加网络RoundTrip的问题。通过程序直接生成GUID填充主键，不用考虑是否会出现重复。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">UniqueIdentifier字段也存在严重的缺陷：首先，它的长度是16字节，是整数的4倍长，会占用大量存储空间。更为严重的是，UniqueIdentifier的生成毫无规律可言，要想在上面建立索引（绝大多数数据库在主键上都有索引）是一个非常耗时的操作。有人做过实验，插入同样的数据量，使用UniqueIdentifier型数据做主键要比使用Integer型数据慢，所以，出于效率考虑，尽可能避免使用UniqueIdentifier型数据库作为主键键值。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;"><strong><span style="font-size: medium;">4使用“COMB（Combine）”类型</span></strong></pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">既然上面三种主键类型选取策略都存在各自的缺点，那么到底有没有好的办法加以解决呢？答案是肯定的。通过使用COMB类型（数据库中没有COMB类型，它是Jimmy Nilsson在他的“The Cost of GUIDs as Primary Keys”一文中设计出来的），可以在三者之间找到一个很好的平衡点。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">COMB数据类型的基本设计思路是这样的：既然UniqueIdentifier数据因毫无规律可言造成索引效率低下，影响了系统的性能，那么我们能不能通过组合的方式，保留UniqueIdentifier的前10个字节，用后6个字节表示GUID生成的时间（DateTime），这样我们将时间信息与UniqueIdentifier组合起来，在保留UniqueIdentifier的唯一性的同时增加了有序性，以此来提高索引效率。也许有人会担心UniqueIdentifier减少到10字节会造成数据出现重复，其实不用担心，后6字节的时间精度可以达到1/300秒，两个COMB类型数据完全相同的可能性是在这1/300秒内生成的两个GUID前10个字节完全相同，这几乎是不可能的！在SQL Server中用SQL命令将这一思路实现出来便是：</pre>
+<p><span><img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">DECLARE</span> @aGuid <span style="font-weight: bold;">UNIQUEIDENTIFIER</span><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">SET</span> @aGuid <span style="color: #808080;">=</span> <span style="color: #ff00ff;">CAST</span>(<span style="color: #ff00ff;">CAST</span>(<span style="color: #ff00ff;">NEWID</span>() <span style="color: #0000ff;">AS</span> <span style="font-weight: bold;">BINARY</span>(<span style="font-weight: bold; color: #800000;">10</span>))<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #808080;">+</span> <span style="color: #ff00ff;">CAST</span>(<span style="color: #ff00ff;">GETDATE</span>() <span style="color: #0000ff;">AS</span> <span style="font-weight: bold;">BINARY</span>(<span style="font-weight: bold; color: #800000;">6</span>)) <span style="color: #0000ff;">AS</span> <span style="font-weight: bold;">UNIQUEIDENTIFIER</span>)</span></p>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">经过测试，使用COMB做主键比使用INT做主键，在检索、插入、更新、删除等操作上仍然显慢，但比Unidentifier类型要快上一些。关于测试数据可以参考我2004年7月21日的随笔。</pre>
+<pre style="margin-top: 1em; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding: 0px;">除了使用存储过程实现COMB数据外，我们也可以使用C#生成COMB数据，这样所有主键生成工作可以在客户端完成。C#代码如下：</pre>
+<p><span><img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #008000;">//</span><span style="color: #008000;">================================================================</span><span style="color: #008000;"><br>
+<img decoding="async" id="Codehighlighter1_67_183_Open_Image" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/3403_ExpandedBlockStart.gif" alt="" align="top"></span><span id="Codehighlighter1_67_183_Open_Text"><span style="color: #808080;">///</span><span style="color: #808080;">&lt;summary&gt;</span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span><span style="color: #808080;">///</span><span style="color: #008000;"> 返回 GUID 用于数据库操作，特定的时间代码可以提高检索效率<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span><span style="color: #808080;">///</span><span style="color: #008000;"> </span><span style="color: #808080;">&lt;/summary&gt;</span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/4fd9_ExpandedBlockEnd.gif" alt="" align="top"></span><span style="color: #808080;">///</span><span style="color: #008000;"> </span><span style="color: #808080;">&lt;returns&gt;</span><span style="color: #008000;">COMB (GUID 与时间混合型) 类型 GUID 数据</span><span style="color: #808080;">&lt;/returns&gt;</span></span><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Guid NewComb()<br>
+<img decoding="async" id="Codehighlighter1_214_1271_Open_Image" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/3403_ExpandedBlockStart.gif" alt="" align="top"><span id="Codehighlighter1_214_1271_Open_Text">{<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">byte</span>[] guidArray = System.Guid.NewGuid().ToByteArray();<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     DateTime baseDate = <span style="color: #0000ff;">new</span> DateTime(1900,1,1);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     DateTime now = DateTime.Now;<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #008000;">//</span><span style="color: #008000;"> Get the days and milliseconds which will be used to build the byte string </span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     TimeSpan days = <span style="color: #0000ff;">new</span> TimeSpan(now.Ticks - baseDate.Ticks);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     TimeSpan msecs = <span style="color: #0000ff;">new</span> TimeSpan(now.Ticks - (<span style="color: #0000ff;">new</span> DateTime(now.Year, now.Month, now.Day).Ticks));<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #008000;">//</span><span style="color: #008000;"> Convert to a byte array<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     </span><span style="color: #008000;">//</span><span style="color: #008000;"> Note that SQL Server is accurate to 1/300th of a millisecond so we spanide by 3.333333 </span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     <span style="color: #0000ff;">byte</span>[] daysArray = BitConverter.GetBytes(days.Days);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">byte</span>[] msecsArray = BitConverter.GetBytes((<span style="color: #0000ff;">long</span>)(msecs.TotalMilliseconds/3.333333));<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #008000;">//</span><span style="color: #008000;"> Reverse the bytes to match SQL Servers ordering </span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     Array.Reverse(daysArray);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     Array.Reverse(msecsArray);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #008000;">//</span><span style="color: #008000;"> Copy the bytes into the guid </span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     Array.Copy(daysArray, daysArray.Length - 2, guidArray, guidArray.Length - 6, 2);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     Array.Copy(msecsArray, msecsArray.Length - 4, guidArray, guidArray.Length - 4, 4);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> System.Guid(guidArray);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/4fd9_ExpandedBlockEnd.gif" alt="" align="top">}</span><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #008000;">//</span><span style="color: #008000;">================================================================</span><span style="color: #008000;"><br>
+<img decoding="async" id="Codehighlighter1_1342_1475_Open_Image" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/3403_ExpandedBlockStart.gif" alt="" align="top"></span><span id="Codehighlighter1_1342_1475_Open_Text"><span style="color: #808080;">///</span><span style="color: #008000;"> </span><span style="color: #808080;">&lt;summary&gt;</span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span><span style="color: #808080;">///</span><span style="color: #008000;"> 从 SQL SERVER 返回的 GUID 中生成时间信息<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span><span style="color: #808080;">///</span><span style="color: #008000;"> </span><span style="color: #808080;">&lt;/summary&gt;</span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span><span style="color: #808080;">///</span><span style="color: #008000;"> </span><span style="color: #808080;">&lt;param name="guid"&gt;</span><span style="color: #008000;">包含时间信息的 COMB </span><span style="color: #808080;">&lt;/param&gt;</span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/4fd9_ExpandedBlockEnd.gif" alt="" align="top"></span><span style="color: #808080;">///</span><span style="color: #008000;"> </span><span style="color: #808080;">&lt;returns&gt;</span><span style="color: #008000;">时间</span><span style="color: #808080;">&lt;/returns&gt;</span></span><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/f0cd_None.gif" alt="" align="top"><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> DateTime GetDateFromComb(System.Guid guid)<br>
+<img decoding="async" id="Codehighlighter1_1534_2482_Open_Image" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/3403_ExpandedBlockStart.gif" alt="" align="top"><span id="Codehighlighter1_1534_2482_Open_Text">{<br>
+<span style="color: #008000;"><img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     DateTime baseDate = <span style="color: #0000ff;">new</span> DateTime(1900,1,1);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">byte</span>[] daysArray = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[4];<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">byte</span>[] msecsArray = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[4];<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">byte</span>[] guidArray = guid.ToByteArray();<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #008000;">//</span><span style="color: #008000;"> Copy the date parts of the guid to the respective byte arrays. </span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     Array.Copy(guidArray, guidArray.Length - 6, daysArray, 2, 2);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     Array.Copy(guidArray, guidArray.Length - 4, msecsArray, 0, 4);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #008000;">//</span><span style="color: #008000;"> Reverse the arrays to put them into the appropriate order </span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     Array.Reverse(daysArray);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     Array.Reverse(msecsArray);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #008000;">//</span><span style="color: #008000;"> Convert the bytes to ints </span><span style="color: #008000;"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"></span>     <span style="color: #0000ff;">int</span> days = BitConverter.ToInt32(daysArray, 0);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">int</span> msecs = BitConverter.ToInt32(msecsArray, 0);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     DateTime date = baseDate.AddDays(days);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     date = date.AddMilliseconds(msecs * 3.333333);<br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top"><br>
+<img decoding="async" style="border-style: initial; border-color: initial;" src="/wp-content/uploads/2011/12/587e_InBlock.gif" alt="" align="top">     <span style="color: #0000ff;">return</span> date;<br>
+</span></span></p>
+<pre style="line-height: 19px; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto;">注意唯一和主键的区别，它们都是创建一个唯一的索引，一个表格仅含有一个主键约束列，但是，它有可能在其他列中含有许多的唯一约束。</pre>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/%E4%B8%BB%E9%94%AE" rel="tag">主键</a>, <a href="/tag/%E4%B8%BB%E9%94%AE%E4%B8%8E%E5%A4%96%E9%94%AE" rel="tag">主键与外键</a>, <a href="/tag/%E5%A4%96%E9%94%AE" rel="tag">外键</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/12/28/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D%E7%B3%BB%E5%88%97%EF%BC%9A%E5%B9%BD%E9%BB%98%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95.html" rel="prev">程序员笑话系列：幽默学习方法</a><br>【下篇】<a href="/2011/12/29/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D%E7%B3%BB%E5%88%97%EF%BC%9A%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98.html" rel="next">程序员笑话系列：硬件问题</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2020/05/08/log-or-data.html">数据库先写日志还是先写数据？</a></li><li> · <a href="/2018/01/29/interview1.html">数据库 面试记录（面试题）</a></li><li> · <a href="/2018/01/08/sql-server-lock.html">记一次sql server数据库死锁的解决过程</a></li><li> · <a href="/2017/09/14/sql-server-auto-backup.html">SQL Server数据库定时自动备份并自动删除旧的备份</a></li><li> · <a href="/2017/07/27/%E4%BD%BF%E7%94%A8sqlcmd%E8%BF%98%E5%8E%9F%E5%A4%A7%E6%96%87%E4%BB%B6.html">使用sqlcmd还原大文件</a></li><li> · <a href="/2017/06/21/sql%E6%AF%8F%E4%B8%AA%E7%94%A8%E6%88%B7%E5%8F%961%E6%9D%A1%E8%AE%B0%E5%BD%95.html">SQL每个用户取1条记录</a></li><li> · <a href="/2017/06/12/mssql%E4%B8%ADdatetime%E8%BD%ACunix%E6%97%B6%E9%97%B4%E6%88%B3.html">MSSQL中datetime转unix时间戳</a></li><li> · <a href="/2017/01/06/sql-server-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0.html">SQL Server 字符串函数</a></li><li> · <a href="/2017/01/06/clear-sqlserver2014-log.html">SQLServer2014删除log文件和清空日志的方案</a></li><li> · <a href="/2016/12/09/sql%E5%8E%BB%E6%8E%89%E5%9B%9E%E8%BD%A6%E7%AD%89asccii%E5%AD%97%E7%AC%A6.html">sql去掉回车等ASCCII字符</a></li><li> · <a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%89.html">大数据量数据库性能优化(三)</a></li><li> · <a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BA%8C.html">大数据量数据库性能优化(二)</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年12月28日发表在<a href="/category/sql-server" rel="category tag">SQL Server</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/12/28/sqlserver%E4%B8%BB%E9%94%AE%E4%B8%8E%E5%A4%96%E9%94%AE.html" rel="bookmark" title="本文固定链接 /2011/12/28/sqlserver%e4%b8%bb%e9%94%ae%e4%b8%8e%e5%a4%96%e9%94%ae.html">SQLSERVER主键与外键 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/12/28/sqlserver%e4%b8%bb%e9%94%ae%e4%b8%8e%e5%a4%96%e9%94%ae.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/12/28/sqlserver%E4%B8%BB%E9%94%AE%E4%B8%8E%E5%A4%96%E9%94%AE.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="1220" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="c41222c1aa"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="210"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.099 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:59 -->

@@ -1,0 +1,651 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>.NET | Bruce's Blog</title> 
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-menu-item menu-item-3991"><a href="/category/net" aria-current="page">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10 current-cat"><a aria-current="page" href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2026 年 7 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
+	</tr>
+	<tr>
+		<td>6</td><td>7</td><td>8</td><td>9</td><td id="today">10</td><td>11</td><td>12</td>
+	</tr>
+	<tr>
+		<td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td>
+	</tr>
+	<tr>
+		<td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2026/03">« 3 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"> </span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#52eb11;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#b684a4;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#e5d610;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#9a8645;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#94dbfc;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#dedf5f;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#1eca5c;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#9224f7;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#5186bf;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#889de5;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#2edf17;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#7a3f6d;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#55b41c;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#8ddae8;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#17c868;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#e7997d;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#df714f;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#67c59c;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#162bf0;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#167e57;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#321db3;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#29bce9;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#e18ad5;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#495f74;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#b4d8e0;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#bb49cb;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#778851;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#34af78;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#376b41;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#19272d;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#caa627;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#869a01;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#752938;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#7986e5;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#e04811;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#639a3f;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#c91319;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#4c3e45;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#85a014;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#5597fe;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#9559ed;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#447425;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#d64fa;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#8c94bc;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#cc26c8;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<div id="content">
+	<!-- menu -->
+	<div class="post_nav_block_wrapper">
+		<ul class="post_nav_block">
+			<li><a href="/">首页</a></li>
+			<li><a href="/?order=commented">热门文章</a></li>
+			<li><a href="/?order=rand">随便看看</a></li>
+			<li><a href="/category/net/page/30" class="current_nav">
+				                
+								所有属于.NET分类文章
+								</a>
+			</li>
+		</ul> 
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>
+		<div class="clear"></div>
+    </div>
+	<!-- end: menu -->
+	<div class="navigation"><div class="pagination"><a href="/category/net/page/29">上一页</a><a href="/category/net/page/24" class="inactive">24</a><a href="/category/net/page/25" class="inactive">25</a><a href="/category/net/page/26" class="inactive">26</a><a href="/category/net/page/27" class="inactive">27</a><a href="/category/net/page/28" class="inactive">28</a><a href="/category/net/page/29" class="inactive">29</a><span class="current">30</span><a href="/category/net/page/31" class="inactive">31</a><a href="/category/net/page/32" class="inactive">32</a><a href="/category/net/page/33" class="inactive">33</a><a href="/category/net/page/34" class="inactive">34</a><a href="/category/net/page/35" class="inactive">35</a><a href="/category/net/page/36" class="inactive">36</a><a href="/category/net/page/31">下一页</a><a href="/category/net/page/46">最后</a></div>
+</div>
+    <div class="clear"></div>
+ 	<!-- end: navigation -->
+ 	<!-- archive_box -->
+	<div id="post-list">
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">31</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/31/ef%E6%89%A7%E8%A1%8C%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2.html" class="titlelnk" title="EF执行连接查询">EF执行连接查询</a></h3>
+			<p class="post_item_summary">
+				ef4.1执行连接查询？什么时候执行左连接？ 什么时候执行内连接？ ef 根据什么去判断？
+当我们做多表查询时  用Include 强制加载 或用 select 去查询时  发现生成的SQL语句 有时是左连接  有时是inner join。
+其实EF是根据我们实体类的连接字段 是否可空来判断的~比如外键 studentID
+public  Nullable&lt;int&gt; StudentID { get; set; }
+是否可空 就会造成 是 left join 还是 inner join~~
+补充下~~ 有个朋友说 这个设为空了 依然执行的是内连接啊~
+注意看下你的关系那块  也要设为可空 用这个   HasOptional 而...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-31 11:38</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/31/ef%E6%89%A7%E8%A1%8C%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>5,307</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">31</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/31/ef%E5%B8%B8%E8%A7%81%E6%8A%A5%E9%94%99%E4%BF%A1%E6%81%AF.html" class="titlelnk" title="EF常见报错信息">EF常见报错信息</a></h3>
+			<p class="post_item_summary">
+				新手使用ef4.1 常见的一些报错信息
+1.执行命令定义时出错
+出现这个错的原因有很多  数据库语句错误 我们可以先通过监测SQL 语句是否发送到数据库 然后执行这条SQL语句 看看是否有问题
+ 造成这个错的原因 还有可能是 连接对象一直被占用 因为EF有延迟加载 只是select时 并没有真正去数据库执行
+我们可以先把前面的查询语句 tolist等  再去执行下面的操作
+2.
+System.Data.Edm.EdmEntityType: : EntityType“Enrollment”未定义键。请为该 EntityType 定义键。
+System.Data.Edm.EdmEntitySet: EntityType: EntitySet �E...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-31 11:34</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/31/ef%E5%B8%B8%E8%A7%81%E6%8A%A5%E9%94%99%E4%BF%A1%E6%81%AF.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>3,854</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">30</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/30/net-remoting%E7%B3%BB%E5%88%97-%EF%BC%9A%E4%BF%A1%E9%81%93.html" class="titlelnk" title=".NET Remoting系列 ：信道">.NET Remoting系列 ：信道</a></h3>
+			<p class="post_item_summary">
+				信道(Channel)是 Remoting 体系的承载平台，负责处理客户端和服务器之间的通讯，其内容包括跨域通讯、消息传递、对象编码等等。信道必须实现 IChannel 接口，根据通讯方向又分别提供了继承版本 IChannelReceiver 和 IChannelSender。Remoting 框架为我们提供了 IPC、TCP 以及 HTTP 的实现版本，当然我们还可以在网络上找到其他协议的实现版本。
+TcpServerChannel channel = new TcpServerChannel(801);
+ChannelServices.RegisterChannel(channel, false);
+我们可以使用实用类 ChannelServices 来管理程序域内的信...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-30 14:37</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/30/net-remoting%E7%B3%BB%E5%88%97-%EF%BC%9A%E4%BF%A1%E9%81%93.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,510</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">26</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/26/asp-net-cache%E7%BC%93%E5%AD%98%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3.html" class="titlelnk" title="ASP.NET Cache缓存技术详解">ASP.NET Cache缓存技术详解</a></h3>
+			<p class="post_item_summary">
+				
+ 缓存是在内存中存储很耗时创建的数据的一项技术，也是ASP.NET一个重要特性。例如，你可以缓存那些耗时的复杂查询出来的数据，之后的请求不必再从数据库中取数，直接从缓存中取。通过缓存，可以大大提高应该程序的性能。
+
+主要有两种缓存类型:
+1.输出缓存
+2.数据缓存
+
+1. Output Caching（输出缓存）
+使用输出缓存，可以缓存页面最终的生成的HTML。当同一个页面再次请求时，缓存页起作用。ASP.NET不再执行页面的生命周期和相关代码。输出缓存的语法：
+
+
+1 &lt;%@ OutputCache Duration=”60” VaryByParam=”None” %...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-26 11:44</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/26/asp-net-cache%E7%BC%93%E5%AD%98%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>3,200</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">25</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/25/remoting-%E7%94%9F%E5%AD%98%E6%9C%9F%E7%A7%9F%E7%BA%A6.html" class="titlelnk" title="Remoting 生存期租约">Remoting 生存期租约</a></h3>
+			<p class="post_item_summary">
+				Remoting 采取了一种称之为 "租约" 的机制来管理远程对象(Singleton、CAO)的生存期策略。每个应用程序域中都有一个租约管理器(LifetimeServices)，它负责管理所有参与生存期的远程对象租约。租约管理器定期检查所有租约以确定过期的租约时间，如果租约已过期，将向该对象发起人(Sponsor)的发送请求，查询是否有谁要续订租约，若没有任何发起人续订该租约，租约将被移除，该远程对象也会被删除等待垃圾回收器回收。如果远程对象被发起人多次续订租约或被客户端持续调用，其生存期可以比其生存期租约长得多。
+所谓发...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-25 23:07</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/25/remoting-%E7%94%9F%E5%AD%98%E6%9C%9F%E7%A7%9F%E7%BA%A6.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,850</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">25</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/25/%E5%BC%80%E6%94%BE%E5%B0%81%E9%97%AD%E5%8E%9F%E5%88%99-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" class="titlelnk" title="开放封闭原则 学习笔记">开放封闭原则 学习笔记</a></h3>
+			<p class="post_item_summary">
+				开放封闭原则，核心思想：软件实体应该是可扩展，而不可修改的。也就是说，对扩展是开放的，而对修改是封闭的。
+     
+     体现在两个方面：     1、对扩展开放，意味着有新的需求和变化时，可以对现有代码进行扩展，以适应新的情况。     2、对修改封闭，意味着类一旦设计完成，就可以独立完成其工作，而不要对类进行任何修改。
+==
+     辛辛苦苦写好的代码，测试也通过了，就不要再改了嘛，一改动就可能发生错误，或者是不希望的修改，至少还需要在测试一遍吧。如果改一处会引发好多的错误的话，那就更不要改了...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-25 23:02</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/25/%E5%BC%80%E6%94%BE%E5%B0%81%E9%97%AD%E5%8E%9F%E5%88%99-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,014</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">24</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/24/gridview%E5%AE%9E%E7%8E%B0%E5%88%A0%E9%99%A4%E3%80%81%E6%9B%B4%E6%96%B0%E3%80%81%E5%8F%96%E6%B6%88.html" class="titlelnk" title="GridView实现删除、更新、取消">GridView实现删除、更新、取消</a></h3>
+			<p class="post_item_summary">
+				
+ 
+//数据绑定 
+ 
+ 
+ 
+private void InitData()
+ 
+    {
+ 
+ string sqlselect = "";
+ 
+ XmlDocument document = new XmlDocument();
+ 
+ document.Load(Server.MapPath("BannerList.xml"));
+ 
+ XmlNodeList xn = document.SelectNodes("BannerList/item");
+ 
+ string selch = "";selch = ddlchannel.SelectedItem.Value;
+ 
+ if ( ddlchannel.SelectedItem.Value != "-1")
+ 
+ {
+ 
+ sqlselect = "select picid,picdiscription,piclink,picname,uploaddatetime,picchannel,picorder,isenjoin,banner
+,bannercode from ...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-24 18:28</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/24/gridview%E5%AE%9E%E7%8E%B0%E5%88%A0%E9%99%A4%E3%80%81%E6%9B%B4%E6%96%B0%E3%80%81%E5%8F%96%E6%B6%88.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>3,365</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">24</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/24/%E4%BB%8E%E5%8E%9F%E7%90%86%E4%B8%8A-%E9%A2%84%E9%98%B2sql%E6%B3%A8%E5%85%A5.html" class="titlelnk" title="从原理上 预防SQL注入">从原理上 预防SQL注入</a></h3>
+			<p class="post_item_summary">
+				　　第一次听说SQL注入攻击的时候还是在2004年（好像得知的比较晚），那是还是在写asp呢。在一次写代码的时候，有同事问我，你的这段代码防注入攻击了吗？什么攻击？这是什么呀。　　后来到网上各种找，终于弄明白了是怎么攻击进来的了。注入攻击都是来自于客户端，无论是表单提交、URL传值还是Cookie等，其实原理都是一样的。到了服务器端可以分成三种情况：数字、日期时间、字符串。　　说起防止SQL注入攻击，感觉很郁闷，这么多年了大家一直在讨论，也一直在争论，可是到了现在似乎还是没有定论。当不知道注入...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-24 17:56</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a>, <a href="/category/mysql" rel="category tag">MySQL</a>, <a href="/category/oracle" rel="category tag">Oracle</a>, <a href="/category/sql-server" rel="category tag">SQL Server</a>, <a href="/category/sqlite" rel="category tag">SQLite</a></span>
+				<span class="article_comment"><a href="/2011/12/24/%E4%BB%8E%E5%8E%9F%E7%90%86%E4%B8%8A-%E9%A2%84%E9%98%B2sql%E6%B3%A8%E5%85%A5.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,868</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">24</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/24/%E6%89%A9%E5%B1%95%E6%80%A7-%E7%BC%96%E7%A8%8B.html" class="titlelnk" title="扩展性 编程">扩展性 编程</a></h3>
+			<p class="post_item_summary">
+				　在业界曾经有一句很经典的话：“在软件开发领域中，唯一的不变就是变化” 。一旦变化，就有人遭殃，不是开发人员，就是设计师或架构师。无论谁遭殃，都不得不拥抱变化。
+   作为软件开发人员最担心的就是变化，因为一旦变化，意味着自己的开发任务加重， 轻则修改代码，重则修改框架，如果不用做任何修改，则皆大欢喜，现实告诉我们，这是小概率事件，但比买彩票中大奖的概率还是大很多。于是各种讨论开始，开发人员开始讲述修改如何的大，进度如何紧张，架构师也在一旁不停的唠叨这个修改点的重要性，以及对整个...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-24 00:27</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/24/%E6%89%A9%E5%B1%95%E6%80%A7-%E7%BC%96%E7%A8%8B.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,184</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		<div class="post_item">
+		<div class="indexdate">
+			<div class="postdate">
+				<span class="postday">23</span>
+				<span class="postyear">12/11</span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="post_item_body">
+			<h3><a href="/2011/12/23/remoting%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E5%AF%B9%E8%B1%A1.html" class="titlelnk" title="Remoting系列之远程对象">Remoting系列之远程对象</a></h3>
+			<p class="post_item_summary">
+				前面几篇文章，我们说到Remoting的其它几个方法，今天我们说说Remoting系列中的远程对象，对于 MBR，我们可以指定不同的激活模式。
+
+服务器激活(Server-Activated Objects / SAO)：只有在客户端调用代理对象第一个方法时才创建，区分为 Singleton 和 SingleCall 两种模式。Singleton 一如设计模式中的名称，无论有多少客户端都只有一个实例存在；而 SingleCall 则为每次调用创建一个新对象，因此它是无状态的。SingleCall 在方法调用完成后立即失效，不会参与生存期租约系统。
+客户端激活(Client-Activated Object...			</p>
+			<div class="post_item_foot">
+				<span class="postdate_icon"> 2011-12-23 23:13</span>
+				<span class="category"><a href="/category/net" rel="category tag">.NET</a></span>
+				<span class="article_comment"><a href="/2011/12/23/remoting%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E5%AF%B9%E8%B1%A1.html#respond">暂无评论</a></span>
+				 <span class="article_view grayline">阅读(<span>2,696</span>)</span>			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+ 	<!-- end: box_archive --> 
+		</div>
+ 	<!-- navigation -->
+    <div class="navigation_b"><div class="pagination"><a href="/category/net/page/29">上一页</a><a href="/category/net/page/24" class="inactive">24</a><a href="/category/net/page/25" class="inactive">25</a><a href="/category/net/page/26" class="inactive">26</a><a href="/category/net/page/27" class="inactive">27</a><a href="/category/net/page/28" class="inactive">28</a><a href="/category/net/page/29" class="inactive">29</a><span class="current">30</span><a href="/category/net/page/31" class="inactive">31</a><a href="/category/net/page/32" class="inactive">32</a><a href="/category/net/page/33" class="inactive">33</a><a href="/category/net/page/34" class="inactive">34</a><a href="/category/net/page/35" class="inactive">35</a><a href="/category/net/page/36" class="inactive">36</a><a href="/category/net/page/31">下一页</a><a href="/category/net/page/46">最后</a></div>
+</div>
+ 	<!-- end: navigation -->
+	<div class="clear"></div>
+</div>
+<!-- end: content -->
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.215 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 21:00:21 -->

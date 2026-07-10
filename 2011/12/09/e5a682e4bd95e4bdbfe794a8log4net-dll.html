@@ -1,0 +1,844 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>如何使用Log4Net.dll | Bruce's Blog</title> 
+<meta name="description" content="Log4net是基于.net开发的一款非常著名的记录日志开源组件。他最早是2001年7月由NeoWorks Limited启动的项目，基本的框架源于另外的一个非常著名的姐妹组件－log4j。Log4net记录日志的功能非常强大。它可以将日志分不同的等级，比不同的样式，将日志输出到不同的媒介。  Log4net可以从http://logging.apache.org/log4net/downloads.html网站下载最新版本,引用log">
+<meta name="keywords" content="log4net winform,log4net 例子,log4net 配置,log4net.dll,log4net.dll 下载,log4net实例,log4net是什么,如何使用Log4Net.dll">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2011/12/01" aria-label="2011年12月1日 发布的文章">1</a></td><td><a href="/2011/12/02" aria-label="2011年12月2日 发布的文章">2</a></td><td><a href="/2011/12/03" aria-label="2011年12月3日 发布的文章">3</a></td><td><a href="/2011/12/04" aria-label="2011年12月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/05" aria-label="2011年12月5日 发布的文章">5</a></td><td><a href="/2011/12/06" aria-label="2011年12月6日 发布的文章">6</a></td><td><a href="/2011/12/07" aria-label="2011年12月7日 发布的文章">7</a></td><td><a href="/2011/12/08" aria-label="2011年12月8日 发布的文章">8</a></td><td><a href="/2011/12/09" aria-label="2011年12月9日 发布的文章">9</a></td><td><a href="/2011/12/10" aria-label="2011年12月10日 发布的文章">10</a></td><td><a href="/2011/12/11" aria-label="2011年12月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/12" aria-label="2011年12月12日 发布的文章">12</a></td><td><a href="/2011/12/13" aria-label="2011年12月13日 发布的文章">13</a></td><td><a href="/2011/12/14" aria-label="2011年12月14日 发布的文章">14</a></td><td><a href="/2011/12/15" aria-label="2011年12月15日 发布的文章">15</a></td><td><a href="/2011/12/16" aria-label="2011年12月16日 发布的文章">16</a></td><td><a href="/2011/12/17" aria-label="2011年12月17日 发布的文章">17</a></td><td><a href="/2011/12/18" aria-label="2011年12月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/19" aria-label="2011年12月19日 发布的文章">19</a></td><td><a href="/2011/12/20" aria-label="2011年12月20日 发布的文章">20</a></td><td><a href="/2011/12/21" aria-label="2011年12月21日 发布的文章">21</a></td><td><a href="/2011/12/22" aria-label="2011年12月22日 发布的文章">22</a></td><td><a href="/2011/12/23" aria-label="2011年12月23日 发布的文章">23</a></td><td><a href="/2011/12/24" aria-label="2011年12月24日 发布的文章">24</a></td><td><a href="/2011/12/25" aria-label="2011年12月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/26" aria-label="2011年12月26日 发布的文章">26</a></td><td><a href="/2011/12/27" aria-label="2011年12月27日 发布的文章">27</a></td><td><a href="/2011/12/28" aria-label="2011年12月28日 发布的文章">28</a></td><td><a href="/2011/12/29" aria-label="2011年12月29日 发布的文章">29</a></td><td><a href="/2011/12/30" aria-label="2011年12月30日 发布的文章">30</a></td><td><a href="/2011/12/31" aria-label="2011年12月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2011/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#9e3fe5;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#a6e2bd;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#7e1940;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#4aa5cd;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#7ae5d3;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#bbfcc0;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#f6d7a8;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#e22cbe;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#ccc2ea;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#31dbb9;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#867443;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#7d46de;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#54cbc9;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#2d9474;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#2ece89;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#dd270f;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#5865bb;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#3b0130;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#e97e0d;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#6776bc;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#3d8be7;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#116bae;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#232713;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#25bfb7;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#77febb;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#a7c1ba;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#5599a9;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#ef5d7;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#8a55cd;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#32b029;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#2d0ce0;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#a34462;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#52e101;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#ca14c8;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#444da6;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#5d2d67;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#2de9f8;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#7bf909;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#c5e91;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#62f77;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#c98f5e;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#17e8aa;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#805820;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#be0c9b;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#1be328;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">如何使用Log4Net.dll</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-12-09 23:50</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2011/12/09/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8log4net-dll.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>3,361</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p><span style="color: #000000;">Log4net是基于.net开发的一款非常著名的记录日志开源组件。他最早是2001年7月由NeoWorks Limited启动的项目，基本的框架源于另外的一个非常著名的姐妹组件－log4j。Log4net记录日志的功能非常强大。它可以将日志分不同的等级，比不同的样式，将日志输出到不同的媒介。</span> <span style="color: #000000;"> Log4net可以从http://logging.apache.org/log4net/downloads.html网站下载最新版本,引用<span class="wp_keywordlink_affiliate"><a href="/tag/log4net-dll" title="View all posts in log4net.dll" target="_blank">log4net.dll</a></span>组件,从你下载下来的src目录log4net.sln文件生成后便会自动编译<span class="wp_keywordlink_affiliate"><a href="/tag/log4net-dll" title="View all posts in log4net.dll" target="_blank">log4net.dll</a></span>文件了.</span></p>
+<p><strong> </strong></p>
+<div>
+<p>1      <strong>     <span class="Apple-style-span" style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px; white-space: pre;">Log4net</span>简介</strong></p>
+<p>1.1       几所 有 的大型应用都会有自己的用于跟踪调试的API。因为一旦程序被部署以后，就不太可能再利用专门的调试工具了。然而一个管理员可能需要有一套强大的日志系统来诊断和修复配置上的问题。</p>
+<p>经验表明，日志记录往往是软件开发周期中的重要组成部分。它具有以下几个优点：它可以提供应用程序运行时的精确环境，可供开发人员尽快找到应用程序中的Bug；一旦在程序中加入了Log 输出代码，程序运行过程中就能生成并输出日志信息而无需人工干预。另外，日志信息可以输出到不同的地方（控制台，文件等）以备以后研究之用。</p>
+<p>Log4net就是为这样一个目的设计的，用于.NET开发环境的日志记录包。</p>
+<p>1.2         <strong><span style="color: #000000;"> Log4net的安装</span></strong>：</p>
+<p>用户可以从<a href="http://logging.apache.org/log4net/">http://logging.apache.org/log4net/</a>下载log4net的源代码。解压软件包后，在解压的src目录下将log4net.sln载入Visual Studio .NET，编译后可以得到log4net.dll。用户要在自己的程序里加入日志功能，只需将log4net.dll引入工程即可。</p>
+<p> </p>
+<p>2          <strong> Log4net的结构</strong></p>
+<p>log4net 有四种主要的组件，分别是Logger（记录器）, Repository（库）, Appender（附着器）以及 Layout（布局）.</p>
+<p>2.1        <strong>  Logger</strong></p>
+<p>2.1.1    <strong> Logger接口</strong></p>
+<p>Logger是应用程序需要交互的主要组件，它用来产生日志消息。产生的日志消息并不直接显示，还要预先经过Layout的格式化处理后才会输出。</p>
+<p>Logger提供了多种方式来记录一个日志消息，你可以在你的应用程序里创建多个Logger，每个实例化的Logger对象都被log4net框架作为命名实体(named entity)来维护。这意味着为了重用Logger对象，你不必将它在不同的类或对象间传递，只需要用它的名字为参数调用就可以了。log4net框架使用继承体系，继承体系类似于.NET中的名字空间。也就是说，如果有两个logger,分别被定义为a.b.c和a.b，那么我们说a.b是a.b.c的祖先。每一个logger都继承了祖先的属性</p>
+<p>Log4net框架定义了一个ILog接口，所有的logger类都必须实现这个接口。如果你想实现一个自定义的logger，你必须首先实现这个接口。你可以参考在/extension目录下的几个例子。</p>
+<p>ILog接口的定义如下：</p>
+<p>public interface ILog</p>
+<p>{</p>
+<p>void Debug(object message);</p>
+<p>void Info(object message);</p>
+<p>void Warn(object message);</p>
+<p>void Error(object message);</p>
+<p>void Fatal(object message);</p>
+<p> </p>
+<p>//以上的每一个方法都有一个重载的方法，用来支持异常处理。</p>
+<p>//每一个重载方法都如下所示，有一个异常类型的附加参数。</p>
+<p>void Debug(object message, Exception ex);</p>
+<p>// ...</p>
+<p> </p>
+<p>//Boolean 属性用来检查Logger的日志级别</p>
+<p>//（我们马上会在后面看到日志级别）</p>
+<p>bool isDebugEnabled;</p>
+<p>bool isInfoEnabled;</p>
+<p>//<span style="font-family: 'Times New Roman';">… </span>其他方法对应的Boolean属性</p>
+<p>}</p>
+<p>Log4net框架定义了一个叫做LogManager的类，用来管理所有的logger对象。它有一个GetLogger()静态方法，用我们提供的名字参数来检索已经存在的Logger对象。如果框架里不存在该Logger对象，它也会为我们创建一个Logger对象。代码如下所示：</p>
+<p>log4net.ILog log = log4net.LogManager.GetLogger("logger-name");</p>
+<p>通常来说，我们会以类（class）的类型（type）为参数来调用GetLogger()，以便跟踪我们正在进行日志记录的类。传递的类(class)的类型(type)可以用typeof(Classname)方法来获得，或者可以用如下的反射方法来获得：</p>
+<p>System.Reflection.MethodBase.GetCurrentMethod().DeclaringType</p>
+<p>尽管符号长了一些，但是后者可以用于一些场合，比如获取调用方法的类(class)的类型(type)。</p>
+<p>2.1.2     日志的级别</p>
+<p>正如你在ILog的接口中看到的一样，有五种不同的方法可以跟踪一个应用程序。事实上，这五种方法是运作在Logger对象设置的不同日志优先级别上。这几种不同的级别是作为常量定义在log4net.spi.Level类中。你可以在程序中使用任何一种方法。但是在最后的发布中你也许不想让所有的代码来浪费你的CPU周期，因此，框架提供了7种级别和相应的Boolean属性来控制日志记录的类型。</p>
+<p> </p>
+<p> </p>
+<p>Level有以下几种取值</p>
+<table>
+<tbody>
+<tr>
+<td valign="center" width="69">级别</td>
+<td valign="center" width="118">允许的方法</td>
+<td valign="center" width="154">Boolean属性</td>
+<td valign="center" width="81">优先级别</td>
+</tr>
+<tr>
+<td valign="center" width="69">OFF</td>
+<td valign="center" width="118"> </td>
+<td valign="center" width="154"> </td>
+<td valign="center" width="81">Highest</td>
+</tr>
+<tr>
+<td valign="center" width="69">FATAL</td>
+<td valign="center" width="118">void Fatal(...);</td>
+<td valign="center" width="154">bool IsFatalEnabled;</td>
+<td valign="center" width="81"> </td>
+</tr>
+<tr>
+<td valign="center" width="69">RROR</td>
+<td valign="center" width="118">void Error(...);</td>
+<td valign="center" width="154">bool IsErrorEnabled;</td>
+<td valign="center" width="81"> </td>
+</tr>
+<tr>
+<td valign="center" width="69">WARN</td>
+<td valign="center" width="118">void Warn(...);</td>
+<td valign="center" width="154">bool IsWarnEnabled;</td>
+<td valign="center" width="81"> </td>
+</tr>
+<tr>
+<td valign="center" width="69">INFO</td>
+<td valign="center" width="118">void Info(...);</td>
+<td valign="center" width="154">bool IsInfoEnabled;</td>
+<td valign="center" width="81"> </td>
+</tr>
+<tr>
+<td valign="center" width="69">DEBUG</td>
+<td valign="center" width="118">void Debug(...);</td>
+<td valign="center" width="154">bool IsDebugEnabled;</td>
+<td valign="center" width="81"> </td>
+</tr>
+<tr>
+<td valign="center" width="69">ALL</td>
+<td valign="center" width="118"> </td>
+<td valign="center" width="154"> </td>
+<td valign="center" width="81">Lowest</td>
+</tr>
+</tbody>
+</table>
+<p>表1  Logger的日志级别</p>
+<p>在log4net框架里，通过设置配置文件，每个日志对象都被分配了一个日志优先级别。如果没有给一个日志对象显式地分配一个级别，那么该对象会试图从他的祖先继承一个级别值。</p>
+<p>ILog接口的每个方法都有一个预先定义好了的级别值。正如你在表1看到的，ILog的Inof()方法具有INFO级别。同样的，以此类推，Error()方法具有ERROR级别。当我们使用以上的任何一种方法时，log4net框架会检查日志对象logger的级别和方法的级别。只有当方法的级别高于日志级别时，日志请求才会被接受并执行。</p>
+<p>举例说明，当你创建了一个日志对象，并且把他的级别设置为INFO。于是框架会设置日志的每个Boolean属性。当你调用相应的日志方法时，框架会检查相应的Boolean属性，以决定该方法能不能执行。如下的代码：</p>
+<p> </p>
+<p>Logger.Info("message");</p>
+<p>Logger.Debug("message");</p>
+<p>Logger.Warn("message");</p>
+<p>对于第一种方法，Info()的级别等与日志的级别（INFO），因此日志请求会被传递，我们可以得到输出结果”<span style="font-family: Verdana;">message</span><span style="font-family: 'Times New Roman';">”</span>。</p>
+<p>对于第二种方法，Debug()的级别低于日志对象logger的日志级别(INFO)，因此，日志请求被拒绝了，我们得不到任何输出。同样的，针对第三行语句，我们可以很容易得出结论。</p>
+<p>在表1中有两个特殊的级别：ALL和OFF。ALL表示允许所有的日志请求。OFF是拒绝所有的请求。</p>
+<p>你也可以显式地检查Logger对象的Boolean属性，如下所示：</p>
+<p>if (logger.IsDebugEnabled)</p>
+<p>{</p>
+<p>Logger.Debug("message");</p>
+<p>}</p>
+<p> </p>
+<p>2.2          Repository</p>
+<p>Repository主要用于负责日志对象组织结构的维护。在log4net的以前版本中，框架仅支持分等级的组织结构(hierarchical organization)。这种等级结构本质上是库的一个实现，并且定义在log4net.Repository.Hierarchy 名字空间中。要实现一个Repository，需要实现log4net.Repository.ILoggerRepository 接口。但是通常并不是直接实现该接口，而是以log4net.Repository.LoggerRepositorySkeleton为基类继承。体系库 (hierarchical repository )则由log4net.Repository.Hierarchy.Hierarchy类实现。</p>
+<p>如果你是个log4net框架的使用者，而非扩展者，那么你几乎不会在你的代码里用到Repository的类。相反的，你需要用到LogManager类来自动管理库和日志对象。</p>
+<p>2.3          Appender</p>
+<p>一个好的日志框架应该能够产生多目的地的输出。比如说输出到控制台或保存到一个日志文件。log4net 能够很好的满足这些要求。它使用一个叫做Appender的组件来定义输出介质。正如名字所示，这些组件把它们附加到Logger日志组件上并将输出传递到输出流中。你可以把多个Appender组件附加到一个日志对象上。 Log4net框架提供了几个Appender组件。关于log4net提供的Appender组件的完整列表可以在log4net框架的帮助手册中找到。有了这些现成的Appender组件，一般来说你没有必要再自己编写了。但是如果你愿意，可以从log4net.Appender.AppenderSkeleton类继承。</p>
+<p>2.4          Appender Filters</p>
+<p>一个Appender 对象缺省地将所有的日志事件传递到输出流。Appender的过滤器(Appender Filters) 可以按照不同的标准过滤日志事件。在log4net.Filter的名字空间下已经有几个预定义的过滤器。使用这些过滤器，你可以按照日志级别范围过滤日志事件，或者按照某个特殊的字符串进行过滤。你可以在API的帮助文件中发现更多关于过滤器的信息。</p>
+<p>2.5          Layout</p>
+<p>Layout 组件用于向用户显示最后经过格式化的输出信息。输出信息可以以多种格式显示，主要依赖于我们采用的Layout组件类型。可以是线性的或一个XML文件。Layout组件和一个Appender组件一起工作。API帮助手册中有关于不同Layout组件的列表。一个Appender对象，只能对应一个Layout对象。要实现你自己的Layout类，你需要从log4net.Layout.LayoutSkeleton类继承，它实现了ILayout接口。</p>
+<p> </p>
+<p> </p>
+<p>3           在程序中使用log4net</p>
+<p>在开始对你的程序进行日志记录前，需要先启动log4net引擎。这意味着你需要先配置前面提到的三种组件。你可以用两种方法来设定配置：在单独的文件中设定配置或在代码中定义配置。</p>
+<p>因为下面几种原因，推荐在一个单独的文件中定义配置：</p>
+<p>l         你不需要重新编译源代码就能改变配置；</p>
+<p>l         你可以在程序正运行的时候就改变配置。这一点在一些WEB程序和远程过程调用的程序中有时很重要；</p>
+<p>考虑到第一种方法的重要性，我们先看看怎样在文件中设定配置信息。</p>
+<p>3.1          定义配置文件</p>
+<p>配置信息可以放在如下几种形式文件的一种中。</p>
+<p>在程序的配置文件里，如AssemblyName.config 或web.config.</p>
+<p>在你自己的文件里。文件名可以是任何你想要的名字，如AppName.exe.xyz等.</p>
+<p>log4net框架会在相对于AppDomain.CurrentDomain.BaseDirectory 属性定义的目录路径下查找配置文件。框架在配置文件里要查找的唯一标识是&lt;log4net&gt;标签。一个完整的配置文件的例子如下：</p>
+<p> </p>
+<p>&lt;?xml version="1.0" encoding="utf-8" ?&gt;</p>
+<p>&lt;configuration&gt;</p>
+<p>&lt;configSections&gt;</p>
+<p>&lt;section name="log4net"</p>
+<p>type="log4net.Config.Log4NetConfigurationSectionHandler,</p>
+<p>log4net-net-1.0"</p>
+<p>/&gt;</p>
+<p>&lt;/configSections&gt;</p>
+<p> </p>
+<p>&lt;log4net&gt;</p>
+<p> </p>
+<p>&lt;root&gt;</p>
+<p>&lt;level value="WARN" /&gt;</p>
+<p>&lt;appender-ref ref="LogFileAppender" /&gt;</p>
+<p>&lt;appender-ref ref="ConsoleAppender" /&gt;</p>
+<p>&lt;/root&gt;</p>
+<p> </p>
+<p>&lt;logger name="testApp.Logging"&gt;</p>
+<p>&lt;level value="DEBUG"/&gt;</p>
+<p>&lt;/logger&gt;</p>
+<p>&lt;appender name="LogFileAppender"</p>
+<p>type="log4net.Appender.FileAppender" &gt;</p>
+<p>&lt;param name="File" value="log-file.txt" /&gt;</p>
+<p>&lt;param name="AppendToFile" value="true" /&gt;</p>
+<p> </p>
+<p>&lt;layout type="log4net.Layout.PatternLayout"&gt;</p>
+<p>&lt;param name="Header" value="[Header]\r\n"/&gt;</p>
+<p>&lt;param name="Footer" value="[Footer]\r\n"/&gt;</p>
+<p>&lt;param name="ConversionPattern"</p>
+<p>value="%d [%t] %-5p %c [%x]  - %m%n"</p>
+<p>/&gt;</p>
+<p>&lt;/layout&gt;</p>
+<p> </p>
+<p>&lt;filter type="log4net.Filter.LevelRangeFilter"&gt;</p>
+<p>&lt;param name="LevelMin" value="DEBUG" /&gt;</p>
+<p>&lt;param name="LevelMax" value="WARN" /&gt;</p>
+<p>&lt;/filter&gt;</p>
+<p>&lt;/appender&gt;</p>
+<p>&lt;appender name="ConsoleAppender"</p>
+<p>type="log4net.Appender.ConsoleAppender" &gt;</p>
+<p>&lt;layout type="log4net.Layout.PatternLayout"&gt;</p>
+<p>&lt;param name="ConversionPattern"</p>
+<p>value="%d [%t] %-5p %c [%x] - %m%n"</p>
+<p>/&gt;</p>
+<p>&lt;/layout&gt;</p>
+<p>&lt;/appender&gt;</p>
+<p>&lt;/log4net&gt;</p>
+<p>&lt;/configuration&gt;</p>
+<p>你可以直接将上面的文本拷贝到任何程序中使用，但是最好还是能够理解配置文件是怎样构成的。 只有当你需要在应用程序配置文件中使用log4net配置时，才需要在&lt;configSection&gt;标签中加入&lt;section&gt;配置节点入口。对于其他的单独文件，只有&lt;log4net&gt;标签内的文本才是必需的，这些标签的顺序并不是固定的。下面我们依次讲解各个标签内文本的含义：</p>
+<p>3.1.1     &lt;root&gt;</p>
+<p>&lt;root&gt;</p>
+<p>&lt;level value="WARN" /&gt;</p>
+<p>&lt;appender-ref ref="LogFileAppender" /&gt;</p>
+<p>&lt;appender-ref ref="ConsoleAppender" /&gt;</p>
+<p>&lt;/root&gt;</p>
+<p> </p>
+<p>在框架的体系里，所有的日志对象都是根日志(root logger)的后代。 因此如果一个日志对象没有在配置文件里显式定义，则框架使用根日志中定义的属性。在&lt;root&gt;标签里，可以定义level级别值和Appender的列表。如果没有定义LEVEL的值，则缺省为DEBUG。可以通过&lt;appender-ref&gt;标签定义日志对象使用的Appender对象。&lt;appender-ref&gt;声明了在其他地方定义的Appender对象的一个引用。在一个logger对象中的设置会覆盖根日志的设置。而对Appender属性来说，子日志对象则会继承父日志对象的Appender列表。这种缺省的行为方式也可以通过显式地设定&lt;logger&gt;标签的additivity属性为false而改变。</p>
+<p>&lt;logger name="testApp.Logging" additivity="false"&gt;</p>
+<p>&lt;/logger&gt;</p>
+<p>Additivity的值缺省是true.</p>
+<p> </p>
+<p> </p>
+<p>3.1.2     &lt;Logger&gt;</p>
+<p>&lt;logger name="testApp.Logging"&gt;</p>
+<p>&lt;level value="DEBUG"/&gt;</p>
+<p>&lt;/logger&gt;</p>
+<p> </p>
+<p>&lt;logger&gt; 元素预定义了一个具体日志对象的设置。然后通过调用LogManager.GetLogger(<span style="font-family: 'Times New Roman';">“</span><span style="font-family: Verdana;">testAPP.Logging</span><span style="font-family: 'Times New Roman';">”</span><span style="font-family: Verdana;">)</span>函数，你可以检索具有该名字的日志。如果LogManager.GetLogger(<span style="font-family: 'Times New Roman';">…</span><span style="font-family: Verdana;">)</span>打开的不是预定义的日志对象，则该日志对象会继承根日志对象的属性。知道了这一点，我们可以说，其实&lt;logger&gt;标签并不是必须的。</p>
+<p> </p>
+<p> </p>
+<p>3.1.3     &lt;appender&gt;</p>
+<p> </p>
+<p>&lt;appender name="LogFileAppender"</p>
+<p>type="log4net.Appender.FileAppender" &gt;</p>
+<p>&lt;param name="File" value="log-file.txt" /&gt;</p>
+<p>&lt;param name="AppendToFile" value="true" /&gt;</p>
+<p>&lt;layout type="log4net.Layout.PatternLayout"&gt;</p>
+<p>&lt;param name="Header" value="[Header]\r\n" /&gt;</p>
+<p>&lt;param name="Footer" value="[Footer]\r\n"/&gt;</p>
+<p>&lt;param name="ConversionPattern"</p>
+<p>value="%d [%t] %-5p %c - %m%n"</p>
+<p>/&gt;</p>
+<p>&lt;/layout&gt;</p>
+<p>&lt;filter type="log4net.Filter.LevelRangeFilter"&gt;</p>
+<p>&lt;param name="LevelMin" value="DEBUG" /&gt;</p>
+<p>&lt;param name="LevelMax" value="WARN" /&gt;</p>
+<p>&lt;/filter&gt;</p>
+<p>&lt;/appender&gt;</p>
+<p> </p>
+<p>在&lt;root&gt;标签或单个的&lt;logger&gt;标签里的Appender对象可以用&lt;appender&gt;标签定义。&lt;appender&gt;标签的基本形式如上面所示。它定义了appender的名字和类型。 另外比较重要的是&lt;appender&gt;标签内部的其他标签。不同的appender有不同的&lt;param&gt;标签。在这里，为了使用FileAppender,你需要一个文件名作为参数。另外还需要一个在&lt;appender&gt;标签内部定义一个Layout对象。Layout对象定义在它自己的&lt;layout&gt;标签内。&lt;layout&gt;标签的type属性定义了Layout的类型(在本例里是PatternLayout)，同时也确定了需要提供的参数值。Header和Footer标签提供了一个日志会话(logging session)开始和结束时输出的文字。有关每种appender的具体配置的例子，可以在log4net\doc\manual\example-config-appender.html中得到。</p>
+<p> </p>
+<p>3.1.4     log4net.Layout.PatternLayout中的转换模式(ConversionPattern)</p>
+<p>%m(message):输出的日志消息，如ILog.Debug(<span style="font-family: 'Times New Roman';">…</span><span style="font-family: Verdana;">)</span>输出的一条消息</p>
+<p>%n(new line):换行</p>
+<p>%d(datetime):输出当前语句运行的时刻</p>
+<p>%r(run time):输出程序从运行到执行到当前语句时消耗的毫秒数</p>
+<p>%t(thread id):当前语句所在的线程ID</p>
+<p>%p(priority): 日志的当前优先级别，即DEBUG、INFO、WARN<span style="font-family: 'Times New Roman';">…</span>等</p>
+<p>%c(class):当前日志对象的名称，例如：</p>
+<p>模式字符串为：%-10c -%m%n</p>
+<p>代码为：</p>
+<p>ILog log=LogManager.GetLogger(<span style="font-family: 'Times New Roman';">“</span><span style="font-family: Verdana;">Exam.Log</span><span style="font-family: 'Times New Roman';">”</span><span style="font-family: Verdana;">);</span></p>
+<p>log.Debug(<span style="font-family: 'Times New Roman';">“</span><span style="font-family: Verdana;">Hello</span><span style="font-family: 'Times New Roman';">”</span><span style="font-family: Verdana;">);</span></p>
+<p>则输出为下面的形式：</p>
+<p>Exam.Log       - Hello</p>
+<p>%L：输出语句所在的行号</p>
+<p>%F：输出语句所在的文件名</p>
+<p>%-数字：表示该项的最小长度，如果不够，则用空格填充</p>
+<p>例如，转换模式为%r [%t]%-5p %c - %m%n 的 PatternLayout 将生成类似于以下内容的输出：</p>
+<p>176 [main] INFO  org.foo.Bar - Located nearest gas station.</p>
+<p> </p>
+<p>3.1.5     &lt;filter&gt;</p>
+<p>最后，让我们看看在Appender元素里的&lt;filter&gt;标签。它定义了应用到Appender对象的过滤器。本例中，我们使用了LevelRangeFilter过滤器,它可以只记录LevelMin和LevelMax参数指定的日志级别之间的日志事件。可以在一个Appender上定义多个过滤器（Filter）,这些过滤器将会按照它们定义的顺序对日志事件进行过滤。其他过滤器的有关信息可以在log4net的SDK文档中找到。</p>
+<p> </p>
+<p>3.2          使用配置文件</p>
+<p>3.2.1     关联配置文件</p>
+<p>当我们创建了上面的配置文件后，我们接下来需要把它和我们的应用联系起来。缺省的，每个独立的可执行程序集都会定义它自己的配置。log4net框架使用log4net.Config.DOMConfiguratorAttribute在程序集的级别上定义配置文件。</p>
+<p>例如：可以在项目的AssemblyInfo.cs文件里添加以下的语句</p>
+<p>[assembly:log4net.Config.DOMConfigurator(ConfigFile="filename",</p>
+<p>ConfigFileExtension="ext",Watch=true/false)]</p>
+<p>l         ConfigFile:指出了我们的配置文件的路径及文件名，包括扩展名。</p>
+<p>l         ConfigFileExtension:如果我们对被编译程序的程序集使用了不同的文件扩展名，那么我们需要定义这个属性，缺省的，程序集的配置文件扩展名为”<span style="font-family: Verdana;">config</span><span style="font-family: 'Times New Roman';">”</span>。</p>
+<p>l         Watch (Boolean属性): log4net框架用这个属性来确定是否需要在运行时监视文件的改变。如果这个属性为true,那么FileSystemWatcher将会被用来监视文件的改变，重命名，删除等事件。</p>
+<p>其中：ConfigFile和ConfigFileExtension属性不能同时使用，ConfigFile指出了配置文件的名字，例如，ConfigFile=<span style="font-family: 'Times New Roman';">”</span><span style="font-family: Verdana;">Config.txt</span><span style="font-family: 'Times New Roman';">”</span></p>
+<p>ConfigFileExtension则是指明了和可执行程序集同名的配置文件的扩展名，例如，应用程序的名称是”<span style="font-family: Verdana;">test.exe</span><span style="font-family: 'Times New Roman';">”</span><span style="font-family: Verdana;">,ConfigFileExtension=</span><span style="font-family: 'Times New Roman';">”</span><span style="font-family: Verdana;">txt</span><span style="font-family: 'Times New Roman';">”</span><span style="font-family: Verdana;">,</span>则配置文件就应该是”<span style="font-family: Verdana;">test.exe.txt</span><span style="font-family: 'Times New Roman';">” </span>；</p>
+<p>也可以不带参数应用DOMConfiguratio():</p>
+<p>[assembly: log4net.Config.DOMConfigurator()]</p>
+<p>也可以在程序代码中用DOMConfigurator类打开配置文件。类的构造函数需要一个FileInfo对象作参数，以指出要打开的配置文件名。 这个方法和前面在程序集里设置属性打开一个配置文件的效果是一样的。</p>
+<p>log4net.Config.DOMConfigurator.Configure(</p>
+<p>new FileInfo("TestLogger.Exe.Config"));</p>
+<p>DOMConfigurator 类还有一个方法ConfigureAndWatch(..), 用来配置框架并检测文件的变化。</p>
+<p>以上的步骤总结了和配置相关的各个方面，下面我们将分两步来使用logger对象。</p>
+<p>3.2.2     创建或获取日志对象</p>
+<p>日志对象会使用在配置文件里定义的属性。如果某个日志对象没有事先在配置文件里定义，那么框架会根据继承结构获取祖先节点的属性，最终的，会从根日志获取属性。如下所示：</p>
+<p>Log4net.ILog log = Log4net.LogManager.GetLogger("MyLogger");</p>
+<p>3.2.3     输出日志信息</p>
+<p>可以使用ILog的几种方法输出日志信息。你也可以在调用某方法前先检查IsXXXEnabled布尔变量，再决定是否调用输出日志信息的函数，这样可以提高程序的性能。因为框架在调用如ILog.Debug(<span style="font-family: 'Times New Roman';">…</span><span style="font-family: Verdana;">)</span>这样的函数时，也会先判断是否满足Level日志级别条件。</p>
+<p>if (log.IsDebugEnabled) log.Debug("message");</p>
+<p>if (log.IsInfoEnabled) log.Info("message);</p>
+<p> </p>
+<p>3.3          在程序中配置log4net</p>
+<p>除了前面讲的用一个配置文件来配置log4net以外，还可以在程序中用代码来配置log4net框架。如下面的例子:</p>
+<p> </p>
+<p>// 和PatternLayout一起使用FileAppender</p>
+<p>log4net.Config.BasicConfigurator.Configure(</p>
+<p>new log4net.Appender.FileAppender(</p>
+<p>new log4net.Layout.PatternLayout("%d</p>
+<p>[%t]%-5p %c [%x] - %m%n"),"testfile.log"));</p>
+<p> </p>
+<p>// using a FileAppender with an XMLLayout</p>
+<p>log4net.Config.BasicConfigurator.Configure(</p>
+<p>new log4net.Appender.FileAppender(</p>
+<p>new log4net.Layout.XMLLayout(),"testfile.xml"));</p>
+<p> </p>
+<p>// using a ConsoleAppender with a PatternLayout</p>
+<p>log4net.Config.BasicConfigurator.Configure(</p>
+<p>new log4net.Appender.ConsoleAppender(</p>
+<p>new log4net.Layout.PatternLayout("%d</p>
+<p>[%t] %-5p %c - %m%n")));</p>
+<p> </p>
+<p>// using a ConsoleAppender with a SimpleLayout</p>
+<p>log4net.Config.BasicConfigurator.Configure(</p>
+<p>new log4net.Appender.ConsoleAppender(new</p>
+<p>log4net.Layout.SimpleLayout()));</p>
+<p>尽管这里用代码配置log4net也很方便，但是你却不能分别配置每个日志对象。所有的这些配置都是被应用到根日志上的。</p>
+<p>log4net.Config.BasicConfigurator 类使用静态方法Configure 设置一个Appender 对象。而Appender的构造函数又会相应的要求Layout对象。你也可以不带参数直接调用BasicConfigurator.Configure()，它会使用一个缺省的PatternLayout对象，在一个ConsoleAppender中输出信息。如下所示：</p>
+<p> </p>
+<p>log4net.Config.BasicConfigurator.Configure();</p>
+<p>在输出时会显示如下格式的信息：</p>
+<p> </p>
+<p>0 [1688] DEBUG log1 A B C - Test</p>
+<p>20 [1688] INFO log1 A B C - Test</p>
+<p>当log4net框架被配置好以后，就可以如前所述使用日志功能了。</p>
+<p> </p>
+<p> </p>
+<p>4           总结</p>
+<p>使用log4net可以很方便地为应用添加日志功能。应用Log4net，使用者可以很精确地控制日志信息的输出，减少了多余信息，提高了日志记录性能。同时，通过外部配置文件，用户可以不用重新编译程序就能改变应用的日志行为，使得用户可以根据情况灵活地选择要记录的信息。</p>
+<p> </p>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/log4net-winform" rel="tag">log4net winform</a>, <a href="/tag/log4net-%E4%BE%8B%E5%AD%90" rel="tag">log4net 例子</a>, <a href="/tag/log4net-%E9%85%8D%E7%BD%AE" rel="tag">log4net 配置</a>, <a href="/tag/log4net-dll" rel="tag">log4net.dll</a>, <a href="/tag/log4net-dll-%E4%B8%8B%E8%BD%BD" rel="tag">log4net.dll 下载</a>, <a href="/tag/log4net%E5%AE%9E%E4%BE%8B" rel="tag">log4net实例</a>, <a href="/tag/log4net%E6%98%AF%E4%BB%80%E4%B9%88" rel="tag">log4net是什么</a>, <a href="/tag/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8log4net-dll" rel="tag">如何使用Log4Net.dll</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/12/09/c%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8webservice.html" rel="prev">C#如何调用WebService</a><br>【下篇】<a href="/2011/12/10/office%E4%B8%8B%E8%BD%BD%E5%90%88%E9%9B%86.html" rel="next">office下载合集</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li><li> · <a href="/2024/09/12/fix-net-blazor-child-component-not-refresh.html">解决.NET Blazor子组件不刷新问题</a></li><li> · <a href="/2024/09/10/net8-microsoft-aspnetcore.html">.NET8如何在普通类库中引用 Microsoft.AspNetCore</a></li><li> · <a href="/2024/06/27/net8-mysql-ssl-error.html">.NET8 Mysql SSL error</a></li><li> · <a href="/2024/06/25/asp-net-core-razor-unicode.html">ASP.NET Core MVC的Razor视图渲染中文乱码的问题</a></li><li> · <a href="/2022/02/23/netcore-life-circle.html">.NETCORE 依赖注入服务生命周期</a></li><li> · <a href="/2022/02/16/asp-net-zero-mysql.html">asp.net zero改mysql</a></li><li> · <a href="/2022/02/16/net5.html">.NET5面试汇总</a></li><li> · <a href="/2021/05/26/convert-zero-datetime.html">.Net连接Mysql数据库的Convert Zero Datetime日期问题</a></li><li> · <a href="/2020/09/30/vue-message-notification.html">vue使用element-ui中的Message 、MessageBox 、Notification</a></li><li> · <a href="/2020/09/30/asp-net-core-filter-aop.html">Asp.Net Core Filter 深入浅出的那些事-AOP</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年12月09日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/12/09/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8log4net-dll.html" rel="bookmark" title="本文固定链接 /2011/12/09/%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8log4net-dll.html">如何使用Log4Net.dll | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/12/09/%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8log4net-dll.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/12/09/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8log4net-dll.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="690" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="53b04e1f5f"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="88"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.069 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:16 -->

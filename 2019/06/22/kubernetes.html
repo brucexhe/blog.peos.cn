@@ -1,0 +1,842 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>[转]Kubernetes安装方法及使用教程 | Bruce's Blog</title> 
+<meta name="description" content="目录">
+<meta name="keywords" content="docker,k8s,Kubernetes">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2019 年 6 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="5" class="pad"> </td><td>1</td><td>2</td>
+	</tr>
+	<tr>
+		<td>3</td><td>4</td><td>5</td><td><a href="/2019/06/06" aria-label="2019年6月6日 发布的文章">6</a></td><td>7</td><td><a href="/2019/06/08" aria-label="2019年6月8日 发布的文章">8</a></td><td>9</td>
+	</tr>
+	<tr>
+		<td>10</td><td>11</td><td>12</td><td>13</td><td><a href="/2019/06/14" aria-label="2019年6月14日 发布的文章">14</a></td><td>15</td><td>16</td>
+	</tr>
+	<tr>
+		<td><a href="/2019/06/17" aria-label="2019年6月17日 发布的文章">17</a></td><td><a href="/2019/06/18" aria-label="2019年6月18日 发布的文章">18</a></td><td><a href="/2019/06/19" aria-label="2019年6月19日 发布的文章">19</a></td><td><a href="/2019/06/20" aria-label="2019年6月20日 发布的文章">20</a></td><td>21</td><td><a href="/2019/06/22" aria-label="2019年6月22日 发布的文章">22</a></td><td>23</td>
+	</tr>
+	<tr>
+		<td><a href="/2019/06/24" aria-label="2019年6月24日 发布的文章">24</a></td><td><a href="/2019/06/25" aria-label="2019年6月25日 发布的文章">25</a></td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2019/05">« 5 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2019/07">7 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#c29111;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#dfd8d2;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#d04f6d;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#b11811;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#8cb10d;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#693aed;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#3efdc2;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#d55283;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#a61a78;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#c0a47;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#123fb3;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#a4b1b9;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#19243b;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#cdef60;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#c617b4;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#3ebd85;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#d6640c;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#b54837;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#a2e784;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#a863cf;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#b04b59;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#8d45d4;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#d1f591;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#d4f1d;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#1655ab;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#4ddc46;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#717517;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#4034d0;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#6008f0;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#2c7525;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#6bc8fd;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#7d664e;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#6303fa;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#c4e03;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#69f244;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#7dc07;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#6e95ae;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#ec6d64;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#f3b97f;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#3aa672;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#21a77d;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#3559c9;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#63627e;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#27d969;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#6a01c9;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/docker" rel="category tag">Docker</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">[转]Kubernetes安装方法及使用教程</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2019-06-22 11:09</span>
+			<span class="category">  <a href="/category/docker" rel="category tag">Docker</a></span>
+			<span class="article_comment"><a href="/2019/06/22/kubernetes.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>726</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div id="content_views" class="htmledit_views">
+<p id="main-toc"><strong>目录</strong></p>
+<p id="%E5%89%8D%E8%A8%80%3A-toc" style="margin-left: 0px;"><a href="#%E5%89%8D%E8%A8%80%3A" target="_self" rel="nofollow noopener noreferrer">前言:</a></p>
+<p id="1%E3%80%81Kubernetes%E4%BB%8B%E7%BB%8D-toc" style="margin-left: 0px;"><a href="#1%E3%80%81Kubernetes%E4%BB%8B%E7%BB%8D" target="_self" rel="nofollow noopener noreferrer">1、Kubernetes介绍</a></p>
+<p id="2%E3%80%81k8s%E7%9A%84%E6%9E%B6%E6%9E%84-toc" style="margin-left: 0px;"><a href="#2%E3%80%81k8s%E7%9A%84%E6%9E%B6%E6%9E%84" target="_self" rel="nofollow noopener noreferrer">2、k8s的架构</a></p>
+<p id="%E6%9E%B6%E6%9E%84%E5%9B%BE-toc" style="margin-left: 80px;"><a href="#%E6%9E%B6%E6%9E%84%E5%9B%BE" target="_self" rel="nofollow noopener noreferrer">架构图</a></p>
+<p id="%E6%9E%B6%E6%9E%84%E6%98%AFmaster%2Fnode%E7%9A%84%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84-toc" style="margin-left: 80px;"><a href="#%E6%9E%B6%E6%9E%84%E6%98%AFmaster%2Fnode%E7%9A%84%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84" target="_self" rel="nofollow noopener noreferrer">架构是master/node的主从架构</a></p>
+<p id="Pod%E5%88%86%E4%B8%BA%E4%B8%A4%E7%B1%BB%EF%BC%88%E6%88%91%E8%87%AA%E5%B7%B1%E7%BB%99%E5%88%86%E7%9A%84%E7%B1%BB%EF%BC%89%EF%BC%9A-toc" style="margin-left: 80px;"><a href="#Pod%E5%88%86%E4%B8%BA%E4%B8%A4%E7%B1%BB%EF%BC%88%E6%88%91%E8%87%AA%E5%B7%B1%E7%BB%99%E5%88%86%E7%9A%84%E7%B1%BB%EF%BC%89%EF%BC%9A" target="_self" rel="nofollow noopener noreferrer">Pod分为两类（我自己给分的类）：</a></p>
+<p id="Pod%E7%9A%84%E5%B8%B8%E7%94%A8%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%9A-toc" style="margin-left: 80px;"><a href="#Pod%E7%9A%84%E5%B8%B8%E7%94%A8%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%9A" target="_self" rel="nofollow noopener noreferrer">Pod的常用控制器：</a></p>
+<p id="Service%3A-toc" style="margin-left: 80px;"><a href="#Service%3A" target="_self" rel="nofollow noopener noreferrer">Service:</a></p>
+<p id="%E9%9B%86%E7%BE%A4%E7%9A%84%E9%99%84%E4%BB%B6AddOns%EF%BC%9A-toc" style="margin-left: 80px;"><a href="#%E9%9B%86%E7%BE%A4%E7%9A%84%E9%99%84%E4%BB%B6AddOns%EF%BC%9A" target="_self" rel="nofollow noopener noreferrer">集群的附件AddOns：</a></p>
+<p id="k8s%E9%9B%86%E7%BE%A4%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%EF%BC%9A-toc" style="margin-left: 80px;"><a href="#k8s%E9%9B%86%E7%BE%A4%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%EF%BC%9A" target="_self" rel="nofollow noopener noreferrer">k8s集群的三种网络：</a></p>
+<p id="k8s%E9%9B%86%E7%BE%A4%E7%9A%84%E4%B8%89%E7%A7%8D%E9%80%9A%E4%BF%A1%EF%BC%9A-toc" style="margin-left: 80px;"><a href="#k8s%E9%9B%86%E7%BE%A4%E7%9A%84%E4%B8%89%E7%A7%8D%E9%80%9A%E4%BF%A1%EF%BC%9A" target="_self" rel="nofollow noopener noreferrer">k8s集群的三种通信：</a></p>
+<p id="k8s%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%B8%B8%E8%A7%81%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88-toc" style="margin-left: 80px;"><a href="#k8s%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%B8%B8%E8%A7%81%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88" target="_self" rel="nofollow noopener noreferrer">k8s的两种常见部署方案</a></p>
+<p id="%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B%E4%BD%BF%E7%94%A8kubeadm%E5%AE%89%E8%A3%85k8s%EF%BC%9A-toc" style="margin-left: 80px;"><a href="#%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B%E4%BD%BF%E7%94%A8kubeadm%E5%AE%89%E8%A3%85k8s%EF%BC%9A" target="_self" rel="nofollow noopener noreferrer">总结一下使用kubeadm安装k8s：</a></p>
+<p id="3%E3%80%81k8s%E7%9A%84%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2-toc" style="margin-left: 0px;"><a href="#3%E3%80%81k8s%E7%9A%84%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2" target="_self" rel="nofollow noopener noreferrer">3、k8s的安装部署</a></p>
+<p id="3.1%E3%80%81%E4%BC%A0%E7%BB%9F%E7%9A%84%E9%83%A8%E7%BD%B2%E6%96%B9%E5%BC%8F%EF%BC%9A%EF%BC%88%E6%9C%AC%E6%96%87%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%BF%99%E7%A7%8D%EF%BC%8C%E5%BE%80%E4%B8%8B%E7%9C%8B%EF%BC%89-toc" style="margin-left: 40px;"><a href="#3.1%E3%80%81%E4%BC%A0%E7%BB%9F%E7%9A%84%E9%83%A8%E7%BD%B2%E6%96%B9%E5%BC%8F%EF%BC%9A%EF%BC%88%E6%9C%AC%E6%96%87%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%BF%99%E7%A7%8D%EF%BC%8C%E5%BE%80%E4%B8%8B%E7%9C%8B%EF%BC%89" target="_self" rel="nofollow noopener noreferrer">3.1、传统的部署方式：（本文不使用这种，往下看）</a></p>
+<p id="3.2%E3%80%81%E4%BD%BF%E7%94%A8kubeadm%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85k8s%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89-toc" style="margin-left: 40px;"><a href="#3.2%E3%80%81%E4%BD%BF%E7%94%A8kubeadm%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85k8s%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89" target="_self" rel="nofollow noopener noreferrer">3.2、使用kubeadm方式安装k8s（推荐）</a></p>
+<p id="3.2.1%E9%85%8D%E7%BD%AEyum%E4%BB%93%E5%BA%93-toc" style="margin-left: 80px;"><a href="#3.2.1%E9%85%8D%E7%BD%AEyum%E4%BB%93%E5%BA%93" target="_self" rel="nofollow noopener noreferrer">3.2.1配置yum仓库</a></p>
+<p id="3.2.2%20%E5%AE%89%E8%A3%85%E5%B9%B6%E5%90%AF%E5%8A%A8%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6-toc" style="margin-left: 80px;"><a href="#3.2.2%20%E5%AE%89%E8%A3%85%E5%B9%B6%E5%90%AF%E5%8A%A8%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6" target="_self" rel="nofollow noopener noreferrer">3.2.2 安装并启动相关组件</a></p>
+<hr id="hr-toc">
+<h1 id="%E5%89%8D%E8%A8%80%3A"><a name="t0"></a>前言:</h1>
+<p><img decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181207094745525.png" alt="" width="318" height="82"></p>
+<p><strong>Devops：</strong></p>
+<p><img decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181207094713825.png" alt="" width="284" height="170"></p>
+<p>DevOps（Development和Operations的组合词）是一组过程、方法与系统的统称，用于促进开发（应用程序/软件工程）、技术运营和质量保障（QA）部门之间的沟通、协作与整合。</p>
+<p>它是一种重视“软件开发人员（Dev）”和“IT运维技术人员（Ops）”之间沟通合作的文化、运动或惯例。透过自动化“软件交付”和“架构变更”的流程，来使得构建、测试、发布软件能够更加地快捷、频繁和可靠。</p>
+<p>它的出现是由于软件行业日益清晰地认识到：为了按时交付软件产品和服务，开发和运营工作必须紧密合作。</p>
+<h1 id="1%E3%80%81Kubernetes%E4%BB%8B%E7%BB%8D"><a name="t1"></a>1、<span class="wp_keywordlink_affiliate"><a href="/tag/kubernetes" title="View all posts in Kubernetes" target="_blank">Kubernetes</a></span>介绍</h1>
+<p>kubernetes翻译成舵手</p>
+<p>kubernetes受Borg系统的影响。<span class="wp_keywordlink_affiliate"><a href="/tag/k8s" title="View all posts in k8s" target="_blank">k8s</a></span>用go语言把Borg重写一遍变成了<span class="wp_keywordlink_affiliate"><a href="/tag/k8s" title="View all posts in k8s" target="_blank">k8s</a></span>。</p>
+<p>kubernetes的代码托管在github上</p>
+<p>而在2017年大量的云厂商对<span class="wp_keywordlink_affiliate"><a href="/tag/k8s" title="View all posts in k8s" target="_blank">k8s</a></span>的原生支持。</p>
+<p><strong>k8s的特性</strong>：<span style="color: #f33b45;">自动装箱，自我修复，水平扩展，服务发现和负载均衡，自动发布和回滚，密钥和配置管理，存储编排，批量处理执行。</span></p>
+<p><img fetchpriority="high" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181118221644964.png" alt="" width="761" height="333"></p>
+<h1 id="2%E3%80%81k8s%E7%9A%84%E6%9E%B6%E6%9E%84"><a name="t2"></a>2、k8s的架构</h1>
+<h3 id="%E6%9E%B6%E6%9E%84%E5%9B%BE"><a name="t3"></a>架构图</h3>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181119160849445.png" alt="" width="396" height="349"></p>
+<h3 id="%E6%9E%B6%E6%9E%84%E6%98%AFmaster%2Fnode%E7%9A%84%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84"><a name="t4"></a>架构是master/node的主从架构</h3>
+<p>master：API Server ，Scheduler，Controller-Manager? ? (这三个是组件，也是守护进程)</p>
+<p>node：kubelet，<span class="wp_keywordlink_affiliate"><a href="/tag/docker" title="View all posts in docker" target="_blank">docker</a></span>，kube-proxy</p>
+<ul>
+<li><span style="color: #f33b45;"><strong>API Server</strong></span>：负责接收请求，解析请求，处理请求。</li>
+<li><span style="color: #f33b45;"><strong>Scheduler</strong></span>：调度器，调度容器创建的请求，负责去观测每一个node之上总共可用的CPU，RAM和存储资源并根据用户所请求创建容器的资源量(因为在k8s上我们可以设定容器的资源上限和资源下限我们成为资源请求量)，调度器就是根据容器的最低需求，来进行评估，哪一个节点最合适。因此k8s设定了一个两级调度的方式来完成调度，第一步先做<strong>预选</strong>（先评估一下到底有多少个是符合这个容器运行需求的节点，比如有三个）。第二步要做<strong>优选</strong>，从这三者中在选择一个最佳适配，到底哪个是最佳取决于调度算法当中的优选算法来决定的。</li>
+<li><span style="color: #f33b45;"><strong>kubelet</strong></span>：集群代理，用于能够与master通信的，接收master和调度过来的各种任务由他来执行的我们称为集群代理，是保证容器始终处于健康运行状态的软件。简单来讲API Server把任务编排以后由Scheduler来调度，Scheduler的调度结果由kubelet来执行。比如启动pod、在本地上管理pod健康、创建存储卷等等都由kubelet来执行，但是kubelet本身并不能运行容器，他最多就能接收任务，并在本机上试图启动容器，运行容器就需要容器引擎来运行，最流行的引擎就是docke，是用于pod中的容器的而创建的。</li>
+<li><span style="color: #f33b45;"><strong>控制器</strong></span><strong>：</strong>是用来不断的监听他所管理的每一个容器是否是健康的，一旦发现不健康，控制器就负责向MasterServer发请求再调度重新启动一个。k8s支持很多类型的控制器，控制容器自身健康的只是一种，他还有其他的控制器。我们以后就不能在k8s上称呼容器了，因为k8s最小运行地单元是pod。</li>
+<li><span style="color: #f33b45;"><strong>Controller-Manager</strong></span>：控制器管理器，负责监控每一个控制器是健康的，他本身是高可用的，是冗余的。假如Master是三个节点，那么Master每一个上面都有一个控制器管理器，大家都在的时候这三个控制器管理器只有一个正常工作，他是主节点，其他都是做冗余的。</li>
+<li><span style="color: #f33b45;"><strong>pod</strong></span>：是k8s的最小运行地单元。其可以理解为容器的外壳，给容器做了一层抽象的封装，pod是k8s系统之上最小的调度的逻辑单元，他的内部主要是用来放容器的，pod有一个工作特点：一个pod内可以包含多个容器，多个容器共享同一个底层的网络命名空间Net(网络设备、网络栈、端口等)，UTS（主机名和域名）和IPC（信号量、消息队列和共享内存）三个网络名称空间，另外三个互相隔离User、MNT、PID是互相隔离的。所以说pod对外更像是一个模拟虚拟机，而且同一个pod下的容器还共享存储卷，存储卷就不在属于容器而属于pod。各个node主要是运行pod的，一般说一个pod只放一个容器，除非容器之间有非常紧密的关系需要放在同一个pod中，通常我们他们中的一个容器为主容器，其他的容器是辅助这个主容器中的应用程序完成更多功能来实现的。其他的辅助容器也成为 <strong>边车</strong>。我们为pod打上标签，用标签来识别pod，能让控制器或者是人能够基于标签的值来识别出pod的，比如我们创建了4个nginx pod，我们可以给每一个pod上加上一个标签叫app这个叫key，他的值都等于nginx，当我们想挑出来这些pod的时候就找key是app的并且值是nginx的就ok了。标签不是pod独有的，因为k8s是restfull风格的api，几乎所有被操纵的目标都是对象，几乎所有的对象都可以拥有标签，可以用标签选择器操作。</li>
+<li><span style="color: #f33b45;"><strong>Label select</strong></span>：标签选择器，根据标签来过滤符合条件的资源对象的机制，把感兴趣的pod挑出来的组件。</li>
+<li><span style="color: #f33b45;"><strong>kube-proxy</strong></span>：管理service，随时与Api Server进行通信。关于这个的详解请点击<a href="https://blog.csdn.net/JENREY/article/details/84252449" target="_blank" rel="nofollow noopener noreferrer">kubernetes 简介：kube-proxy 和 service</a></li>
+<li><span style="color: #f33b45;"><strong>etcd</strong></span>：是一个开源的、分布式的键值对数据存储系统，提供共享配置、服务的注册和发现。etcd与zookeeper相比算是轻量级系统，两者的一致性协议也一样，etcd的raft协议比zookeeper的paxos简单；他要是宕机了整个集群也就宕机了，所以要高可用，一个端口用于集群内通信，一个端口用于向客户端提供服务</li>
+<li><span style="color: #f33b45;"><strong>CNI</strong></span>：容器网络接口，是k8s的外部接入的网络服务解决方案，能遵循CNI开发的这个服务那么就能作为k8s的网络解决方案来使用，事实上这些解决方式可以以附件的方式托管在集群之上。常见的有<strong>?flannel：</strong>简单，支持网络配置，是叠加网络实现。<strong>calico</strong>：复杂，即支持网络配置又支持网络策略，是三层隧道实现。<strong>canel：</strong>用flannel提供网络，用calico提供网络策略来搭配使用。除了上述三个还有很多，这里不说了。</li>
+<li>
+</ul>
+<p> </p>
+<h3 id="Pod%E5%88%86%E4%B8%BA%E4%B8%A4%E7%B1%BB%EF%BC%88%E6%88%91%E8%87%AA%E5%B7%B1%E7%BB%99%E5%88%86%E7%9A%84%E7%B1%BB%EF%BC%89%EF%BC%9A"><a name="t5"></a>Pod分为两类（我自己给分的类）：</h3>
+<ul>
+<li>自主式pod：自我管理的。没法实现全局进行调度。</li>
+<li>控制器管理的pod：（我们建议使用这种）正是由于控制器的设计，pod才被成为有生命周期的对象。</li>
+</ul>
+<h3 id="Pod%E7%9A%84%E5%B8%B8%E7%94%A8%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%9A"><a name="t6"></a>Pod的常用控制器：</h3>
+<ul>
+<li><span style="color: #f33b45;"><strong>ReplicationController</strong></span>：副本控制器，多退少补。</li>
+<li><strong><span style="color: #f33b45;">ReplicaSet</span></strong>：副本集控制器，他不直接使用他有个声明式更新的控制器Deployment来管理。</li>
+<li><span style="color: #f33b45;"><strong>Deployment</strong></span>：（我们用的最多）只能负责管理那些无状态的应用，还支持二级控制器叫HPA（HorizontalPodAutoscaler：水平pod自动伸缩控制器）</li>
+<li><span style="color: #f33b45;"><strong>StatefulSet</strong></span>：有状态副本集，负责管理那些有状态的应用</li>
+<li><span style="color: #f33b45;"><strong>DaemonSet</strong></span>：我们需要在每一个node上运行一个副本而不是随意运行还需要DaemonSet</li>
+<li><span style="color: #f33b45;"><strong>job</strong></span>：要运行作业</li>
+<li><span style="color: #f33b45;"><strong>Ctonjob</strong></span>：周期性任务化作业</li>
+<li><span style="color: #f33b45;"><strong>HorizontalPodAutoscaler</strong></span>：可自动进行扩展</li>
+</ul>
+<h3 id="Service%3A"><a name="t7"></a>Service:</h3>
+<p>因为pod经常变，所以我们不能通过访问pod的ip地址和端口来访问pod，那么我们怎么访问呢？就通过接入层的一个叫service的东西，他是关联pod的，当他所管理的pod挂掉了，他会自动去找一个新的pod并自动关联上service。</p>
+<p>那么service是怎么管理pod的呢？pod的ip地址经常变，主机名也经常变，但是pod上有固定的元数据叫标签label，只要创建了pod的label是统一的，都能被service识别，因为service是靠标签选择器来关联pod对象的。所以只要pod存在，只要属于这个标签选择器，那么就会立即被service挑选住，并作为service的后端组件。而后这个service把这个pod关联进来后在动态探测这个pod的ip地址是什么，端口是什么，并作为自己调度的后端可用服务器主机对象。因此客户端的请求到达service，并由service代理至客户端pod来实现。因此客户端始终看见的都是service的地址。而在k8s之上，service不是应用程序，也不是一个实体组件，他只不过<strong>是一个iptables的DNAT规则</strong>(目标地址转换)。因为是个规则，所以service的地址是没有配置在任何一个网卡上的，是不存在的，他仅仅出现在规则中，所以ping不通的，但是却可以请求做服务端。能ping通是因为有一个TCP/IP协议栈有支持这个ip地址，所以他能在协议栈上进行响应。</p>
+<p>service作为k8s的对象来讲，有service的名称，而service名称就相当于这个服务的名称，而名称可以被解析，可以直接把service名称解析为service的ip，名称解析靠DNS，所以我们装完k8s集群以后，第一件事就需要在k8s集群之上部署一个<strong>DNS Pod</strong>，已确保各service域名能被解析，像这样的pod是k8s自身就需要用到的，所以我们把它成为<strong>基础性的系统架构的pod对象</strong>，而且他们也被成为<span style="color: #f33b45;">集群的附件AddOns</span>。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181210091855373.png" alt="" width="219" height="221"></p>
+<h3 id="%E9%9B%86%E7%BE%A4%E7%9A%84%E9%99%84%E4%BB%B6AddOns%EF%BC%9A"><a name="t8"></a>集群的附件AddOns：</h3>
+<p>插件是什么：插件是本身作为程序的一部分而存在</p>
+<p>附件是什么：有它，功能更丰富，没它也行。它本身不作为程序的一部分而存在。只是另外一个应用程序。但是他俩可以很好地结合起来提供一种工作。</p>
+<ul>
+<li>DNS：而且k8s的DNS会动态创建、动态改变、动态删除。比如我们把service的名称一改，他会自动触发DNS中的解析记录名称并修改。DNS也是一个pod，也需要service来访问管理，也需要高可用防止宕机。</li>
+</ul>
+<h3 id="k8s%E9%9B%86%E7%BE%A4%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%EF%BC%9A"><a name="t9"></a>k8s集群的三种网络：</h3>
+<p><strong>节点网络、集群网络（service网络）、pod网络</strong></p>
+<p>各pod运行在一个网络中，而service是另外一个网络。service的地址和pod的地址是不同网段的。pod地址是配置在pod内部的网络名称空间之上，是可以ping通的，相当于一个正常的主机地址。但是service的地址是虚拟的、是假的。它只存在iptables或ipvs规则当中。</p>
+<p>所已由外部访问时，先到达节点网络，由节点网络代为代理至集群网络，再由集群网络代为代理至pod网络。</p>
+<h3 id="k8s%E9%9B%86%E7%BE%A4%E7%9A%84%E4%B8%89%E7%A7%8D%E9%80%9A%E4%BF%A1%EF%BC%9A"><a name="t10"></a>k8s集群的三种通信：</h3>
+<p>同一Pod内的多个容器之间通信：lo（localhost）本地通信</p>
+<p>各pod之间的通信：用到叠加网络，这里先认识一下，部署完的效果能看到。</p>
+<p>Pod与service之间的通信：</p>
+<p> </p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181119160141360.png" alt="" width="710" height="338">3、k8s的安装部署</p>
+<h3 id="k8s%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%B8%B8%E8%A7%81%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><a name="t11"></a>k8s的两种常见部署方案</h3>
+<ul>
+<li><strong><span style="color: #f33b45;">传统的部署方式</span></strong>：让k8s自己的相关组件统统运行为<strong>系统级的守护进程</strong>，这包括master节点上的四个组件，以及每个node节点上的三个组件，都运行为系统级守护进程，但是这种安装方式每一组都需要我们手动解决，包括做证书等等，而安装过程也需要我们手动解决，编辑配置文件也需要手动解决，他的配置过程繁琐而复杂，一般第一次部署需要一天左右的时间能调通。</li>
+<li><span style="color: #f33b45;"><strong>kubeadm</strong></span>：这个工具是k8s官方的集群部署管理工具，几个命令就能完成安装，但是他把所有组件能运行为容器的全部运行为容器，只有kubelet是需要单独装在主机上的，其他统统运行为容器。这些容器的所有的镜像都托管在gcr的仓库当中，gcr的仓库出于某种不可描述的原因(国内访问不了)?，是不能直接访问的。? 实现一种自我管理的方式把k8s自己也部署为pod，至少核心组件部署为pod，包括master和各node所在内的所有节点，我们还需要手动安装和部署，但是只需要部署kubelet和<span class="wp_keywordlink_affiliate"><a href="/tag/docker" title="View all posts in docker" target="_blank">docker</a></span>就行了。因为<span class="wp_keywordlink_affiliate"><a href="/tag/docker" title="View all posts in docker" target="_blank">docker</a></span>是运行容器的引擎，kubelet是负责能运行pod化容器的核心组件。那么每一个节点都装上kubelet和docker，也就意味着，运行容器及运行pod的基础环境我们已经准备好了。在此基础之上我们能够实现把master的相关四个组件统统运行为pod，就是直接托管在k8s之上，而后把每个node节点上的余下的组件叫kube-proxy也运行为pod，那整个集群就跑起来了。要注意以上说的这些pod都是静态pod（static pod，不受k8s的管理，只不过运行为pod的形式而已）而不是我们之前讲过的能够接受k8s自身管理的pod。我们的flannel也是需要托管的，每一个节点包括master和各node节点还需要部署flannel，以支撑他们部署的pod资源彼此之间能够互相通信的。但是这个flannel的的确确是托管在k8s集群之上的附件，他不像前面那几个都是静态的pod，都是动态的由k8s自身管理的pod。</li>
+</ul>
+<blockquote>
+<h3 id="%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B%E4%BD%BF%E7%94%A8kubeadm%E5%AE%89%E8%A3%85k8s%EF%BC%9A"><a name="t12"></a><strong>总结一下使用kubeadm安装k8s</strong>：</h3>
+<ol>
+<li>在master、nodes节点安装kubelet，kubeadm，docker</li>
+<li>在master节点上去运行 kubeadm init去初始化集群</li>
+<li>各nodes节点上分别执行kubeadm join加入到集群中</li>
+<li>官方的安装文档在https://github.com/kubernetes/kubeadm/blob/master/docs/design/design_v1.10.md</li>
+</ol>
+</blockquote>
+<p>假设我们部署的网络如下图所示：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181119161241302.png" alt="" width="800" height="373"></p>
+<h1 id="3%E3%80%81k8s%E7%9A%84%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2"><a name="t13"></a>3、k8s的安装部署</h1>
+<blockquote>
+<h2 id="3.1%E3%80%81%E4%BC%A0%E7%BB%9F%E7%9A%84%E9%83%A8%E7%BD%B2%E6%96%B9%E5%BC%8F%EF%BC%9A%EF%BC%88%E6%9C%AC%E6%96%87%E4%B8%8D%E4%BD%BF%E7%94%A8%E8%BF%99%E7%A7%8D%EF%BC%8C%E5%BE%80%E4%B8%8B%E7%9C%8B%EF%BC%89"><a name="t14"></a>3.1、传统的部署方式：（本文不使用这种，往下看）</h2>
+<p>作为系统级守护进程的方式</p>
+<p>进入k8s官网：<a href="https://github.com/kubernetes/kubernetes" target="_blank" rel="nofollow noopener noreferrer">点我去官网</a></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120094930705.png" alt="" width="1200" height="567"></p>
+<p>点击进入releases，我们去下载把master和node分开组织的包，按下图红框所示，.tar.gz的包是k8s的所有组件的包，我们不建议用这个。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120095024152.png" alt="" width="620" height="423"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181211144108817.png" alt="" width="402" height="410"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181211144135477.png" alt="" width="250" height="492"></p>
+<p>可以看到上图，分开的server端的包和客户端的包，而且是针对不同平台的。</p>
+<p>无论master还是node用的都是server端的东西就是Server Binaries下的包。</p>
+<p>上述这种都是属于安装的第一种运行为系统级守护进程的方式。挑战度非常大！这里我们就提一嘴</p></blockquote>
+<hr>
+<h2 id="3.2%E3%80%81%E4%BD%BF%E7%94%A8kubeadm%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85k8s%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><a name="t15"></a>3.2、使用<strong>kubeadm方式安装k8s（推荐）</strong></h2>
+<p>进入阿里云镜像库<a href="https://opsx.alibaba.com/mirror" target="_blank" rel="nofollow noopener noreferrer">点我进入</a></p>
+<p>记得要关闭防火墙和ipv6</p>
+<blockquote>
+<h3 id="3.2.1%E9%85%8D%E7%BD%AEyum%E4%BB%93%E5%BA%93"><a name="t16"></a>3.2.1配置yum仓库</h3>
+<p>下图均为在master上的操作</p>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>先配置docker的仓库</strong></em></span></li>
+</ul>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120102335913.png" alt="" width="537" height="318"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181211151042544.png" alt="" width="900" height="307"></p>
+<p>不用进行修改了</p>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>再配置kubernetes的仓库</strong></em></span></li>
+</ul>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120102618562.png" alt="" width="355" height="21"></p>
+<p>写入下图的内容</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181211151638648.png" alt="" width="603" height="113"></p>
+<p>其中的baseurl的值是下图所示</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120100303652.png" alt="" width="639" height="366"></p>
+<p> </p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120102557420.png" alt="" width="589" height="207"></p>
+<p>其中的gpgkey的值是下图所示</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120102659501.png" alt="" width="533" height="301"></p>
+<p>然后运行<span style="color: #f33b45;">yum repolist</span>命令，可以看到下图docker和k8s的有程序包可以用。没问题</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181211150347242.png" alt="" width="968" height="523"></p>
+<p>然后通过scp发送给node1和node2节点</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181211150705656.png" alt="" width="948" height="324"></p></blockquote>
+<h3 id="3.2.2%20%E5%AE%89%E8%A3%85%E5%B9%B6%E5%90%AF%E5%8A%A8%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6"><a name="t17"></a>3.2.2 安装并启动相关组件</h3>
+<blockquote>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>在master节点进行安装docker、kubelet、kubeadm、kubectl?</strong></em></span><span style="color: #f33b45;"><em><strong>：</strong></em></span></li>
+</ul>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120103651259.png" alt="" width="909" height="245"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120103722863.png" alt="" width="876" height="200"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/2018112010325298.png" alt="" width="716" height="147"></p>
+<p><strong>kubectl?</strong>是apiServer的命令行客户端</p>
+<p>出现下图表示安装完成</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120103827941.png" alt="" width="918" height="176"></p>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>启动docker的服务：</strong></em></span></li>
+</ul>
+<p>因为docker会自动到docker仓库去下载所依赖到的每一个镜像文件，这些镜像文件国内无法访问。所以我们先通过下面的方式把相关镜像文件加载完成并导入进来使用。例如加载进来后我们可以docker save保存下来，或者推送到本地的仓库中。kubeadm新版本是支持直接使用本地当中已有的镜像文件或者使用本地私有仓库作为下载路径的。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120104030490.png" alt="" width="442" height="17"></p>
+<p>加入下图所示内容，用来定义环境变量。</p>
+<p>当我们要访问HTTPS服务的时候，通过这么一个所谓的代理去访问并加载相关的镜像文件。等加载完了，我们再把它注释掉，然后再使用我们国内的加速方式来访问其他镜像。下图的地址是可以帮我们辗转访问到相应的镜像。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120104501811.png" alt="" width="607" height="482"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120104402657.png" alt="" width="308" height="50"></p>
+<p>可以看到下图所示信息</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120104541878.png" alt="" width="467" height="253"></p>
+<p>因为docker会生成大量的IP6或者IP的规则，有可能对iptables内部的nf-call需要打开内生的桥接功能，所以如下图所示先查看</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/2018121115584523.png" alt="" width="701" height="131"></p>
+<p>要确保两个值都是1，就说明随后我们在docker上去用是没有问题的。</p>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>启动kubelet服务：</strong></em></span></li>
+</ul>
+<p>我们之前准备好了yum仓库和程序包都安装好了。因此我们直接去启动kubelet就可以了。</p>
+<p>但是在启动之前先查看都安装生成了哪些文件</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181120135942917.png" alt="" width="269" height="80"></p>
+<p>清单目录/etc/bubernetes/manifests</p>
+<p>配置文件/etc/sysconfig/kubelet</p>
+<p>/etc/systemd/system/kubelet.service</p>
+<p>主程序/usr/bin/kubelet</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/2018121217114541.png" alt="" width="332" height="54"></p>
+<p>通过上图我们发现，配置文件的参数是空的，也就意味着我们使用默认配置它就有可能正常工作了。</p>
+<p>启动服务：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181212171619339.png" alt="" width="313" height="41"></p>
+<p>查看相关状态：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181212175706104.png" alt="" width="968" height="228"></p>
+<p>下面我们查看日志信息：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213101219855.png" alt="" width="965" height="223"></p>
+<p>这就意味着我们不需要启动k8s，现在关闭k8s</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213101803773.png" alt="" width="304" height="34"></p>
+<p>现在我们要把它设置为开机自启，但是现在不能是启动状态，因为我们的各种配置还没有触发完成，触发完成后才能启动。</p>
+<p>但是开机自启要打开的，要不然里面还会警告的。包括docker也一样。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213102045977.png" alt="" width="929" height="83"></p>
+<ul>
+<li><strong><span style="color: #f33b45;"><em>kubeadm的 init</em></span></strong></li>
+</ul>
+<p>先查看kubeadm init 的命令参数</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213141100177.png" alt="" width="966" height="430"></p>
+<p>指明参数并执行init命令：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213141521713.png" alt="" width="966" height="178"></p>
+<p>可以看到报错，我们忽略不了Swap，所以我们需要做两个设定，第一，去编辑下列文件</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213141715977.png" alt="" width="351" height="20"></p>
+<p>在当中加个忽略swap选项，只在命令行中加是不够的。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213155951881.png" alt="" width="318" height="36"></p>
+<p>然后在init命令中加入忽略swap错误的信息</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181213160109604.png" alt="" width="965" height="208"></p>
+<p>出现下图及下下图显示的镜像则表示成功</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181217155147760.png" alt="" width="966" height="524"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181217155322723.png" alt="" width="966" height="338"></p>
+<p>发现监听了6443端口。</p>
+<p>--token是个令牌，其实是个域共享秘钥。我这个集群不是谁都能加入进来的，需要拿着我事先给你的密码才行，这个令牌是动态生成的。所以建议复制保存下载，免得以后找不到了。</p>
+<p>--discovery-token-ca-cert-hash 表示做发现时，相关文件的或者是私钥的哈希码。如果我们的server发现证书的哈希码不是这个哈希码，我们是拒绝加入集群的。也避免自己的节点误入别的狼群中去。</p>
+<p>他去下载镜像到本地了，速度取决于网络，现在等着他就行了，过了一会发现如下就是成功了。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181217144136646.png" alt="" width="849" height="145"></p>
+<p><strong>pause</strong>用来做：我们之前讲docker时候说过，以后我们可以做一个容器，这个容器不用启动，随后其他容器启动后可以加入复制这个基础容器的网络和存储卷等等，我们把它称为<strong>基础架构容器</strong>。每一个pod的内部，之所以叫pod，而且pod能启动起来，里边还有主容器，还有其他容器能够协同，就是因为他底层有个基础架构容器，而pause，就是用来为构建基础架构容器而创建的。说明它就是为了能够分配一个网络名称空间、ip地址、主机名然后能够有存储卷，为一个pod提供底层基础结构的。他不需要启动和运行。</p>
+<p>继续执行下面命令：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181218171800329.png" alt="" width="892" height="146"></p>
+<p>上图的复制文件命令的意思是：这个命令复制了<strong>admin.conf</strong>就是kubeadm帮我们自动初始化好的一个被kubectl可以拿来作为配置文件指定连接着k8s的apiServer并完成认证的配置文件，这里包含了认证信息（就是认证证书，客户端证书）等相关信息的非常非常重要的一些配置。因为他的生成是比较复杂的，他的格式也比较复杂。后面我们还会讲这个格式。现在我们会简单使用就可以了。</p>
+<p>上面报错，提示我们使用kubectl get -h，我们执行这个命令可以查看到get相关的帮助</p>
+<ul>
+<li><strong>获取各组件健康状态信息</strong></li>
+</ul>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181218175200751.png" alt="" width="448" height="164"></p>
+<p><span style="color: #f33b45;"><strong>cs</strong></span>是组件状态信息，显示的是各组件的健康状态，之所以没显示ApiServer是因为如果它不健康，那么这里的请求发不过去的。能正常显示信息就说明本身一定是健康的。</p>
+<ul>
+<li><strong>获取节点信息</strong></li>
+</ul>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181218180056490.png" alt="" width="455" height="70"></p>
+<p>可以看到当前是未就绪状态。是因为还缺少一个重要的附件叫<strong>flannel</strong>，或者这样的网络组件，没有网络，那个各pod装起来是没法跑的，彼此间无法通信。部署flannel属于另外的事情，本身不属于k8s的事情了。</p>
+<ul>
+<li><strong><em><span style="color: #f33b45;">在master部署flannel</span></em></strong></li>
+</ul>
+<p>在flannel的github上可以看到如下文档</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219145201134.png" alt="" width="585" height="246"></p>
+<p>往下拉看到如下图所示，如果你的k8s是1.7+只需要执行下面命令即可，他会自动的获取在线的部署清单，基于此清单下载镜像启动并部署flannel。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219145312708.png" alt="" width="723" height="165"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219145439540.png" alt="" width="917" height="178"></p>
+<p>这里可以看到各种各样的created，但是这是不够的，我们要使用 kubectl get pods -n kube-system命令查看，我们要看到flannel正常启动并运行的状态才算ok。</p>
+<p>我们要使用docker image ls 要看到flannel镜像拖下来才能看见启动起来。我们只需要等待一会即可。耐心一点。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219150135385.png" alt="" width="845" height="319"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219150039927.png" alt="" width="605" height="257"></p>
+<p>可以看到现在的状态为Ready了。</p>
+<p>这里所显示的列表就是当前节点上运行地所有pod，而且他们属于kube-system名称空间。</p>
+<p>如果默认不指明名称空间的话是k8s集群默认的名称空间叫default。</p>
+<p>我们的系统级的pod都在kube-system名称空间中。</p>
+<ul>
+<li><strong>获取名称空间</strong></li>
+</ul>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219151103404.png" alt="" width="253" height="100"></p>
+<p>到这里master就全部搞定了，就等着我们另外两个node节点加入进来了。</p>
+<p> </p>
+<p> </p></blockquote>
+<blockquote>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>在node01节点进行安装docker、kubelet、kubeadm</strong></em></span><span style="color: #f33b45;"><em><strong>：</strong></em></span></li>
+</ul>
+<p>在master节点发送相关东西到node节点：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181217143159162.png" alt="" width="966" height="85"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181217143309149.png" alt="" width="965" height="352"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181218171453178.png" alt="" width="963" height="521"></p>
+<p><strong>kubectl?</strong>是apiServer的命令行客户端，我们按不按都行，因为我们不一定会在这个主机上执行客户端程序。这里就不安装了。</p>
+<p>然后把master的docker的配置文件发送到node节点上</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219153814674.png" alt="" width="933" height="37"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219153906861.png" alt="" width="931" height="49"></p>
+<p>因为我们就在node01安装了，所以我们先不演示node02的了。</p>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>在node01节点启动docker</strong></em></span><span style="color: #f33b45;"><em><strong>：</strong></em></span></li>
+</ul>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219155018491.png" alt="" width="302" height="36"></p>
+<p>可以看到下图红框所示，证明docker.service配置文件生效成功了。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219155041267.png" alt="" width="305" height="243"></p>
+<p>设置为开机自启：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219155114362.png" alt="" width="937" height="71"></p>
+<p>加入到集群中：</p>
+<p>在上面kubeadm的 init的时候有join的令牌，但是还不够，我们还要忽略swap错误</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219155232312.png" alt="" width="968" height="413"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219155313607.png" alt="" width="966" height="521"></p>
+<p>然后我们去master节点查看一下新加入这个node节点的情况：</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219155649210.png" alt="" width="451" height="85"></p>
+<p>然后我们需要一个简短的等待，让这个节点去下载kube-proxy镜像、flannel镜像并启动起来，他才能真正的初始化完成。</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181219155746839.png" alt="" width="892" height="461"></p>
+<p>上图可以看到有两个flannel，两个proxy，查看后面的地址发现一个是master一个是node01</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/2018121915581652.png" alt="" width="446" height="82"></p>
+<ul>
+<li><span style="color: #f33b45;"><em><strong>在node02节点安装：</strong></em></span></li>
+</ul>
+<p>跟node01节点安装是一样的</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181220152739612.png" alt="" width="441" height="83"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181220152816158.png" alt="" width="969" height="240"></p>
+<p>出现上图安装成功，下面在master发送一下配置文件到node02</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181220152643283.png" alt="" width="933" height="81"></p>
+<p>启动node02的docker</p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181220152922709.png" alt="" width="669" height="83"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/2018122015392115.png" alt="" width="488" height="273"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/2018122015393615.png" alt="" width="933" height="70"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181220154017664.png" alt="" width="967" height="427"></p>
+<p><img loading="lazy" decoding="async" class="has" src="https://img-blog.csdnimg.cn/20181220154112922.png" alt="" width="444" height="83"></p></blockquote>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/docker" rel="tag">docker</a>, <a href="/tag/k8s" rel="tag">k8s</a>, <a href="/tag/kubernetes" rel="tag">Kubernetes</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2019/06/22/ali-mirror.html" rel="prev">阿里云镜像库</a><br>【下篇】<a href="/2019/06/24/kubernetes-webui.html" rel="next">Kubernetes 1.8.6 集群部署–部署Web UI界面</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li><li> · <a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li><li> · <a href="/2025/07/02/k8s-ingress-non-pod-service.html">利用k8s ingress访问非POD服务</a></li><li> · <a href="/2025/06/06/docker-fastapi.html">Docker 快速部署 FastAPI 项目</a></li><li> · <a href="/2025/03/24/docker-confluence9.html">docker安装 Confluence9</a></li><li> · <a href="/2025/02/28/single-server-rolling-hot-upgrade.html">单台服务器应用不中断服务热部署滚动更新方案</a></li><li> · <a href="/2025/02/28/code-server.html">docker安装code-server</a></li><li> · <a href="/2025/02/19/dockerhub.html">Docker 镜像加速列表（20250216已更新）</a></li><li> · <a href="/2025/02/05/unknown-blob.html">解决docker push 到私有registry时，报unknown blob错</a></li><li> · <a href="/2024/10/31/amazon-linux-2023-docker.html">Amazon Linux 2023 安装Docker和Docker Compose</a></li><li> · <a href="/2024/10/30/docker-network.html">修改Docker的默认网段</a></li><li> · <a href="/2024/08/15/docker-backup-mysql-crontab-script.html">docker定时任务Mysql脚本</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2019年06月22日发表在<a href="/category/docker" rel="category tag">Docker</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2019/06/22/kubernetes.html" rel="bookmark" title="本文固定链接 /2019/06/22/kubernetes.html">[转]Kubernetes安装方法及使用教程 | Bruce's Blog</a><a href="#" onclick="copy_code('/2019/06/22/kubernetes.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2019/06/22/kubernetes.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="5209" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="61afce40fd"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="20"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.069 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:08 -->

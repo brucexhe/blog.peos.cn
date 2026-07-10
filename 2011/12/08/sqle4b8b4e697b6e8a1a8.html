@@ -1,0 +1,741 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>SQL临时表 | Bruce's Blog</title> 
+<meta name="description" content="临时表就是那些名称以井号 (#) 开头的表。如果当用户断开连接时没有除去临时表，SQL Server 将自动除去临时表。临时表不存储在当前数据库内，而是存储在系统数据库 tempdb 内。 临时表有两种类型： 本地临时表 以一个井号 (#) 开头的那些表名。只有在创建本地临时表的连接上才能看到这些表，链接断开时临时表即被删除（本地临时表为创建它的该链接的会话所独享）或者这样说局部临时表是有当前用户创建的，并且只有当前用户的会话才可以访问">
+<meta name="keywords" content="SQL临时表">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2011/12/01" aria-label="2011年12月1日 发布的文章">1</a></td><td><a href="/2011/12/02" aria-label="2011年12月2日 发布的文章">2</a></td><td><a href="/2011/12/03" aria-label="2011年12月3日 发布的文章">3</a></td><td><a href="/2011/12/04" aria-label="2011年12月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/05" aria-label="2011年12月5日 发布的文章">5</a></td><td><a href="/2011/12/06" aria-label="2011年12月6日 发布的文章">6</a></td><td><a href="/2011/12/07" aria-label="2011年12月7日 发布的文章">7</a></td><td><a href="/2011/12/08" aria-label="2011年12月8日 发布的文章">8</a></td><td><a href="/2011/12/09" aria-label="2011年12月9日 发布的文章">9</a></td><td><a href="/2011/12/10" aria-label="2011年12月10日 发布的文章">10</a></td><td><a href="/2011/12/11" aria-label="2011年12月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/12" aria-label="2011年12月12日 发布的文章">12</a></td><td><a href="/2011/12/13" aria-label="2011年12月13日 发布的文章">13</a></td><td><a href="/2011/12/14" aria-label="2011年12月14日 发布的文章">14</a></td><td><a href="/2011/12/15" aria-label="2011年12月15日 发布的文章">15</a></td><td><a href="/2011/12/16" aria-label="2011年12月16日 发布的文章">16</a></td><td><a href="/2011/12/17" aria-label="2011年12月17日 发布的文章">17</a></td><td><a href="/2011/12/18" aria-label="2011年12月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/19" aria-label="2011年12月19日 发布的文章">19</a></td><td><a href="/2011/12/20" aria-label="2011年12月20日 发布的文章">20</a></td><td><a href="/2011/12/21" aria-label="2011年12月21日 发布的文章">21</a></td><td><a href="/2011/12/22" aria-label="2011年12月22日 发布的文章">22</a></td><td><a href="/2011/12/23" aria-label="2011年12月23日 发布的文章">23</a></td><td><a href="/2011/12/24" aria-label="2011年12月24日 发布的文章">24</a></td><td><a href="/2011/12/25" aria-label="2011年12月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/26" aria-label="2011年12月26日 发布的文章">26</a></td><td><a href="/2011/12/27" aria-label="2011年12月27日 发布的文章">27</a></td><td><a href="/2011/12/28" aria-label="2011年12月28日 发布的文章">28</a></td><td><a href="/2011/12/29" aria-label="2011年12月29日 发布的文章">29</a></td><td><a href="/2011/12/30" aria-label="2011年12月30日 发布的文章">30</a></td><td><a href="/2011/12/31" aria-label="2011年12月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2011/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#b5ffea;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#586cc2;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#70bf3a;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#330bb7;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#4b9727;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#1c5b0;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#f06cf6;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#464c8d;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#54cb2f;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#e03f9c;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#3895d9;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#4c7382;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#b150b0;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#7b8807;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#4c2303;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#32053b;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#15ad22;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#140195;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#125e38;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#e3260b;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#86c982;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#444589;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#b1510;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#80fad9;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#a1bec1;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#6afbcf;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#9146ac;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#d41dba;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#99a48d;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#38592f;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#d94e61;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#a628f4;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#901b24;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#c824e9;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#586a5d;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#ac0ebd;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#e9c58a;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#536248;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#2bb397;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#37a99b;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#c66ecf;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#b95264;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#3a969b;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#b4a885;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#b79;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/sql-server" rel="category tag">SQL Server</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">SQL临时表</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-12-08 15:53</span>
+			<span class="category">  <a href="/category/sql-server" rel="category tag">SQL Server</a></span>
+			<span class="article_comment"><a href="/2011/12/08/sql%E4%B8%B4%E6%97%B6%E8%A1%A8.html#comments">评论(1)</a></span>
+			 <span class="article_view grayline">阅读(<span>3,425</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p><span class="Apple-style-span" style="font-family: Verdana; font-size: 14px; line-height: 21px; background-color: #ffffff;">临时表就是那些名称以井号 (#) 开头的表。如果当用户断开连接时没有除去临时表，SQL Server 将自动除去临时表。临时表不存储在当前数据库内，而是存储在系统数据库 tempdb 内。 </span><br style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;"><br style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;"><span class="Apple-style-span" style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;">临时表有两种类型： </span><br style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;"><br style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;"><strong style="font-family: Verdana; line-height: 21px; text-align: left; background-color: #ffffff; font-size: 14pt;">本地临时表</strong><span style="font-family: Verdana; line-height: 21px; text-align: left; background-color: #ffffff; font-size: 14pt;"> </span><br style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;"><span class="Apple-style-span" style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;">以一个井号 (#) 开头的那些表名。只有在创建本地临时表的连接上才能看到这些表，链接断开时临时表即被删除（本地临时表为创建它的该链接的会话所独享）或者这样说局部临时表是有当前用户创建的，并且只有当前用户的会话才可以访问</span><strong style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff;">。</strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">如果本地临时表由存储过程创建或由多个用户同时执行的应用程序创建（其实可看作是不同的链接，不同的会话），则数据库引擎必须能够区分由不同用户创建的表。为此，数据库引擎在内部为每个本地临时表的表名追加一个数字后缀。存储在 <strong>tempdb</strong> 的 <strong>sysobjects </strong>表中的临时表，其全名由 CREATE TABLE 语句中指定的表名和系统生成的数字后缀组成。为了允许追加后缀，为本地临时表指定的 <em style="font-style: normal;">table_name</em> 不能超过 116 个字符。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">对于本地临时表来说，需要注意在不同情形下应用本地临时表其删除的实际。如假设数据库在执行一个存储过程的时候建立了本地临时表。那么此时这个本地临时表并不是在会话终止的时候自动删除，而是在这个存储过程执行完毕后就会删除。这是什意思呢?也就是说，用户发起的某个会话，为了执行一个特殊的作业(如用户的这个会话调用了某个存储过程)。此时其实就是会话再创建一个子会话的过程。在这种情况下需要注意的是，子会话创建的本地临时表只在子会话内部有效。当这个子会话终止的时候(存储过程执行完毕)，此时这个临时表就会自动删除。即对于调用这个子会话的会话来说，这个其子会话的创建的临时表对于其也是无效的，因为临时表已经在子会话关闭的时候自动删除。做一个形象的比喻。即现在做父亲的去叫儿子造一座房子。当儿子死亡的时候，这座房子也会消失。对于这种情况，数据库管理员需要注意。父会话只能够引用子会话从临时表中传递出来的数据。也就是说，父会话要访问子会话创建的临时表的数据，只有一种手段。即先让子会话对临时表中的数据进行查询或者操作，然后把结构回传给父会话。父会话是不能够直接访问子会话所创建的临时表。当然这个限制是专门针对本地临时表而言的。对于全局临时表来说，本身就是所有用户都可以访问，为此就没有这个限制。<br>
+<strong></strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><strong style="font-size: 14pt;">全局临时表</strong><span style="font-size: 14pt;"> </span><br>
+以两个井号 (##) 开头的那些表名。在所有连接上都能看到全局临时表或者这样说只要这个全局临时表存在，那么用户创建会话后对所有的用户都是可见的。如果在创建全局临时表的连接断开前没有显式地除去这些表，那么只要所有其它任务停止引用它们，这些表即被除去。当创建全局临时表的连接断开后，新的任务不能再引用它们（换句话说旧的任务还何以引用）。当前的语句一执行完，任务与表之间的关联即被除去；因此通常情况下，只要创建全局临时表的连接断开，全局临时表即被除去。</p>
+<div style="font-family: Verdana; font-size: 14px; line-height: 21px; background-color: #ffffff; padding: 0px; margin: 0px;" align="center">
+<div class="cnblogs_code" style="background-color: #f5f5f5; font-family: 'Courier New'; font-size: 12px; word-break: break-all; overflow-x: auto; overflow-y: auto; border-width: 1px; border-color: #cccccc; border-style: solid; padding: 5px; margin: 0px;">
+<div style="padding: 0px; margin: 0px;" align="left"><img decoding="async" id="Code_Open_Image_231758" style="border-style: initial; border-color: initial; display: inline;" src="/wp-content/uploads/2011/12/3403_ExpandedBlockStart.gif" alt="" width="11" height="16" align="top"><span id="Code_Open_Text_231758" style="line-height: 1.5; display: inline;"><br>
+<span style="line-height: 1.5; color: #008080;">--</span><span style="line-height: 1.5; color: #008080;">失败的----</span><span style="line-height: 1.5; color: #008080;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">declare</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">varchar</span><span style="line-height: 1.5;">(</span><span style="line-height: 1.5; color: #800000; font-weight: bold;">100</span><span style="line-height: 1.5;">)<br>
+</span><span style="line-height: 1.5; color: #0000ff;">set</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5; color: #808080;">=</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">select id as a,name as b into #b from shopName</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">print</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">exec</span><span style="line-height: 1.5;">(</span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5;">)<br>
+</span><span style="line-height: 1.5; color: #0000ff;">select</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #808080;">*</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">from</span><span style="line-height: 1.5;"> #b<br>
+</span><span style="line-height: 1.5; color: #0000ff;">drop</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">table</span><span style="line-height: 1.5;"> #b
+<p>消息 </p></span><span style="line-height: 1.5; color: #800000; font-weight: bold;">208</span><span style="line-height: 1.5;">，级别 </span><span style="line-height: 1.5; color: #800000; font-weight: bold;">16</span><span style="line-height: 1.5;">，状态 </span><span style="line-height: 1.5; color: #800000; font-weight: bold;">0</span><span style="line-height: 1.5;">，第 </span><span style="line-height: 1.5; color: #800000; font-weight: bold;">5</span><span style="line-height: 1.5;"> 行<br>
+对象名  </span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">#b</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;"> 无效。
+<p></p></span><span style="line-height: 1.5; color: #008080;">--</span><span style="line-height: 1.5; color: #008080;">-成功的-----</span><span style="line-height: 1.5; color: #008080;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">declare</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">varchar</span><span style="line-height: 1.5;">(</span><span style="line-height: 1.5; color: #800000; font-weight: bold;">100</span><span style="line-height: 1.5;">)<br>
+</span><span style="line-height: 1.5; color: #0000ff;">set</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5; color: #808080;">=</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">select id as a,name as b into ##b from shopName</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">print</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">exec</span><span style="line-height: 1.5;">(</span><span style="line-height: 1.5; color: #008000;">@sql</span><span style="line-height: 1.5;">)<br>
+</span><span style="line-height: 1.5; color: #0000ff;">select</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #808080;">*</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">from</span><span style="line-height: 1.5;"> ##b<br>
+</span><span style="line-height: 1.5; color: #0000ff;">drop</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">table</span><span style="line-height: 1.5;"> ##b  </span><span style="line-height: 1.5; color: #808080;">//</span><span style="line-height: 1.5;">一定要DROP不然又要报错</span></span></div>
+</div>
+</div>
+<div style="font-family: Verdana; font-size: 14px; line-height: 21px; background-color: #ffffff; padding: 0px; margin: 0px;" align="center"></div>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"> 当然勿论是全局的还是本地表，只要是能访问的都能用DROP TABLE 来强制地删除临时表。</p>
+<p style="margin-top: 5px; margin-right: 0px; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;" dir="ltr"><span style="color: red;">当创建本地或全局临时表时，CREATE TABLE 语法支持除 FOREIGN KEY 约束以外的其他所有约束定义</span>。如果临时表中指定了 FOREIGN KEY 约束，则该语句将返回一条表明已跳过此约束的警告消息。此表仍将创建，但不使用 FOREIGN KEY 约束。在 FOREIGN KEY 约束中不能引用临时表。</p>
+<p style="margin-top: 5px; margin-right: 0px; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;" dir="ltr">以一个实际的例子来谈谈普通表、本地临时表、全局临时表三个表的差异。如现在有一个保存员工信息的表user。这个表是一个普通表，只要其建立就不会自动删除，任何好在数据库中有使用这个表(具有访问权限)的用户都可以访问这个表，除非这个表被所有者删除或者更改了权限。在用户A(具有访问权限)访问这个表的过程中，数据库可能会根据需要生成一张本地临时表#user。此时只有这个会话才可以访问这个本地临时表。当这个用户的会话中断之后，这个本地临时表也会被自动删除。不过根据需要，数据库也可能会建立全局临时表##user(在名字上与本地临时表不同)。此时数据库中的任何用户只要连接到了数据库就可以访问这个全局临时表(访问权限上的不同)。当这个创建临时表会话的用户中断数据库连接时，这个临时表是否会删除是一个未知数，这要看当时的实际情况(在可用性上不同)。如果此时还有其他用户连接在这个表上的话，那么这个全局临时表就不会被删除。只有在中断连接时，没有其他用户在访问这个表时，即某个用户(不一定是创建这张全局临时表的用户)断开连接并且所有其他的会话不再使用这个表时才会被删除。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">　　可见无论是全局临时表还是本地临时表，其跟普通表相比，最重要的一个差异就是其会根据需要自动创建。当不再需要时其又会自动删除。这也正是临时表的魅力所在，其可以在数据处理的过程中，减少很多中间表格。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><strong style="font-size: 14pt;">临时表对日志与锁的影响</strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">　　日志文件是数据库中很重要的一个工具。无论是SQL Server数据库还是Oracle数据库，都有日志这个工具。如凭借重做日志工具，数据库管理员可以在数据库故障的时候借此来恢复数据，将数据恢复到故障的那个点上。但是在使用临时表的时候，需要注意一点，就是临时表不会有日志文件。即对临时表进行的DML等操作不会形成日志文件。这个特性即有好处，也有坏处。好处是对于临时表的更改不会保存到日志文件中。也就是说，如果数据库发生了故障，则保存在临时表中的数据是不能够恢复的。为此数据库管理员不得不重新执行某些作业以重新生成临时表中的数据。好处就是对于临时表的DML操作速度会非常的块。除了其他的原因导致其性能的提升外，在更改其内容时不会生成日志信息也是一个重要的原因。为此对临时表的操作不生成日志信息，这是一个双刃剑。数据库管理员在日常工作中，要尽量发挥其优势，减少其负面作用的影响。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">　　另外，若采用临时表这种处理机制的话，还需要注意其对锁的影响。在介绍本地临时表与全局临时表差异的时候，笔者就介绍过，本地临时表只对当前的会话有效。即使当前会话又创建了另外一个子会话，也只对子会话有效。当某个会话终止的时候，这临时表就会自动被删除。而对于普通表或者全局临时表来说，可能同时多个会话都可以访问这个表。这两者有什么区别呢?若允许多个会话可以同时访问某个表的话，那么这个表就可能会遇到锁的情况。即某个用户会话在对表中地记录进行DML等操作时，为了保证数据的一致性，会对相关的记录进行加锁等措施。而采用本地临时表的话，由于只有一个会话可以访问临时表中的数据，所以即使这个会话更改临时表中的数据，也不会有锁冲突的问题。故其在更改本地临时表中的数据时，就不用为其加锁。所以，对于本地临时表的操作速度就要比其他表来的快。故在何时的情况下使用临时表无疑可以提高数据库的整体性能。如可以将一些操作在临时表中完成，然后再将最后的结果更新到基本表中。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><strong></strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><strong>利用SQL的全局临时表防止用户重复登录</strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">      在我们开发商务软件的时候，常常会遇到这样的一个问题：怎样防止用户重复登录我们的系统？特别是对于银行或是财务部门，更是要限制用户以其工号身份多次登入。</p>
+<p>可能会有人说在用户信息表中加一字段判断用户工号登录的状态，登录后写1，退出时写0，且登录时判断其标志位是否为1，如是则不让该用户工号登录。但是这样那势必会带来新的问题：如发生象断电之类不可预知的现象，系统是非正常退出，无法将标志位置为0，那么下次以该用户工号登录则不可登入.
+</p>
+<div class="cnblogs_code" style="background-color: #ffffff; font-family: 'Courier New'; font-size: 12px; word-break: break-all; overflow-x: auto; overflow-y: auto; line-height: 21px; text-align: left; border-width: 1px; border-color: #cccccc; border-style: solid; padding: 5px; margin: 0px;"><img decoding="async" id="Code_Open_Image_195822" style="border-style: initial; border-color: initial; display: inline;" src="/wp-content/uploads/2011/12/3403_ExpandedBlockStart.gif" alt="" width="11" height="16" align="top"><span id="Code_Open_Text_195822" style="line-height: 1.5; display: inline;"><br>
+<span style="line-height: 1.5; color: #0000ff;">create</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">procedure</span><span style="line-height: 1.5;"> gp_findtemptable<br>
+</span><span style="line-height: 1.5; color: #008080;">/*</span><span style="line-height: 1.5; color: #008080;"> 寻找以操作员工号命名的全局临时表<br>
+* 如无则将out参数置为0并创建该表,如有则将out参数置为1<br>
+* 在connection断开连接后,全局临时表会被SQL Server自动回收<br>
+* 如发生断电之类的意外,全局临时表虽然还存在于tempdb中,但是已经失去活性<br>
+* 用object_id函数去判断时会认为其不存在.<br>
+</span><span style="line-height: 1.5; color: #008080;">*/</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #008000;">@v_userid</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">varchar</span><span style="line-height: 1.5;">(</span><span style="line-height: 1.5; color: #800000; font-weight: bold;">6</span><span style="line-height: 1.5;">), </span><span style="line-height: 1.5; color: #008080;">--</span><span style="line-height: 1.5; color: #008080;"> 操作员工号</span><span style="line-height: 1.5; color: #008080;"><br>
+</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #008000;">@i_out</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">int</span><span style="line-height: 1.5;"> out </span><span style="line-height: 1.5; color: #008080;">--</span><span style="line-height: 1.5; color: #008080;"> 输出参数 0:没有登录 1:已经登录</span><span style="line-height: 1.5; color: #008080;"><br>
+</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">as</span><span style="line-height: 1.5;">
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">declare</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@v_sql</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">varchar</span><span style="line-height: 1.5;">(</span><span style="line-height: 1.5; color: #800000; font-weight: bold;">100</span><span style="line-height: 1.5;">)
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">if</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #ff00ff;">object_id</span><span style="line-height: 1.5;">(</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">tempdb.dbo.##</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #808080;">+</span><span style="line-height: 1.5; color: #008000;">@v_userid</span><span style="line-height: 1.5;">) </span><span style="line-height: 1.5; color: #0000ff;">is</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">null</span><span style="line-height: 1.5;">
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">begin</span><span style="line-height: 1.5;">
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">set</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@v_sql</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #808080;">=</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">create table ##</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #808080;">+</span><span style="line-height: 1.5; color: #008000;">@v_userid</span><span style="line-height: 1.5; color: #808080;">+</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">(userid varchar(6))</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;">
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">exec</span><span style="line-height: 1.5;"> (</span><span style="line-height: 1.5; color: #008000;">@v_sql</span><span style="line-height: 1.5;">)
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">set</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@i_out</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #808080;">=</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #800000; font-weight: bold;">0</span><span style="line-height: 1.5;">
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">end</span><span style="line-height: 1.5;">
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">else</span><span style="line-height: 1.5;">
+<p></p></span><span style="line-height: 1.5; color: #0000ff;">set</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #008000;">@i_out</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #808080;">=</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #800000; font-weight: bold;">1</span><span style="line-height: 1.5;">
+<p></p></span></span></div>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+在这个过程中，我们看到如果以用户工号命名的全局临时表不存在时过程会去创建一张并把out参数置为0，如果已经存在则将out参数置为1。</p>
+<p>这样，我们在我们的应用程序中调用该过程时，如果取得的out参数为1时，我们可以毫不客气地跳出一个message告诉用户说”对不起，此工号正被使用！”</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">上面还涉及到一个OBJECT_ID ()函数：</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">Syntax:</p>
+<div style="font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #dddddd; padding: 0px; margin: 0px;" dir="ltr">
+<pre id="ctl00_MainContent_ctl31_ctl00_ctl00_code" class="libCScode" style="margin-top: 0px; margin-bottom: 0px; white-space: pre-wrap; word-wrap: break-word; line-height: 14px; padding: 0px;"><span style="background-color: #3399ff; color: #ffffff;">OBJECT_ID</span> ( '[ database_name . [ schema_name ] . | schema_name . object_name' [ ,'object_type' ] )</pre>
+</div>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">一般语法：<strong>int object_id('objectname');</strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">此方法返回数据库对象标识号。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">其中，参数objectname 表示要使用的对象，其数据类型为nchar或char（如果为char，系统将其转换为nchar）</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">object_type:为可选参数，其数据类型为nchar或char（如果为char，系统将其转换为nchar），指明架构范围的对象类型（object_name为字符串通过它，可以说明这个字符串究竟是说明对象，其列表见文章结尾）</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><span style="color: #0000ff;">ps:</span><span style="font-family: 宋体; color: #0000ff;">使用</span><span style="color: #0000ff;"> OBJECT_ID </span><span style="font-family: 宋体; color: #0000ff;">不能查询非架构范围内的对象（如</span><span style="color: #0000ff;"> DDL </span><span style="font-family: 宋体; color: #0000ff;">触发器）。对于在</span><span style="color: #0000ff;"> sys.objects </span><span style="font-family: 宋体; color: #0000ff;">目录视图中找不到的对象，需要通过查询适当的目录视图来获取该对象的标识号。例如，若要返回</span><span style="color: #0000ff;"> DDL </span><span style="font-family: 宋体; color: #0000ff;">触发器的对象标识号，请使用</span><span style="color: #0000ff;"> SELECT OBJECT_ID FROM sys.triggers WHERE name = 'DatabaseTriggerLog'</span><span style="font-family: 宋体; color: #0000ff;">。</span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">返回类型为int，表示该对象在系统中的编号，如果找不到或发生错误一律返回NULL。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">例子：</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><strong style="font-size: 12pt;">A.返回数据库<span style="font-family: 'Courier New';">AdventureWorks中Production.WorkOrder表的标识号</span></strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><div class="cnblogs_code" style="background-color: #ffffff; font-family: 'Courier New'; font-size: 12px; word-break: break-all; overflow-x: auto; overflow-y: auto; line-height: 21px; text-align: left; border-width: 1px; border-color: #cccccc; border-style: solid; padding: 5px; margin: 0px;"><span style="line-height: 1.5; color: #0000ff;">USE</span><span style="line-height: 1.5;"> master;<br>
+</span><span style="line-height: 1.5; color: #0000ff;">GO</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">SELECT</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #ff00ff;">OBJECT_ID</span><span style="line-height: 1.5;">(N</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">AdventureWorks.Production.WorkOrder</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;">) </span><span style="line-height: 1.5; color: #0000ff;">AS</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">Object ID</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;">;<br>
+</span><span style="line-height: 1.5; color: #0000ff;">GO</span><span style="line-height: 1.5;"><br>
+</span></div>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><strong style="font-size: 12pt;">B.存在性检查</strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">下列会确认资料表有物件的标识码，藉此检查指定的资料表是否存在。如果存在就删除。</p>
+<div class="cnblogs_code" style="background-color: #ffffff; font-family: 'Courier New'; font-size: 12px; word-break: break-all; overflow-x: auto; overflow-y: auto; line-height: 21px; text-align: left; border-width: 1px; border-color: #cccccc; border-style: solid; padding: 5px; margin: 0px;"><span style="line-height: 1.5; color: #0000ff;">USE</span><span style="line-height: 1.5;"> AdventureWorks;<br>
+</span><span style="line-height: 1.5; color: #0000ff;">GO</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">IF</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #ff00ff;">OBJECT_ID</span><span style="line-height: 1.5;"> (N</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">dbo.AWBuildVersion</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;">, N</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5; color: #ff0000;">U</span><span style="line-height: 1.5; color: #ff0000;">'</span><span style="line-height: 1.5;">) </span><span style="line-height: 1.5; color: #0000ff;">IS</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #808080;">NOT</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">NULL</span><span style="line-height: 1.5;"><br>
+</span><span style="line-height: 1.5; color: #0000ff;">DROP</span><span style="line-height: 1.5;"> </span><span style="line-height: 1.5; color: #0000ff;">TABLE</span><span style="line-height: 1.5;"> dbo.AWBuildVersion;<br>
+</span><span style="line-height: 1.5; color: #0000ff;">GO</span><span style="line-height: 1.5;"><br>
+</span></div>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">此方法一般用来判断数据库中本来用没有此对象（procedures，views，functions等）.</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><span style="font-size: 14pt;"><strong>注意：</strong></span><br>
+当该参数对系统函数可选时，则系统采用当前数据库、主机、服务器用户或数据库用户。内置函数后面必须跟圆括号。<br>
+如果指定一个临时表名，除非当前数据库为tempdb(<span style="color: red;">废话</span>)，否则必须在临时表名前面加上数据库名，例如：<br>
+SELECT OBJECT_ID('tempdb..#mytemptable')</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; text-align: left; background-color: #ffffff; padding: 0px;"><strong style="font-size: 14pt;">Object_Type列表:</strong></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; background-color: #ffffff; text-align: left; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; background-color: #ffffff; text-align: left; padding: 0px;">
+</p><p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: Verdana; font-size: 14px; line-height: 21px; background-color: #ffffff; text-align: left; padding: 0px;">
+</p><table class="alignleft" style="border-collapse: collapse; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; font-size: 14px; margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; color: #000000; font-family: Verdana; line-height: 21px; text-align: left; background-color: #ffffff; width: 152pt; border-width: 1px; border-color: #c0c0c0; border-style: solid;" width="203" border="0" cellspacing="0" cellpadding="0">
+<colgroup>
+<col style="width: 152pt;" width="203"></colgroup>
+<tbody>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; width: 152pt; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" width="203" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">AF = </span><span class="font6" style="font-family: 宋体;">聚合函数</span><span class="font5" style="font-family: 'Segoe UI';"> (CLR)</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">C = CHECK </span><span class="font6" style="font-family: 宋体;">约束</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">D = DEFAULT</span><span class="font6" style="font-family: 宋体;">（约束或独立）</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">F = FOREIGN KEY </span><span class="font6" style="font-family: 宋体;">约束</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">FN = SQL </span><span class="font6" style="font-family: 宋体;">标量函数</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">FS = </span><span class="font6" style="font-family: 宋体;">程序集</span><span class="font5" style="font-family: 'Segoe UI';"> (CLR) </span><span class="font6" style="font-family: 宋体;">标量函数</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">FT = </span><span class="font6" style="font-family: 宋体;">程序集</span><span class="font5" style="font-family: 'Segoe UI';"> (CLR) </span><span class="font6" style="font-family: 宋体;">表值函数</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">IF = SQL </span><span class="font6" style="font-family: 宋体;">内联表值函数</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">IT = </span><span class="font6" style="font-family: 宋体;">内部表</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">P = SQL </span><span class="font6" style="font-family: 宋体;">存储过程</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">PC = </span><span class="font6" style="font-family: 宋体;">程序集</span><span class="font5" style="font-family: 'Segoe UI';"> (CLR) </span><span class="font6" style="font-family: 宋体;">存储过程</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">PG = </span><span class="font6" style="font-family: 宋体;">计划指南</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">PK = PRIMARY KEY </span><span class="font6" style="font-family: 宋体;">约束</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">R = </span><span class="font6" style="font-family: 宋体;">规则（旧式，独立）</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">RF = </span><span class="font6" style="font-family: 宋体;">复制筛选过程</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">S = </span><span class="font6" style="font-family: 宋体;">系统基表</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">SN = </span><span class="font6" style="font-family: 宋体;">同义词</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">SQ = </span><span class="font6" style="font-family: 宋体;">服务队列</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">TA = </span><span class="font6" style="font-family: 宋体;">程序集</span><span class="font5" style="font-family: 'Segoe UI';"> (CLR) DML </span><span class="font6" style="font-family: 宋体;">触发器</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">TF = SQL </span><span class="font6" style="font-family: 宋体;">表值函数</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">TR = SQL DML </span><span class="font6" style="font-family: 宋体;">触发器</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">U = </span><span class="font6" style="font-family: 宋体;">表（用户定义类型）</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">UQ = UNIQUE </span><span class="font6" style="font-family: 宋体;">约束</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">V = </span><span class="font6" style="font-family: 宋体;">视图</span></span></span></td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl24" style="border-collapse: collapse; background-color: transparent; height: 14.25pt; border-width: initial; border-color: #f0f0f0; border-style: initial; padding: 3px; margin: 0px;" height="19"><span lang="EN-US"><span style="font-size: x-small;"><span style="font-family: 'Segoe UI';">X = </span><span class="font6" style="font-family: 宋体;">扩展存储过程
+<p></p></span></span></span></td>
+</tr>
+</tbody>
+</table>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/sql%E4%B8%B4%E6%97%B6%E8%A1%A8" rel="tag">SQL临时表</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/12/08/%E4%BD%A0%E6%9C%89%E9%87%8D%E6%9E%84%E7%9A%84%E5%8B%87%E6%B0%94%E4%B9%88%EF%BC%9F%EF%BC%88%E4%BA%8C%EF%BC%89.html" rel="prev">你有重构的勇气么？（二）</a><br>【下篇】<a href="/2011/12/08/net4-0%E6%96%B0%E7%89%B9%E6%80%A71.html" rel="next">.NET4.0新特性（一）</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2020/05/08/log-or-data.html">数据库先写日志还是先写数据？</a></li><li> · <a href="/2018/01/29/interview1.html">数据库 面试记录（面试题）</a></li><li> · <a href="/2018/01/08/sql-server-lock.html">记一次sql server数据库死锁的解决过程</a></li><li> · <a href="/2017/09/14/sql-server-auto-backup.html">SQL Server数据库定时自动备份并自动删除旧的备份</a></li><li> · <a href="/2017/07/27/%E4%BD%BF%E7%94%A8sqlcmd%E8%BF%98%E5%8E%9F%E5%A4%A7%E6%96%87%E4%BB%B6.html">使用sqlcmd还原大文件</a></li><li> · <a href="/2017/06/21/sql%E6%AF%8F%E4%B8%AA%E7%94%A8%E6%88%B7%E5%8F%961%E6%9D%A1%E8%AE%B0%E5%BD%95.html">SQL每个用户取1条记录</a></li><li> · <a href="/2017/06/12/mssql%E4%B8%ADdatetime%E8%BD%ACunix%E6%97%B6%E9%97%B4%E6%88%B3.html">MSSQL中datetime转unix时间戳</a></li><li> · <a href="/2017/01/06/sql-server-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0.html">SQL Server 字符串函数</a></li><li> · <a href="/2017/01/06/clear-sqlserver2014-log.html">SQLServer2014删除log文件和清空日志的方案</a></li><li> · <a href="/2016/12/09/sql%E5%8E%BB%E6%8E%89%E5%9B%9E%E8%BD%A6%E7%AD%89asccii%E5%AD%97%E7%AC%A6.html">sql去掉回车等ASCCII字符</a></li><li> · <a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%89.html">大数据量数据库性能优化(三)</a></li><li> · <a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%BA%8C.html">大数据量数据库性能优化(二)</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年12月08日发表在<a href="/category/sql-server" rel="category tag">SQL Server</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/12/08/sql%E4%B8%B4%E6%97%B6%E8%A1%A8.html" rel="bookmark" title="本文固定链接 /2011/12/08/sql%e4%b8%b4%e6%97%b6%e8%a1%a8.html">SQL临时表 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/12/08/sql%e4%b8%b4%e6%97%b6%e8%a1%a8.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+<!-- 引用 -->	
+	<div class="tab_comment">
+		<h2 id="comments">SQL临时表：目前有1 条留言</h2>	
+	</div>
+	<ol class="commentlist">   <li class="comment byuser comment-author-admin bypostauthor even thread-even depth-1" id="comment-33">
+   <div id="div-comment-33">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>数据库之家</strong> :
+			<span class="datetime">2011年12月08日下午 3:55</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2011/12/08/sql%E4%B8%B4%E6%97%B6%E8%A1%A8.html?replytocom=33#respond" data-commentid="33" data-postid="637" data-belowelement="div-comment-33" data-respondelement="respond" data-replyto="回复给 数据库之家" aria-label="回复给 数据库之家">回复</a></span>
+		</div>
+				<p>Sql中的创建的临时表存在哪里，能存多久？</p>
+<p>一般存在你建表的那个数据库里，只要程序退出，就会被系统自动删除</p>
+	<div class="clear"></div>
+  </div>
+</li></ol>
+
+	<div class="navigation_c">
+		<div class="previous"></div>
+	</div>
+
+ 		<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/12/08/sql%E4%B8%B4%E6%97%B6%E8%A1%A8.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="637" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="6a964438c9"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="140"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.069 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:17 -->

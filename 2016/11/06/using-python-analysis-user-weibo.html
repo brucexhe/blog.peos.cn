@@ -1,0 +1,782 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>[转]用python爬取指定用户微博图片及内容，并进行微博分类及使用习惯分析 | Bruce's Blog</title> 
+<meta name="description" content="虽然我是不用微博的，但由于某种原因，手机端的微博会时不时地推送几条我必须看的消息过来。微博被看久了，前几天又看到 语亮 - 简书 一年前的的微博爬虫，就有了对某人微博深入挖掘的想法。">
+<meta name="keywords" content="Python,微博,爬虫">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2016 年 11 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="1" class="pad"> </td><td><a href="/2016/11/01" aria-label="2016年11月1日 发布的文章">1</a></td><td>2</td><td><a href="/2016/11/03" aria-label="2016年11月3日 发布的文章">3</a></td><td>4</td><td><a href="/2016/11/05" aria-label="2016年11月5日 发布的文章">5</a></td><td><a href="/2016/11/06" aria-label="2016年11月6日 发布的文章">6</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2016/11/07" aria-label="2016年11月7日 发布的文章">7</a></td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td>
+	</tr>
+	<tr>
+		<td><a href="/2016/11/14" aria-label="2016年11月14日 发布的文章">14</a></td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td>
+	</tr>
+	<tr>
+		<td><a href="/2016/11/21" aria-label="2016年11月21日 发布的文章">21</a></td><td><a href="/2016/11/22" aria-label="2016年11月22日 发布的文章">22</a></td><td><a href="/2016/11/23" aria-label="2016年11月23日 发布的文章">23</a></td><td><a href="/2016/11/24" aria-label="2016年11月24日 发布的文章">24</a></td><td>25</td><td>26</td><td>27</td>
+	</tr>
+	<tr>
+		<td>28</td><td><a href="/2016/11/29" aria-label="2016年11月29日 发布的文章">29</a></td><td><a href="/2016/11/30" aria-label="2016年11月30日 发布的文章">30</a></td>
+		<td class="pad" colspan="4"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2016/10">« 10 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2016/12">12 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#339e97;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#55e999;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#e5402e;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#89a9dc;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#b89e2c;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#52b3b3;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#f9ed6d;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#15c422;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#369cf6;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#9f612a;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#446834;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#a5ae79;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#1f5011;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#b956c0;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#d21746;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#485329;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#ab03c6;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#99c8;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#47a075;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#84645b;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#156985;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#7f28d4;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#6a9ee7;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#4de57a;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#6aebb;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#601272;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#af7ef5;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#70c727;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#d945ed;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#8d2811;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#56541e;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#392e4e;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#200590;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#1bf978;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#4e6f68;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#75fdce;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#aa1588;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#514ee8;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#5f08f;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#5b90ed;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#546657;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#740a47;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#2cb689;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#20e0e5;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#54d7ba;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/python" rel="category tag">Python</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">[转]用python爬取指定用户微博图片及内容，并进行微博分类及使用习惯分析</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2016-11-06 21:53</span>
+			<span class="category">  <a href="/category/python" rel="category tag">Python</a></span>
+			<span class="article_comment"><a href="/2016/11/06/using-python-analysis-user-weibo.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>1,200</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>虽然我是不用<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%BE%AE%E5%8D%9A" title="View all posts in 微博" target="_blank">微博</a></span>的，但由于某种原因，手机端的<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%BE%AE%E5%8D%9A" title="View all posts in 微博" target="_blank">微博</a></span>会时不时地推送几条我必须看的消息过来。微博被看久了，前几天又看到 语亮 - 简书 一年前的的微博<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%88%AC%E8%99%AB" title="View all posts in 爬虫" target="_blank">爬虫</a></span>，就有了对某人微博深入挖掘的想法。</p>
+<p>之前语亮的<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%88%AC%E8%99%AB" title="View all posts in 爬虫" target="_blank">爬虫</a></span>不能抓取用户一条微博的多张图片，一年后微博界面也发生了一些变化，决定还是参考语亮爬取手机端界面的方法更新下代码，同时加上一点小小的数据分析。</p>
+<p>主要想法是抓取指定用户的全部微博原创内容和全部原创图片保存到本地，然后对原创微博进行分类，并统计用户最爱使用的表情、最常使用的词语和微博中提到的人名。</p>
+<p>（经过验证妹子的微博大多集中在美食类、购物类、美妆类和旅游类）</p>
+<p> </p>
+<p>下面说下爬取步骤、展示结果以及详细代码：</p>
+<p>因为PC端的微博是JS内容不好爬取，所以还是选择了chrome打开微博手机版进行爬取，简单粗暴无障碍。</p>
+<p><strong>1、获取自己的cookie，利用chrome浏览器。</strong></p>
+<p>在chrome 中打开微博手机版，F12打开开发者工具，勾选Network的Preserve log项，然后输入账号密码登陆自己的微博。</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106143456408-1368406867.png" alt=""></p>
+<p>在m.weibo.cn-&gt;Headers-&gt;Cookie 复制下自己的cookie，一会需要粘贴到代码中运行。</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106143714315-1106368495.png" alt=""></p>
+<p><strong>2、获取你要爬取的用户的微博User_id。</strong></p>
+<p>依然在手机端找到你要爬取的用户，点进主页，这时浏览器后的ID就是User_id了。</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106143932752-1178089341.png" alt=""></p>
+<p><strong>3、将获得的两项内容填入到<span class="final-path">weibo.py中，替换代码中的YOUR_USER_ID和#YOUR_COOKIE，运行代码就可以了。</span></strong></p>
+<p><span class="final-path">在我的测试过程中，发现不停访问微博内容的话，访问25页后就会因为请求过于频繁被拒绝，所以我的代码中每访问一页就sleep一分钟，不着急得到结果的话就一直放在后台跑就可以了。嫌慢的话可以自行修改sleep时间或者利用多个账号的cookie轮流爬取。</span></p>
+<p><span class="final-path">爬取过程如下：</span></p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106144602158-2100068832.png" alt=""> <img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106144631705-734039371.png" alt=""> <img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106144834721-435952892.png" alt=""></p>
+<p>会生成两个文件，分别存有用户所有文字微博和微博图片的url，在weibo_image文件夹中会下载用户所有的微博图片。</p>
+<p>（图片有时会下载失败，我的1249张里有4张失败，在日志中可以看到，再手动复制url下载一下即可）</p>
+<p>抓取结果如下图所示：</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106145625049-1565259842.png" alt=""> <img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106145250361-1646636059.png" alt=""></p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106145400486-923278576.png" alt=""></p>
+<p><strong> 4、下面我们对抓取到的微博内容进行分析，依然是将用户User_id填入代码analysis.py的YOUR_USER_ID处，运行代码即可。</strong></p>
+<p>之后会自动生成四个文件，分别是：category.txt, word.txt, express.txt, name.txt. 分别存储了微博分类，常用词，常用表情，微博中的人名及出现次数。</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106150311143-914740568.png" alt=""> <img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106150436096-577992030.png" alt=""> <img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106150500986-1951518390.png" alt=""> <img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106150558768-12497048.png" alt=""></p>
+<p>到这里我们的分析基本结束啦，下一步就是将得到的结果用图表清晰的展示出来。</p>
+<p><strong>5、利用html5图表可视化结果</strong></p>
+<p>在我的github中给出了xita.html模板，套用模板就可以直观的展示我们的代码了，把html文件发给别人看也是可以的。</p>
+<p>（这里调用了google的api，所以可能要FQ才能打开）</p>
+<p>最后成品如下：</p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106152520627-1741952962.png" alt=""></p>
+<p> </p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106152550065-103094046.png" alt=""></p>
+<p> </p>
+<p><img decoding="async" src="/wp-content/uploads/2016/11/784179-20161106151547111-1047639323.png" alt=""></p>
+<p> </p>
+<p><strong>6、下面列出爬取微博和分析所用到的代码：</strong></p>
+<p>用到的库看代码中的 import 内容就可以了，安装过程都很简单，大家自行 baidu or google 即可。</p>
+<p><strong>weibo.py</strong></p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></span></div>
+<pre>  1 #-*-coding:utf8-*-
+  2 
+  3 import re
+  4 import string
+  5 import sys
+  6 import os
+  7 import urllib
+  8 import urllib2
+  9 from bs4 import BeautifulSoup
+ 10 import requests
+ 11 import shutil
+ 12 import time
+ 13 from lxml import etree
+ 14 
+ 15 reload(sys) 
+ 16 sys.setdefaultencoding('utf-8')
+ 17 #if(len(sys.argv)&gt;=2):
+ 18 #        user_id = (int)(sys.argv[1])
+ 19 #else:
+ 20 #        user_id = (int)(raw_input(u"please_input_id: "))
+ 21 user_id = YOUR_USER_ID
+ 22 cookie = {"Cookie": "#YOUR_COOKIE"}
+ 23 url = 'http://weibo.cn/u/%d?filter=1&amp;page=1'%user_id
+ 24 html = requests.get(url, cookies = cookie).content
+ 25 print u'user_id和cookie读入成功'
+ 26 selector = etree.HTML(html)
+ 27 pageNum = (int)(selector.xpath('//input[@name="mp"]')[0].attrib['value'])
+ 28 
+ 29 result = "" 
+ 30 urllist_set = set()
+ 31 word_count = 1
+ 32 image_count = 1
+ 33 
+ 34 print u'ready'
+ 35 print pageNum
+ 36 sys.stdout.flush()
+ 37 
+ 38 times = 5
+ 39 one_step = pageNum/times
+ 40 for step in range(times):
+ 41     if step &lt; times - 1:
+ 42         i = step * one_step + 1
+ 43         j =(step + 1) * one_step + 1
+ 44     else:
+ 45         i = step * one_step + 1
+ 46         j =pageNum + 1
+ 47     for page in range(i, j):
+ 48         #获取lxml页面
+ 49         try:
+ 50             url = 'http://weibo.cn/u/%d?filter=1&amp;page=%d'%(user_id,page) 
+ 51             lxml = requests.get(url, cookies = cookie).content
+ 52             #文字爬取
+ 53             selector = etree.HTML(lxml)
+ 54             content = selector.xpath('//span[@class="ctt"]')
+ 55             for each in content:
+ 56                 text = each.xpath('string(.)')
+ 57                 if word_count &gt;= 3:
+ 58                     text = "%d: "%(word_count - 2) +text+"\n"
+ 59                 else :
+ 60                     text = text+"\n\n"
+ 61                 result = result + text
+ 62                 word_count += 1
+ 63             print page,'word ok'
+ 64             sys.stdout.flush()
+ 65             soup = BeautifulSoup(lxml, "lxml")
+ 66             urllist = soup.find_all('a',href=re.compile(r'^http://weibo.cn/mblog/oripic',re.I))
+ 67             urllist1 = soup.find_all('a',href=re.compile(r'^http://weibo.cn/mblog/picAll',re.I))
+ 68             for imgurl in urllist:
+ 69                 imgurl['href'] = re.sub(r"amp;", '', imgurl['href'])
+ 70         #       print imgurl['href']
+ 71                 urllist_set.add(requests.get(imgurl['href'], cookies = cookie).url)
+ 72                 image_count +=1
+ 73             for imgurl_all in urllist1:
+ 74                 html_content = requests.get(imgurl_all['href'], cookies = cookie).content 
+ 75                 soup = BeautifulSoup(html_content, "lxml")
+ 76                 urllist2 = soup.find_all('a',href=re.compile(r'^/mblog/oripic',re.I))
+ 77                 for imgurl in urllist2:
+ 78                     imgurl['href'] = 'http://weibo.cn' + re.sub(r"amp;", '', imgurl['href'])
+ 79                     urllist_set.add(requests.get(imgurl['href'], cookies = cookie).url)
+ 80                     image_count +=1
+ 81                 image_count -= 1
+ 82             print page,'picurl ok'
+ 83         except:
+ 84             print page,'error'
+ 85         print page, 'sleep'
+ 86         sys.stdout.flush()
+ 87         time.sleep(60)
+ 88     print u'正在进行第', step + 1, u'次停顿，防止访问次数过多'
+ 89     time.sleep(300)
+ 90 
+ 91 try:
+ 92     fo = open(os.getcwd()+"/%d"%user_id, "wb")
+ 93     fo.write(result)
+ 94     word_path=os.getcwd()+'/%d'%user_id
+ 95     print u'文字微博爬取完毕'
+ 96     link = ""
+ 97     fo2 = open(os.getcwd()+"/%s_image"%user_id, "wb")
+ 98     for eachlink in urllist_set:
+ 99         link = link + eachlink +"\n"
+100     fo2.write(link)
+101     print u'图片链接爬取完毕'
+102 except:
+103     print u'存放数据地址有误'
+104 sys.stdout.flush()
+105 
+106 if not urllist_set:
+107     print u'该用户原创微博中不存在图片'
+108 else:
+109     #下载图片,保存在当前目录的pythonimg文件夹下
+110     image_path=os.getcwd()+'/weibo_image'
+111     if os.path.exists(image_path) is False:
+112         os.mkdir(image_path)
+113     x = 1
+114     for imgurl in urllist_set:
+115         temp= image_path + '/%s.jpg' % x
+116         print u'正在下载第%s张图片' % x
+117         try:
+118         # urllib.urlretrieve(urllib2.urlopen(imgurl).geturl(),temp)
+119             r = requests.get(imgurl, stream=True)
+120             if r.status_code == 200:
+121                 with open(temp, 'wb') as f:
+122                     r.raw.decode_content = True
+123                     shutil.copyfileobj(r.raw, f)
+124         except:
+125             print u"该图片下载失败:%s"%imgurl
+126         x += 1
+127 print u'原创微博爬取完毕，共%d条，保存路径%s'%(word_count - 3,word_path)
+128 print u'微博图片爬取完毕，共%d张，保存路径%s'%(image_count - 1,image_path)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p><strong>analysis.py</strong></p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></span></div>
+<pre> 1 # -*- coding: utf-8 -*-
+ 2 import pandas as pd
+ 3 import re
+ 4 import jieba
+ 5 import jieba.analyse
+ 6 from collections import Counter
+ 7 import sys
+ 8 import time
+ 9 import jieba.posseg as pseg
+10 import keywords_new
+11 reload(sys)
+12 sys.setdefaultencoding('utf-8')
+13 
+14 #sentence = "用知识的浪花去推动思考的风帆，用智慧的火星去点燃思想的火花，用浪漫的激情去创造美好的生活，用科学的力量去强劲腾飞的翅膀！只有使自己自卑的心灵自信起来，弯曲的身躯才能挺直；只有使自己懦弱的体魄健壮起来，束缚的脚步才能迈开；只有使自己狭隘的心胸开阔起来，短视的眼光才能放远；只有使自己愚昧的头脑聪明起来，愚昧的幻想才能抛弃不点燃智慧的火花，聪明的头脑也会变为愚蠢；不践行确立的目标，浪漫的理想也会失去光彩；不珍惜宝贵的时间，人生的岁月也会变得短暂；不总结失败的经验，简单的事情也会让你办砸。宠爱的出发点是爱，落脚点却是恨；嫉妒的出发点是进，落脚点却是退；梦幻的出发点是绚（烂），落脚点却是空；贪婪的出发点是盈，落脚点却是亏。没有激情，爱就不会燃烧；没有友情，朋就不会满座；没有豪情，志就难于实现；没有心情，事就难于完成。我们缺少的不是机遇，而是对机遇的把握；我们缺欠的不是财富，而是创造财富的本领；我们缺乏的不是知识，而是学而不厌的态度；我们缺少的不是理想，而是身体力行的实践。有了成绩要马上忘掉，这样才不会自寻烦恼；有了错误要时刻记住，这样才不会重蹈覆辙；有了机遇要马上抓住，这样才不会失去机会；有了困难要寻找对策，这样才能迎刃而解。你可以不高尚，但不能无耻；你可以不伟大，但不能卑鄙；你可以不聪明，但不能糊涂；你可以不博学，但不能无知；你可以不交友，但不能孤僻；你可以不乐观，但不能厌世；你可以不慷慨，但不能损人；你可以不追求，但不能嫉妒；你可以不进取，但不能倒退。生活需要游戏，但不能游戏人生；生活需要歌舞，但不需醉生梦死；生活需要艺术，但不能投机取巧；生活需要勇气，但不能鲁莽蛮干；生活需要重复，但不能重蹈覆辙。把工作当享受，你就会竭尽全力；把生活当乐趣，你就会满怀信心；把读书当成长，你就会勤奋努力；把奉献当快乐，你就会慷慨助人。"
+15 
+16 f = open("YOUR_USER_ID", "r")
+17 f1 = open("category.txt", "w")
+18 f2 = open("express.txt", "w")
+19 f3 = open("word.txt", "w")
+20 f4 = open("name.txt", "w")
+21 list1 = []
+22 record = {}  # 记录命中信息
+23 express = {}
+24 name_set = {}
+25 while True:
+26     line = f.readline().strip().decode('utf-8')
+27     if line:
+28         item = line.split(' ', 1)[1]
+29         ex_all = re.findall(u"\\[.*?\\]", item)  
+30         if ex_all:
+31             for ex_item in ex_all:
+32                 express[ex_item] = express.get(ex_item, 0) + 1
+33         for kw, keywords in keywords_new.keyword_dict.iteritems():  # kw是大类
+34             flag = 0  # 大类命中的标志
+35             for key, keyword in keywords.iteritems():  # key 是小类
+36                 if flag == 1:
+37                     break
+38                 for word in keyword:  # 小类关键词
+39                     match_flag = 1  # 列表中关键词全部命中的标志
+40                     for small_word in word:  # 关键词列表
+41 #                        print small_word
+42                         match = re.search(re.compile(small_word, re.I), item)
+43                         if not match:
+44                             match_flag = 0
+45                             break
+46                     if match_flag == 1:  #命中了一个小类
+47                         record[kw] = record.get(kw, 0) + 1 # 单次记录
+48                         flag = 1
+49                         break
+50         item = re.sub(u"\\[.*?\\]", '', item)
+51         list = jieba.cut(item, cut_all = False)
+52         for ll in list:
+53             list1.append(ll)  # 分词
+54         seg_list = pseg.cut(item)
+55         for word, flag in seg_list:
+56             if flag == 'nr':
+57                 name_set[word] = name_set.get(word, 0) + 1
+58     else:
+59         break
+60 
+61 count = Counter(list1)
+62 for item in sorted(dict(count).iteritems(), key=lambda d:d[1], reverse = True):
+63     if len(item[0]) &gt;= 2 and item[1] &gt;= 3:   
+64         print &gt;&gt; f3, item[0],item[1] 
+65 
+66 for key, keywords in sorted(record.iteritems(), key=lambda d:d[1], reverse = True):
+67     print &gt;&gt; f1, u'命中了', key, record[key], u'次'
+68 
+69 for key, keywords in sorted(express.iteritems(), key=lambda d:d[1], reverse = True):
+70     print &gt;&gt; f2, u'使用了', key, u'表情', express[key], u'次'
+71 
+72 for key, keywords in sorted(name_set.iteritems(), key=lambda d:d[1], reverse = True):
+73     print &gt;&gt;f4, u'使用了名字', key, name_set[key], u'次'</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><img decoding="async" src="/wp-content/uploads/2016/11/copycode.gif" alt="复制代码"></span></div>
+</div>
+<p> </p>
+<p>当然词语识别和人名识别还是不够准确的，仅供娱乐参考。</p>
+<p>还想把收集到的微博图片识别归类一下，但是太杂乱了不好搞，以后有空可以试试识别下人脸。</p>
+<p>此项目全部代码和结果都在我的github上，欢迎大家Star和Fork，嘿嘿。</p>
+<p>如果您觉得对您有用的话欢迎打赏，嘿嘿。</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/python" rel="tag">Python</a>, <a href="/tag/%E5%BE%AE%E5%8D%9A" rel="tag">微博</a>, <a href="/tag/%E7%88%AC%E8%99%AB" rel="tag">爬虫</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2016/11/06/net-core-1-1-preview-1.html" rel="prev">.NET跨平台之旅：使用 .NET Core 1.1 Preview 1</a><br>【下篇】<a href="/2016/11/06/simple-code-optimization.html" rel="next">无意中看到的几句简单粗暴的代码优化方法</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li><li> · <a href="/2022/08/05/python-static-property.html">python静态变量赋值</a></li><li> · <a href="/2022/07/28/aliyun-dataworks-worldbank-data-api.html">可在阿里云dataworks直接使用的worldbank data api</a></li><li> · <a href="/2022/07/25/fwd-scraper.html">Fwd: 关于爬虫技术法律问题咨询</a></li><li> · <a href="/2021/07/01/python-1.html">python常用（1）</a></li><li> · <a href="/2017/11/16/webspider.html">我的第一个开源框架,webspider</a></li><li> · <a href="/2012/09/19/python%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%90%8D.html">python批量修改文件名</a></li><li> · <a href="/2012/08/21/python-%E6%80%8E%E4%B9%88%E6%B7%BB%E5%8A%A0%E4%B8%AD%E6%96%87%E6%B3%A8%E9%87%8A.html">python 怎么添加中文注释</a></li><li> · <a href="/2012/08/21/python%E5%88%A0%E9%99%A4redis%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE.html">python删除redis所有数据</a></li><li> · <a href="/2012/08/12/python%E4%BD%BF%E7%94%A8redis%E7%A4%BA%E4%BE%8B.html">python使用redis示例</a></li><li> · <a href="/2025/08/13/authentic-roles.html">authentic如何把roles返回给sso客户端</a></li><li> · <a href="/2025/06/06/docker-fastapi.html">Docker 快速部署 FastAPI 项目</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2016年11月06日发表在<a href="/category/python" rel="category tag">Python</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2016/11/06/using-python-analysis-user-weibo.html" rel="bookmark" title="本文固定链接 /2016/11/06/using-python-analysis-user-weibo.html">[转]用python爬取指定用户微博图片及内容，并进行微博分类及使用习惯分析 | Bruce's Blog</a><a href="#" onclick="copy_code('/2016/11/06/using-python-analysis-user-weibo.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2016/11/06/using-python-analysis-user-weibo.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4018" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="7f947f13f5"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="239"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.064 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:55 -->

@@ -1,0 +1,738 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>[转]MySQL 对于千万级的大表要怎么优化? | Bruce's Blog</title> 
+<meta name="description" content="作者：哈哈">
+<meta name="keywords" content="MySQ,千万级,数据库优化">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2016 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td>1</td><td>2</td><td><a href="/2016/12/03" aria-label="2016年12月3日 发布的文章">3</a></td><td>4</td>
+	</tr>
+	<tr>
+		<td>5</td><td>6</td><td>7</td><td>8</td><td><a href="/2016/12/09" aria-label="2016年12月9日 发布的文章">9</a></td><td>10</td><td>11</td>
+	</tr>
+	<tr>
+		<td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td>
+	</tr>
+	<tr>
+		<td>19</td><td>20</td><td>21</td><td>22</td><td><a href="/2016/12/23" aria-label="2016年12月23日 发布的文章">23</a></td><td>24</td><td>25</td>
+	</tr>
+	<tr>
+		<td><a href="/2016/12/26" aria-label="2016年12月26日 发布的文章">26</a></td><td><a href="/2016/12/27" aria-label="2016年12月27日 发布的文章">27</a></td><td><a href="/2016/12/28" aria-label="2016年12月28日 发布的文章">28</a></td><td>29</td><td>30</td><td>31</td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2016/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2017/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#52590d;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#f62657;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#1fd895;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#885ab0;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#1f8dd4;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#9f0373;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#a2e4a2;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#1d633e;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#79449e;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#3c1987;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#9c22a;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#6d06b6;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#f9cefe;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#34c5ca;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#fd1bac;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#b6adff;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#48a7b;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#f3b436;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#26da16;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#e5940a;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#6491dc;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#9b156a;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#6675f8;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#6e7a14;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#e17e92;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#23bb13;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#e2ac47;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#8daecb;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#f0ec5f;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#d64ba;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#b40563;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#e601bd;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#ddf7ee;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#54e895;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#62591d;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#e1902c;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#ecb720;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#60d7cb;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#3a9632;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#4ccfa;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#7e9788;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#953212;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#695aef;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#258c49;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#7023d;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/mysql" rel="category tag">MySQL</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">[转]MySQL 对于千万级的大表要怎么优化?</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2016-12-03 13:40</span>
+			<span class="category">  <a href="/category/mysql" rel="category tag">MySQL</a></span>
+			<span class="article_comment"><a href="/2016/12/03/mysql-%E5%AF%B9%E4%BA%8E%E5%8D%83%E4%B8%87%E7%BA%A7%E7%9A%84%E5%A4%A7%E8%A1%A8%E8%A6%81%E6%80%8E%E4%B9%88%E4%BC%98%E5%8C%96.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>1,371</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>作者：哈哈<br>
+链接：https://www.zhihu.com/question/19719997/answer/81930332<br>
+来源：知乎<br>
+著作权归作者所有，转载请联系作者获得授权。</p>
+<p>很多人第一反应是各种切分；我给的顺序是:<br>
+第一优化你的sql和索引；</p>
+<p>第二加缓存，memcached,redis；</p>
+<p>第三以上都做了后，还是慢，就做主从复制或主主复制，读写分离，可以在应用层做，效率高，也可以用三方工具，第三方工具推荐360的atlas,其它的要么效率不高，要么没人维护；</p>
+<p>第四如果以上都做了还是慢，不要想着去做切分，mysql自带分区表，先试试这个，对你的应用是透明的，无需更改代码,但是sql语句是需要针对分区表做优化的，sql条件中要带上分区条件的列，从而使查询定位到少量的分区上，否则就会扫描全部分区，另外分区表还有一些坑，在这里就不多说了；</p>
+<p>第五如果以上都做了，那就先做垂直拆分，其实就是根据你模块的耦合度，将一个大的系统分为多个小的系统，也就是分布式系统；</p>
+<p>第六才是水平切分，针对数据量大的表，这一步最麻烦，最能考验技术水平，要选择一个合理的sharding key,为了有好的查询效率，表结构也要改动，做一定的冗余，应用也要改，sql中尽量带sharding key，将数据定位到限定的表上去查，而不是扫描全部的表；</p>
+<p>mysql数据库一般都是按照这个步骤去演化的，成本也是由低到高；</p>
+<p>有人也许要说第一步优化sql和索引这还用说吗？的确，大家都知道，但是很多情况下，这一步做的并不到位，甚至有的只做了根据sql去建索引，根本没对sql优化（中枪了没？），除了最简单的增删改查外，想实现一个查询，可以写出很多种查询语句，不同的语句，根据你选择的引擎、表中数据的分布情况、索引情况、<span class="wp_keywordlink_affiliate"><a href="/tag/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96" title="View all posts in 数据库优化" target="_blank">数据库优化</a></span>策略、查询中的锁策略等因素，最终查询的效率相差很大；优化要从整体去考虑，有时你优化一条语句后，其它查询反而效率被降低了，所以要取一个平衡点；即使精通mysql的话，除了纯技术面优化，还要根据业务面去优化sql语句，这样才能达到最优效果；你敢说你的sql和索引已经是最优了吗?</p>
+<p>再说一下不同引擎的优化，myisam读的效果好，写的效率差，这和它数据存储格式，索引的指针和锁的策略有关的，它的数据是顺序存储的（innodb数据存储方式是聚簇索引），他的索引btree上的节点是一个指向数据物理位置的指针，所以查找起来很快，（innodb索引节点存的则是数据的主键，所以需要根据主键二次查找）；myisam锁是表锁，只有读读之间是并发的，写写之间和读写之间（读和插入之间是可以并发的，去设置concurrent_insert参数，定期执行表优化操作，更新操作就没有办法了）是串行的，所以写起来慢，并且默认的写优先级比读优先级高，高到写操作来了后，可以马上插入到读操作前面去，如果批量写，会导致读请求饿死，所以要设置读写优先级或设置多少写操作后执行读操作的策略;myisam不要使用查询时间太长的sql，如果策略使用不当，也会导致写饿死，所以尽量去拆分查询效率低的sql,</p>
+<p>innodb一般都是行锁，这个一般指的是sql用到索引的时候，行锁是加在索引上的，不是加在数据记录上的，如果sql没有用到索引，仍然会锁定表,mysql的读写之间是可以并发的，普通的select是不需要锁的，当查询的记录遇到锁时，用的是一致性的非锁定快照读，也就是根据数据库隔离级别策略，会去读被锁定行的快照，其它更新或加锁读语句用的是当前读，读取原始行；因为普通读与写不冲突，所以innodb不会出现读写饿死的情况，又因为在使用索引的时候用的是行锁，锁的粒度小，竞争相同锁的情况就少，就增加了并发处理，所以并发读写的效率还是很优秀的，问题在于索引查询后的根据主键的二次查找导致效率低；</p>
+<p>ps:很奇怪，为什innodb的索引叶子节点存的是主键而不是像mysism一样存数据的物理地址指针吗？如果存的是物理地址指针不就不需要二次查找了吗，这也是我开始的疑惑，根据mysism和innodb数据存储方式的差异去想，你就会明白了，我就不费口舌了！</p>
+<p>所以innodb为了避免二次查找可以使用索引覆盖技术，无法使用索引覆盖的，再延伸一下就是基于索引覆盖实现延迟关联；不知道什么是索引覆盖的，建议你无论如何都要弄清楚它是怎么回事！</p>
+<p>尽你所能去优化你的sql吧！说它成本低，却又是一项费时费力的活，需要在技术与业务都熟悉的情况下，用心去优化才能做到最优，优化后的效果也是立竿见影的！<br>
+编辑于 2016-01-19 46 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>回答一</h2>
+<p>提问：如何设计或优化<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%8D%83%E4%B8%87%E7%BA%A7" title="View all posts in 千万级" target="_blank">千万级</a></span>别的大表？此外无其他信息，个人觉得这个话题有点范，就只好简单说下该如何做，对于一个存储设计，必须考虑业务特点，收集的信息如下：<br>
+1.数据的容量：1-3年内会大概多少条数据，每条数据大概多少字节；</p>
+<p>2.数据项：是否有大字段，那些字段的值是否经常被更新；<br>
+3.数据查询SQL条件：哪些数据项的列名称经常出现在WHERE、GROUP BY、ORDER BY子句中等；<br>
+4.数据更新类SQL条件：有多少列经常出现UPDATE或DELETE 的WHERE子句中；<br>
+5.SQL量的统计比，如：SELECT：UPDATE+DELETE：INSERT=多少？</p>
+<p>6.预计大表及相关联的SQL，每天总的执行量在何数量级？<br>
+7.表中的数据：更新为主的业务 还是 查询为主的业务<br>
+8.打算采用什么数据库物理服务器，以及数据库服务器架构？<br>
+9.并发如何？<br>
+10.存储引擎选择InnoDB还是MyISAM？</p>
+<p>大致明白以上10个问题，至于如何设计此类的大表，应该什么都清楚了！</p>
+<p>至于优化若是指创建好的表，不能变动表结构的话，那建议InnoDB引擎，多利用点内存，减轻磁盘IO负载，因为IO往往是数据库服务器的瓶颈</p>
+<p>另外对优化索引结构去解决性能问题的话，建议优先考虑修改类SQL语句，使他们更快些，不得已只靠索引组织结构的方式，当然此话前提是，<br>
+索引已经创建的非常好，若是读为主，可以考虑打开query_cache，</p>
+<p>以及调整一些参数值：sort_buffer_size,read_buffer_size,read_rnd_buffer_size,join_buffer_size</p>
+<h2>
+松哥</h2>
+<p>27<br>
+赞同反对，不会显示你的姓名<br>
+Gary Chen 从事数据库领域10多年。<br>
+27 人赞同<br>
+说3点<br>
+1. 设计合适的索引,基于主键的查找,上亿数据也是很快的;<br>
+2. 反范式化设计,以空间换时间,避免join,有些join操作可以在用代码实现,没必要用数据库来实现;<br>
+3. buffer,尽量让内存大于数据.<br>
+编辑于 2012-02-01 5 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>
+沈涛</h2>
+<p>喜欢在夜深人静的时候听着久石让的音乐写…<br>
+1 人赞同<br>
+水平拆分+读写分离<br>
+发布于 2011-08-02 添加评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>
+陈满砚</h2>
+<p>程序员里吉他弹得最好的, 吉他手里程序写…<br>
+39 人赞同<br>
+不纸上谈兵，说一下我的思路以及我的解决，抛砖引玉了<br>
+我最近正在解决这个问题<br>
+我现在的公司有三张表，是5亿的数据，每天张表每天的增量是100w<br>
+每张表大概在10个columns左右<br>
+下面是我做的测试和对比<br>
+1.首先看engine,在大数据量情况下，在没有做分区的情况下<br>
+mysiam比innodb在只读的情况下，效率要高13％左右<br>
+2.在做了partition之后，你可以去读一下mysql的官方文档，其实对于partition，专门是对myisam做的优化，对于innodb，所有的数据是存在ibdata里面的，所以即使你可以看到schema变了，其实没有本质的变化<br>
+在分区出于同一个physical disk下面的情况下，提升大概只有1％<br>
+在分区在不同的physical disk下，我分到了三个不同的disks下，提升大概在3％，其实所谓的吞吐量，由很多因素决定的，比如你的explain parition时候可以看到，record在那一个分区，如果每个分区都有，其实本质上没有解决读的问题，这样只会提升写的效率。<br>
+另外一个问题在于，分区，你怎么分，如果一张表，有三个column都是经常被用于做查询条件的，其实是一件很悲惨的事情，因为你没有办法对所有的sql做针对性的分区，如果你只是如mysql官方文档上说的，只对时间做一个分区，而且你也只用时间查询的话，恭喜你<br>
+3.表主要用来读还是写，其实这个问题是不充分的，应该这样问，你在写入的时候，同时并发的查询多么？我的问题还比较简单，因为mongodb的shredding支持不能，在crush之后，还是回到mysql，所以在通常情况下，9am－9pm，写入的情况很多，这个时候我会做一个view，view是基于最近被插入或者经常被查询的，通过做view来分离读取，就是说写是在table上的，读在进行逻辑判断前是在view上操作的<br>
+4做一些archive table，比如先对这些大表做很多已有的统计分析，然后通过已有的分析＋增量来解决<br>
+5如果你用mysiam，还有一个问题你要注意，如果你的.configure的时候，加了一个max index length参数的时候，当你的record数大于制定长度的时候，这个index会被disable<br>
+6<br>
+7<br>
+8<br>
+太多了，洗澡去先－ －<br>
+当然，我还是纸上谈兵了，lz把上下文给足，我可以帮你看一下<br>
+发布于 2011-12-19 13 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>
+manatee</h2>
+<p>都千万数据了，居然没有具体细节，提问者肯定是新手。<br>
+发布于 2014-08-29 2 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>
+樱木花 DBA，</h2>
+<p>1. 千万只是小case而已，千万对程序员来说好大啊， 人家一天几千万的，那DBA不是不要活了？<br>
+现在5T,10T 的单个数据库都很多。程序猿能兼职干了吗？？<br>
+2. 你需要一个专业的DBA，专业的人干专业的事，DBA手里有自己的武器</p>
+<p>3.程序员来操DBA的心，不是傻，就是楞，在不就是逗比。<br>
+我想强调的是“专业性”，数据库架构、管理、优化，在IT的始祖，美国是一个专门的行业和要求很严格的岗位，在我们这里是什么情况，一个编代码能力还不到3-5年的初中级程序猿总要试图，找到解决海量数据问题的捷径，还总一种企图找到“魔术师式的秘诀” 的心态，很显然，并不存在，一个合格的DBA，是经历各种问题处理、碰壁、深思的成长过程，经历早已覆盖了这些初中级程序猿能碰到的你们认为比较难的问题，对他们来说，这些都是很基本的问题， IT本身并没有捷径。 数据库的运行本质和一切程序代码都是一个原理，DBA不过对于数据库运行的各个环节更加清晰，更有量化，碰到问题的广度和深度都比写代码的程序猿多一些。相反要DBA去调试java代码可能同样吃力、难受，还做不出效果。<br>
+编辑于 2016-11-16 4 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>
+后端攻城狮</h2>
+<p>@哈哈 答主答得非常好了，但是不太赞同答主给出的顺序。<br>
+一个合格的技术人，应该能做出适用于未来的产品。引入分布式会带来很多麻烦，但它会让你走得更远。这不正是技术人的价值所在吗？<br>
+看到有人回复说有钱就上Oracle了。Facebook，阿里没钱吗？钱不是最重要的考虑。再说他们的技术实力没有甲骨文强吗？万万不要迷信IOE。<br>
+首先，任何优化，都需要你了解你的业务，了解你的数据。<br>
+QPS要到多少？- 带宽及存储够的情况下，单机几千QPS妥妥的。<br>
+读写比例如何？- 读多写少和写多读少，优化方法是有很大差别的。设置于只读场景，果断压缩。<br>
+数据是否快速增长？- 基本就是QPS的要求。<br>
+数据及服务的SLA要到多少？- 数据需不需要强一致？HA做到什么程度？<br>
+诸如此类。<br>
+不同的场景有不同的侧重，解决方案是不同的。而对于一些典型的场景可能会有成熟的解决方案。<br>
+题主已注明“<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%8D%83%E4%B8%87%E7%BA%A7" title="View all posts in 千万级" target="_blank">千万级</a></span>”，因此以下假设题主为最常见的场景：大量数据，QPS要求高，读多写少，数据快速增长，SLA要求高。<br>
+其次，说优化的方法。<br>
+主要从三个维度说：Why, How, When。<br>
+0. sql vs nosql<br>
+有些跑题，但也是很重要的一方面。<br>
+Why: nosql天生分布，而且大多针对某种类型的数据、某种使用场景做过优化。<br>
+比如大批量的监控数据，用mysql存费时费力，可以选择mongo，甚至时间序列数据库，存取会有量级提升。<br>
+How: 找对应解决方案。<br>
+When: 有足够诱惑 - 针对使用场景，有成熟解决方案，效率获得大量提升。<br>
+1. 优化shema、sql语句+索引<br>
+Why: 再好的<span class="wp_keywordlink_affiliate"><a href="/tag/mysq" title="View all posts in MySQ" target="_blank">MySQ</a></span>L架构也扛不住一个频繁的垃圾查询。不合理的schema设计也会导致数据存取慢。索引的作用不必多说，但如innodb下，错的索引带来的可能不只是查询变慢而已。<br>
+How: 设计阶段就需要预计QPS及数据规模，参考业务场景对数据的要求，合理设计表结构（参考mysql在线DDL问题），甚至违反设计范式做到适当冗余。生产环境分析慢日志，优化语句。索引的设计需要知道索引是怎么用的，比如innodb的加锁机制。<br>
+When: 这个不仅仅是第一个要考虑的，而应该是需要持续去优化的。特别是要参考业务。但实际环境中如果是这个的问题，那一般比较幸运了，因为一般已经优化过很多了。实际中遇到的一般是更深的问题。<br>
+2. 缓存<br>
+缓存没有那么简单。<br>
+缓存对于应用不是完全透明的，除非你用Django这种成熟框架，而且缓存粒度很大，但实际。。。像python，最少也得加几个装饰器。<br>
+如何保证缓存里面的数据是始终正确的？写数据前失效缓存还是写数据后？<br>
+缓存挂了或者过冷，流量压到后端mysql了怎么办？<br>
+缓存也不是万能的。写多读少，命中率会很低。<br>
+How: memcache用做缓存，redis用于需要持久化的场景。（redis能不能完全取代memcache？呵呵。。）<br>
+还可以使用mysql自带的query cache，对应用基本完全透明。但会受限于本机。而且只缓存查询结果，mc和redis可以缓存一些加工后的数据。<br>
+而且数据量大、QPS大的情况下，也需要考虑分片及HA的问题。如果有一个数据过热，把一个节点压垮了怎么办？<br>
+When: 基本上大多数读多写少的场景都能用，写多的情况下可能需要考虑考虑。<br>
+3. 复制及读写分离<br>
+Why: 这个其实是大多数场景下都必须的。因为复制可以实现备份、高可用、负载均衡。就算嫌麻烦不做负载均衡，那备份下总是要的吧？既然已经备份了，何不加个LVS+HAProxy做下HA？顺便稍微修改下应用，读写分离也就成了。<br>
+How: 节点少的情况下，主备。前面加Keepalived+HAProxy等组件，失效自动切换。读写分离可能需要修改下应用。<br>
+节点多的情况下，一是考虑多级备份，减轻主的压力。其次可以引入第三方组件，接管主节点的备份工作。<br>
+主主不是很推荐。一是需要考虑数据冲突的情况，比如错开id，同时操作数据后冲突解决。其次如果强一致会导致延迟增加，如果有节点挂了，需要等到超时才返回。<br>
+When: 主备几乎大多数场景。甚至不论数据大小。高可用对应用透明，为啥不用?主主麻烦，建议先用切分。<br>
+4. 切分<br>
+包括垂直切分和水平切分，实现方式上又包括分库、分表。<br>
+虽然有些难度，但还是推荐常用的。<br>
+Why: 垂直切分保证业务的独立性，防止不同业务争抢资源，毕竟业务是有优先级的。<br>
+水平切分主要用于突破单机瓶颈。除了主主外，只有切分能真正做到将负载分配下去。<br>
+切分后也可对不同片数据进行不同优化。如按时间切分，超过一定时间数据不允许修改，就可以引入压缩了，数据传输及读取减少很多。<br>
+How: 根据业务垂直切分。业务内部分库、分表。一般都需要修改应用。除分表外，其余实现不是很复杂。有第三方组件可用，但通用高效又灵活的方式，还是自己写client。<br>
+When: 垂直切分一般都要做，只不过业务粒度大小而已。<br>
+分库有是经常用的，就算当前压力小，也尽量分出几个逻辑库出来。等规模上去了，很方便就迁移扩展。<br>
+水平拆分有一定难度，但如果将来一定会到这个规模，又可能用到，建议越早做越好。因为对应用的改动较大，而且迁移成本高。</p>
+<p>综上，数据库设计要面向现代化，面向世界，面向未来。。。<br>
+编辑于 2016-04-06 2 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>1<br>
+知乎用户 程序员</h2>
+<p>如果数据很冷或者都是简单主键查询，不优化也罢。<br>
+发布于 2014-08-09 2 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>
+babyyellow</h2>
+<p>单表 7亿笔记录, 80G 大小, 无分区, 每秒可以支持400次增删查改.<br>
+还有一个 2.8亿记录, 大约40Gb 同一个库 的两个大表.</p>
+<p>出现问题了,多半是你设计出问题了, 跟数据库关系不大.<br>
+编辑于 2015-08-31 6 条评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<h2>
+朱明豪 mysql/oracel DBA。</h2>
+<p>mysql只做简单的事情，<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%8D%83%E4%B8%87%E7%BA%A7" title="View all posts in 千万级" target="_blank">千万级</a></span>的表，不论如何优化，同样的SQL都没有十万级的表访问快。<br>
+如果设计千万级的大表，要问自己几个问题：<br>
+1.数据是否存在明显的冷热（考虑旧数据归档）<br>
+2.是否可以按照时间，区域拆分表<br>
+3.如果字段过多是否可以字段的关联性进行拆分<br>
+说白了就是：归档，垂直拆分，水平拆分<br>
+周松，http://ChinaDBA.com<br>
+先读写分离、再垂直拆分、再水平拆分！<br>
+发布于 2014-11-25 添加评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利<br>
+推荐一本书，《<span class="wp_keywordlink_affiliate"><a href="/tag/mysq" title="View all posts in MySQ" target="_blank">MySQ</a></span>L高性能优化》</p>
+<h2>
+谭景峰 always beta</h2>
+<p>提到优化，先要确定出现的问题，是存储引擎选择问题，还是sql语句使用问题（如：索引）亦或者是单一存储服务器对于千万级别的数据力不从心。<br>
+解决方法：<br>
+1、根据不同业务选用不同存储引擎，虽然一般情况下都优先选择InnoDB。<br>
+2、分析sql语句的影响结果集。查慢查询日志，定位慢查询的sql语句，查看是否有锁定的sql操作。<br>
+3、分库，分表，分区（慎用分区，往往OLTP操作不适用分区，分区反倒会拖慢原有查询）<br>
+4、利用缓存或NoSql代替现有一些热点查询操作，减轻Mysql压力。<br>
+分库：<br>
+可以基于业务逻辑拆分，不同业务分布在不同服务器中，减少单一服务器压力<br>
+分表：<br>
+垂直分表和水平分表两种方式<br>
+垂直分表：将表中的一些频繁更新和非频繁更新的字段分开存放<br>
+水平分表，三种分表方式：<br>
+均等分表，哈希方式分表，优点是负载平均分布，缺点是当容量持续增加时扩荣不方便，需要重新分表，主键就很不好处理。<br>
+递增分表，比如每一千万数据开一个新表，优点是自适应强，缺点是数据负载不均衡，需要代码层额外处理。<br>
+时间分表，根据不同的创建时间分表，适用于OLAP应用。<br>
+发布于 2015-11-22 添加评论 感谢 分享 收藏 • 没有帮助 • 举报 • 禁止转载</p>
+<p>3<br>
+赞同反对，不会显示你的姓名<br>
+华天清 网络爬虫 http://www.GooSeeker.com 创始人，…<br>
+3 人赞同<br>
+没看错吧，千万级也叫大表？这个规模的，只要没把索引用错，几乎不用考虑优化。</p>
+<p>具体遇到什么问题了？可以列出来，大家一起诊断一下。</p>
+<p>关系数据库本来是一套严密的理论，现在越来越少的人愿意去花时间捉摸集合运算，很多时候是没有用对集合运算导致性能急剧下降。这其实不属于优化范围<br>
+编辑于 2016-06-05 添加评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<p>2<br>
+赞同反对，不会显示你的姓名<br>
+简朝阳 Oracle ACE Director, Data Architect<br>
+2 人赞同<br>
+优化本身需要有一个非常明确具体的目标，以及应用类型环境。</p>
+<p>如果非要抛开这两个因素，也有看上去可以解决一切问题但不具备实际操作范例的答案，那就是：<br>
+1. 优化SQL<br>
+2. 优化结构<br>
+3. 优化存储<br>
+编辑于 2016-05-04 添加评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<p>1<br>
+赞同反对，不会显示你的姓名<br>
+drdr xp 要了几天饱饭就不记得西北风啥味了<br>
+1 人赞同<br>
+千万也算大表ರ_ರ<br>
+发布于 2016-01-18 添加评论 感谢 分享 收藏 • 没有帮助 • 举报 • 作者保留权利</p>
+<p>1<br>
+赞同反对，不会显示你的姓名<br>
+苏钰文 转点<br>
+1 人赞同<br>
+千万级不算大，优化一下，可以在几十到几百毫秒几查询。<br>
+30多条mysql<span class="wp_keywordlink_affiliate"><a href="/tag/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96" title="View all posts in 数据库优化" target="_blank">数据库优化</a></span>方法,千万级数据库记录查询轻松解决</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/mysq" rel="tag">MySQ</a>, <a href="/tag/%E5%8D%83%E4%B8%87%E7%BA%A7" rel="tag">千万级</a>, <a href="/tag/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96" rel="tag">数据库优化</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2016/12/03/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B8%89.html" rel="prev">大数据量数据库性能优化(三)</a><br>【下篇】<a href="/2016/12/09/sql%E5%8E%BB%E6%8E%89%E5%9B%9E%E8%BD%A6%E7%AD%89asccii%E5%AD%97%E7%AC%A6.html" rel="next">sql去掉回车等ASCCII字符</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2011/12/24/%E6%8F%90%E9%AB%98sql%E6%9F%A5%E8%AF%A2%E6%95%88%E7%8E%87-%E7%9A%8410%E5%A4%A7%E6%96%B9%E6%B3%95.html">提高SQL查询效率 的10大方法</a></li><li> · <a href="/2025/09/10/springboot-duckdb.html">springboot集成duckdb</a></li><li> · <a href="/2025/08/20/mysql-aes.html">MYSQL AES解密</a></li><li> · <a href="/2024/10/29/mysql-create-user.html">mysql创建用户并赋予权限</a></li><li> · <a href="/2024/08/15/docker-backup-mysql-crontab-script.html">docker定时任务Mysql脚本</a></li><li> · <a href="/2024/07/04/docker-mysql8.html">docker安装mysql8注意事项</a></li><li> · <a href="/2023/07/04/backup-docker-mysql.html">定时备份docker中的mysql</a></li><li> · <a href="/2022/11/23/docker-compose-mysql.html">docker-compose通过容器名连接mysql</a></li><li> · <a href="/2022/11/03/unity3d-mysql-error-the-given-key-was-not-present-in-the-dictionary.html">unity3d mysql error: The given key was not present in the dictionary.</a></li><li> · <a href="/2022/07/28/mysql-my-cnf.html">mysql服务性能优化—my.cnf配置说明详解（不同内存)</a></li><li> · <a href="/2022/07/19/mysql-charset.html">MySQL 批量修改数据表编码及字符集</a></li><li> · <a href="/2022/06/02/your-database-must-use-read-committed-as-the-default-isolation-level.html">Your database must use ‘READ-COMMITTED’ as the default isolation level.</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2016年12月03日发表在<a href="/category/mysql" rel="category tag">MySQL</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2016/12/03/mysql-%E5%AF%B9%E4%BA%8E%E5%8D%83%E4%B8%87%E7%BA%A7%E7%9A%84%E5%A4%A7%E8%A1%A8%E8%A6%81%E6%80%8E%E4%B9%88%E4%BC%98%E5%8C%96.html" rel="bookmark" title="本文固定链接 /2016/12/03/mysql-%e5%af%b9%e4%ba%8e%e5%8d%83%e4%b8%87%e7%ba%a7%e7%9a%84%e5%a4%a7%e8%a1%a8%e8%a6%81%e6%80%8e%e4%b9%88%e4%bc%98%e5%8c%96.html">[转]MySQL 对于千万级的大表要怎么优化? | Bruce's Blog</a><a href="#" onclick="copy_code('/2016/12/03/mysql-%e5%af%b9%e4%ba%8e%e5%8d%83%e4%b8%87%e7%ba%a7%e7%9a%84%e5%a4%a7%e8%a1%a8%e8%a6%81%e6%80%8e%e4%b9%88%e4%bc%98%e5%8c%96.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2016/12/03/mysql-%E5%AF%B9%E4%BA%8E%E5%8D%83%E4%B8%87%E7%BA%A7%E7%9A%84%E5%A4%A7%E8%A1%A8%E8%A6%81%E6%80%8E%E4%B9%88%E4%BC%98%E5%8C%96.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4097" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="2f83acff04"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="163"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.064 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:52 -->

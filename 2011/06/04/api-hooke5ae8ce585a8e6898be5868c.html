@@ -1,0 +1,545 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>API Hook完全手册 | Bruce's Blog</title> 
+<meta name="description" content="文章来源: http://blog.csdn.net/atfield 原文作者: ATField 整理日期: 2008-07-16 注：本文是根据我两年前写的一个系统行为监测程序写成（参考了一些书籍和文章）。最近在论坛上看到有不少人在问关于API Hook的问题，便写成此文，希望能对朋友们在写API Hook代码的时候能够有所帮助。1 基本原理API Hook是什么我就不多说了，直接进入正题。API Hoo">
+<meta name="keywords" content="api hook">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 6 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="2" class="pad"> </td><td>1</td><td>2</td><td>3</td><td><a href="/2011/06/04" aria-label="2011年6月4日 发布的文章">4</a></td><td><a href="/2011/06/05" aria-label="2011年6月5日 发布的文章">5</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/06/06" aria-label="2011年6月6日 发布的文章">6</a></td><td><a href="/2011/06/07" aria-label="2011年6月7日 发布的文章">7</a></td><td><a href="/2011/06/08" aria-label="2011年6月8日 发布的文章">8</a></td><td>9</td><td>10</td><td>11</td><td>12</td>
+	</tr>
+	<tr>
+		<td>13</td><td>14</td><td>15</td><td>16</td><td><a href="/2011/06/17" aria-label="2011年6月17日 发布的文章">17</a></td><td>18</td><td>19</td>
+	</tr>
+	<tr>
+		<td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td><a href="/2011/06/25" aria-label="2011年6月25日 发布的文章">25</a></td><td>26</td>
+	</tr>
+	<tr>
+		<td><a href="/2011/06/27" aria-label="2011年6月27日 发布的文章">27</a></td><td>28</td><td>29</td><td>30</td>
+		<td class="pad" colspan="3"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2008/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2011/08">8 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#727b0f;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#49779c;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#d923a0;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#4cfa2;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#8bc707;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#df9283;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#7353ea;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#a2a163;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#6325f3;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#3e7e67;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#f67733;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#50cd04;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#851569;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#ce5bc4;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#e8512b;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#d7a73d;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#aa6b26;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#f73bcf;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#493b4b;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#6c0fce;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#eabbb0;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#cc195;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#2d1df1;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#33bfd8;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#d4c70e;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#4ab2ee;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#c0f1ab;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#9db06c;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#4b2642;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#6b37ce;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#2bc1a;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#65f0c2;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#a3904f;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#99a6d8;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#1cc172;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#38956;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#e4775d;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#11bb40;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#ca2ac0;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#8d8cdc;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#672e92;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#8ea461;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#30f1b5;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#4c996d;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#5851ac;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/cc" rel="category tag">C/C++</a>, <a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">API Hook完全手册</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-06-04 14:50</span>
+			<span class="category">  <a href="/category/cc" rel="category tag">C/C++</a>, <a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a></span>
+			<span class="article_comment"><a href="/2011/06/04/api-hook%E5%AE%8C%E5%85%A8%E6%89%8B%E5%86%8C.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,431</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>文章来源: http://blog.csdn.net/atfield 原文作者: ATField 整理日期: 2008-07-16 注：本文是根据我两年前写的一个系统行为监测程序写成（参考了一些书籍和文章）。最近在论坛上看到有不少人在问关于API Hook的问题，便写成此文，希望能对朋友们在写API Hook代码的时候能够有所帮助。1 基本原理API Hook是什么我就不多说了，直接进入正题。API Hook技术主要有下面的技术难点：<br>1.     如何将自己的的代码Inject到其他进程<br>2.     如何Hook到API<br>1.1 代码的Injection常用的方法有：<br>1.     使用注册表HKLMSoftwareMicrosoftWindows NTCurrentVersionWindowsAppInit_DLLs<br> <br>这种方法可以指定多个DLL，用空格隔开。这些DLL会被任何用到User32.dll的所有程序自动加载。当User32.dll加载的时候，User32.dll的DllMain会收到一个DLL_PROCESS_ATTACH通知，User32在这个时候读取注册表项中的值，调用LoadLibrary加载各个DLL。<br>显然使用这种方法要求设置注册表之后立刻重起系统，不过一般情况下这不是大问题。这种方法的主要问题在于，只有用到User32.dll的应用程序才会被Inject。所有的GUI和少部分CUI程序会用到User32.dll，所以如果你的API Hook程序不打算监视CUI程序的话，那么可能问题并不太大。但是如果你的API Hook程序需要监视系统中所有进程的话，这种方法的限制将是非常致命的。<br> <br>2.     调用SetWindowsHookEx(WH_GETMESSAGE, …, 0)<br> <br>可以使用SetWindowsHookEx(WH_GETMESSAGE, …, 0) 设置全局的消息钩子，虽然可能你的程序并不用到消息钩子，但是钩子的一个副作用是会将对应的DLL加载到所有的GUI线程之中。类似的，只有用到GUI的进程才会被挂接。虽然有这种限制，这种方法仍然是最常用的挂接进程的方法。<br> <br>3.     使用CreateRemoteThread函数在目标进程中创建远程线程<br> <br>这种方法可以在任意的目标进程中创建一个远程线程，远程线程中可以执行任意代码，这样便可以做到把我们的代码Inject到目标进程中。这种方法具有最大的灵活性，但是难度也最高：<br>a) 远程线程代码必须可以自重定位<br>b) 要能够监视进程的启动和结束，这样才可以挂接到所有进程<br>这两个问题都是可以解决的，在本文中我将重点讲述如何创建远程线程和解决这两个问题。<br> <br>4.     如果你只是要挂接某个特定进程的并且情况允许你自己来创建此进程，你可以调用CreateProcess(…, CREATE_SUSPENDED)创建子进程并暂停运行，然后修改入口代码使之调用LoadLibrary加载自己的DLL。该方法在不同CPU之间显然是无法移植的。<br>1.2 Hook API常用的方法有：<br>1.     找到API函数在内存中的地址，改写函数头几个字节为JMP指令跳转到自己的代码，执行完毕再执行API开头几个字节的内容再跳回原地址。这种方法对CPU有较大的依赖性，而且在多线程环境下可能出问题，当改写函数代码的时候有可能此函数正在被执行，这样做可能导致程序出错。<br>2.     修改PE文件的IAT (Import Address Table)，使之指向自己的代码，这样EXE/DLL在调用系统API的时候便会调用你自己的函数<br> <br>2 PE文件结构和输入函数Windows9x、Windows NT、Windows 2000/XP/2003等操作系统中所使用的可执行文件格式是纯32位PE（Portable Executable）文件格式，大致如下：<br> </p>
+<p> </p>
+<p>文件中数据被分为不同的节（Section）。代码(.code)、初始化的数据（.idata），未初化的数据（.bss）等被按照属性被分类放到不同的节中，每个节的属性和位置等信息用一个IMAGE_SECTION_HEADER结构来描述。所有的这些IMAGE_SECTION_HEADER结构组成一个节表（Section Table），这个表被放在所有节数据的前面。由于数据按照属性被放在不同的节中，那么不同用途但是属性相同的数据可能被放在同一个节中，因此PE文件中还使用IMAGE_DATA_DIRECTORY数据目录结构来指明这些数据的位置。数据目录和其他描述文件属性的数据和在一起称为PE文件头。PE文件头被放在节和节表的前面。PE文件中的数据位置使用RVA（Relative Virtual Address）来表示。RVA指的是相对虚拟地址，也就是一个偏移量。当PE文件被装入内存中的时候，Windows把PE文件装入到某个特定的位置，称为映像基址（Image Base）。而某个RVA值表示某个数据在内存中相对于映像基址的偏移量。<br>输入表（Import Table）是来放置输入函数（Imported functions）的一个表。输入函数就是被程序调用的位于外部DLL的函数，这些函数称为输入函数。它们的代码位于DLL之中，程序通过引用其DLL来访问这些函数。输入表中放置的是这些函数的名称（或者序号）以及函数所在的DLL路径等有关信息。程序通过这些信息找到相应的DLL，从而调用这些外部函数。这个过程是在运行过程中发生的，因此属于动态链接。由于操作系统的API也是在DLL之中实现的，因此应用程序调用API也要通过动态连接。在程序的代码中，当需要调用API的时候，就执行类似下面语句：<br> <br>0040100E      CALL          0040101A </p>
+<p>可以看到这是一个call语句。Call语句则调用下面的语句：<br> <br>0040101A      JMP           DWORD PTR [00402000] </p>
+<p>上面的代码称为桩代码（Stub code），jmp语句中的目标地址[00402000]才是API函数的地址。这段Stub code位于.lib输入库中。如果加以优化，那么调用代码是下面这样：<br> <br>XXXXXXXX      CALL          DWORD PTR [XXXXXXXX] </p>
+<p>其中[XXXXXXXX]指向IAT（Import Address Table）即输入地址表中的表项。表项中指定了API的目标地址。这是经过编译器优化过的调用方法，通常速度要比原来的CALL+JMP快一些。<br>3 挂接API从上面的PE文件结构可知，当我们知道了IAT中的地址所在位置，便可以把原来的API 的地址修改为新的API的地址。这样，进程在调用API的时候就会调用我们所提供的新的API的地址。修改输入表可以通过调用ImageDirectoryEntryToData API函数得到内存中模块的输入表的地址：<br>    ULONG ulSize;<br>    PIMAGE_IMPORT_DESCRIPTOR pid = (PIMAGE_IMPORT_DESCRIPTOR) <br>        ImageDirectoryEntryToData(<br>        hModule, <br>        TRUE,<br>        IMAGE_DIRECTORY_ENTRY_IMPORT, <br>        &amp;ulSize ); </p>
+<p>这个函数返回一个IMAGE_IMPORT_DESCRIPTOR的指针，指向输入描述符数据。然后，遍历该描述符表通过比较DLL名称查找到相应的DLL所对应的IMAGE_IMPORT_DESCRIPTOR：<br>    // if this image has no import section, just simply return and do nothing<br>    if( pid == NULL )<br>        return;<br> <br>    // find the corresponding item<br>    while( pid-&gt;Name )<br>    {<br>        // pid-&gt;Name contains the RVA addr of the module name string <br>        PSTR pszModName = (PSTR) ( (PBYTE)hModule + pid-&gt;Name );<br>        if( lstrcmpiA( pszModuleName, pszModName ) == 0 )<br>        {<br>            // found<br>            break;    <br>        }<br> <br>        pid++;<br>    }<br> <br>    if( pid-&gt;Name == 0 )<br>    {<br>        // not found, just return<br>        return;<br>    } </p>
+<p>找到相应的DLL之后，遍历其IAT表，根据地址pfnCurrentFuncAddr找到相应的表项，修改之<br>    // get caller's import address table(IAT) for the callee's functions<br>    PIMAGE_THUNK_DATA pThunk = (PIMAGE_THUNK_DATA) ( (PBYTE)hModule + pid-&gt;FirstThunk );<br> <br>    while( pThunk-&gt;u1.Function )<br>    {<br>        PROC *ppfnEntry = (PROC*) &amp;(pThunk-&gt;u1.Function);<br> <br>        if( *ppfnEntry == pfnCurrentFuncAddr )<br>        {<br>            // …<br>            // Modify IAT<br>            // …<br>        }<br> <br>        pThunk++;<br>    } </p>
+<p>修改的时候，需要改变该块内存的保护为可读写，需要通过VirtualQuery获得内存的信息，然后通过VirtualProtectEx修改为可读写。之后可以通过WriteProcessMemory修改内存，修改完毕之后还要通过VirtualProtectEx再改回来。<br>            SIZE_T sBytesWritten;<br>            BOOL bProtectResult = FALSE;<br>            DWORD dwOldProtect = 0;<br>                <br>            MEMORY_BASIC_INFORMATION memInfo;<br>            <br>            if( ::VirtualQuery( ppfnEntry, &amp;memInfo, sizeof( memInfo ) ) &gt; 0 )<br>            {<br>                <br>                // change the pages to read/write<br>                bProtectResult = <br>                    ::VirtualProtect( <br>                        memInfo.BaseAddress, <br>                        memInfo.RegionSize, <br>                        PAGE_READWRITE, <br>                        &amp;dwOldProtect );<br>            <br> <br>                // then write it<br>                ::WriteProcessMemory( ::GetCurrentProcess(),<br>                    ppfnEntry, &amp;pfnReplacementFuncAddr, sizeof( PROC * ), &amp;sBytesWritten <br>                    );<br>                <br>                // restore the page to its old protect status<br>                bProtectResult = <br>                    ::VirtualProtect( <br>                        memInfo.BaseAddress, <br>                        memInfo.RegionSize, <br>                        PAGE_READONLY, <br>                        &amp;dwOldProtect );<br>            } </p>
+<p> <br>3 远程线程远程线程是Win2000以上才支持的技术。简单来讲，CreateRemoteThread函数会在其他进程中创建一个线程，执行指定的代码。因为这个线程并非在调用进程之中，而是在其他进程，因此称之为远程线程(Remote Thread)。CreateRemoteThread的原型如下：<br>HANDLE WINAPI CreateRemoteThread(<br>  HANDLE hProcess,<br>  LPSECURITY_ATTRIBUTES lpThreadAttributes,<br>  SIZE_T dwStackSize,<br>  LPTHREAD_START_ROUTINE lpStartAddress,<br>  LPVOID lpParameter,<br>  DWORD dwCreationFlags,<br>  LPDWORD lpThreadId<br>); </p>
+<p>虽然概念上非常简单，但是使用CreateRemoteThread还会有一些问题：<br>1．  lpStartAddress必须是其他进程的地址，但是我们又如何把代码放到另外一个进程中呢？幸运的是，有两个函数可以做到这一点：VirtualAllocEx和WriteProcessMemory，前者可以在指定进程中分配一块内存，WriteProcessMemory可以修改指定进程的代码。因此，先调用VirtualAllocEx在指定进程中分配内存，再调用WriteProcessMemory将代码写入到分配好的内存中，再调用CreateRemoteThread创建远程线程执行在事先准备好的代码。<br>2．  此外，这些代码必须得是自重定位的代码。在解释自重定位之前，先解释一下什么是重定位。在程序访问数据的时候，必须得访问某个绝对地址，如：<br>MOV EAX, DWORD PTR [00400120H] </p>
+<p>[00400120] 便是一个绝对地址。但是，由于程序实际上可以任意地址加载（这句话其实是不准确的，后面会解释），因此这个地址不可能是固定的，而是会在加载的时候改变的。假如程序在0x00400000地址加载，访问地址是0x00400120，那么如果程序在0x00800000加载的话，那么地址应该会变成0x00800120，否则便会访问到错误的地址。因此，有必要在程序加载的时候修正这些地址，这个工作是由Windows的PE Loader，也就是程序的加载器负责的。当编译连接的时候，在EXE/DLL中会保存那些地方的数据需要重定位，并把这些位置的RVA和数据本身的RVA保存在.reloc重定位节中，从而在加载的时候，PE Loader会自动检查重定位节的内容并在程序执行之前对这些数据进行修正。<br>实际上，并非所有EXE/DLL都需要重定位。由于在单个地址空间中只有一个EXE，而这个EXE必然最先加载，因此这个EXE的加载地址总是不变的。因此，一般情况下EXE并不需要重定位信息，编译器一般在编译链接的时候会将EXE中的重定位信息去掉，以减少程序大小加快加载速度和运行速度。EXE一般在0x40000000的地址加载，一般没有特别原因无需修改。而DLL因为一般无法保证预先设置好的加载地址总能够满足。比如DLL可能指定在0x10000000地址加载，但是有可能此地址已经有其他DLL占据或者被EXE占据，DLL必须得在另外的地址加载，因此一般在DLL中总是保存重定位信息。<br>一段代码，一般情况下无法在任意地址执行。假设我们有下面的代码：<br>00400120 12h, 34h, 56h, 78h<br>00400124 MOV EAX, DWORD PTR [00400120H]<br>… </p>
+<p>如果我们手动把这段代码copy到另外一个地方，如00500000，那么显然00400120H这个地址需要被修改，我们当然可以仿照自重定位的方法来手动修改这个地址值，但是通常较简单的方法是写自重定位代码，这样的代码可以在任意地址执行，具体做法如下：<br>call    @F<br>@@:<br>       pop ebx<br>       sub ebx,offset @B<br>DATA   db 12h, 34h, 56h, 78h<br>       MOV    EAX, [EBX + DATA] </p>
+<p>可以看到，该段代码通过使用call指令压入当前地址eip并弹出从而得到当前地址。然后，用当前地址减去其标号的偏移量就得到重定位修正值，存入ebx之中。之后，就可以使用ebx作为一个基准来访问数据，以后访问数据可以用EBX + ???来访问，这样由于EBX会根据当前的地址值而变化，所以这段代码是自重定位的。<br>下面给出一段代码，这段代码中的InjectRemoteCode函数负责将RemoteThread这个函数的自重定位代码Copy到其他进程中执行：<br>;=============================================================================<br>; RemoteThread.ASM<br>; Author : ATField<br>; Description :<br>;       This assembly file contains a InjectRemoteCode function<br>;       which injects remote code into a process<br>; History :<br>;       2004-3-8        Start<br>;       2004-3-9        Completed and tested.     <br>;       2004-3-26       bug fix:<br>;                       not all clients connected<br>;                           Wait for completion of the remote thread                                                                      <br>;=============================================================================<br> <br>        .386<br>        .MODEL FLAT, STDCALL            ; must be stdcall here, <br>                                        ; or link error will occur<br>        OPTION CASEMAP:NONE<br>        <br>        <br>        INCLUDE     WINDOWS.INC<br>        INCLUDE     USER32.INC<br>        INCLUDELIB  USER32.LIB<br>        INCLUDE     KERNEL32.INC<br>        INCLUDELIB  KERNEL32.LIB<br>        ;INCLUDE    MACRO.INC<br> <br> <br>        .DATA            <br>hRemoteThread       dd 0 <br>szKernel32          db 'Kernel32.dll',0<br>hmodKernel32        dd 0<br>szGetProcAddress    db 'GetProcAddress',0<br>szLoadLibraryA      db 'LoadLibraryA',0<br>lpRemoteCode        dd 0<br>lpGetProcAddress    dd 0 <br>lpLoadLibraryA      dd 0          <br>        .CODE   <br> <br>;=============================================================================<br>; remote code starts here<br>;=============================================================================<br>REMOTE_CODE_START   equ this byte<br> <br>;=============================================================================<br>; data<br>;=============================================================================<br>lpRemoteGetProcAddress    dd 0 <br>lpRemoteLoadLibraryA      dd 0          <br>szRemoteDllPathName       db 255 dup(0)<br>lpRemoteDllHandle         dd 0<br>lpRemoteInitDll           dd 0<br>szRemoteInitDllFuncName   db 'InitializeDll',0<br>;=============================================================================<br> <br>RemoteThread    PROC uses ebx lParam<br>        <br>        ;=====================================================================<br>        ; relocation<br>        ;=====================================================================<br>        ; just for debug<br>        ;int 3<br>        <br>        call    @F<br>        @@:<br>        pop ebx<br>        sub ebx,offset @B<br>        <br>        ; LoadLibraryA szRemoteDllPathName<br>        lea     ecx, [ebx + offset szRemoteDllPathName]<br>        push    ecx<br>        call    [ebx + offset lpRemoteLoadLibraryA]<br>        <br>        test    eax, eax<br>        jz      error<br>        <br>        mov     [ebx + offset lpRemoteDllHandle], eax<br>        ; GetProcAddress hModule InitializeDll<br>        lea     ecx, [ebx + offset szRemoteInitDllFuncName]<br>        push    ecx                                     ; 'InitializeDll'<br>        push    [ebx + offset lpRemoteDllHandle]        ; hmodule<br>        call    [ebx + offset lpRemoteGetProcAddress]<br>        <br>        test    eax, eax<br>        jz     error<br>            <br>        ; InitializeDll()<br>        call    eax<br>        ret<br>error:<br>        mov eax, -1<br>        ret<br>RemoteThread    endp<br> <br>REMOTE_CODE_END     equ this byte<br>REMOTE_CODE_LENGTH  equ offset REMOTE_CODE_END - offset REMOTE_CODE_START<br>;=============================================================================<br>; remote code ends<br>;=============================================================================<br> <br>; BUG FIX: do not use FAR here!<br>InjectRemoteCode    PROC C, hProcess : HANDLE, szDllPathName : DWORD<br>        <br>        INVOKE GetModuleHandleA, offset szKernel32<br>        .IF eax<br>            mov hmodKernel32, eax<br>        .ELSE<br>            mov eax, 0<br>            ret<br>        .ENDIF<br>        <br>        INVOKE GetProcAddress, hmodKernel32, addr szGetProcAddress<br>        mov    lpGetProcAddress, eax<br>        <br>        INVOKE GetProcAddress, hmodKernel32, addr szLoadLibraryA<br>        mov    lpLoadLibraryA, eax<br>        <br>        INVOKE VirtualAllocEx,hProcess,NULL,REMOTE_CODE_LENGTH,MEM_COMMIT,PAGE_EXECUTE_READWRITE<br>        <br>        .IF eax<br>            ; memory allocation success<br>            <br>            mov lpRemoteCode,eax<br>            <br>            ; copy the code<br>            INVOKE  WriteProcessMemory,hProcess,lpRemoteCode,<br>                offset REMOTE_CODE_START,REMOTE_CODE_LENGTH,NULL<br>            <br>            ; write function start addresses to the remote memory   <br>            INVOKE  WriteProcessMemory,hProcess,lpRemoteCode,<br>                offset lpGetProcAddress,sizeof dword * 2,NULL<br>            <br>            ; write dll path name to the remote memory<br>            INVOKE  lstrlen, szDllPathName<br>            mov ecx, eax<br>            inc ecx<br>            <br>            mov ebx, lpRemoteCode<br>            add ebx, 8<br>            INVOKE  WriteProcessMemory,hProcess,ebx,szDllPathName,ecx,NULL<br>                                   <br>            mov eax,lpRemoteCode<br>            add eax,offset RemoteThread - offset REMOTE_CODE_START<br>            INVOKE  CreateRemoteThread,hProcess,NULL,0,eax,0,0,NULL<br>            <br>            mov hRemoteThread, eax<br>            .IF hRemoteThread<br>                INVOKE WaitForSingleObject, hRemoteThread, INFINITE           <br>                INVOKE CloseHandle, hRemoteThread               <br>            .ELSE<br>                jmp errorHere<br>            .ENDIF<br>            <br>        .ELSE<br>            jmp errorHere   <br>        .ENDIF<br>        <br>        mov eax, 0<br>       <br>        ret<br>errorHere:<br>        mov eax, -1<br>        ret<br>InjectRemoteCode    ENDP<br> <br>        END </p>
+<p>上面讲到了CreateremoteThread的做法，可以看到使用CreateRemoteThread是十分复杂的。不过，实际上，我们并不用总是这么做，还有更简单的方法：利用Kernel32.dll中的LoadLibrary这个函数。由于Kernel32.dll在每个EXE中都会被加载，而且由于Kernel32.dll总是第一个被加载的，因此Kernel32.dll的加载地址总是相同的，换句话说，在我们的主程序中Kernel32.dll中的LoadLibrary函数的地址同时也是其他程序中LoadLibrary函数的地址，而LoadLibrary可以加载任意DLL。此外，LoadLibrary只有一个参数，正好和普通线程的要求相同！所以我们只要调用CreateRemoteThread(…, LoadLibrary, DLL_PathName)便可以将Dll Inject到任意进程中。唯一需要注意的就是，由于LoadLibrary是在其他进程中运行，而LoadLibrary的参数必须保存在另外的进程中。怎么做到这一点呢？回忆一下前文提到了两个函数VirtualAllocEx和WriteProcessMemory，正好我们可以利用这两个函数分配一块内存然后把Dll的路径名Copy到该内存中去。<br>此外，由于DLL中的代码是可以重定位的，因此实际上我们会把API Hook的代码放在DLL中，这样写Hook代码的时候便不用考虑重定位问题。<br>4 监视进程的启动综合上面的内容，我们已经可以挂接单个进程中的指定API了。不过这还不够，我们还需要挂接系统中的所有进程。如果在程序运行之后，不允许新进程的创建，那么挂接所有进程则是非常容易的。Windows操作系统提供了一个CreateToolhelp32Snapshot的API函数。这个API函数创建当前系统的快照（Snapshot），这个快照可以是所有进程的快照（参数是TH32CS_SNAPPROCESS），或者是指定某个进程的所有模块（Module）的快照（参数是TH32CS_SNAPMODULE），等等。通过调用CreateToolhelp32Snapshot函数获得了所有进程之后，便可以依次挂接各个进程。但是事情并非如此简单。用户和操作系统都可以启动新的进程，这样单纯的调用CreateToolhelp32Snapshot函数并不能解决问题。所以需要一种机制来通知本系统新进程的创建和结束。经过查阅相关资料（其实也就是Google啦），发现监视系统进程开始和结束的最好方法是通过DDK中的PsSetCreateProcessNotifyRoutine函数，其原型为：<br>NTSTATUS  PsSetCreateProcessNotifyRoutine(<br>    IN PCREATE_PROCESS_NOTIFY_ROUTINE  NotifyRoutine,<br>    IN BOOLEAN  Remove<br>    ); </p>
+<p>NotifyRoutine指定了当进程被创建和结束的时候所需要调用的回调函数。则Remove是用来告诉该函数是设置该回调还是移除。NotifyRoutine的类型为PCREATE_PROCESS_NOTIFY_ROUTINE，其定义为：<br>VOID<br>(*PCREATE_PROCESS_NOTIFY_ROUTINE) (<br>    IN HANDLE  ParentId,<br>    IN HANDLE  ProcessId,<br>    IN BOOLEAN  Create<br>    ); </p>
+<p>ParentId和ProcessId用来标识进程，Create则是用来表示该进程是正在被创建还是正在被结束。这样，每当进程被创建或者结束的时候，操作系统就会立刻调用NotifyRoutine这个回调函数并正确提供参数。<br>由于这个函数是由ntdll.dll所输出的，属于Windows的内核空间，因此必须编写一个处于内核模式的驱动程序才可以。但是，至此问题并没有完全解决。内核模式的驱动程序和用户模式的主程序如何通讯呢？这里就需要用到IO请求包IRP（IO Request Packet）。这个IRP的定义为：<br>typedef struct _CallbackInfo<br>{<br>    HANDLE  hParentId;<br>    HANDLE  hProcessId;<br>    BOOLEAN bCreate;<br>} CALLBACK_INFO, *PCALLBACK_INFO; </p>
+<p>其字段的意义就和PCREATE_PROCESS_NOTIFY_ROUTINE一样，不再赘述。<br>用户模式的程序通过DeviceIoControl函数发送IO请求包到内核模式的驱动。内核模式接收到此请求包，并填写数据到用户程序所提供的CALLBACK_INFO缓冲区里。这样通过检查CALLBACK_INFO的值就可以知道hProcessId所指定的进程是正在被创建或者结束了。<br>虽然有了数据交换的机制，这还是不够。这样只能告诉用户程序究竟是哪一个进程，是创建还是结束，但是无法通知用户程序此事件的发生。通常，通知某个程序某个事件的发生一般的方法是使用事件（Event）。驱动程序创建一个内核事件（Kernel Event）。用户程序打开这个事件用于同步。每当事件发生的时候驱动程序就首先把该事件设置为Signaled，然后再Non-signaled。这样用户程序就可以接收到通知了。但是为什么需要首先设置为Signaled，然后再Non-signaled？因为用户程序没有权限来设置其状态，因此只能由驱动程序来设置，首先设置为Signaled，然后再Non-signaled是唯一的办法。<br>有了这两种方法，就可以挂接操作系统中的所有进程了。首先，主线程调用CreateToolhelp32Snapshot函数创建系统内所有进程的快照，挂接这些进程，然后启动驱动程序，在主程序中启动一个新线程等待Event来监视新的进程的创建和旧进程的结束。驱动程序的代码和监听的代码可以在http://www.codeproject.com/threads/procmon.asp下载到。<br>5 其他问题5.1 Unicode大部分Windows API均有两个版本：Ansi和Unicode。如GetWindowText API实际上只是一个宏，实际上在不同编译选项下对应GetWindowTextA和GetWindowTextW。在NT系统下，GetWindowTextA只是做一个转换，再调用GetWindowTextW，实际的实现在GetWindowTextW中。因此，挂接API必须要Hook两个版本，实际在Hook的时候，我们也可以仿照Windows的做法，让GetWindowTextA做一个简单字符串转换，然后直接调GetWindowTextW即可。可能有朋友要问了，为何不直接Hook GetWindowTextW呢？反正GetWindowTextA要调GetWindowTextW就不用Hook GetWindowTextA了嘛。不过实际上，因为GetWindowTextA和GetWindowTextW在同一个DLL中，他们的调用很有可能并不是通过IAT来，而是直接调用的关系，所以GetWindowTextA会绕过我们的Hook机制而直接调到原始的GetWindowTextW，这不是我们希望看到的，所以两个版本保险起见都应该Hook。<br>5.2 IPC由于Hook的API代码位于某个DLL中，这个DLL处于不同的进程，因此需要用到IPC机制在主程序和其他被Hook的进程进行通讯。不同进程之间的通讯称之为IPC(Interprocess Communication)，大概的方法有下面几种：<br>1.     Pipe。管道是比较常用的IPC机制，可以传输大量数据，代码写起来也比较方便。管道也可以用于网络间不同计算机通讯，但是有一定限制。<br>2.     Socket。虽然Socket一般用于网络，但是显然也可以用于本机，优点是大家可能对Socket编程比较熟悉，此外可以很容易扩展到网络之间的通讯，基本没有限制，因此也是很不错的选择。<br>3.     Message。消息一般适用于比较简单的通讯，如果要传递数据必须要使用WM_COPYDATA消息。优点是比较简单，但是性能可能无法保证。<br>4.     Shared Segment。也就是共享段。简单来说，就是把EXE/DLL中的某个段标记为共享，这样多个EXE/DLL的实例之间会共享同一块内存，通过读写此块内存便可以互相传递数据，但是同步比较困难。具体做法是：<br>#pragma bss_seg("shared_bss")<br>int a;<br>#pragma bss_seg()<br>#pragma comment(linker, "/Section:shared_bss,rws") </p>
+<p>这样，变量a便放在了共享段之中。<br>5.     Memory Mapped File（内存映射文件）。比较简单，但是缺点和Shared Segment类似，无法同步。<br>6.     Event/Semaphore/Mutex。这些只能用于同步，无法传递数据。<br>7.     …还有很多<br>可以根据自己的情况灵活选用。<br>6 总结API Hook的通常做法如下：<br>1.     通过全局消息钩子或者驱动程序监视进程启动/结束来挂接系统中所有进程<br>a.     如果不需要挂接CUI程序则选用全局消息钩子<br>b.     否则则选用驱动程序<br>2.     通过全局消息钩子或者远程线程来注入代码到目标进程中<br>a.     全局消息钩子无需考虑如何加载DLL的问题，系统会自动加载<br>b.     远程线程一般直接创建线程执行LoadLibrary代码加载DLL，当然也可以执行自己写的汇编代码<br>3.     通过修改IAT (Import Address Table)中的API地址为自己的函数地址来Hook API。所使用的API是ImageDirectoryEntryToData.<br>4.     自己编写的API的代码放在DLL中以解决重定位问题（如果用全局消息钩子的话放在DLL是强制要求）<br>7 相关参考文献我当初在写程序和写作本文的时候，参考了下面这些书籍和文章，有兴趣的朋友可以参考一下看看：<br>Windows核心编程，第22章Windows环境下32位汇编语言程序设计，第13章，17章API Hooking Revealed, 地址：http://www.codeproject.com/system/hooksys.aspDetecting Windows NT/2K process execution, 地址：http://www.codeproject.com/threads/procmon.asp </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/api-hook" rel="tag">api hook</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/06/04/%E5%8F%8D%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93-%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0.html" rel="prev">反调试技巧总结-原理和实现</a><br>【下篇】<a href="/2011/06/04/api-hook%E4%BA%8C.html" rel="next">api hook(二)</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2011/06/04/api-hook-and-anti-api-hook-for-ring3.html">API-HOOK and ANTI-API-HOOK For Ring3</a></li><li> · <a href="/2011/06/04/api-hook%E4%BA%8C.html">api hook(二)</a></li><li> · <a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li><li> · <a href="/2025/02/06/vue3-html5-pdf.html">html5预览PDF（vue3）</a></li><li> · <a href="/2024/12/25/filebeat-zincsearch.html">Filebeat + ZincSearch 轻量级日志</a></li><li> · <a href="/2024/12/11/emby-excluding-files-folders.html">Emby 如何设置排除项，排除某个文件夹</a></li><li> · <a href="/2024/11/23/emby.html">Emby全平台开心版、认证服务器搭建方法(自建认证服务器)</a></li><li> · <a href="/2024/11/13/qywx-development.html">企业微信开发之代开发应用</a></li><li> · <a href="/2024/10/28/vue3-html2canvas-png.html">vue3  html2canvas导出透明png图片</a></li><li> · <a href="/2024/09/24/%E6%88%90%E9%83%BD%E5%85%B1%E4%BA%AB%E5%8A%9E%E5%85%AC%E5%AE%A4%E6%8E%A8%E8%8D%90.html">成都共享办公室推荐</a></li><li> · <a href="/2024/09/09/nas-web-station-wordpress-rewrite.html">群晖web station设置wordpress 伪静态</a></li><li> · <a href="/2024/09/07/2024-xiezilou.html">2024年，写字楼市场面临新挑战与机遇</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年06月04日发表在<a href="/category/cc" rel="category tag">C/C++</a>, <a href="/category/%E5%85%B6%E5%AE%83" rel="category tag">Others</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/06/04/api-hook%E5%AE%8C%E5%85%A8%E6%89%8B%E5%86%8C.html" rel="bookmark" title="本文固定链接 /2011/06/04/api-hook%e5%ae%8c%e5%85%a8%e6%89%8b%e5%86%8c.html">API Hook完全手册 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/06/04/api-hook%e5%ae%8c%e5%85%a8%e6%89%8b%e5%86%8c.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/06/04/api-hook%E5%AE%8C%E5%85%A8%E6%89%8B%E5%86%8C.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="88" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="85d96af526"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="37"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.066 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:42 -->

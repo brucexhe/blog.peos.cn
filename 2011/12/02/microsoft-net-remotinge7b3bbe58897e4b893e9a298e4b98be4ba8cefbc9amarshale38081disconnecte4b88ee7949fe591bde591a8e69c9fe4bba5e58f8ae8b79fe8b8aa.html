@@ -1,0 +1,590 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>Microsoft .Net Remoting系列专题之二：Marshal、Disconnect与生命周期以及跟踪服务 | Bruce's Blog</title> 
+<meta name="description" content="Microsoft .Net Remoting系列专题之二 ">
+<meta name="keywords" content="Remoting">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2011/12/01" aria-label="2011年12月1日 发布的文章">1</a></td><td><a href="/2011/12/02" aria-label="2011年12月2日 发布的文章">2</a></td><td><a href="/2011/12/03" aria-label="2011年12月3日 发布的文章">3</a></td><td><a href="/2011/12/04" aria-label="2011年12月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/05" aria-label="2011年12月5日 发布的文章">5</a></td><td><a href="/2011/12/06" aria-label="2011年12月6日 发布的文章">6</a></td><td><a href="/2011/12/07" aria-label="2011年12月7日 发布的文章">7</a></td><td><a href="/2011/12/08" aria-label="2011年12月8日 发布的文章">8</a></td><td><a href="/2011/12/09" aria-label="2011年12月9日 发布的文章">9</a></td><td><a href="/2011/12/10" aria-label="2011年12月10日 发布的文章">10</a></td><td><a href="/2011/12/11" aria-label="2011年12月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/12" aria-label="2011年12月12日 发布的文章">12</a></td><td><a href="/2011/12/13" aria-label="2011年12月13日 发布的文章">13</a></td><td><a href="/2011/12/14" aria-label="2011年12月14日 发布的文章">14</a></td><td><a href="/2011/12/15" aria-label="2011年12月15日 发布的文章">15</a></td><td><a href="/2011/12/16" aria-label="2011年12月16日 发布的文章">16</a></td><td><a href="/2011/12/17" aria-label="2011年12月17日 发布的文章">17</a></td><td><a href="/2011/12/18" aria-label="2011年12月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/19" aria-label="2011年12月19日 发布的文章">19</a></td><td><a href="/2011/12/20" aria-label="2011年12月20日 发布的文章">20</a></td><td><a href="/2011/12/21" aria-label="2011年12月21日 发布的文章">21</a></td><td><a href="/2011/12/22" aria-label="2011年12月22日 发布的文章">22</a></td><td><a href="/2011/12/23" aria-label="2011年12月23日 发布的文章">23</a></td><td><a href="/2011/12/24" aria-label="2011年12月24日 发布的文章">24</a></td><td><a href="/2011/12/25" aria-label="2011年12月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/26" aria-label="2011年12月26日 发布的文章">26</a></td><td><a href="/2011/12/27" aria-label="2011年12月27日 发布的文章">27</a></td><td><a href="/2011/12/28" aria-label="2011年12月28日 发布的文章">28</a></td><td><a href="/2011/12/29" aria-label="2011年12月29日 发布的文章">29</a></td><td><a href="/2011/12/30" aria-label="2011年12月30日 发布的文章">30</a></td><td><a href="/2011/12/31" aria-label="2011年12月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2011/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#2b31f9;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#4ce570;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#8cc6f1;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#eaff1e;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#9a1198;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#ae5e6d;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#a714b1;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#b9859a;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#92e0d0;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#8c1783;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#fa33d7;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#8349e4;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#a2993d;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#de898;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#b4fc14;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#56b5d0;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#8424ef;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#405b5a;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#29ba47;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#6b3167;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#327212;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#c47f2;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#aa67a6;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#1b6dd0;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#7e5385;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#e3993d;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#4a37f2;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#14a475;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#226886;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#c60442;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#d38f79;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#aaad66;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#619d7a;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#ac4dc7;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#1bfc40;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#f5d65;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#b2e608;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#7dd298;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#af155e;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#8126df;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#6eb000;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#356214;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#90d88b;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#39deed;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#f2eb51;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">Microsoft .Net Remoting系列专题之二：Marshal、Disconnect与生命周期以及跟踪服务</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-12-02 23:09</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2011/12/02/microsoft-net-remoting%E7%B3%BB%E5%88%97%E4%B8%93%E9%A2%98%E4%B9%8B%E4%BA%8C%EF%BC%9Amarshal%E3%80%81disconnect%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8A%E8%B7%9F%E8%B8%AA.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>2,492</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;"><strong style="padding: 0px; margin: 0px;"><span style="color: #000000; padding: 0px; margin: 0px;">Microsoft .Net <span class="wp_keywordlink_affiliate"><a href="/tag/remoting" title="View all posts in Remoting" target="_blank">Remoting</a></span>系列专题之二</span></strong> </span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;"><strong style="padding: 0px; margin: 0px;">一、远程对象的激活</strong></span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">在<span class="wp_keywordlink_affiliate"><a href="/tag/remoting" title="View all posts in Remoting" target="_blank">Remoting</a></span>中有三种激活方式，一般的实现是通过<span class="wp_keywordlink_affiliate"><a href="/tag/remoting" title="View all posts in Remoting" target="_blank">Remoting</a></span>Services类的静态方法来完成。工作过程事实上是将该远程对象注册到通道中。由于Remoting没有提供与之对应的Unregister方法来注销远程对象，所以如果需要注册/注销指定对象，微软推荐使用Marshal（一般译为编组）和Disconnect配对使用。在《<a style="text-decoration: none; color: #000000; border-bottom-width: 1px; border-bottom-style: dotted; border-bottom-color: #333333; padding: 0px; margin: 0px;" href="http://www.brucezhang.com/?p=70" rel="bookmark">Net Remoting基础篇</a>》中我已经谈到：Marshal()方法是将MarshalByRefObject类对象转化为ObjRef类对象，这个对象是存储生成代理以与远程对象通讯所需的所有相关信息。这样就可以将该实例序列化以便在应用程序域之间以及通过网络进行传输，客户端就可以调用了。而Disconnect()方法则将具体的实例对象从通道中断开。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">根据上述说明，Marshal()方法对远程对象以引用方式进行编组（Marshal-by-Reference，MBR），并将对象的代理信息放到通道中。客户端可以通过Activator.GetObject()来获取。如果用户要注销该对象，则通过调用Disconnect()方法。那么这种方式对于编组的远程对象是否存在生命周期的管理呢？这就是本文所要描述的问题。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;"><strong style="padding: 0px; margin: 0px;">二、生命周期</strong></span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">在CLR中，框架提供了GC（垃圾回收器）来管理内存中对象的生命周期。同样的，.Net Remoting使用了一种分布式垃圾回收，基于租用的形式来管理远程对象的生命周期。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">早期的DCOM对于对象生命周期的管理是通过ping和引用计数来确定对象何时应当作为垃圾回收。然而ping引起的网络流量对分布式应用程序的性能是一种痛苦的负担，它大大地影响了分布式处理的整体性能。.Net Remoting在每个应用程序域中都引入一个租用管理器，为每个服务器端的SingleTon，或每个客户端激活的远程对象保存着对租用对象的引用。（说明：对于服务器端激活的SingleCall方式，由于它是无状态的，对于每个激活的远程对象，都由CLR的GC来自动回收，因此对于SingleCall模式激活的远程对象，不存在生命周期的管理。）</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;">1、租用</span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">租用是个封装了TimeSpan值的对象，用以管理远程对象的生存期。在.Net Remoting中提供了定义租用功能的ILease接口。当Remoting通过SingleTon模式或客户端激活模式来激活远程对象时，租用对象调用从System.MarshalByRefObject继承的InitializeLifetimeService方法，向对象请求租用。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">ILease接口定义了有关生命周期的属性，均为TimeSpan值。如下：<br style="padding: 0px; margin: 0px;">InitialLeaseTime：初始化有效时间，默认值为300秒，如果为0，表示永不过期；<br style="padding: 0px; margin: 0px;">RenewOnCallTime：调用远程对象一个方法时的租用更新时间，默认值为120秒；<br style="padding: 0px; margin: 0px;">SponsorshipTimeout：超时值，通知Sponsor（发起人）租用过期后，Remoting会等待的时间，默认值为120秒；<br style="padding: 0px; margin: 0px;">CurrentLeaseTime：当前租用时间，首次获得租用时，为InitializeLeaseTime的值。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">Remoting的远程对象因为继承了MarshalByRefObject，因此默认继承了InitializeLifetimeService方法，那么租用的相关属性为默认值。如果要改变这些设置，可以在远程对象中重写该方法。例如：<br style="padding: 0px; margin: 0px;"> public override object InitializeLifetimeService()<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  ILease lease = (ILease)base.InitializeLifetimeService();<br style="padding: 0px; margin: 0px;">  if (lease.CurrentState == LeaseState.Initial)<br style="padding: 0px; margin: 0px;">  {<br style="padding: 0px; margin: 0px;">   lease.InitialLeaseTime = TimeSpan.FromMinutes(1);<br style="padding: 0px; margin: 0px;">   lease.RenewOnCallTime = TimeSpan.FromSeconds(20);<br style="padding: 0px; margin: 0px;">  }<br style="padding: 0px; margin: 0px;">  return lease;  <br style="padding: 0px; margin: 0px;"> }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">也可以忽略该方法，将对象的租用周期改变为无限：<br style="padding: 0px; margin: 0px;"> public override object InitializeLifetimeService()<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  return null;<br style="padding: 0px; margin: 0px;"> }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;">2、租用管理器</span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">如果是前面所说的租用主要是应用在每个具体的远程对象上，那么租用管理器是服务器端专门用来管理远程对象生命周期的管理器，它维持着一个System.Hashtable成员，将租用映射为System.DateTime实例表示每个租用何时应过期。Remoting采用轮询的方式以一定的时间唤醒租用管理器，检查每个租用是否过期。默认为每10秒钟唤醒一次。轮询的间隔可以配置，如将轮询间隔设置为5分钟：LifetimeService.LeaseManagerPollTime = System.TimeSpan.FromMinutes(5);</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">我们还可以在租用管理器中设置远程对象租用的属性，如改变远程对象的初始有效时间为永久有效：<br style="padding: 0px; margin: 0px;">LifetimeServices.LeaseTime = TimeSpan.Zero;</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">我们也可以通过配置文件来设置生命周期，如：<br style="padding: 0px; margin: 0px;">&amp;lt;configuration&amp;gt;<br style="padding: 0px; margin: 0px;"> &amp;lt;system.runtime.remoting&amp;gt;<br style="padding: 0px; margin: 0px;">  &amp;lt;application name = "SimpleServer"&amp;gt;<br style="padding: 0px; margin: 0px;">   &amp;lt;lifetime leaseTime = "0" sponsorshipTimeOut = "1M" renewOnCallTime = "1M" pollTime = "30S"/&amp;gt;       <br style="padding: 0px; margin: 0px;">  &amp;lt;/application&amp;gt;<br style="padding: 0px; margin: 0px;"> &amp;lt;/system.runtime.remoting&amp;gt;<br style="padding: 0px; margin: 0px;">&amp;lt;/configuration&amp;gt;</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">注：配置文件中的pollTime即为上面所说的租用管理器的轮询间隔时间LeaseManagerPollTime。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">租用管理器对于生命周期的设置是针对服务器上所有的远程对象。当我们通过配置文件或租用管理器设置租用的属性时，所有远程对象的生命周期都遵循该设置，除非我们对于指定的远程对象通过重写InitializeLifetimeService方法，改变了相关配置。也就是说，远程对象的租用配置优先级高于服务器端配置。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;">3、发起人（Sponsor）</span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">发起人是针对客户端而言的。远程对象就是发起人要租用的对象，发起人可以与服务器端签订租约，约定租用时间。一旦到期后，发起人还可以续租，就像现实生活中租方的契约，房东、租房者之间的关系一样。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">在.Net Framework中的System.Runtime.Remoting.Lifetime命名空间中定义了ClientSponsor类，该类继承了System.MarshalByRefObject，并实现了ISponsor接口。ClientSponsor类的属性和方法，可以参考MSDN。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">客户端要使用发起人机制，必须创建ClientSponsor类的一个实例。然后调用相关方法如Register()或Renewal()方法来注册远程对象或延长生命周期。如：<br style="padding: 0px; margin: 0px;">RemotingObject obj = new RemotingObject();<br style="padding: 0px; margin: 0px;">ClientSponsor sponsor = new ClientSponsor();<br style="padding: 0px; margin: 0px;">sponsor.RenewalTime = TimeSpan.FromMinutes(2);<br style="padding: 0px; margin: 0px;">sponsor.Register(obj);</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">续租时间也可以在ClientSponsor的构造函数中直接设置，如：<br style="padding: 0px; margin: 0px;">ClientSponsor sponsor = new ClientSponsor(TimeSpan.FromMinutes(2));<br style="padding: 0px; margin: 0px;">sponsor.Register(obj);</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">我们也可以自己编写Sponsor来管理发起人机制，这个类必须继承ClientSponsor并实现ISponsor接口。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;"><strong style="padding: 0px; margin: 0px;">三、跟踪服务</strong></span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">如前所述，我们要判断通过Marshal编组远程对象是否存在生命周期的管理。在Remoting中，可以通过跟踪服务程序来监视MBR对象的编组进程。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">我们可以创建一个简单的跟踪处理程序，该程序实现接口ITrackingHandler。接口ITrackingHandler定义了3个方法，MarshalObject、UnmarshalObject和DisconnectedObject。当远程对象被编组、解组和断开连接时，就会调用相应的方法。下面是该跟踪处理类的代码：public class MyTracking:ITrackingHandler<br style="padding: 0px; margin: 0px;">{<br style="padding: 0px; margin: 0px;"> public MyTracking()<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  //<br style="padding: 0px; margin: 0px;">  // TODO: 在此处添加构造函数逻辑<br style="padding: 0px; margin: 0px;">  //<br style="padding: 0px; margin: 0px;"> }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"> public void MarshaledObject(object obj,ObjRef or)<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  Console.WriteLine();<br style="padding: 0px; margin: 0px;">  Console.WriteLine("对象" + obj.Tostring() + " is marshaled at " + DateTime.Now.ToShortTimeString());<br style="padding: 0px; margin: 0px;"> }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"> public void UnmarshaledObject(object obj,ObjRef or)<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  Console.WriteLine();<br style="padding: 0px; margin: 0px;">  Console.WriteLine("对象" + obj.Tostring() + " is unmarshaled at " + DateTime.Now.ToShortTimeString());<br style="padding: 0px; margin: 0px;"> }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">  public void DisconnectedObject(object obj)<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  Console.WriteLine(obj.ToString() + " is disconnected at " + DateTime.Now.ToShortTimeString());<br style="padding: 0px; margin: 0px;"> }<br style="padding: 0px; margin: 0px;">}</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">然后再服务器端创建该跟踪处理类的实例，并注册跟踪服务：<br style="padding: 0px; margin: 0px;">TrackingServices.RegisterTrackingHandler(new MyTracking());</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;"><strong style="padding: 0px; margin: 0px;">四、测试</strong></span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;">1、建立两个远程对象，并重写InitializeLifetimeService方法：</span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">对象一：AppService1<br style="padding: 0px; margin: 0px;">初始生命周期：1分钟</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"> public class AppService1:MarshalByRefObject<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  public void PrintString(string contents)<br style="padding: 0px; margin: 0px;">  {<br style="padding: 0px; margin: 0px;">   Console.WriteLine(contents);   <br style="padding: 0px; margin: 0px;">  }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">  public override object InitializeLifetimeService()<br style="padding: 0px; margin: 0px;">  {<br style="padding: 0px; margin: 0px;">   ILease lease = (ILease)base.InitializeLifetimeService();<br style="padding: 0px; margin: 0px;">   if (lease.CurrentState == LeaseState.Initial)<br style="padding: 0px; margin: 0px;">   {<br style="padding: 0px; margin: 0px;">    lease.InitialLeaseTime = TimeSpan.FromMinutes(1);<br style="padding: 0px; margin: 0px;">    lease.RenewOnCallTime = TimeSpan.FromSeconds(20);<br style="padding: 0px; margin: 0px;">   }<br style="padding: 0px; margin: 0px;">   return lease;<br style="padding: 0px; margin: 0px;">   <br style="padding: 0px; margin: 0px;">  }<br style="padding: 0px; margin: 0px;"> }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">对象二：AppService2<br style="padding: 0px; margin: 0px;">初始生命周期：3分钟</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"> public class AppService2:MarshalByRefObject<br style="padding: 0px; margin: 0px;"> {<br style="padding: 0px; margin: 0px;">  public void PrintString(string contents)<br style="padding: 0px; margin: 0px;">  {<br style="padding: 0px; margin: 0px;">   Console.WriteLine(contents);   <br style="padding: 0px; margin: 0px;">  }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">  public override object InitializeLifetimeService()<br style="padding: 0px; margin: 0px;">  {<br style="padding: 0px; margin: 0px;">   ILease lease = (ILease)base.InitializeLifetimeService();<br style="padding: 0px; margin: 0px;">   if (lease.CurrentState == LeaseState.Initial)<br style="padding: 0px; margin: 0px;">   {<br style="padding: 0px; margin: 0px;">    lease.InitialLeaseTime = TimeSpan.FromMinutes(3);<br style="padding: 0px; margin: 0px;">    lease.RenewOnCallTime = TimeSpan.FromSeconds(40);<br style="padding: 0px; margin: 0px;">   }<br style="padding: 0px; margin: 0px;">   return lease;<br style="padding: 0px; margin: 0px;">   <br style="padding: 0px; margin: 0px;">  }<br style="padding: 0px; margin: 0px;"> }</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">为简便起见，两个对象的方法都一样。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;">2、服务器端</span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">(1) 首先建立如上的监控处理类；</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">(2) 注册通道：<br style="padding: 0px; margin: 0px;">TcpChannel channel = new TcpChannel(8080);<br style="padding: 0px; margin: 0px;">ChannelServices.RegisterChannel(channel);</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">(3) 设置租用管理器的初始租用时间为无限：<br style="padding: 0px; margin: 0px;">LifetimeServices.LeaseTime = TimeSpan.Zero;</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">(4) 创建该跟踪处理类的实例，并注册跟踪服务：<br style="padding: 0px; margin: 0px;">TrackingServices.RegisterTrackingHandler(new MyTracking());</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">(5) 编组两个远程对象：<br style="padding: 0px; margin: 0px;">ServerAS.AppService1 service1 = new ServerAS1.AppService1();<br style="padding: 0px; margin: 0px;">ObjRef objRef1 = RemotingServices.Marshal((MarshalByRefObject)service1,"AppService1");</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">ServerAS.AppService2 service2 = new ServerAS1.AppService2();<br style="padding: 0px; margin: 0px;">ObjRef objRef2 = RemotingServices.Marshal((MarshalByRefObject)service2,"AppService2");</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">(6) 使服务器端保持运行：<br style="padding: 0px; margin: 0px;">Console.WriteLine("Remoting服务启动，按退出..."); <br style="padding: 0px; margin: 0px;">Console.ReadLine();</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;">3、客户端</span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">通过Activator.GetObject()获得两个远程对象，并调用其方法PrintString。代码略。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;">4、运行测试</span>：</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">运行服务器端和客户端，由于监控程序将监视远程对象的编组进程，因此在运行开始，就会显示远程对象已经被Marshal：</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;" align="center"><img fetchpriority="high" decoding="async" style="border-style: initial; border-color: initial; padding: 0px; margin: 0px;" src="/wp-content/uploads/2011/12/e0a3_ar1.gif" alt="" width="668" height="271" border="0"></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">然后再客户端调用这两个远程对象的PrintString方法，服务器端接受字符串：</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;" align="center"><img decoding="async" style="border-style: initial; border-color: initial; padding: 0px; margin: 0px;" src="/wp-content/uploads/2011/12/80eb_ar2.gif" alt="" width="668" height="303" border="0"></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">一分钟后，远程对象一自动被Disconnect：</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;" align="center"><img decoding="async" style="border-style: initial; border-color: initial; padding: 0px; margin: 0px;" src="/wp-content/uploads/2011/12/5d3f_ar3.gif" alt="" width="668" height="303" border="0"></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">此时客户端如要调用远程对象一，会抛出RemotingException异常；</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">又一分钟后，远程对象二被Disconnect了：</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">align="center"&gt;<img loading="lazy" decoding="async" style="border-style: initial; border-color: initial; padding: 0px; margin: 0px;" src="/wp-content/uploads/2011/12/d5bc_ar4.gif" alt="" width="668" height="303" border="0"></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">用户还可以根据这个代码测试RenewOnCallTime的时间是否正确。也即是说，在对象还未被Disconnect时，调用对象，则从调用对象的这一刻起，其生命周期不再是原来设定的初始有效时间值（InitialLeaseTime），而是租用更新时间值（RenewOnCallTime）。另外，如果这两个远程对象没有重写InitializeLifetimeService方法，则生命周期应为租用管理器所设定的值，为永久有效（设置为0）。那么这两个对象不会被自动Disconnect，除非我们显式指定关闭它的连接。当然，如果我们显式关闭连接，跟踪程序仍然会监视到它的变化，然后显示出来。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;"><span style="color: #a52a2a; padding: 0px; margin: 0px;"><strong style="padding: 0px; margin: 0px;">五、结论</strong><br style="padding: 0px; margin: 0px;"></span></p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">通过我们的测试，其实结论已经很明显了。通过Marshal编组的对象要受到租用的生命周期所控制。注意对象被Disconnect，并不是指这个对象被GC回收，而是指这个对象保存在通道的相关代理信息被断开了，而对象本身仍然在服务器端存在。</p>
+<p style="margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; color: #333333; font-family: verdana, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 25px; background-color: #ffffff; padding: 0px;">所以我们通过Remoting提供服务，应根据实际情况指定远程对象的生命周期，如果不指定，则为Remoting默认的设定。要让所有的远程对象永久有效，可以通过配置文件或租用管理器将初始有效时间设为0。</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/remoting" rel="tag">Remoting</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/12/02/microsoft-net-remoting%E7%B3%BB%E5%88%97%E4%B8%93%E9%A2%98%E4%B9%8B%E4%B8%80-net-remoting%E5%9F%BA%E7%A1%80%E7%AF%87.html" rel="prev">Microsoft .Net Remoting系列专题之一:.Net Remoting基础篇</a><br>【下篇】<a href="/2011/12/02/microsoft-net-remoting%E7%B3%BB%E5%88%97%E4%B8%93%E9%A2%98%E4%B9%8B%E4%B8%89%EF%BC%9Aremoting%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%85%A8%E6%8E%A5%E8%A7%A6.html" rel="next">Microsoft .Net Remoting系列专题之三：Remoting事件处理全接触</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2011/12/30/net-remoting%E7%B3%BB%E5%88%97-%EF%BC%9A%E4%BF%A1%E9%81%93.html">.NET Remoting系列 ：信道</a></li><li> · <a href="/2011/12/25/remoting-%E7%94%9F%E5%AD%98%E6%9C%9F%E7%A7%9F%E7%BA%A6.html">Remoting 生存期租约</a></li><li> · <a href="/2011/12/23/remoting%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E5%AF%B9%E8%B1%A1.html">Remoting系列之远程对象</a></li><li> · <a href="/2011/12/22/net-remoting%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E5%AF%B9%E8%B1%A1.html">.NET Remoting系列之远程对象</a></li><li> · <a href="/2011/12/22/net-remoting%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89.html">.NET Remoting系列（一）</a></li><li> · <a href="/2011/12/02/remoting%E5%AE%9E%E7%8E%B0%E5%8F%8C%E5%90%91%E9%80%9A%E4%BF%A1.html">Remoting实现双向通信</a></li><li> · <a href="/2011/12/02/microsoft-net-remoting%E7%B3%BB%E5%88%97%E4%B8%93%E9%A2%98%E4%B9%8B%E4%B8%89%EF%BC%9Aremoting%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%85%A8%E6%8E%A5%E8%A7%A6.html">Microsoft .Net Remoting系列专题之三：Remoting事件处理全接触</a></li><li> · <a href="/2011/12/02/microsoft-net-remoting%E7%B3%BB%E5%88%97%E4%B8%93%E9%A2%98%E4%B9%8B%E4%B8%80-net-remoting%E5%9F%BA%E7%A1%80%E7%AF%87.html">Microsoft .Net Remoting系列专题之一:.Net Remoting基础篇</a></li><li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li><li> · <a href="/2024/09/12/fix-net-blazor-child-component-not-refresh.html">解决.NET Blazor子组件不刷新问题</a></li><li> · <a href="/2024/09/10/net8-microsoft-aspnetcore.html">.NET8如何在普通类库中引用 Microsoft.AspNetCore</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年12月02日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/12/02/microsoft-net-remoting%E7%B3%BB%E5%88%97%E4%B8%93%E9%A2%98%E4%B9%8B%E4%BA%8C%EF%BC%9Amarshal%E3%80%81disconnect%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8A%E8%B7%9F%E8%B8%AA.html" rel="bookmark" title="本文固定链接 /2011/12/02/microsoft-net-remoting%e7%b3%bb%e5%88%97%e4%b8%93%e9%a2%98%e4%b9%8b%e4%ba%8c%ef%bc%9amarshal%e3%80%81disconnect%e4%b8%8e%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e4%bb%a5%e5%8f%8a%e8%b7%9f%e8%b8%aa.html">Microsoft .Net Remoting系列专题之二：Marshal、Disconnect与生命周期以及跟踪服务 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/12/02/microsoft-net-remoting%e7%b3%bb%e5%88%97%e4%b8%93%e9%a2%98%e4%b9%8b%e4%ba%8c%ef%bc%9amarshal%e3%80%81disconnect%e4%b8%8e%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e4%bb%a5%e5%8f%8a%e8%b7%9f%e8%b8%aa.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/12/02/microsoft-net-remoting%E7%B3%BB%E5%88%97%E4%B8%93%E9%A2%98%E4%B9%8B%E4%BA%8C%EF%BC%9Amarshal%E3%80%81disconnect%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8A%E8%B7%9F%E8%B8%AA.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="497" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="d43a60628a"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="164"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.067 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:21 -->

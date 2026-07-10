@@ -1,0 +1,779 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>AngularJs 登录的简单实现 | Bruce's Blog</title> 
+<meta name="description" content="AngularJs 登录的简单实现">
+<meta name="keywords" content="AngularJs,AngularJs 登陆">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2017 年 8 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="1" class="pad"> </td><td><a href="/2017/08/01" aria-label="2017年8月1日 发布的文章">1</a></td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td>
+	</tr>
+	<tr>
+		<td><a href="/2017/08/07" aria-label="2017年8月7日 发布的文章">7</a></td><td><a href="/2017/08/08" aria-label="2017年8月8日 发布的文章">8</a></td><td>9</td><td><a href="/2017/08/10" aria-label="2017年8月10日 发布的文章">10</a></td><td>11</td><td>12</td><td>13</td>
+	</tr>
+	<tr>
+		<td>14</td><td>15</td><td>16</td><td>17</td><td><a href="/2017/08/18" aria-label="2017年8月18日 发布的文章">18</a></td><td>19</td><td>20</td>
+	</tr>
+	<tr>
+		<td>21</td><td><a href="/2017/08/22" aria-label="2017年8月22日 发布的文章">22</a></td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td>
+	</tr>
+	<tr>
+		<td>28</td><td>29</td><td>30</td><td>31</td>
+		<td class="pad" colspan="3"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2017/07">« 7 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2017/09">9 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#5ca753;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#1d3bf6;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#bea076;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#949be3;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#9f1b5c;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#3b4dfd;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#16fb06;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#bbd0a;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#7a0d91;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#ea351d;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#d99171;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#9e784;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#934b80;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#295bd8;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#c68ebb;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#ffc555;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#efa8dc;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#bc1d1a;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#c1c080;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#a22cdb;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#d503ba;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#bdbe06;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#e20a4d;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#aab3e7;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#ba81e8;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#7eec9f;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#7cf6ac;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#d1ab3c;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#3af7e;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#f65870;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#ca4284;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#49704d;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#df695;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#c0fdb3;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#acc5a5;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#f8b84;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#b3fb3;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#c108b7;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#7d929c;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#16ae02;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#67161d;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#ec4184;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#c8fbbc;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#13fdc;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#c1d356;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/jsjqureycss" rel="category tag">前端</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">AngularJs 登录的简单实现</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2017-08-07 11:29</span>
+			<span class="category">  <a href="/category/jsjqureycss" rel="category tag">前端</a></span>
+			<span class="article_comment"><a href="/2017/08/07/angularjs-login.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>944</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<h2 id="angularjs-登录的简单实现"><span class="wp_keywordlink_affiliate"><a href="/tag/angularjs" title="View all posts in AngularJs" target="_blank">AngularJs</a></span> 登录的简单实现</h2>
+<p>多数<span class="wp_keywordlink_affiliate"><a href="/tag/angularjs" title="View all posts in AngularJs" target="_blank">AngularJs</a></span>应用离不开登录操作，最近阅读了一篇关于AngularJs登录的博客，博客中实现的登录系统demo能够应用于多数小型AngularJs应用，实现也并不困难，这里讲讲如何实现这个简单的登录系统。</p>
+<h2 id="种子项目">种子项目</h2>
+<p>这里使用的种子项目是 <code>angular-seed</code>,登录系统会在这个种子项目的基础上完成<br>
+，github地址：https://github.com/angular/angular-seed/。按照github上`README.md`配置后便可在上面添加我们自己的登录系统。</p>
+<p>angular-seed文件目录：</p>
+<pre><code class="hljs lua">app/                    &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; all of the source files for the application&lt;/span&gt;
+  app.css               &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; default stylesheet&lt;/span&gt;
+    components/           &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; all app specific modules&lt;/span&gt;
+  version/              &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; version related components&lt;/span&gt;
+    version.js                 &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; version module declaration and basic &quot;version&quot; value service&lt;/span&gt;
+    version_test.js            &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; &quot;version&quot; value service tests&lt;/span&gt;
+    version-directive.js       &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; custom directive that returns the current app version&lt;/span&gt;
+    version-directive_test.js  &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; version directive tests&lt;/span&gt;
+    interpolate-filter.js      &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; custom interpolation filter      interpolate-filter_test.js --&amp;gt; interpolate filter tests&lt;/span&gt;
+  view1/                &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; the view1 view template and logic&lt;/span&gt;
+    view1.html            &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; the partial template&lt;/span&gt;
+    view1.js              &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; the controller logic&lt;/span&gt;
+    view1_test.js         &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; tests of the controller&lt;/span&gt;
+  view2/                &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; the view2 view template and logic&lt;/span&gt;
+    view2.html            &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; the partial template&lt;/span&gt;
+    view2.js              &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; the controller logic&lt;/span&gt;
+    view2_test.js         &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; tests of the controller&lt;/span&gt;
+  app.js                &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; main application module&lt;/span&gt;
+  index.html            &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; app layout file (the main html template file of the app)&lt;/span&gt;
+  index-async.html      &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; just like index.html, but loads js files asynchronously&lt;/span&gt;
+karma.conf.js         &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; config file for running unit tests with Karma&lt;/span&gt;
+e2e-tests/            &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; end-to-end tests&lt;/span&gt;
+  protractor-conf.js    &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; Protractor config file&lt;/span&gt;
+  scenarios.js          &lt;span class=&quot;hljs-comment&quot;&gt;--&amp;gt; end-to-end scenarios to be run by Protractor&lt;/span&gt;</code></pre>
+<p>这里，主要修改app.js以及view1文件夹相关文件，其中，view1将作为登录界面。</p>
+<h2 id="具体实现">具体实现</h2>
+<h3 id="实现登录表单">实现登录表单</h3>
+<p>一个简单实用的登录表单的html文件：</p>
+<pre><code class="hljs django">&lt;span class=&quot;xml&quot;&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;loginForm&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-controller&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;LoginController&quot;&lt;/span&gt;
+  &lt;span class=&quot;hljs-attr&quot;&gt;ng-submit&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;login(credentials)&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;novalidate&lt;/span&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;label&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;for&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;username&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;Username:&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;label&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;input&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;type&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;text&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;id&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;username&quot;&lt;/span&gt;
+     &lt;span class=&quot;hljs-attr&quot;&gt;ng-model&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;credentials.username&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;label&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;for&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;password&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;Password:&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;label&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;input&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;type&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;password&quot;&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;id&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;password&quot;&lt;/span&gt;
+     &lt;span class=&quot;hljs-attr&quot;&gt;ng-model&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;credentials.password&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;type&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;submit&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;Login&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;button&lt;/span&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;form&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<p>将该表单代码放入<code>view1.html</code>中，并且修改<code>view1.js</code>为该表单添加对应的controller，即<code>LoginController</code>.如下：</p>
+<pre><code class="hljs php">&lt;span class=&quot;hljs-comment&quot;&gt;// controller&lt;/span&gt;
+.controller(&lt;span class=&quot;hljs-string&quot;&gt;'LoginController'&lt;/span&gt;, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;($scope, $rootScope, AUTH_EVENTS, AuthService)&lt;/span&gt; &lt;/span&gt;{
+  $scope.credentials = {
+     username : &lt;span class=&quot;hljs-string&quot;&gt;''&lt;/span&gt;,
+     password : &lt;span class=&quot;hljs-string&quot;&gt;''&lt;/span&gt;
+};  
+  $scope.login = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(credentials)&lt;/span&gt; &lt;/span&gt;{
+    console.log(&lt;span class=&quot;hljs-string&quot;&gt;'login'&lt;/span&gt;, credentials);
+    AuthService.login(credentials).then(&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(user)&lt;/span&gt; &lt;/span&gt;{
+        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+        $scope.$parent.setCurrentUser(user);
+    }, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;{
+        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+    });
+  };
+})</code></pre>
+<p>这里的credentials存放用户信息，值得注意的是：这里<code>$scope.login</code>仅完成抽象逻辑，具体的逻辑实现依靠<code>AuthService</code>这样的service，在<code>controller</code>里面建议多使用抽象逻辑，而非具体的实现。</p>
+<hr>
+<h3 id="用户登录状态记录">用户登录状态记录</h3>
+<p>通常，用户的登录情况会放置在服务器端的Session中，当用户在应用内跳转页面时，相应的状态会保留在Session中。这里先定义__用户登录的状态__和__用户权限__，这里使用constants定义：</p>
+<pre><code class="hljs javascript">&lt;span class=&quot;hljs-comment&quot;&gt;//用户登录状态&lt;/span&gt;
+.constant(&lt;span class=&quot;hljs-string&quot;&gt;'AUTH_EVENTS'&lt;/span&gt;, {
+  loginSuccess: &lt;span class=&quot;hljs-string&quot;&gt;'auth-login-success'&lt;/span&gt;,
+  loginFailed: &lt;span class=&quot;hljs-string&quot;&gt;'auth-login-failed'&lt;/span&gt;,
+  logoutSuccess: &lt;span class=&quot;hljs-string&quot;&gt;'auth-logout-success'&lt;/span&gt;,
+  sessionTimeout: &lt;span class=&quot;hljs-string&quot;&gt;'auth-session-timeout'&lt;/span&gt;,
+  notAuthenticated: &lt;span class=&quot;hljs-string&quot;&gt;'auth-not-authenticated'&lt;/span&gt;,
+  notAuthorized: &lt;span class=&quot;hljs-string&quot;&gt;'auth-not-authorized'&lt;/span&gt;
+})</code></pre>
+<p>从<code>LoginController</code>可以看出，<code>constants</code>可以像service一样方便注入；</p>
+<pre><code class="hljs javascript">&lt;span class=&quot;hljs-comment&quot;&gt;//用户权限&lt;/span&gt;
+.constant(&lt;span class=&quot;hljs-string&quot;&gt;'USER_ROLES'&lt;/span&gt;, {
+  all: &lt;span class=&quot;hljs-string&quot;&gt;'*'&lt;/span&gt;,
+  admin: &lt;span class=&quot;hljs-string&quot;&gt;'admin'&lt;/span&gt;,
+  editor: &lt;span class=&quot;hljs-string&quot;&gt;'editor'&lt;/span&gt;,
+  guest: &lt;span class=&quot;hljs-string&quot;&gt;'guest'&lt;/span&gt;
+})</code></pre>
+<p>用户登录状态和用户权限将保存在Session中。</p>
+<hr>
+<h3 id="登录服务authservice">登录服务AuthService</h3>
+<p>将登录实现以及用户权限管理统一交给<code>AuthService</code>,可在顶层模块中注册该服务，这里是<code>app.js</code>中的<code>myApp</code>模块。</p>
+<pre><code class="hljs php">.factory(&lt;span class=&quot;hljs-string&quot;&gt;'AuthService'&lt;/span&gt;, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;($http, Session)&lt;/span&gt; &lt;/span&gt;{
+  &lt;span class=&quot;hljs-keyword&quot;&gt;var&lt;/span&gt; authService = {};
+ 
+  authService.login = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;(credentials)&lt;/span&gt; &lt;/span&gt;{
+
+    &lt;span class=&quot;hljs-comment&quot;&gt;//本地提供的服务，可用loopback快速搭建&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;var&lt;/span&gt; api = $resource(&lt;span class=&quot;hljs-string&quot;&gt;'http://localhost:3000/api/user_tests'&lt;/span&gt;);
+    
+    &lt;span class=&quot;hljs-comment&quot;&gt;//因为没有写服务端验证用户密码，使用save是为了方便；&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//这里，如果服务端已存在该credentials，返回的response会包含错误信息，可用来替代401、403等；&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; api.save(credentials)
+        .$promise
+        .then(&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(res)&lt;/span&gt; &lt;/span&gt;{
+            Session.create(res.id, res.id,
+                           res.Role);
+            &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; res;
+        });
+  };
+ 
+  authService.isAuthenticated = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;{
+    &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; !!Session.userId;
+  };
+ 
+  authService.isAuthorized = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;(authorizedRoles)&lt;/span&gt; &lt;/span&gt;{
+    &lt;span class=&quot;hljs-keyword&quot;&gt;if&lt;/span&gt; (!angular.isArray(authorizedRoles)) {
+      authorizedRoles = [authorizedRoles];
+    }
+    &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; (authService.isAuthenticated() &amp;amp;&amp;amp;
+      authorizedRoles.indexOf(Session.userRole) !== &lt;span class=&quot;hljs-number&quot;&gt;-1&lt;/span&gt;);
+  };
+ 
+  &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; authService;
+})</code></pre>
+<h3 id="session">Session</h3>
+<p>用户登录后，将服务器中关于用户的Session存储起来。</p>
+<p>在<code>myApp</code>模块中注册一个服务<code>Session</code>，用于存储服务端用户的Session。</p>
+<pre><code class="hljs javascript">.service(&lt;span class=&quot;hljs-string&quot;&gt;'Session'&lt;/span&gt;, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; () &lt;/span&gt;{
+  &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.create = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;hljs-params&quot;&gt;sessionId, userId, userRole&lt;/span&gt;) &lt;/span&gt;{
+    &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.id = sessionId;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.userId = userId;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.userRole = userRole;
+  };
+  &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.destroy = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; () &lt;/span&gt;{
+    &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.id = &lt;span class=&quot;hljs-literal&quot;&gt;null&lt;/span&gt;;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.userId = &lt;span class=&quot;hljs-literal&quot;&gt;null&lt;/span&gt;;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;.userRole = &lt;span class=&quot;hljs-literal&quot;&gt;null&lt;/span&gt;;
+  };
+})</code></pre>
+<h3 id="用户信息">用户信息</h3>
+<p>当用户登录之后，用户的信息（用户名、id等）应该保存在哪里？</p>
+<p>这里的做法是将用户对象<code>currentUser</code>保存在应用顶层模块<code>myApp</code>的<code>$scope</code>中，由于它位于<code>$scope</code>根部，应用中任何<code>$scope</code>都继承它,子代<code>$scope</code>可以很方便地使用根的变量和方法。</p>
+<pre><code class="hljs php">.controller(&lt;span class=&quot;hljs-string&quot;&gt;'ApplicationController'&lt;/span&gt;, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;($scope, USER_ROLES, AuthService)&lt;/span&gt; &lt;/span&gt;{
+  $scope.currentUser = &lt;span class=&quot;hljs-keyword&quot;&gt;null&lt;/span&gt;;
+  $scope.userRoles = USER_ROLES;
+  $scope.isAuthorized = AuthService.isAuthorized;
+ 
+  $scope.setCurrentUser = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;(user)&lt;/span&gt; &lt;/span&gt;{
+    $scope.currentUser = user;
+  };
+})</code></pre>
+<p>首先声明<code>currentUser</code>以便在子代<code>$scope</code>中使用；因为在子代<code>$scope</code>中直接给<code>currentUser</code>赋值不会更新根部的<code>currentUser</code>，而是在当前<code>$scope</code>中新建一个<code>currentUser</code>（详细查询scope的继承），所以用<code>setCurrentUser</code>给根'$scope'的<code>currentUser</code>变量赋值。</p>
+<hr>
+<h3 id="访问控制">访问控制</h3>
+<p>客户端不存在真正意义的访问控制，毕竟代码在客户端手中，这种工作通常是在服务端完成的，这里说的实际上是显示控制(visibility control).</p>
+<h4 id="angularjs隐藏信息">AngularJs隐藏信息</h4>
+<p><code>ng-show</code>和<code>ng-hide</code>是对DOM进行操作，会增加浏览器负担；这里选择使用<code>ng-if</code>和<code>ng-switch</code>。</p>
+<p>在<code>view2.html</code>中插入：</p>
+<pre><code class="hljs django">&lt;span class=&quot;xml&quot;&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-if&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;currentUser&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;Welcome, &lt;/span&gt;&lt;span class=&quot;hljs-template-variable&quot;&gt;{{ currentUser.name }}&lt;/span&gt;&lt;span class=&quot;xml&quot;&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-if&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;isAuthorized(userRoles.admin)&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;You're admin.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-switch&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;on&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;currentUser.role&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-switch-when&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;userRoles.admin&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;You're admin.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-switch-when&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;userRoles.editor&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;You're editor.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-switch-default&lt;/span&gt;&amp;gt;&lt;/span&gt;You're something else.&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
+<h4 id="限制访问">限制访问</h4>
+<p>有些页面仅允许具有权限的用户访问，这里需要限制其他用户的访问，在<code>ui-router</code>下可以通过传参进行限制，规定页面允许访问的角色：</p>
+<pre><code class="hljs php">.config(&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;($stateProvider, USER_ROLES)&lt;/span&gt; &lt;/span&gt;{
+  $stateProvider.state(&lt;span class=&quot;hljs-string&quot;&gt;'dashboard'&lt;/span&gt;, {
+    url: &lt;span class=&quot;hljs-string&quot;&gt;'/dashboard'&lt;/span&gt;,
+    templateUrl: &lt;span class=&quot;hljs-string&quot;&gt;'dashboard/index.html'&lt;/span&gt;,
+    data: {
+      authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
+    }
+  });
+})</code></pre>
+<p>接下来，需要在每次页面改变前判断用户是否有权限访问，通过监听<code>$stateChangeStart</code>来实现：</p>
+<pre><code class="hljs php">.run(&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;($rootScope, AUTH_EVENTS, AuthService)&lt;/span&gt; &lt;/span&gt;{
+  $rootScope.$on(&lt;span class=&quot;hljs-string&quot;&gt;'$stateChangeStart'&lt;/span&gt;, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;(event, next)&lt;/span&gt; &lt;/span&gt;{
+    &lt;span class=&quot;hljs-keyword&quot;&gt;var&lt;/span&gt; authorizedRoles = next.data.authorizedRoles;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;if&lt;/span&gt; (!AuthService.isAuthorized(authorizedRoles)) {
+      event.preventDefault();
+      &lt;span class=&quot;hljs-keyword&quot;&gt;if&lt;/span&gt; (AuthService.isAuthenticated()) {
+        &lt;span class=&quot;hljs-comment&quot;&gt;// user is not allowed&lt;/span&gt;
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+      } &lt;span class=&quot;hljs-keyword&quot;&gt;else&lt;/span&gt; {
+        &lt;span class=&quot;hljs-comment&quot;&gt;// user is not logged in&lt;/span&gt;
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+      }
+    }
+  });
+})</code></pre>
+<p>如果用户 未登录/无权限，将被限制在当前页面，发出 认证失败/授权失败 的广播；<br>
+之后，需要有相应的交互，如弹出登录框，提醒用户完成登录操作，或者弹出错误提示，告诉用户无权限访问相应的页面。</p>
+<h3 id="会话过期session-expiration">会话过期（Session expiration）</h3>
+<p>向服务器发送请求，如果出现非法访问等情况，服务端将返回HTTP response会包含相应的错误信息，例如：</p>
+<ul>
+<li>401 Unauthorized — 用户未登录</li>
+<li>403 Forbidden — 已登录，但无权限访问</li>
+<li>419 Authentication Timeout (non standard) — 会话过期</li>
+<li>440 Login Timeout (Microsoft only) — 会话过期</li>
+</ul>
+<p>返回401、419、440时，需要弹出登录框让用户登录；<br>
+返回403时，需要弹出错误信息；<br>
+为了方便，这里的登录框使用<code>Angular</code>的<code>directive</code>封装，提供一个叫<code>LoginDialog</code>的标签。</p>
+<pre><code class="hljs php">.config(&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;($httpProvider)&lt;/span&gt; &lt;/span&gt;{
+  $httpProvider.interceptors.push([
+    &lt;span class=&quot;hljs-string&quot;&gt;'$injector'&lt;/span&gt;,
+    &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;($injector)&lt;/span&gt; &lt;/span&gt;{
+      &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; $injector.get(&lt;span class=&quot;hljs-string&quot;&gt;'AuthInterceptor'&lt;/span&gt;);
+    }
+  ]);
+})
+.factory(&lt;span class=&quot;hljs-string&quot;&gt;'AuthInterceptor'&lt;/span&gt;, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;($rootScope, $q,
+                                      AUTH_EVENTS)&lt;/span&gt; &lt;/span&gt;{
+  &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; {
+    responseError: &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;(response)&lt;/span&gt; &lt;/span&gt;{ 
+      $rootScope.$broadcast({
+        &lt;span class=&quot;hljs-number&quot;&gt;401&lt;/span&gt;: AUTH_EVENTS.notAuthenticated,
+        &lt;span class=&quot;hljs-number&quot;&gt;403&lt;/span&gt;: AUTH_EVENTS.notAuthorized,
+        &lt;span class=&quot;hljs-number&quot;&gt;419&lt;/span&gt;: AUTH_EVENTS.sessionTimeout,
+        &lt;span class=&quot;hljs-number&quot;&gt;440&lt;/span&gt;: AUTH_EVENTS.sessionTimeout
+      }[response.status], response);
+      &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; $q.reject(response);
+    }
+  };
+})</code></pre>
+<p><code>loginDialog</code>的实现如下，通过监听<code>AUTH_EVENTS.notAuthenticated</code>和<code>AUTH_EVENTS.sessionTimeout</code>,当用户 未登录/会话过期 时，将<code>loginDialog</code>的<code>visible</code>设为<code>true</code>,显示登录框：</p>
+<pre><code class="hljs php">.directive(&lt;span class=&quot;hljs-string&quot;&gt;'loginDialog'&lt;/span&gt;, &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;(AUTH_EVENTS)&lt;/span&gt; &lt;/span&gt;{
+  &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; {
+    restrict: &lt;span class=&quot;hljs-string&quot;&gt;'A'&lt;/span&gt;,
+    template: &lt;span class=&quot;hljs-string&quot;&gt;'&amp;lt;div ng-if=&quot;visible&quot; ng-include=&quot;\'view1/view1.html\'&quot;&amp;gt;'&lt;/span&gt;,
+    link: &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;(scope)&lt;/span&gt; &lt;/span&gt;{
+      &lt;span class=&quot;hljs-keyword&quot;&gt;var&lt;/span&gt; showDialog = &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;{
+        scope.visible = &lt;span class=&quot;hljs-keyword&quot;&gt;true&lt;/span&gt;;
+      };
+  
+      scope.visible = &lt;span class=&quot;hljs-keyword&quot;&gt;false&lt;/span&gt;;
+      scope.$on(AUTH_EVENTS.notAuthenticated, showDialog);
+      scope.$on(AUTH_EVENTS.sessionTimeout, showDialog)
+    }
+  };
+})</code></pre>
+<p>为方便测试，将其放入<code>index.html</code>中：</p>
+<pre><code class="hljs django">&lt;span class=&quot;xml&quot;&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-controller&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;'ApplicationController'&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;login-dialog&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;ng-if&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;NotLoginPage&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;ul&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;menu&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;href&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;#!/view1&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;view1&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;&lt;span class=&quot;hljs-name&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;hljs-attr&quot;&gt;href&lt;/span&gt;=&lt;span class=&quot;hljs-string&quot;&gt;&quot;#!/view2&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;view2&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;hljs-tag&quot;&gt;&amp;lt;/&lt;span class=&quot;hljs-name&quot;&gt;ul&lt;/span&gt;&amp;gt;&lt;/span&gt;
+...&lt;/span&gt;</code></pre>
+<hr>
+<p>到这里，登录涉及的主要模块已经完成。</p>
+<p>本文主要参考：https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec#.kr5puik92</p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/angularjs" rel="tag">AngularJs</a>, <a href="/tag/angularjs-%E7%99%BB%E9%99%86" rel="tag">AngularJs 登陆</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2017/08/01/%E5%9F%BA%E4%BA%8Ep2p-%E7%BD%91%E7%BB%9C%E7%9A%84-zeronet-%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F.html" rel="prev">基于P2P 网络的 ZeroNet 是什么意思？</a><br>【下篇】<a href="/2017/08/07/iphone8.html" rel="next">最靠谱的iPhone 8渲染图：太美了！</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2017/10/11/angularjs-disable-template-cache.html">AngularJs 禁止模板缓存</a></li><li> · <a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li><li> · <a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li><li> · <a href="/2025/01/06/nestjs-nextjs-nuxtjs.html">Nest.js 、 Next.js、 Nuxt.js的区别</a></li><li> · <a href="/2024/11/20/mp-bind.html">小程序可以绑定其它小程序吗？</a></li><li> · <a href="/2024/11/19/vue3-vite-subdir.html">vue3+vite+多环境发面到二级目录配置</a></li><li> · <a href="/2024/09/03/catchtap.html">微信小程序防止事件穿透防止事件冒泡</a></li><li> · <a href="/2024/08/29/qrcode-to-miniprogram.html">普通链接二维码跳转小程序</a></li><li> · <a href="/2024/06/03/flex-direction-column.html">解决flex-direction: column 之后元素宽度自动变为100%</a></li><li> · <a href="/2023/11/09/vue-react-node-vite-npm-yarn-build-auto-update-version.html">vue/react/node/vite/npm/yarn build自动更新版本号</a></li><li> · <a href="/2023/05/30/getvisitdistribution.html">getVisitDistribution  访问来源定义（访问来源 key 对应关系）</a></li><li> · <a href="/2023/05/10/tinymce.html">TinyMCE工具栏配置详解</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2017年08月07日发表在<a href="/category/jsjqureycss" rel="category tag">前端</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2017/08/07/angularjs-login.html" rel="bookmark" title="本文固定链接 /2017/08/07/angularjs-login.html">AngularJs 登录的简单实现 | Bruce's Blog</a><a href="#" onclick="copy_code('/2017/08/07/angularjs-login.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/08/07/angularjs-login.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4328" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="e8c7fcfa2b"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="138"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.066 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:40 -->

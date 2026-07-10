@@ -1,0 +1,729 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>Kubernetes 1.8.6 集群部署–部署Web UI界面 | Bruce's Blog</title> 
+<meta name="description" content="安装DNS插件">
+<meta name="keywords" content="docker,k8s,Kubernetes">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2019 年 6 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="5" class="pad"> </td><td>1</td><td>2</td>
+	</tr>
+	<tr>
+		<td>3</td><td>4</td><td>5</td><td><a href="/2019/06/06" aria-label="2019年6月6日 发布的文章">6</a></td><td>7</td><td><a href="/2019/06/08" aria-label="2019年6月8日 发布的文章">8</a></td><td>9</td>
+	</tr>
+	<tr>
+		<td>10</td><td>11</td><td>12</td><td>13</td><td><a href="/2019/06/14" aria-label="2019年6月14日 发布的文章">14</a></td><td>15</td><td>16</td>
+	</tr>
+	<tr>
+		<td><a href="/2019/06/17" aria-label="2019年6月17日 发布的文章">17</a></td><td><a href="/2019/06/18" aria-label="2019年6月18日 发布的文章">18</a></td><td><a href="/2019/06/19" aria-label="2019年6月19日 发布的文章">19</a></td><td><a href="/2019/06/20" aria-label="2019年6月20日 发布的文章">20</a></td><td>21</td><td><a href="/2019/06/22" aria-label="2019年6月22日 发布的文章">22</a></td><td>23</td>
+	</tr>
+	<tr>
+		<td><a href="/2019/06/24" aria-label="2019年6月24日 发布的文章">24</a></td><td><a href="/2019/06/25" aria-label="2019年6月25日 发布的文章">25</a></td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2019/05">« 5 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2019/07">7 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#d00203;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#8e2ff6;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#fb21f7;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#c44ef6;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#b49577;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#96986b;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#b57fba;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#b0f7ff;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#52c2ec;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#9b28c;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#fee54b;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#79ed6d;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#63fcdc;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#4a7b76;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#69e485;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#a93054;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#fd179d;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#bdb142;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#e4312f;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#1d0b3a;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#da0bf9;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#3cf70c;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#d6801b;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#c47216;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#a23c73;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#2dd147;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#987e4d;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#9965a0;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#97d5f1;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#f1a513;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#87bfd1;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#43b033;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#fc71c3;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#87fe7;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#f705b6;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#99f60c;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#42c0c9;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#8d9fcb;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#bc48fe;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#3006f;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#577de5;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#71e77c;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#531fba;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#e8f6cd;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#348b8c;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/docker" rel="category tag">Docker</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">Kubernetes 1.8.6 集群部署–部署Web UI界面</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2019-06-24 18:18</span>
+			<span class="category">  <a href="/category/docker" rel="category tag">Docker</a></span>
+			<span class="article_comment"><a href="/2019/06/24/kubernetes-webui.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>681</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<h3 id="安装dns插件" data-source-line="1">安装DNS插件</h3>
+<p data-source-line="3"><mark>在 <strong>Master节点</strong> 上进行安装操作</mark></p>
+<h4 id="下载安装文件" data-source-line="5">下载安装文件</h4>
+<pre data-source-line="6"><code class="hljs">&lt;span class=&quot;hljs-meta&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; &lt;span class=&quot;hljs-built_in&quot;&gt;cd&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; wget https://github.com/kubernetes/kubernetes/releases/download/v1.8.6/kubernetes.tar.gz&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; tar xzvf kubernetes.tar.gz&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;
+#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; &lt;span class=&quot;hljs-built_in&quot;&gt;cd&lt;/span&gt; /root/kubernetes/cluster/addons/dns&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; mv  kubedns-svc.yaml.sed kubedns-svc.yaml&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;
+#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt;&lt;span class=&quot;zh-hans&quot;&gt;把文件中&lt;/span&gt;&lt;span class=&quot;hljs-variable&quot;&gt;$DNS_SERVER_IP&lt;/span&gt;&lt;span class=&quot;zh-hans&quot;&gt;替换成&lt;/span&gt;10.254.0.2&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; sed -i &lt;span class=&quot;hljs-string&quot;&gt;'s/$DNS_SERVER_IP/10.254.0.2/g'&lt;/span&gt; ./kubedns-svc.yaml&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;
+#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; mv ./kubedns-controller.yaml.sed ./kubedns-controller.yaml&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;
+#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt;&lt;span class=&quot;zh-hans&quot;&gt;把&lt;/span&gt;&lt;span class=&quot;hljs-variable&quot;&gt;$DNS_DOMAIN&lt;/span&gt;&lt;span class=&quot;zh-hans&quot;&gt;替换成&lt;/span&gt;cluster.local&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; sed -i &lt;span class=&quot;hljs-string&quot;&gt;'s/$DNS_DOMAIN/cluster.local/g'&lt;/span&gt; ./kubedns-controller.yaml&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;
+#&lt;/span&gt;&lt;span class=&quot;bash&quot;&gt; ls *.yaml&lt;/span&gt;
+kubedns-cm.yaml  kubedns-controller.yaml  kubedns-sa.yaml  kubedns-svc.yaml
+
+[root@master1 dns]# kubectl create -f .
+configmap &quot;kube-dns&quot; created
+deployment &quot;kube-dns&quot; created
+serviceaccount &quot;kube-dns&quot; created
+service &quot;kube-dns&quot; created
+</code></pre>
+<h3 id="部署-dashboard-插件" data-source-line="32">部署 dashboard 插件</h3>
+<p data-source-line="34"><mark>在<strong>master节点</strong>部署</mark></p>
+<p data-source-line="36">新增部署配置文件</p>
+<p data-source-line="38">需要2个文件。</p>
+<h4 id="文件一" data-source-line="40">文件一</h4>
+<h5 id="dashboardyaml" data-source-line="42">dashboard.yaml：</h5>
+<pre data-source-line="43"><code class="hljs">&lt;span class=&quot;hljs-attr&quot;&gt;apiVersion:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;kind:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;ServiceAccount&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;metadata:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  name:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  namespace:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kube-system&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;apiVersion:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;rbac.authorization.k8s.io/v1beta1&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;kind:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;ClusterRoleBinding&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;metadata:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  name:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  labels:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;    k8s-app:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;roleRef:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  apiGroup:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;rbac.authorization.k8s.io&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  kind:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;ClusterRole&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  name:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;cluster-admin&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;subjects:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;- kind:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;ServiceAccount&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  name:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  namespace:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kube-system&lt;/span&gt;
+&lt;span class=&quot;hljs-meta&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;apiVersion:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;extensions/v1beta1&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;kind:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;Deployment&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;metadata:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  name:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  namespace:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kube-system&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  labels:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;    k8s-app:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+    &lt;span class=&quot;hljs-string&quot;&gt;kubernetes.io/cluster-service:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;&quot;true&quot;&lt;/span&gt;
+    &lt;span class=&quot;hljs-string&quot;&gt;addonmanager.kubernetes.io/mode:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;Reconcile&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;spec:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  selector:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;    matchLabels:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      k8s-app:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;  template:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;    metadata:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      labels:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;        k8s-app:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      annotations:&lt;/span&gt;
+        &lt;span class=&quot;hljs-string&quot;&gt;scheduler.alpha.kubernetes.io/critical-pod:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;''&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;    spec:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      serviceAccountName:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      containers:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      - name:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;        image:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;registry.docker-cn.com/kubernetesdashboarddev/kubernetes-dashboard-amd64:head&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;        resources:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;          limits:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;            cpu:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;hljs-string&quot;&gt;m&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;            memory:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;hljs-string&quot;&gt;Mi&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;          requests:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;            cpu:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;hljs-string&quot;&gt;m&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;            memory:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;hljs-string&quot;&gt;Mi&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;        ports:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;        - containerPort:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;9090&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;        livenessProbe:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;          httpGet:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;            path:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;/&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;            port:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;9090&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;          initialDelaySeconds:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;30&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;          timeoutSeconds:&lt;/span&gt; &lt;span class=&quot;hljs-number&quot;&gt;30&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      tolerations:&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;      - key:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;&quot;CriticalAddonsOnly&quot;&lt;/span&gt;
+&lt;span class=&quot;hljs-attr&quot;&gt;        operator:&lt;/span&gt; &lt;span class=&quot;hljs-string&quot;&gt;&quot;Exists&quot;&lt;/span&gt;
+</code></pre>
+<h4 id="文件二" data-source-line="108">文件二：</h4>
+<h5 id="dashboard-svcyaml文件" data-source-line="110">dashboard-svc.yaml文件</h5>
+<pre data-source-line="111"><code class="hljs">&lt;span class=&quot;hljs-attribute&quot;&gt;apiVersion&lt;/span&gt;: v1
+&lt;span class=&quot;hljs-attribute&quot;&gt;kind&lt;/span&gt;: Service
+&lt;span class=&quot;hljs-attribute&quot;&gt;metadata&lt;/span&gt;:
+  &lt;span class=&quot;hljs-attribute&quot;&gt;name&lt;/span&gt;: kubernetes-dashboard
+  &lt;span class=&quot;hljs-attribute&quot;&gt;namespace&lt;/span&gt;: kube-system
+  &lt;span class=&quot;hljs-attribute&quot;&gt;labels&lt;/span&gt;:
+    &lt;span class=&quot;hljs-attribute&quot;&gt;k8s-app&lt;/span&gt;: kubernetes-dashboard
+    kubernetes.io/&lt;span class=&quot;hljs-attribute&quot;&gt;cluster-service&lt;/span&gt;: &lt;span class=&quot;hljs-string&quot;&gt;&quot;true&quot;&lt;/span&gt;
+    addonmanager.kubernetes.io/&lt;span class=&quot;hljs-attribute&quot;&gt;mode&lt;/span&gt;: Reconcile
+&lt;span class=&quot;hljs-attribute&quot;&gt;spec&lt;/span&gt;:
+  &lt;span class=&quot;hljs-attribute&quot;&gt;selector&lt;/span&gt;:
+    &lt;span class=&quot;hljs-attribute&quot;&gt;k8s-app&lt;/span&gt;: kubernetes-dashboard
+  &lt;span class=&quot;hljs-attribute&quot;&gt;type&lt;/span&gt;: NodePort
+  &lt;span class=&quot;hljs-attribute&quot;&gt;ports&lt;/span&gt;:
+  - &lt;span class=&quot;hljs-attribute&quot;&gt;port&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;9090&lt;/span&gt;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;targetPort&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;9090&lt;/span&gt;
+    &lt;span class=&quot;hljs-attribute&quot;&gt;nodePort&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;8888&lt;/span&gt;
+</code></pre>
+<p data-source-line="130"><ins>给个吉利数字，因为这个端口来的太不容易了。。。</ins></p>
+<h4 id="分别执行2个部署文件" data-source-line="132">分别执行2个部署文件</h4>
+<pre data-source-line="134"><code class="hljs">kubectl create -f dashboard&lt;span class=&quot;hljs-selector-class&quot;&gt;.yaml&lt;/span&gt;
+
+kubectl create -f dashboard-svc&lt;span class=&quot;hljs-selector-class&quot;&gt;.yaml&lt;/span&gt;
+</code></pre>
+<h4 id="如何访问" data-source-line="140">如何访问？</h4>
+<pre data-source-line="141"><code class="hljs">[root@master1 dashboard]# kubectl get po -n kube-system -o wide
+NAME                                    READY     STATUS    RESTARTS   AGE       IP             NODE
+heapster&lt;span class=&quot;hljs-number&quot;&gt;-6&lt;/span&gt;c6bb6b7f5&lt;span class=&quot;hljs-number&quot;&gt;-9&lt;/span&gt;sskf               &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;/&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;       Running   &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;          &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;h        &lt;span class=&quot;hljs-number&quot;&gt;172.30&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.61&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.4&lt;/span&gt;    &lt;span class=&quot;hljs-number&quot;&gt;192.168&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.161&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.162&lt;/span&gt;
+kube-dns&lt;span class=&quot;hljs-number&quot;&gt;-777&lt;/span&gt;f78c558-fshmq               &lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;/&lt;span class=&quot;hljs-number&quot;&gt;3&lt;/span&gt;       Running   &lt;span class=&quot;hljs-number&quot;&gt;15&lt;/span&gt;         &lt;span class=&quot;hljs-number&quot;&gt;9&lt;/span&gt;h        &lt;span class=&quot;hljs-number&quot;&gt;172.30&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.61&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.3&lt;/span&gt;    &lt;span class=&quot;hljs-number&quot;&gt;192.168&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.161&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.162&lt;/span&gt;
+kubernetes-dashboard&lt;span class=&quot;hljs-number&quot;&gt;-8665&lt;/span&gt;cd4dfb&lt;span class=&quot;hljs-number&quot;&gt;-2&lt;/span&gt;ddd9   &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;/&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;       Running   &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;          &lt;span class=&quot;hljs-number&quot;&gt;10&lt;/span&gt;m       &lt;span class=&quot;hljs-number&quot;&gt;172.30&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.101&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.2&lt;/span&gt;   &lt;span class=&quot;hljs-number&quot;&gt;192.168&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.161&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.163&lt;/span&gt;
+monitoring-grafana&lt;span class=&quot;hljs-number&quot;&gt;-8&lt;/span&gt;f6f789f9-lp2zk      &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;/&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;       Running   &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;          &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;h        &lt;span class=&quot;hljs-number&quot;&gt;172.30&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.61&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.6&lt;/span&gt;    &lt;span class=&quot;hljs-number&quot;&gt;192.168&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.161&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.162&lt;/span&gt;
+monitoring-influxdb&lt;span class=&quot;hljs-number&quot;&gt;-7&lt;/span&gt;c77768d9&lt;span class=&quot;hljs-number&quot;&gt;-9&lt;/span&gt;nbbv     &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;/&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;       Running   &lt;span class=&quot;hljs-number&quot;&gt;0&lt;/span&gt;          &lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;h        &lt;span class=&quot;hljs-number&quot;&gt;172.30&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.61&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;    &lt;span class=&quot;hljs-number&quot;&gt;192.168&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.161&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.162&lt;/span&gt;
+</code></pre>
+<p data-source-line="150">首先查看一下部署的服务是否正常？</p>
+<p data-source-line="152">如上可以很清晰的看到 咱们部署的 <strong>kubernetes-dashboard</strong> 在 192.168.161.163 上面已经部署了。</p>
+<p data-source-line="154">那我们可以去访问下：</p>
+<pre data-source-line="155"><code class="hljs">&lt;span class=&quot;hljs-symbol&quot;&gt;http:&lt;/span&gt;&lt;span class=&quot;hljs-comment&quot;&gt;//192.168.161.163:8888&lt;/span&gt;
+</code></pre>
+<h3 id="部署-heapster-插件" data-source-line="159">部署 heapster 插件</h3>
+<h5 id="下载安装文件-2" data-source-line="161">下载安装文件</h5>
+<pre data-source-line="162"><code class="hljs">&lt;span class=&quot;hljs-comment&quot;&gt;# wget https://github.com/kubernetes/heapster/archive/v1.5.0.tar.gz&lt;/span&gt;
+
+&lt;span class=&quot;hljs-comment&quot;&gt;# tar xzvf ./v1.5.0.tar.gz&lt;/span&gt;
+
+&lt;span class=&quot;hljs-comment&quot;&gt;# cd ./heapster-1.5.0/&lt;/span&gt;
+
+[root@master1 heapster-1.5.0]# kubectl create -f deploy/kube-config/influxdb/
+deployment &lt;span class=&quot;hljs-string&quot;&gt;&quot;monitoring-grafana&quot;&lt;/span&gt; created&lt;span class=&quot;hljs-built_in&quot;&gt;
+service &lt;/span&gt;&lt;span class=&quot;hljs-string&quot;&gt;&quot;monitoring-grafana&quot;&lt;/span&gt; created
+serviceaccount &lt;span class=&quot;hljs-string&quot;&gt;&quot;heapster&quot;&lt;/span&gt; created
+deployment &lt;span class=&quot;hljs-string&quot;&gt;&quot;heapster&quot;&lt;/span&gt; created&lt;span class=&quot;hljs-built_in&quot;&gt;
+service &lt;/span&gt;&lt;span class=&quot;hljs-string&quot;&gt;&quot;heapster&quot;&lt;/span&gt; created
+deployment &lt;span class=&quot;hljs-string&quot;&gt;&quot;monitoring-influxdb&quot;&lt;/span&gt; created&lt;span class=&quot;hljs-built_in&quot;&gt;
+service &lt;/span&gt;&lt;span class=&quot;hljs-string&quot;&gt;&quot;monitoring-influxdb&quot;&lt;/span&gt; created
+
+[root@master1 heapster-1.5.0]#  kubectl create -f deploy/kube-config/rbac/heapster-rbac.yaml
+clusterrolebinding &lt;span class=&quot;hljs-string&quot;&gt;&quot;heapster&quot;&lt;/span&gt; created
+</code></pre>
+<h4 id="登录dashboard" data-source-line="182">登录dashboard</h4>
+<p data-source-line="184"><img fetchpriority="high" decoding="async" class="alignnone size-full wp-image-1032" src="/wp-content/uploads/2019/06/7-1.png" sizes="(max-width: 1916px) 100vw, 1916px" srcset="https://www.okay686.cn/wp-content/uploads/2018/03/7-1.png 1916w, https://www.okay686.cn/wp-content/uploads/2018/03/7-1-150x79.png 150w, https://www.okay686.cn/wp-content/uploads/2018/03/7-1-300x159.png 300w, https://www.okay686.cn/wp-content/uploads/2018/03/7-1-768x406.png 768w, https://www.okay686.cn/wp-content/uploads/2018/03/7-1-1024x541.png 1024w" alt="" width="1916" height="1013" data-original="/wp-content/uploads/2019/06/7-1.png"></p>
+<p data-source-line="186"><img decoding="async" class="alignnone size-full wp-image-1033" src="/wp-content/uploads/2019/06/7-2.png" sizes="(max-width: 1907px) 100vw, 1907px" srcset="https://www.okay686.cn/wp-content/uploads/2018/03/7-2.png 1907w, https://www.okay686.cn/wp-content/uploads/2018/03/7-2-150x75.png 150w, https://www.okay686.cn/wp-content/uploads/2018/03/7-2-300x150.png 300w, https://www.okay686.cn/wp-content/uploads/2018/03/7-2-768x384.png 768w, https://www.okay686.cn/wp-content/uploads/2018/03/7-2-1024x512.png 1024w" alt="" width="1907" height="954" data-original="/wp-content/uploads/2019/06/7-2.png"></p>
+<p data-source-line="188"><img decoding="async" class="alignnone size-full wp-image-1034" src="/wp-content/uploads/2019/06/7-3.png" sizes="(max-width: 1902px) 100vw, 1902px" srcset="https://www.okay686.cn/wp-content/uploads/2018/03/7-3.png 1902w, https://www.okay686.cn/wp-content/uploads/2018/03/7-3-150x76.png 150w, https://www.okay686.cn/wp-content/uploads/2018/03/7-3-300x152.png 300w, https://www.okay686.cn/wp-content/uploads/2018/03/7-3-768x388.png 768w, https://www.okay686.cn/wp-content/uploads/2018/03/7-3-1024x518.png 1024w" alt="" width="1902" height="962" data-original="/wp-content/uploads/2019/06/7-3.png"></p>
+<p data-source-line="190"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1035" src="/wp-content/uploads/2019/06/7-4.png" sizes="auto, (max-width: 1915px) 100vw, 1915px" srcset="https://www.okay686.cn/wp-content/uploads/2018/03/7-4.png 1915w, https://www.okay686.cn/wp-content/uploads/2018/03/7-4-150x77.png 150w, https://www.okay686.cn/wp-content/uploads/2018/03/7-4-300x153.png 300w, https://www.okay686.cn/wp-content/uploads/2018/03/7-4-768x393.png 768w, https://www.okay686.cn/wp-content/uploads/2018/03/7-4-1024x523.png 1024w" alt="" width="1915" height="979" data-original="/wp-content/uploads/2019/06/7-4.png"></p>
+<p data-source-line="192"><ins>当然最后真的很想说，结果我非常满意，中间入了很多坑，耗费了很长时间，但最终还是一个人搞定了。</ins></p>
+<p data-source-line="195">重点留在后面，顺便给大家说下，架构所涉及的镜像源均为google的，你们也懂的，被墙的不行不行的！在此我把所有的镜像换成了阿里的如下：</p>
+<p data-source-line="197">大家对照着自行修改！！</p>
+<p data-source-line="199">文中用到的服务安装包 我已经下载好 放在了云盘：</p>
+<pre data-source-line="201"><code class="hljs">&lt;span class=&quot;zh-hans&quot;&gt;链接：&lt;/span&gt;https:&lt;span class=&quot;hljs-regexp&quot;&gt;//&lt;/span&gt;pan.baidu.com&lt;span class=&quot;hljs-regexp&quot;&gt;/s/&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1&lt;/span&gt;RPUsippDee5C9tOnBkdlqg &lt;span class=&quot;zh-hans&quot;&gt;密码：&lt;/span&gt;ckez
+</code></pre>
+<p data-source-line="205"><strong>要是直接放在yaml文件中记得去掉 <span class="wp_keywordlink_affiliate"><a href="/tag/docker" title="View all posts in docker" target="_blank">docker</a></span> pull</strong></p>
+<pre data-source-line="207"><code class="hljs">gcr.io&lt;span class=&quot;hljs-regexp&quot;&gt;/google_containers/&lt;/span&gt;kubernetes-dashboard-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;v1&lt;span class=&quot;hljs-number&quot;&gt;.8&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.1&lt;/span&gt;
+docker pull registry.docker-cn.com&lt;span class=&quot;hljs-regexp&quot;&gt;/kubernetesdashboarddev/&lt;/span&gt;kubernetes-dashboard-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;head
+
+
+gcr.io&lt;span class=&quot;hljs-regexp&quot;&gt;/google_containers/&lt;/span&gt;k8s-dns-kube-dns-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;
+docker pull registry.cn-hangzhou.aliyuncs.com&lt;span class=&quot;hljs-regexp&quot;&gt;/wonders/&lt;/span&gt;k8s-dns-kube-dns-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;
+
+
+gcr.io&lt;span class=&quot;hljs-regexp&quot;&gt;/google_containers/&lt;/span&gt;heapster-grafana-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;v4&lt;span class=&quot;hljs-number&quot;&gt;.4&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.3&lt;/span&gt;
+docker pull registry.cn-hangzhou.aliyuncs.com&lt;span class=&quot;hljs-regexp&quot;&gt;/inspur_research/&lt;/span&gt;heapster-grafana-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;v4&lt;span class=&quot;hljs-number&quot;&gt;.4&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.3&lt;/span&gt;
+
+
+gcr.io&lt;span class=&quot;hljs-regexp&quot;&gt;/google_containers/&lt;/span&gt;heapster-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;v1&lt;span class=&quot;hljs-number&quot;&gt;.4&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.2&lt;/span&gt;
+docker pull registry.cn-hangzhou.aliyuncs.com&lt;span class=&quot;hljs-regexp&quot;&gt;/inspur_research/&lt;/span&gt;heapster-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;v1&lt;span class=&quot;hljs-number&quot;&gt;.4&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.2&lt;/span&gt;
+
+
+gcr.io&lt;span class=&quot;hljs-regexp&quot;&gt;/google_containers/&lt;/span&gt;heapster-influxdb-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;v1&lt;span class=&quot;hljs-number&quot;&gt;.3&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.3&lt;/span&gt;
+docker pull registry.cn-hangzhou.aliyuncs.com&lt;span class=&quot;hljs-regexp&quot;&gt;/inspur_research/&lt;/span&gt;heapster-influxdb-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;v1&lt;span class=&quot;hljs-number&quot;&gt;.3&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.3&lt;/span&gt;
+
+
+gcr.io&lt;span class=&quot;hljs-regexp&quot;&gt;/google_containers/&lt;/span&gt;k8s-dns-dnsmasq-nanny-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;
+docker pull registry.cn-hangzhou.aliyuncs.com&lt;span class=&quot;hljs-regexp&quot;&gt;/inspur_research/&lt;/span&gt;k8s-dns-dnsmasq-nanny-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;
+</code></pre>
+<p data-source-line="231">网友贡献：</p>
+<pre data-source-line="232"><code class="hljs">hub.c&lt;span class=&quot;hljs-number&quot;&gt;.163&lt;/span&gt;.com&lt;span class=&quot;hljs-regexp&quot;&gt;/zhijiansd/&lt;/span&gt;k8s-dns-kube-dns-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;
+
+hub.c&lt;span class=&quot;hljs-number&quot;&gt;.163&lt;/span&gt;.com&lt;span class=&quot;hljs-regexp&quot;&gt;/zhijiansd/&lt;/span&gt;k8s-dns-dnsmasq-nanny-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;
+
+hub.c&lt;span class=&quot;hljs-number&quot;&gt;.163&lt;/span&gt;.com&lt;span class=&quot;hljs-regexp&quot;&gt;/zhijiansd/&lt;/span&gt;k8s-dns-sidecar-&lt;span class=&quot;hljs-string&quot;&gt;amd64:&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;hljs-number&quot;&gt;.5&lt;/span&gt;
+</code></pre>
+<p data-source-line="239">当然，还有广大的网友支持：（阿里镜像站）</p>
+<p>https://dev.aliyun.com/search.html</p>
+<p> </p>
+<p> </p>
+<pre data-source-line="240">原文地址：https://www.okay686.cn/982.html</pre>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/docker" rel="tag">docker</a>, <a href="/tag/k8s" rel="tag">k8s</a>, <a href="/tag/kubernetes" rel="tag">Kubernetes</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2019/06/22/kubernetes.html" rel="prev">[转]Kubernetes安装方法及使用教程</a><br>【下篇】<a href="/2019/06/25/jap-createnativequery.html" rel="next">JAP使用createNativeQuery做原始的字段映射处理</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li><li> · <a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li><li> · <a href="/2025/07/02/k8s-ingress-non-pod-service.html">利用k8s ingress访问非POD服务</a></li><li> · <a href="/2025/06/06/docker-fastapi.html">Docker 快速部署 FastAPI 项目</a></li><li> · <a href="/2025/03/24/docker-confluence9.html">docker安装 Confluence9</a></li><li> · <a href="/2025/02/28/single-server-rolling-hot-upgrade.html">单台服务器应用不中断服务热部署滚动更新方案</a></li><li> · <a href="/2025/02/28/code-server.html">docker安装code-server</a></li><li> · <a href="/2025/02/19/dockerhub.html">Docker 镜像加速列表（20250216已更新）</a></li><li> · <a href="/2025/02/05/unknown-blob.html">解决docker push 到私有registry时，报unknown blob错</a></li><li> · <a href="/2024/10/31/amazon-linux-2023-docker.html">Amazon Linux 2023 安装Docker和Docker Compose</a></li><li> · <a href="/2024/10/30/docker-network.html">修改Docker的默认网段</a></li><li> · <a href="/2024/08/15/docker-backup-mysql-crontab-script.html">docker定时任务Mysql脚本</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2019年06月24日发表在<a href="/category/docker" rel="category tag">Docker</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2019/06/24/kubernetes-webui.html" rel="bookmark" title="本文固定链接 /2019/06/24/kubernetes-webui.html">Kubernetes 1.8.6 集群部署–部署Web UI界面 | Bruce's Blog</a><a href="#" onclick="copy_code('/2019/06/24/kubernetes-webui.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2019/06/24/kubernetes-webui.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="5215" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="eae75bb758"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="243"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.065 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:07 -->

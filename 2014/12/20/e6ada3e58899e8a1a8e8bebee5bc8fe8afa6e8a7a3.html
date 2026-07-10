@@ -1,0 +1,1116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>正则表达式详解 | Bruce's Blog</title> 
+<meta name="description" content="正则表达式详解">
+<meta name="keywords" content="正则表达式">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2014 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td><a href="/2014/12/07" aria-label="2014年12月7日 发布的文章">7</a></td>
+	</tr>
+	<tr>
+		<td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td>
+	</tr>
+	<tr>
+		<td><a href="/2014/12/15" aria-label="2014年12月15日 发布的文章">15</a></td><td>16</td><td>17</td><td>18</td><td>19</td><td><a href="/2014/12/20" aria-label="2014年12月20日 发布的文章">20</a></td><td>21</td>
+	</tr>
+	<tr>
+		<td>22</td><td>23</td><td><a href="/2014/12/24" aria-label="2014年12月24日 发布的文章">24</a></td><td><a href="/2014/12/25" aria-label="2014年12月25日 发布的文章">25</a></td><td>26</td><td><a href="/2014/12/27" aria-label="2014年12月27日 发布的文章">27</a></td><td><a href="/2014/12/28" aria-label="2014年12月28日 发布的文章">28</a></td>
+	</tr>
+	<tr>
+		<td>29</td><td>30</td><td>31</td>
+		<td class="pad" colspan="4"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2014/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2015/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#7e9e61;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#4dcf89;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#36aa3;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#562afd;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#26be3d;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#76547a;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#f295d3;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#de33b4;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#e237d8;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#6e2cef;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#f88c02;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#8ecab0;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#f27900;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#4f9e26;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#cae637;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#c5caeb;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#2de12f;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#47f494;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#c08762;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#6d1277;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#354210;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#7565f9;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#d89d40;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#fd5f29;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#a86c76;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#885fc1;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#ac6cb1;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#ef11f5;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#52c571;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#26b6d7;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#15c608;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#35673d;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#214c9;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#5d87b5;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#48f153;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#789d20;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#c4959c;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#aa4608;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#ec8892;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#c8a822;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#7fd6c4;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#453e31;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#674a87;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#d97924;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#8c2464;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a>, <a href="/category/jsjqureycss" rel="category tag">前端</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">正则表达式详解</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2014-12-20 22:52</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a>, <a href="/category/jsjqureycss" rel="category tag">前端</a></span>
+			<span class="article_comment"><a href="/2014/12/20/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>3,685</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<h1 style="text-align: center; color: #000000; line-height: normal;"><span style="color: #000000;"><span style="line-height: normal;"><span class="wp_keywordlink_affiliate"><a href="/tag/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F" title="View all posts in 正则表达式" target="_blank">正则表达式</a></span>详解</span></span></h1>
+<h1 style="text-align: center; color: #000000; line-height: normal;">
+<span style="color: #000000;"><span style="line-height: normal;"><span class="wp_keywordlink_affiliate"><a href="/tag/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F" title="View all posts in 正则表达式" target="_blank">正则表达式</a></span>30分钟入门教程</span></span></h1>
+<p id="meta" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; text-align: center; color: #000000; font-size: 16px;">
+</p><h2 id="contents" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">目录</h2>
+<p id="skipContents" class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">跳过目录</p>
+<ol style="color: #000000; font-size: 16px; line-height: normal;">
+<li>本文目标</li>
+<li>如何使用本教程</li>
+<li><span class="wp_keywordlink_affiliate"><a href="/tag/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F" title="View all posts in 正则表达式" target="_blank">正则表达式</a></span>到底是什么东西？</li>
+<li>入门</li>
+<li>测试正则表达式</li>
+<li>元字符</li>
+<li>字符转义</li>
+<li>重复</li>
+<li>字符类</li>
+<li>分枝条件</li>
+<li>反义</li>
+<li>分组</li>
+<li>后向引用</li>
+<li>零宽断言</li>
+<li>负向零宽断言</li>
+<li>注释</li>
+<li>贪婪与懒惰</li>
+<li>处理选项</li>
+<li>平衡组/递归匹配</li>
+<li>还有些什么东西没提到</li>
+<li>联系作者</li>
+<li>网上的资源及本文参考文献</li>
+<li>更新纪录</li>
+</ol>
+<h2 id="mission" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">本文目标</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">30分钟内让你明白正则表达式是什么，并对它有一些基本的了解，让你可以在自己的程序或网页里使用它。</p>
+<h2 id="howtouse" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">如何使用本教程</h2>
+<p id="giveMe30Minutes" class="important note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: orange; font-size: 16px;">最重要的是——请给我<span style="font-weight: bold;">30分钟</span>，如果你没有使用正则表达式的经验，请不要试图在30<span style="font-weight: bold;">秒</span>内入门——除非你是超人 🙂</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">别被下面那些复杂的表达式吓倒，只要跟着我一步一步来，你会发现正则表达式其实并没有想像中的那么困难。当然，如果你看完了这篇教程之后，发现自己明白了很多，却又几乎什么都记不得，那也是很正常的——我认为，没接触过正则表达式的人在看完这篇教程后，能把提到过的语法记住80%以上的可能性为零。这里只是让你明白基本的原理，以后你还需要多练习，多使用，才能熟练掌握正则表达式。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">除了作为入门教程之外，本文还试图成为可以在日常工作中使用的正则表达式语法参考手册。就作者本人的经历来说，这个目标还是完成得不错的——你看，我自己也没能把所有的东西记下来，不是吗？</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">清除格式 文本格式约定：<span class="name" style="margin: 3px; font-weight: bold;">专业术语</span> <span class="code" style="margin: 3px; color: blue;">元字符/语法格式</span> <span class="regex" style="margin: 3px; color: red;">正则表达式</span> <span class="part" style="margin: 3px; color: green;">正则表达式中的一部分(用于分析)</span> <span class="string" style="margin: 3px; font-style: italic;">对其进行匹配的源字符串</span> <span class="desc" style="margin: 3px; text-decoration: underline;">对正则表达式或其中一部分的说明</span></p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">隐藏边注 本文右边有一些注释，主要是用来提供一些相关信息，或者给没有程序员背景的读者解释一些基本概念，通常可以忽略。</p>
+<h2 id="introduction" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">正则表达式到底是什么东西？</h2>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;"><span class="name" style="margin: 3px; font-weight: bold;">字符</span>是计算机软件处理文字时最基本的单位，可能是字母，数字，标点符号，空格，换行符，汉字等等。<span class="name" style="margin: 3px; font-weight: bold;">字符串</span>是0个或更多个字符的序列。<span class="name" style="margin: 3px; font-weight: bold;">文本</span>也就是文字，字符串。说某个字符串<span class="name" style="margin: 3px; font-weight: bold;">匹配</span>某个正则表达式，通常是指这个字符串里有一部分（或几部分分别）能满足表达式给出的条件。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">在编写处理字符串的程序或网页时，经常会有查找符合某些复杂规则的字符串的需要。<span class="name" style="margin: 3px; font-weight: bold;">正则表达式</span>就是用于描述这些规则的工具。换句话说，正则表达式就是记录文本规则的代码。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">很可能你使用过Windows/Dos下用于文件查找的<span class="name" style="margin: 3px; font-weight: bold;">通配符(wildcard)</span>，也就是<span class="code" style="margin: 3px; color: blue;">*</span>和<span class="code" style="margin: 3px; color: blue;">?</span>。如果你想查找某个目录下的所有的Word文档的话，你会搜索<span style="margin: 3px; color: red;">*.doc</span>。在这里，<span class="code" style="margin: 3px; color: blue;">*</span>会被解释成任意的字符串。和通配符类似，正则表达式也是用来进行文本匹配的工具，只不过比起通配符，它能更精确地描述你的需求——当然，代价就是更复杂——比如你可以编写一个正则表达式，用来查找<span class="desc" style="margin: 3px; text-decoration: underline;">所有以0开头，后面跟着2-3个数字，然后是一个连字号“-”，最后是7或8位数字的字符串</span>(像<span class="string" style="margin: 3px; font-style: italic;">010-12345678</span>或<span class="string" style="margin: 3px; font-style: italic;">0376-7654321</span>)。</p>
+<h2 id="getstarted" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">入门</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">学习正则表达式的最好方法是从例子开始，理解例子之后再自己对例子进行修改，实验。下面给出了不少简单的例子，并对它们作了详细的说明。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">假设你在一篇英文小说里查找<span class="desc" style="margin: 3px; text-decoration: underline;">hi</span>，你可以使用正则表达式<span class="regex" style="margin: 3px; color: red;">hi</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">这几乎是最简单的正则表达式了，它可以精确匹配这样的字符串：<span class="desc" style="margin: 3px; text-decoration: underline;">由两个字符组成，前一个字符是h,后一个是i</span>。通常，处理正则表达式的工具会提供一个忽略大小写的选项，如果选中了这个选项，它可以匹配<span class="string" style="margin: 3px; font-style: italic;">hi</span>,<span class="string" style="margin: 3px; font-style: italic;">HI</span>,<span class="string" style="margin: 3px; font-style: italic;">Hi</span>,<span class="string" style="margin: 3px; font-style: italic;">hI</span>这四种情况中的任意一种。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">不幸的是，很多单词里包含<span class="string" style="margin: 3px; font-style: italic;">hi</span>这两个连续的字符，比如<span class="string" style="margin: 3px; font-style: italic;">him</span>,<span class="string" style="margin: 3px; font-style: italic;">history</span>,<span class="string" style="margin: 3px; font-style: italic;">high</span>等等。用<span class="regex" style="margin: 3px; color: red;">hi</span>来查找的话，这里边的<span class="string" style="margin: 3px; font-style: italic;">hi</span>也会被找出来。如果要<span class="desc" style="margin: 3px; text-decoration: underline;">精确地查找hi这个单词</span>的话，我们应该使用<span class="regex" style="margin: 3px; color: red;">\bhi\b</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="part" style="margin: 3px; color: green;">\b</span>是正则表达式规定的一个特殊代码（好吧，某些人叫它<span class="name" style="margin: 3px; font-weight: bold;">元字符，metacharacter</span>），代表着<span class="desc" style="margin: 3px; text-decoration: underline;">单词的开头或结尾，也就是单词的分界处</span>。虽然通常英文的单词是由空格，标点符号或者换行来分隔的，但是<span class="code" style="margin: 3px; color: blue;">\b</span>并不匹配这些单词分隔字符中的任何一个，它<strong>只匹配一个位置</strong>。</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">如果需要更精确的说法，<span class="code" style="margin: 3px; color: blue;">\b</span>匹配这样的位置：它的前一个字符和后一个字符不全是(一个是,一个不是或不存在)<span class="code" style="margin: 3px; color: blue;">\w</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">假如你要找的是<span class="desc" style="margin: 3px; text-decoration: underline;">hi后面不远处跟着一个Lucy</span>，你应该用<span class="regex" style="margin: 3px; color: red;">\bhi\b.*\bLucy\b</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">这里，<span class="part" style="margin: 3px; color: green;">.</span>是另一个元字符，匹配<span class="desc" style="margin: 3px; text-decoration: underline;">除了换行符以外的任意字符</span>。<span class="part" style="margin: 3px; color: green;">*</span>同样是元字符，不过它代表的不是字符，也不是位置，而是数量——它指定*<span class="desc" style="margin: 3px; text-decoration: underline;">前边的内容可以连续重复使用任意次以使整个表达式得到匹配</span>。因此，<span class="part" style="margin: 3px; color: green;">.*</span>连在一起就意味着<span class="desc" style="margin: 3px; text-decoration: underline;">任意数量的不包含换行的字符</span>。现在<span class="regex" style="margin: 3px; color: red;">\bhi\b.*\bLucy\b</span>的意思就很明显了：<span class="desc" style="margin: 3px; text-decoration: underline;">先是一个单词hi,然后是任意个任意字符(但不能是换行)，最后是Lucy这个单词</span>。</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">换行符就是'\n',ASCII编码为10(十六进制0x0A)的字符。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">如果同时使用其它元字符，我们就能构造出功能更强大的正则表达式。比如下面这个例子：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">0\d\d-\d\d\d\d\d\d\d\d</span>匹配这样的字符串：<span class="desc" style="margin: 3px; text-decoration: underline;">以0开头，然后是两个数字，然后是一个连字号“-”，最后是8个数字</span>(也就是中国的电话号码。当然，这个例子只能匹配区号为3位的情形)。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">这里的<span class="part" style="margin: 3px; color: green;">\d</span>是个新的元字符，匹配<span class="desc" style="margin: 3px; text-decoration: underline;">一位数字(0，或1，或2，或……)</span>。<span class="part" style="margin: 3px; color: green;">-</span>不是元字符，只匹配它本身——连字符(或者减号，或者中横线，或者随你怎么称呼它)。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">为了避免那么多烦人的重复，我们也可以这样写这个表达式：<span class="regex" style="margin: 3px; color: red;">0\d{2}-\d{8}</span>。这里<span class="part" style="margin: 3px; color: green;">\d</span>后面的<span class="part" style="margin: 3px; color: green;">{2}</span>(<span class="part" style="margin: 3px; color: green;">{8}</span>)的意思是前面<span class="part" style="margin: 3px; color: green;">\d</span><span class="desc" style="margin: 3px; text-decoration: underline;">必须连续重复匹配2次(8次)</span>。</p>
+<h2 id="testing" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">测试正则表达式</h2>
+<div class="note" style="float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px; line-height: normal;">
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px;">其它可用的测试工具:</p>
+<ul>
+<li>RegexBuddy</li>
+<li>Javascript正则表达式在线测试工具</li>
+</ul>
+</div>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">如果你不觉得正则表达式很难读写的话，要么你是一个天才，要么，你不是地球人。正则表达式的语法很令人头疼，即使对经常使用它的人来说也是如此。由于难于读写，容易出错，所以找一种工具对正则表达式进行测试是很有必要的。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">不同的环境下正则表达式的一些细节是不相同的，本教程介绍的是微软 .Net Framework 4.0 下正则表达式的行为，所以，我向你推荐我编写的.Net下的工具 正则表达式测试器。请参考该页面的说明来安装和运行该软件。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">下面是Regex Tester运行时的截图：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><img decoding="async" src="http://www.jb51.net/images/regex_tester.png" alt="正则表达式测试器运行截图"></p>
+<h2 id="metacode" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">元字符</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">现在你已经知道几个很有用的元字符了，如<span class="code" style="margin: 3px; color: blue;">\b</span>,<span class="code" style="margin: 3px; color: blue;">.</span>,<span class="code" style="margin: 3px; color: blue;">*</span>，还有<span class="code" style="margin: 3px; color: blue;">\d</span>.正则表达式里还有更多的元字符，比如<span class="code" style="margin: 3px; color: blue;">\s</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">任意的空白符，包括空格，制表符(Tab)，换行符，中文全角空格等</span>。<span class="code" style="margin: 3px; color: blue;">\w</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">字母或数字或下划线或汉字等</span>。</p>
+<p class="note important" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: orange; font-size: 16px;">对中文/汉字的特殊处理是由.Net提供的正则表达式引擎支持的，其它环境下的具体情况请查看相关文档。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">下面来看看更多的例子：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">\ba\w*\b</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">以字母<span class="part" style="margin: 3px; color: green;">a</span>开头的单词——先是某个单词开始处(<span class="part" style="margin: 3px; color: green;">\b</span>)，然后是字母<span class="part" style="margin: 3px; color: green;">a</span>,然后是任意数量的字母或数字(<span class="part" style="margin: 3px; color: green;">\w*</span>)，最后是单词结束处(<span class="part" style="margin: 3px; color: green;">\b</span>)</span>。</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">好吧，现在我们说说正则表达式里的单词是什么意思吧：就是不少于一个的连续的<span class="code" style="margin: 3px; color: blue;">\w</span>。不错，这与学习英文时要背的成千上万个同名的东西的确关系不大 🙂</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">\d+</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">1个或更多连续的数字</span>。这里的<span class="part" style="margin: 3px; color: green;">+</span>是和<span class="code" style="margin: 3px; color: blue;">*</span>类似的元字符，不同的是<span class="code" style="margin: 3px; color: blue;">*</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">重复任意次(可能是0次)</span>，而<span class="code" style="margin: 3px; color: blue;">+</span>则匹配<span class="desc" style="margin: 3px; text-decoration: underline;">重复1次或更多次</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">\b\w{6}\b</span> 匹配<span class="desc" style="margin: 3px; text-decoration: underline;">刚好6个字符的单词</span>。</p>
+<table style="margin: auto; border-style: solid; border-width: 1px 1px 0px 0px; background-color: #eeeeee; color: #000000; font-size: 16px; line-height: normal;" cellspacing="0">
+<caption style="margin: auto; font-weight: bold;">表1.常用的元字符</caption>
+<thead>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">代码</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">.</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配除换行符以外的任意字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\w</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配字母或数字或下划线或汉字</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\s</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配任意的空白符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\d</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配数字</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\b</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配单词的开始或结束</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">^</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配字符串的开始</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">$</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配字符串的结束</span></td>
+</tr>
+</tbody>
+</table>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">正则表达式引擎通常会提供一个“测试指定的字符串是否匹配一个正则表达式”的方法，如JavaScript里的RegExp.test()方法或.NET里的Regex.IsMatch()方法。这里的匹配是指是字符串里有没有符合表达式规则的部分。如果不使用<span class="code" style="margin: 3px; color: blue;">^</span>和<span class="code" style="margin: 3px; color: blue;">$</span>的话，对于<span class="regex" style="margin: 3px; color: red;">\d{5,12}</span>而言，使用这样的方法就只能保证字符串里<span class="desc" style="margin: 3px; text-decoration: underline;">包含5到12连续位数字</span>，而不是整个字符串就是5到12位数字。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">元字符<span class="code" style="margin: 3px; color: blue;">^</span>（和数字6在同一个键位上的符号）和<span class="code" style="margin: 3px; color: blue;">$</span>都匹配一个位置，这和<span class="code" style="margin: 3px; color: blue;">\b</span>有点类似。<span class="code" style="margin: 3px; color: blue;">^</span>匹配你要用来查找的字符串的开头，<span class="code" style="margin: 3px; color: blue;">$</span>匹配结尾。这两个代码在验证输入的内容时非常有用，比如一个网站如果要求你填写的QQ号必须为5位到12位数字时，可以使用：<span class="regex" style="margin: 3px; color: red;">^\d{5,12}$</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">这里的<span class="part" style="margin: 3px; color: green;">{5,12}</span>和前面介绍过的<span class="part" style="margin: 3px; color: green;">{2}</span>是类似的，只不过<span class="part" style="margin: 3px; color: green;">{2}</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">只能不多不少重复2次</span>，<span class="part" style="margin: 3px; color: green;">{5,12}</span>则是<span class="desc" style="margin: 3px; text-decoration: underline;">重复的次数不能少于5次，不能多于12次</span>，否则都不匹配。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">因为使用了<span class="part" style="margin: 3px; color: green;">^</span>和<span class="part" style="margin: 3px; color: green;">$</span>，所以输入的整个字符串都要用来和<span class="part" style="margin: 3px; color: green;">\d{5,12}</span>来匹配，也就是说整个输入<span class="desc" style="margin: 3px; text-decoration: underline;">必须是5到12个数字</span>，因此如果输入的QQ号能匹配这个正则表达式的话，那就符合要求了。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">和忽略大小写的选项类似，有些正则表达式处理工具还有一个处理多行的选项。如果选中了这个选项，<span class="code" style="margin: 3px; color: blue;">^</span>和<span class="code" style="margin: 3px; color: blue;">$</span>的意义就变成了<span class="desc" style="margin: 3px; text-decoration: underline;">匹配行的开始处和结束处</span>。</p>
+<h2 id="escape" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">字符转义</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">如果你想查找元字符本身的话，比如你查找<span class="desc" style="margin: 3px; text-decoration: underline;">.</span>,或者<span class="desc" style="margin: 3px; text-decoration: underline;">*</span>,就出现了问题：你没办法指定它们，因为它们会被解释成别的意思。这时你就得使用<span class="code" style="margin: 3px; color: blue;">\</span>来取消这些字符的特殊意义。因此，你应该使用<span class="regex" style="margin: 3px; color: red;">\.</span>和<span class="regex" style="margin: 3px; color: red;">\*</span>。当然，要查找<span class="desc" style="margin: 3px; text-decoration: underline;">\</span>本身，你也得用<span class="regex" style="margin: 3px; color: red;">\\</span>.</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">例如：<span class="regex" style="margin: 3px; color: red;">deerchao\.net</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">deerchao.net</span>，<span class="regex" style="margin: 3px; color: red;">C:\\Windows</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">C:\Windows</span>。</p>
+<h2 id="repeat" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">重复</h2>
+<div class="ad" style="float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px; line-height: normal;"></div>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">你已经看过了前面的<span class="code" style="margin: 3px; color: blue;">*</span>,<span class="code" style="margin: 3px; color: blue;">+</span>,<span class="code" style="margin: 3px; color: blue;">{2}</span>,<span class="code" style="margin: 3px; color: blue;">{5,12}</span>这几个匹配重复的方式了。下面是正则表达式中所有的限定符(指定数量的代码，例如*,{5,12}等)：</p>
+<table style="margin: auto; border-style: solid; border-width: 1px 1px 0px 0px; background-color: #eeeeee; color: #000000; font-size: 16px; line-height: normal;" cellspacing="0">
+<caption style="margin: auto; font-weight: bold;">表2.常用的限定符</caption>
+<thead>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">代码/语法</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">*</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复零次或更多次</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">+</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复一次或更多次</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">?</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复零次或一次</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">{n}</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复n次</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">{n,}</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复n次或更多次</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">{n,m}</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复n到m次</span></td>
+</tr>
+</tbody>
+</table>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">下面是一些使用重复的例子：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">Windows\d+</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">Windows后面跟1个或更多数字</span></p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">^\w+</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">一行的第一个单词(或整个字符串的第一个单词，具体匹配哪个意思得看选项设置)</span></p>
+<h2 id="charclass" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">字符类</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">要想查找数字，字母或数字，空白是很简单的，因为已经有了对应这些字符集合的元字符，但是如果你想匹配没有预定义元字符的字符集合(比如元音字母a,e,i,o,u),应该怎么办？</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">很简单，你只需要在方括号里列出它们就行了，像<span class="regex" style="margin: 3px; color: red;">[aeiou]</span>就匹配<span class="desc" style="margin: 3px; text-decoration: underline;">任何一个英文元音字母</span>，<span class="regex" style="margin: 3px; color: red;">[.?!]</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">标点符号(.或?或!)</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">我们也可以轻松地指定一个字符<span class="name" style="margin: 3px; font-weight: bold;">范围</span>，像<span class="regex" style="margin: 3px; color: red;">[0-9]</span>代表的含意与<span class="regex" style="margin: 3px; color: red;">\d</span>就是完全一致的：<span class="desc" style="margin: 3px; text-decoration: underline;">一位数字</span>；同理<span class="regex" style="margin: 3px; color: red;">[a-z0-9A-Z_]</span>也完全等同于<span class="code" style="margin: 3px; color: blue;">\w</span>（如果只考虑英文的话）。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">下面是一个更复杂的表达式：<span class="regex" style="margin: 3px; color: red;">\(?0\d{2}[) -]?\d{8}</span>。</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">“(”和“)”也是元字符，后面的分组节里会提到，所以在这里需要使用转义。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">这个表达式可以匹配<span class="desc" style="margin: 3px; text-decoration: underline;">几种格式的电话号码</span>，像<span class="string" style="margin: 3px; font-style: italic;">(010)88886666</span>，或<span class="string" style="margin: 3px; font-style: italic;">022-22334455</span>，或<span class="string" style="margin: 3px; font-style: italic;">02912345678</span>等。我们对它进行一些分析吧：首先是一个转义字符<span class="part" style="margin: 3px; color: green;">\(</span>,它能出现0次或1次(<span class="part" style="margin: 3px; color: green;">?</span>),然后是一个<span class="part" style="margin: 3px; color: green;">0</span>，后面跟着2个数字(<span class="part" style="margin: 3px; color: green;">\d{2}</span>)，然后是<span class="part" style="margin: 3px; color: green;">)</span>或<span class="part" style="margin: 3px; color: green;">-</span>或<span class="part" style="margin: 3px; color: green;">空格</span>中的一个，它出现1次或不出现(<span class="part" style="margin: 3px; color: green;">?</span>)，最后是8个数字(<span class="part" style="margin: 3px; color: green;">\d{8}</span>)。</p>
+<h2 id="alternative" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">分枝条件</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">不幸的是，刚才那个表达式也能匹配<span class="string" style="margin: 3px; font-style: italic;">010)12345678</span>或<span class="string" style="margin: 3px; font-style: italic;">(022-87654321</span>这样的“不正确”的格式。要解决这个问题，我们需要用到<span class="name" style="margin: 3px; font-weight: bold;">分枝条件</span>。正则表达式里的<span class="name" style="margin: 3px; font-weight: bold;">分枝条件</span>指的是有几种规则，如果满足其中任意一种规则都应该当成匹配，具体方法是用<span class="code" style="margin: 3px; color: blue;">|</span>把不同的规则分隔开。听不明白？没关系，看例子：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">0\d{2}-\d{8}|0\d{3}-\d{7}</span>这个表达式能<span class="desc" style="margin: 3px; text-decoration: underline;">匹配两种以连字号分隔的电话号码：一种是三位区号，8位本地号(如010-12345678)，一种是4位区号，7位本地号(0376-2233445)</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">\(?0\d{2}\)?[- ]?\d{8}|0\d{2}[- ]?\d{8}</span>这个表达式<span class="desc" style="margin: 3px; text-decoration: underline;">匹配3位区号的电话号码，其中区号可以用小括号括起来，也可以不用，区号与本地号间可以用连字号或空格间隔，也可以没有间隔</span>。你可以试试用分枝条件把这个表达式扩展成也支持4位区号的。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">\d{5}-\d{4}|\d{5}</span>这个表达式用于匹配美国的邮政编码。美国邮编的规则是5位数字，或者用连字号间隔的9位数字。之所以要给出这个例子是因为它能说明一个问题：<strong>使用分枝条件时，要注意各个条件的顺序</strong>。如果你把它改成<span class="regex" style="margin: 3px; color: red;">\d{5}|\d{5}-\d{4}</span>的话，那么就只会匹配5位的邮编(以及9位邮编的前5位)。原因是匹配分枝条件时，将会从左到右地测试每个条件，如果满足了某个分枝的话，就不会去再管其它的条件了。</p>
+<h2 id="grouping" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">分组</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">我们已经提到了怎么重复单个字符（直接在字符后面加上限定符就行了）；但如果想要重复多个字符又该怎么办？你可以用小括号来指定<span class="name" style="margin: 3px; font-weight: bold;">子表达式</span>(也叫做<span class="name" style="margin: 3px; font-weight: bold;">分组</span>)，然后你就可以指定这个子表达式的重复次数了，你也可以对子表达式进行其它一些操作(后面会有介绍)。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">(\d{1,3}\.){3}\d{1,3}</span>是一个<span class="desc" style="margin: 3px; text-decoration: underline;">简单的IP地址匹配</span>表达式。要理解这个表达式，请按下列顺序分析它：<span class="part" style="margin: 3px; color: green;">\d{1,3}</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">1到3位的数字</span>，<span class="part" style="margin: 3px; color: green;">(\d{1,3}\.){3}</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">三位数字加上一个英文句号(这个整体也就是这个<span class="name" style="margin: 3px; font-weight: bold;">分组</span>)重复3次</span>，最后再加上<span class="desc" style="margin: 3px; text-decoration: underline;">一个一到三位的数字</span>(<span class="part" style="margin: 3px; color: green;">\d{1,3}</span>)。</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">IP地址中每个数字都不能大于255. 经常有人问我, 01.02.03.04 这样前面带有0的数字, 是不是正确的IP地址呢? 答案是: 是的, IP 地址里的数字可以包含有前导 0 (leading zeroes).</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">不幸的是，它也将匹配<span class="string" style="margin: 3px; font-style: italic;">256.300.888.999</span>这种不可能存在的IP地址。如果能使用算术比较的话，或许能简单地解决这个问题，但是正则表达式中并不提供关于数学的任何功能，所以只能使用冗长的分组，选择，字符类来描述一个正确的IP地址：<span class="regex" style="margin: 3px; color: red;">((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">理解这个表达式的关键是理解<span class="part" style="margin: 3px; color: green;">2[0-4]\d|25[0-5]|[01]?\d\d?</span>，这里我就不细说了，你自己应该能分析得出来它的意义。</p>
+<h2 id="negation" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">反义</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">有时需要查找不属于某个能简单定义的字符类的字符。比如想查找除了数字以外，其它任意字符都行的情况，这时需要用到<span class="name" style="margin: 3px; font-weight: bold;">反义</span>：</p>
+<table style="margin: auto; border-style: solid; border-width: 1px 1px 0px 0px; background-color: #eeeeee; color: #000000; font-size: 16px; line-height: normal;" cellspacing="0">
+<caption style="margin: auto; font-weight: bold;">表3.常用的反义代码</caption>
+<thead>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">代码/语法</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\W</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配任意不是字母，数字，下划线，汉字的字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\S</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配任意不是空白符的字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\D</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配任意非数字的字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\B</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配不是单词开头或结束的位置</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">[^x]</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配除了x以外的任意字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">[^aeiou]</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配除了aeiou这几个字母以外的任意字符</span></td>
+</tr>
+</tbody>
+</table>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">例子：<span class="regex" style="margin: 3px; color: red;">\S+</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">不包含空白符的字符串</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">&lt;a[^&gt;]+&gt;</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">用尖括号括起来的以a开头的字符串</span>。</p>
+<h2 id="backreference" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">后向引用</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">使用小括号指定一个子表达式后，<strong>匹配这个子表达式的文本</strong>(也就是此分组捕获的内容)可以在表达式或其它程序中作进一步的处理。默认情况下，每个分组会自动拥有一个<span class="name" style="margin: 3px; font-weight: bold;">组号</span>，规则是：从左向右，以分组的左括号为标志，第一个出现的分组的组号为1，第二个为2，以此类推。</p>
+<div class="note" style="float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px; line-height: normal;">
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px;">呃……其实,组号分配还不像我刚说得那么简单：</p>
+<ul>
+<li>分组0对应整个正则表达式</li>
+<li>实际上组号分配过程是要从左向右扫描两遍的：第一遍只给未命名组分配，第二遍只给命名组分配－－因此所有命名组的组号都大于未命名的组号</li>
+<li>你可以使用<span class="code" style="margin: 3px; color: blue;">(?:exp)</span>这样的语法来剥夺一个分组对组号分配的参与权．</li>
+</ul>
+</div>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="name" style="margin: 3px; font-weight: bold;">后向引用</span>用于重复搜索前面某个分组匹配的文本。例如，<span class="part" style="margin: 3px; color: green;">\1</span>代表<span class="desc" style="margin: 3px; text-decoration: underline;">分组1匹配的文本</span>。难以理解？请看示例：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">\b(\w+)\b\s+\1\b</span>可以用来匹配<span class="desc" style="margin: 3px; text-decoration: underline;">重复的单词</span>，像<span class="string" style="margin: 3px; font-style: italic;">go go</span>, 或者<span class="string" style="margin: 3px; font-style: italic;">kitty kitty</span>。这个表达式首先是<span class="desc" style="margin: 3px; text-decoration: underline;">一个单词</span>，也就是<span class="desc" style="margin: 3px; text-decoration: underline;">单词开始处和结束处之间的多于一个的字母或数字</span>(<span class="part" style="margin: 3px; color: green;">\b(\w+)\b</span>)，这个单词会被捕获到编号为1的分组中，然后是<span class="desc" style="margin: 3px; text-decoration: underline;">1个或几个空白符</span>(<span class="part" style="margin: 3px; color: green;">\s+</span>)，最后是<span class="desc" style="margin: 3px; text-decoration: underline;">分组1中捕获的内容（也就是前面匹配的那个单词）</span>(<span class="part" style="margin: 3px; color: green;">\1</span>)。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">你也可以自己指定子表达式的<span class="name" style="margin: 3px; font-weight: bold;">组名</span>。要指定一个子表达式的组名，请使用这样的语法：<span class="code" style="margin: 3px; color: blue;">(?&lt;Word&gt;\w+)</span>(或者把尖括号换成<span class="code" style="margin: 3px; color: blue;">'</span>也行：<span class="code" style="margin: 3px; color: blue;">(?'Word'\w+)</span>),这样就把<span class="part" style="margin: 3px; color: green;">\w+</span>的组名指定为<span class="part" style="margin: 3px; color: green;">Word</span>了。要反向引用这个分组<span class="name" style="margin: 3px; font-weight: bold;">捕获</span>的内容，你可以使用<span class="code" style="margin: 3px; color: blue;">\k&lt;Word&gt;</span>,所以上一个例子也可以写成这样：<span class="regex" style="margin: 3px; color: red;">\b(?&lt;Word&gt;\w+)\b\s+\k&lt;Word&gt;\b</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">使用小括号的时候，还有很多特定用途的语法。下面列出了最常用的一些：</p>
+<table style="margin: auto; border-style: solid; border-width: 1px 1px 0px 0px; background-color: #eeeeee; color: #000000; font-size: 16px; line-height: normal;" cellspacing="0">
+<caption style="margin: auto; font-weight: bold;">表4.常用分组语法</caption>
+<tbody>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">分类</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">代码/语法</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">说明</th>
+</tr>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" rowspan="3">捕获</th>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配exp,并捕获文本到自动命名的组里</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?&lt;name&gt;exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配exp,并捕获文本到名称为name的组里，也可以写成(?'name'exp)</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?:exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配exp,不捕获匹配的文本，也不给此分组分配组号</span></td>
+</tr>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" rowspan="4">零宽断言</th>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?=exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配exp前面的位置</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?&lt;=exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配exp后面的位置</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?!exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配后面跟的不是exp的位置</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?&lt;!exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">匹配前面不是exp的位置</span></td>
+</tr>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" rowspan="1">注释</th>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?#comment)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">这种类型的分组不对正则表达式的处理产生任何影响，用于提供注释让人阅读</span></td>
+</tr>
+</tbody>
+</table>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">我们已经讨论了前两种语法。第三个<span class="code" style="margin: 3px; color: blue;">(?:exp)</span>不会改变正则表达式的处理方式，只是这样的组匹配的内容<span class="desc" style="margin: 3px; text-decoration: underline;">不会像前两种那样被捕获到某个组里面，也不会拥有组号</span>。“我为什么会想要这样做？”——好问题，你觉得为什么呢？</p>
+<h2 id="lookaround" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">零宽断言</h2>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">地球人，是不是觉得这些术语名称太复杂，太难记了？我也有同感。知道有这么一种东西就行了，它叫什么，随它去吧！人若无名，便可专心练剑；物若无名，便可随意取舍……</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">接下来的四个用于查找在某些内容(但并不包括这些内容)之前或之后的东西，也就是说它们像<span class="code" style="margin: 3px; color: blue;">\b</span>,<span class="code" style="margin: 3px; color: blue;">^</span>,<span class="code" style="margin: 3px; color: blue;">$</span>那样用于指定一个位置，这个位置应该满足一定的条件(即断言)，因此它们也被称为<span class="name" style="margin: 3px; font-weight: bold;">零宽断言</span>。最好还是拿例子来说明吧：</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">断言用来声明一个应该为真的事实。正则表达式中只有当断言为真时才会继续进行匹配。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="code" style="margin: 3px; color: blue;">(?=exp)</span>也叫<span class="name" style="margin: 3px; font-weight: bold;">零宽度正预测先行断言</span>，它<span class="desc" style="margin: 3px; text-decoration: underline;">断言自身出现的位置的后面能匹配表达式exp</span>。比如<span class="regex" style="margin: 3px; color: red;">\b\w+(?=ing\b)</span>，匹配<span class="desc" style="margin: 3px; text-decoration: underline;">以ing结尾的单词的前面部分(除了ing以外的部分)</span>，如查找<span class="string" style="margin: 3px; font-style: italic;">I'm singing while you're dancing.</span>时，它会匹配<span class="desc" style="margin: 3px; text-decoration: underline;">sing</span>和<span class="desc" style="margin: 3px; text-decoration: underline;">danc</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="code" style="margin: 3px; color: blue;">(?&lt;=exp)</span>也叫<span class="name" style="margin: 3px; font-weight: bold;">零宽度正回顾后发断言</span>，它<span class="desc" style="margin: 3px; text-decoration: underline;">断言自身出现的位置的前面能匹配表达式exp</span>。比如<span class="regex" style="margin: 3px; color: red;">(?&lt;=\bre)\w+\b</span>会匹配<span class="desc" style="margin: 3px; text-decoration: underline;">以re开头的单词的后半部分(除了re以外的部分)</span>，例如在查找<span class="string" style="margin: 3px; font-style: italic;">reading a book</span>时，它匹配<span class="desc" style="margin: 3px; text-decoration: underline;">ading</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">假如你想要给一个很长的数字中每三位间加一个逗号(当然是从右边加起了)，你可以这样查找需要在前面和里面添加逗号的部分：<span class="regex" style="margin: 3px; color: red;">((?&lt;=\d)\d{3})+\b</span>，用它对<span class="string" style="margin: 3px; font-style: italic;">1234567890</span>进行查找时结果是<span class="desc" style="margin: 3px; text-decoration: underline;">234567890</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">下面这个例子同时使用了这两种断言：<span class="regex" style="margin: 3px; color: red;">(?&lt;=\s)\d+(?=\s)</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">以空白符间隔的数字(再次强调，不包括这些空白符)</span>。</p>
+<h2 id="negativelookaround" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">负向零宽断言</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">前面我们提到过怎么查找<strong>不是某个字符或不在某个字符类里</strong>的字符的方法(反义)。但是如果我们只是想要<strong>确保某个字符没有出现，但并不想去匹配它</strong>时怎么办？例如，如果我们想查找这样的单词--它里面出现了字母q,但是q后面跟的不是字母u,我们可以尝试这样：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">\b\w*q[^u]\w*\b</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">包含<strong>后面不是字母u的字母q</strong>的单词</span>。但是如果多做测试(或者你思维足够敏锐，直接就观察出来了)，你会发现，如果q出现在单词的结尾的话，像<strong>Iraq</strong>,<strong>Benq</strong>，这个表达式就会出错。这是因为<span class="part" style="margin: 3px; color: green;">[^u]</span>总要匹配一个字符，所以如果q是单词的最后一个字符的话，后面的<span class="part" style="margin: 3px; color: green;">[^u]</span>将会匹配q后面的单词分隔符(可能是空格，或者是句号或其它的什么)，后面的<span class="part" style="margin: 3px; color: green;">\w*\b</span>将会匹配下一个单词，于是<span class="regex" style="margin: 3px; color: red;">\b\w*q[^u]\w*\b</span>就能匹配整个<span class="string" style="margin: 3px; font-style: italic;">Iraq fighting</span>。<span class="name" style="margin: 3px; font-weight: bold;">负向零宽断言</span>能解决这样的问题，因为它只匹配一个位置，并不<strong>消费</strong>任何字符。现在，我们可以这样来解决这个问题：<span class="regex" style="margin: 3px; color: red;">\b\w*q(?!u)\w*\b</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="name" style="margin: 3px; font-weight: bold;">零宽度负预测先行断言</span><span class="code" style="margin: 3px; color: blue;">(?!exp)</span>，<span class="desc" style="margin: 3px; text-decoration: underline;">断言此位置的后面不能匹配表达式exp</span>。例如：<span class="regex" style="margin: 3px; color: red;">\d{3}(?!\d)</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">三位数字，而且这三位数字的后面不能是数字</span>；<span class="regex" style="margin: 3px; color: red;">\b((?!abc)\w)+\b</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">不包含连续字符串abc的单词</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">同理，我们可以用<span class="code" style="margin: 3px; color: blue;">(?&lt;!exp)</span>,<span class="name" style="margin: 3px; font-weight: bold;">零宽度负回顾后发断言</span>来<span class="desc" style="margin: 3px; text-decoration: underline;">断言此位置的前面不能匹配表达式exp</span>：<span class="regex" style="margin: 3px; color: red;">(?&lt;![a-z])\d{7}</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">前面不是小写字母的七位数字</span>。</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">请详细分析表达式<span class="regex" style="margin: 3px; color: red;">(?&lt;=&lt;(\w+)&gt;).*(?=&lt;\/\1&gt;)</span>，这个表达式最能表现零宽断言的真正用途。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">一个更复杂的例子：<span class="regex" style="margin: 3px; color: red;">(?&lt;=&lt;(\w+)&gt;).*(?=&lt;\/\1&gt;)</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">不包含属性的简单HTML标签内里的内容</span>。<span class="code" style="margin: 3px; color: blue;">(?&lt;=&lt;(\w+)&gt;)</span>指定了这样的<span class="name" style="margin: 3px; font-weight: bold;">前缀</span>：<span class="desc" style="margin: 3px; text-decoration: underline;">被尖括号括起来的单词</span>(比如可能是&lt;b&gt;)，然后是<span class="part" style="margin: 3px; color: green;">.*</span>(任意的字符串),最后是一个<span class="name" style="margin: 3px; font-weight: bold;">后缀</span><span class="part" style="margin: 3px; color: green;">(?=&lt;\/\1&gt;)</span>。注意后缀里的<span class="part" style="margin: 3px; color: green;">\/</span>，它用到了前面提过的字符转义；<span class="part" style="margin: 3px; color: green;">\1</span>则是一个反向引用，引用的正是<span class="desc" style="margin: 3px; text-decoration: underline;">捕获的第一组</span>，前面的<span class="part" style="margin: 3px; color: green;">(\w+)</span>匹配的内容，这样如果前缀实际上是&lt;b&gt;的话，后缀就是&lt;/b&gt;了。整个表达式匹配的是&lt;b&gt;和&lt;/b&gt;之间的内容(再次提醒，不包括前缀和后缀本身)。</p>
+<h2 id="commenting" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">注释</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">小括号的另一种用途是通过语法<span class="code" style="margin: 3px; color: blue;">(?#comment)</span>来包含注释。例如：<span class="regex" style="margin: 3px; color: red;">2[0-4]\d(?#200-249)|25[0-5](?#250-255)|[01]?\d\d?(?#0-199)</span>。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">要包含注释的话，最好是启用“忽略模式里的空白符”选项，这样在编写表达式时能任意的添加空格，Tab，换行，而实际使用时这些都将被忽略。启用这个选项后，在#后面到这一行结束的所有文本都将被当成注释忽略掉。例如，我们可以前面的一个表达式写成这样：</p>
+<pre class="regex" style="color: red; font-size: 16px; line-height: normal;">      (?&lt;=    # 断言要匹配的文本的前缀
+      &lt;(\w+)&gt; # 查找尖括号括起来的字母或数字(即HTML/XML标签)
+      )       # 前缀结束
+      .*      # 匹配任意文本
+      (?=     # 断言要匹配的文本的后缀
+      &lt;\/\1&gt;  # 查找尖括号括起来的内容：前面是一个"/"，后面是先前捕获的标签
+      )       # 后缀结束</pre>
+<h2 id="greedyandlazy" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">贪婪与懒惰</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">当正则表达式中包含能接受重复的限定符时，通常的行为是（在使整个表达式能得到匹配的前提下）匹配<strong>尽可能多</strong>的字符。以这个表达式为例：<span class="regex" style="margin: 3px; color: red;">a.*b</span>，它将会匹配<span class="desc" style="margin: 3px; text-decoration: underline;">最长的以a开始，以b结束的字符串</span>。如果用它来搜索<span class="string" style="margin: 3px; font-style: italic;">aabab</span>的话，它会匹配整个字符串<span class="desc" style="margin: 3px; text-decoration: underline;">aabab</span>。这被称为<span class="name" style="margin: 3px; font-weight: bold;">贪婪</span>匹配。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">有时，我们更需要<span class="name" style="margin: 3px; font-weight: bold;">懒惰</span>匹配，也就是匹配<strong>尽可能少</strong>的字符。前面给出的限定符都可以被转化为懒惰匹配模式，只要在它后面加上一个问号<span class="code" style="margin: 3px; color: blue;">?</span>。这样<span class="regex" style="margin: 3px; color: red;">.*?</span>就意味着<span class="desc" style="margin: 3px; text-decoration: underline;">匹配任意数量的重复，但是在能使整个匹配成功的前提下使用最少的重复</span>。现在看看懒惰版的例子吧：</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;"><span class="regex" style="margin: 3px; color: red;">a.*?b</span>匹配<span class="desc" style="margin: 3px; text-decoration: underline;">最短的，以a开始，以b结束的字符串</span>。如果把它应用于<span class="string" style="margin: 3px; font-style: italic;">aabab</span>的话，它会匹配<span class="desc" style="margin: 3px; text-decoration: underline;">aab（第一到第三个字符）</span>和<span class="desc" style="margin: 3px; text-decoration: underline;">ab（第四到第五个字符）</span>。</p>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">为什么第一个匹配是aab（第一到第三个字符）而不是ab（第二到第三个字符）？简单地说，因为正则表达式有另一条规则，比懒惰／贪婪规则的优先级更高：最先开始的匹配拥有最高的优先权——The match that begins earliest wins。</p>
+<table style="margin: auto; border-style: solid; border-width: 1px 1px 0px 0px; background-color: #eeeeee; color: #000000; font-size: 16px; line-height: normal;" cellspacing="0">
+<caption style="margin: auto; font-weight: bold;">表5.懒惰限定符</caption>
+<thead>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">代码/语法</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">*?</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复任意次，但尽可能少重复</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">+?</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复1次或更多次，但尽可能少重复</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">??</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复0次或1次，但尽可能少重复</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">{n,m}?</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复n到m次，但尽可能少重复</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">{n,}?</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">重复n次以上，但尽可能少重复</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="regexoptions" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">处理选项</h2>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">在C#中，你可以使用Regex(String, RegexOptions)构造函数来设置正则表达式的处理选项。如：Regex regex = new Regex(@"\ba\w{6}\b", RegexOptions.IgnoreCase);</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">上面介绍了几个选项如忽略大小写，处理多行等，这些选项能用来改变处理正则表达式的方式。下面是.Net中常用的正则表达式选项：</p>
+<table style="margin: auto; border-style: solid; border-width: 1px 1px 0px 0px; background-color: #eeeeee; color: #000000; font-size: 16px; line-height: normal;" cellspacing="0">
+<caption style="margin: auto; font-weight: bold;">表6.常用的处理选项</caption>
+<thead>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">名称</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">IgnoreCase(忽略大小写)</td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">匹配时不区分大小写。</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">Multiline(多行模式)</td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">更改<span class="code" style="margin: 3px; color: blue;">^</span>和<span class="code" style="margin: 3px; color: blue;">$</span>的含义，使它们分别在任意一行的行首和行尾匹配，而不仅仅在整个字符串的开头和结尾匹配。(在此模式下,<span class="code" style="margin: 3px; color: blue;">$</span>的精确含意是:匹配\n之前的位置以及字符串结束前的位置.)</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">Singleline(单行模式)</td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">更改<span class="code" style="margin: 3px; color: blue;">.</span>的含义，使它与每一个字符匹配（包括换行符\n）。</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">IgnorePatternWhitespace(忽略空白)</td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">忽略表达式中的非转义空白并启用由<span class="code" style="margin: 3px; color: blue;">#</span>标记的注释。</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">ExplicitCapture(显式捕获)</td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;">仅捕获已被显式命名的组。</td>
+</tr>
+</tbody>
+</table>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">一个经常被问到的问题是：是不是只能同时使用多行模式和单行模式中的一种？答案是：不是。这两个选项之间没有任何关系，除了它们的名字比较相似（以至于让人感到疑惑）以外。</p>
+<h2 id="balancedgroup" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">平衡组/递归匹配</h2>
+<p class="important note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: orange; font-size: 16px;">这里介绍的平衡组语法是由.Net Framework支持的；其它语言／库不一定支持这种功能，或者支持此功能但需要使用不同的语法。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">有时我们需要匹配像<span class="desc" style="margin: 3px; text-decoration: underline;">( 100 * ( 50 + 15 ) )这样的可嵌套的层次性结构</span>，这时简单地使用<span class="code" style="margin: 3px; color: blue;">\(.+\)</span>则只会匹配到最左边的左括号和最右边的右括号之间的内容(这里我们讨论的是贪婪模式，懒惰模式也有下面的问题)。假如原来的字符串里的左括号和右括号出现的次数不相等，比如<span class="string" style="margin: 3px; font-style: italic;">( 5 / ( 3 + 2 ) ) )</span>，那我们的匹配结果里两者的个数也不会相等。有没有办法在这样的字符串里匹配到最长的，配对的括号之间的内容呢？</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">为了避免<span class="code" style="margin: 3px; color: blue;">(</span>和<span class="code" style="margin: 3px; color: blue;">\(</span>把你的大脑彻底搞糊涂，我们还是用尖括号代替圆括号吧。现在我们的问题变成了如何把<span class="string" style="margin: 3px; font-style: italic;">xx &lt;aa &lt;bbb&gt; &lt;bbb&gt; aa&gt; yy</span>这样的字符串里，最长的配对的尖括号内的内容捕获出来？</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">这里需要用到以下的语法构造：</p>
+<ul style="color: #000000; font-size: 16px; line-height: normal;">
+<li><span class="code" style="margin: 3px; color: blue;">(?'group')</span> 把捕获的内容命名为group,并压入<span class="name" style="margin: 3px; font-weight: bold;">堆栈(Stack)</span></li>
+<li><span class="code" style="margin: 3px; color: blue;">(?'-group')</span> 从堆栈上弹出最后压入堆栈的名为group的捕获内容，如果堆栈本来为空，则本分组的匹配失败</li>
+<li><span class="code" style="margin: 3px; color: blue;">(?(group)yes|no)</span> 如果堆栈上存在以名为group的捕获内容的话，继续匹配yes部分的表达式，否则继续匹配no部分</li>
+<li><span class="code" style="margin: 3px; color: blue;">(?!)</span> 零宽负向先行断言，由于没有后缀表达式，试图匹配总是失败</li>
+</ul>
+<p class="note" style="text-indent: 2em; line-height: 22px; margin: 5px 20px; float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px;">如果你不是一个程序员（或者你自称程序员但是不知道堆栈是什么东西），你就这样理解上面的三种语法吧：第一个就是在黑板上写一个"group"，第二个就是从黑板上擦掉一个"group"，第三个就是看黑板上写的还有没有"group"，如果有就继续匹配yes部分，否则就匹配no部分。</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">我们需要做的是每碰到了左括号，就在压入一个"Open",每碰到一个右括号，就弹出一个，到了最后就看看堆栈是否为空－－如果不为空那就证明左括号比右括号多，那匹配就应该失败。正则表达式引擎会进行回溯(放弃最前面或最后面的一些字符)，尽量使整个表达式得到匹配。</p>
+<pre class="regex" style="color: red; font-size: 16px; line-height: normal;">&lt;                         #最外层的左括号
+    [^&lt;&gt;]*                #最外层的左括号后面的不是括号的内容
+    (
+        (
+            (?'Open'&lt;)    #碰到了左括号，在黑板上写一个"Open"
+            [^&lt;&gt;]*       #匹配左括号后面的不是括号的内容
+        )+
+        (
+            (?'-Open'&gt;)   #碰到了右括号，擦掉一个"Open"
+            [^&lt;&gt;]*        #匹配右括号后面不是括号的内容
+        )+
+    )*
+    (?(Open)(?!))         #在遇到最外层的右括号前面，判断黑板上还有没有没擦掉的"Open"；如果还有，则匹配失败
+
+&gt;                         #最外层的右括号</pre>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">平衡组的一个最常见的应用就是匹配HTML,下面这个例子可以匹配<span class="desc" style="margin: 3px; text-decoration: underline;">嵌套的&lt;div&gt;标签</span>：<span class="regex" style="margin: 3px; color: red;">&lt;div[^&gt;]*&gt;[^&lt;&gt;]*(((?'Open'&lt;div[^&gt;]*&gt;)[^&lt;&gt;]*)+((?'-Open'&lt;/div&gt;)[^&lt;&gt;]*)+)*(?(Open)(?!))&lt;/div&gt;</span>.</p>
+<h2 id="more" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">还有些什么东西没提到</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">上边已经描述了构造正则表达式的大量元素，但是还有很多没有提到的东西。下面是一些未提到的元素的列表，包含语法和简单的说明。你可以在网上找到更详细的参考资料来学习它们--当你需要用到它们的时候。如果你安装了MSDN Library,你也可以在里面找到.net下正则表达式详细的文档。这里的介绍很简略，如果你需要更详细的信息，而又没有在电脑上安装MSDN Library,可以查看关于正则表达式语言元素的MSDN在线文档。</p>
+<div class="ad" style="float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px; line-height: normal;"></div>
+<table style="margin: auto; border-style: solid; border-width: 1px 1px 0px 0px; background-color: #eeeeee; color: #000000; font-size: 16px; line-height: normal;" cellspacing="0">
+<caption style="margin: auto; font-weight: bold;">表7.尚未详细讨论的语法</caption>
+<thead>
+<tr>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">代码/语法</th>
+<th style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;" scope="col">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\a</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">报警字符(打印它的效果是电脑嘀一声)</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\b</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">通常是单词分界位置，但如果在字符类里使用代表退格</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\t</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">制表符，Tab</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\r</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">回车</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\v</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">竖向制表符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\f</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">换页符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\n</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">换行符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\e</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">Escape</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\0nn</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">ASCII代码中八进制代码为nn的字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\xnn</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">ASCII代码中十六进制代码为nn的字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\unnnn</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">Unicode代码中十六进制代码为nnnn的字符</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\cN</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">ASCII控制字符。比如\cC代表Ctrl+C</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\A</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">字符串开头(类似^，但不受处理多行选项的影响)</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\Z</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">字符串结尾或行尾(不受处理多行选项的影响)</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\z</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">字符串结尾(类似$，但不受处理多行选项的影响)</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\G</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">当前搜索的开头</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">\p{name}</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">Unicode中命名为name的字符类，例如\p{IsGreek}</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?&gt;exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">贪婪子表达式</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?&lt;x&gt;-&lt;y&gt;exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">平衡组</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?im-nsx:exp)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">在子表达式exp中改变处理选项</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?im-nsx)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">为表达式后面的部分改变处理选项</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?(exp)yes|no)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">把exp当作零宽正向先行断言，如果在这个位置能匹配，使用yes作为此组的表达式；否则使用no</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?(exp)yes)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">同上，只是使用空表达式作为no</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?(name)yes|no)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">如果命名为name的组捕获到了内容，使用yes作为表达式；否则使用no</span></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="code" style="margin: 3px; color: blue;">(?(name)yes)</span></td>
+<td style="border-style: solid; border-width: 0px 0px 1px 1px; border-color: gray;"><span class="desc" style="margin: 3px; text-decoration: underline;">同上，只是使用空表达式作为no</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="contact" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">联系作者</h2>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">好吧,我承认,我骗了你,读到这里你肯定花了不止30分钟.相信我,这是我的错,而不是因为你太笨.我之所以说"30分钟",是为了让你有信心,有耐心继续下去.既然你看到了这里,那证明我的阴谋成功了.被忽悠的感觉很爽吧？</p>
+<p style="text-indent: 2em; line-height: 22px; margin: 5px 20px; color: #000000; font-size: 16px;">要投诉我,或者觉得我其实可以忽悠得更高明,欢迎来我的微博让我知道. 如果你有关于正则表达式的问题, 可以到 stackoverflow 网站上提问, 记得要添加 regex 标签. 如果你更习惯于用中文交流, 可以到微博上用 #正则# 标签提出问题.</p>
+<h2 id="resources" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">网上的资源及本文参考文献</h2>
+<ul style="color: #000000; font-size: 16px; line-height: normal;">
+<li>精通正则表达式（第3版）</li>
+<li>微软的正则表达式教程</li>
+<li>System.Text.RegularExpressions.Regex类(MSDN)</li>
+<li>专业的正则表达式教学网站(英文)</li>
+<li>关于.Net下的平衡组的详细讨论（英文）</li>
+</ul>
+<h2 id="updatelog" style="background-color: #eeeeee; border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gray; border-right-style: solid; border-right-width: 1px; border-right-color: gray; clear: both; color: #000000; line-height: normal;">更新纪录</h2>
+<div class="ad" style="float: right; width: 300px; padding: 5px; background-color: #eeeeee; border: 1px solid gray; clear: right; color: #000000; font-size: 16px; line-height: normal;"></div>
+<ol style="color: #000000; font-size: 16px; line-height: normal;">
+<li>2006-3-27 第一版</li>
+<li>2006-10-12 第二版
+<ul>
+<li>修正了几个细节上的错误和不准确的地方</li>
+<li>增加了对处理中文时的一些说明</li>
+<li>更改了几个术语的翻译（采用了MSDN的翻译方式）</li>
+<li>增加了平衡组的介绍</li>
+<li>放弃了对The Regulator的介绍，改用Regex Tester</li>
+</ul>
+</li>
+<li>2007-3-12 V2.1
+<ul>
+<li>修正了几个小的错误</li>
+<li>增加了对处理选项(RegexOptions)的介绍</li>
+</ul>
+</li>
+<li>2007-5-28 V2.2
+<ul>
+<li>重新组织了对零宽断言的介绍</li>
+<li>删除了几个不太合适的示例，添加了几个实用的示例</li>
+<li>其它一些微小的更改</li>
+</ul>
+</li>
+<li>2007-8-3 V2.21
+<ul>
+<li>修改了几处文字错误</li>
+<li>修改/添加了对$,\b的精确说明</li>
+<li>承认了作者是个骗子</li>
+<li>给RegexTester添加了Singleline选项的相关功能</li>
+</ul>
+</li>
+<li>2008-4-13 v2.3
+<ul>
+<li>调整了部分章节的次序</li>
+<li>修改了页面布局，删除了专门的参考节</li>
+<li>针对读者的反馈，调整了部分内容</li>
+</ul>
+</li>
+<li>2009-4-11 v2.31
+<ul>
+<li>修改了几处文字错误</li>
+<li>添加了一些注释说明</li>
+<li>调整了一些措词</li>
+</ul>
+</li>
+<li>2011-8-17 v2.32
+<ul>
+<li>更改了工具介绍，换用自行开发的正则表达式测试器</li>
+</ul>
+</li>
+<li>2013-1-10 v2.33
+<ul>
+<li>说明包含前导0的IP地址是合法的</li>
+</ul>
+</li>
+</ol>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F" rel="tag">正则表达式</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2014/12/15/ccnn-wangfei.html" rel="prev">王菲 匆匆那年 flac无损 百度云 百度网盘下载</a><br>【下篇】<a href="/2014/12/24/%E6%99%BA%E5%8F%96%E5%A8%81%E8%99%8E%E5%B1%B1-2014-%E7%99%BE%E5%BA%A6%E4%BA%91-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98-%E7%99%BE%E5%BA%A6%E4%BA%91%E7%BD%91%E7%9B%98%E4%B8%8B%E8%BD%BD.html" rel="next">智取威虎山 2014 – 百度云 百度网盘 百度云网盘下载</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2011/12/18/ultraedit%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html">UltraEdit正则表达式</a></li><li> · <a href="/2011/11/30/jquery%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html">JQuery使用正则表达式</a></li><li> · <a href="/2011/06/04/jquery%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html">JQuery正则表达式</a></li><li> · <a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li><li> · <a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li><li> · <a href="/2025/01/06/nestjs-nextjs-nuxtjs.html">Nest.js 、 Next.js、 Nuxt.js的区别</a></li><li> · <a href="/2024/11/20/mp-bind.html">小程序可以绑定其它小程序吗？</a></li><li> · <a href="/2024/11/19/vue3-vite-subdir.html">vue3+vite+多环境发面到二级目录配置</a></li><li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li><li> · <a href="/2024/09/12/fix-net-blazor-child-component-not-refresh.html">解决.NET Blazor子组件不刷新问题</a></li><li> · <a href="/2024/09/10/net8-microsoft-aspnetcore.html">.NET8如何在普通类库中引用 Microsoft.AspNetCore</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2014年12月20日发表在<a href="/category/net" rel="category tag">.NET</a>, <a href="/category/jsjqureycss" rel="category tag">前端</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2014/12/20/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3.html" rel="bookmark" title="本文固定链接 /2014/12/20/%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e8%af%a6%e8%a7%a3.html">正则表达式详解 | Bruce's Blog</a><a href="#" onclick="copy_code('/2014/12/20/%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e8%af%a6%e8%a7%a3.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2014/12/20/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="3523" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="f81b3e553e"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="220"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.078 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:48:18 -->

@@ -1,0 +1,1443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>salesforce Metadata Types | Bruce's Blog</title> 
+<meta name="description" content="Metadata Type">
+<meta name="keywords" content="Metadata Types,Metatype,salesforce">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2018 年 5 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="1" class="pad"> </td><td>1</td><td>2</td><td><a href="/2018/05/03" aria-label="2018年5月3日 发布的文章">3</a></td><td><a href="/2018/05/04" aria-label="2018年5月4日 发布的文章">4</a></td><td>5</td><td><a href="/2018/05/06" aria-label="2018年5月6日 发布的文章">6</a></td>
+	</tr>
+	<tr>
+		<td>7</td><td><a href="/2018/05/08" aria-label="2018年5月8日 发布的文章">8</a></td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td>
+	</tr>
+	<tr>
+		<td>14</td><td>15</td><td><a href="/2018/05/16" aria-label="2018年5月16日 发布的文章">16</a></td><td>17</td><td>18</td><td>19</td><td><a href="/2018/05/20" aria-label="2018年5月20日 发布的文章">20</a></td>
+	</tr>
+	<tr>
+		<td>21</td><td>22</td><td><a href="/2018/05/23" aria-label="2018年5月23日 发布的文章">23</a></td><td><a href="/2018/05/24" aria-label="2018年5月24日 发布的文章">24</a></td><td>25</td><td>26</td><td>27</td>
+	</tr>
+	<tr>
+		<td>28</td><td><a href="/2018/05/29" aria-label="2018年5月29日 发布的文章">29</a></td><td><a href="/2018/05/30" aria-label="2018年5月30日 发布的文章">30</a></td><td>31</td>
+		<td class="pad" colspan="3"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2018/04">« 4 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2018/06">6 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#51b39c;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#a8fbf4;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#9931f9;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#5fd202;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#bd1435;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#3d63eb;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#b5c30b;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#9533c8;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#745326;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#d90a81;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#835141;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#7d984c;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#5cbcb5;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#ba9086;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#bcca3a;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#8ac136;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#f88c0c;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#a8f302;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#6b3156;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#e56c2e;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#eb72d7;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#642d89;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#4134dd;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#369091;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#4e8d5b;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#c3f0b5;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#612819;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#30b937;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#4e6ce8;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#242912;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#8a47dc;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#6c7315;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#8014b5;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#620785;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#6e818d;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#3b2912;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#ca48a9;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#b262cc;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#64a56e;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#250ee;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#a14396;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#fca702;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#bd5e12;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#be120c;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#712fe8;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/salesforce" rel="category tag">Salesforce</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">salesforce Metadata Types</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2018-05-29 14:10</span>
+			<span class="category">  <a href="/category/salesforce" rel="category tag">Salesforce</a></span>
+			<span class="article_comment"><a href="/2018/05/29/salesforce-metadata-types.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>702</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<table class="featureTable sort_table" summary="">
+<thead class="thead sorted" align="left">
+<tr>
+<th id="d324846e96" class="featureTableHeader  ">Metadata Type</th>
+<th id="d324846e99" class="featureTableHeader  text-center">Allows Wildcard (*)?</th>
+<th id="d324846e102" class="featureTableHeader  ">Description</th>
+</tr>
+</thead>
+<tbody class="tbody">
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_accountsettings.htm">AccountSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s account settings for account teams, account owner report, and the <strong class="ph uicontrol">View Hierarchy</strong> link.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_actionlinkgrouptemplate.htm">ActionLinkGroupTemplate</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the action link group template. Action link templates let you reuse action link definitions and package and distribute action links. An action link is a button on a feed element. Clicking on an action link can take a user to another Web page, initiate a file download, or invoke an API call to an external server or Salesforce. Use action links to integrate Salesforce and third-party services into the feed. Every action link belongs to an action link group and action links within the group are mutually exclusive.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an action override on a standard or custom object. Use it to create, update, edit, or delete action overrides. You can access ActionOverride only by accessing its encompassing CustomObject." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/actionoverride.htm">ActionOverride</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an action override on a standard or custom object. Use it to create, update, edit, or delete action overrides.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_activitiessettings.htm">ActivitiesSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s activity settings, and its user interface settings for the calendar.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the configuration of country and state picklists. Use the AddressSettings component type to configure state and country data in your organization so that you can convert text-based values into standard picklist values. To convert your state and country values, from Setup, enter State and Country Picklists in the Quick Find box, then select State and Country Picklists. For more information, see “Let Users Select State and Country from Picklists” in the Salesforce online help." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_addresssettings.htm">AddressSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the configuration of country and state picklists.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a reporting snapshot. A reporting snapshot lets you report on historical data. Authorized users can save tabular or summary report results to fields on a custom object, then map those fields to corresponding fields on a target object. They can then schedule when to run the report to load the custom object's fields with the report's data. Reporting snapshots enable you to work with report data similarly to how you work with other records in Salesforce." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_analyticsnapshot.htm">AnalyticSnapshot</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a reporting snapshot. A reporting snapshot lets you report on historical data. Authorized users can save tabular or summary report results to fields on a custom object, then map those fields to corresponding fields on a target object. They can then schedule when to run the report to load the custom object's fields with the report's data. Reporting snapshots enable you to work with report data similarly to how you work with other records in Salesforce.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an Apex class. An Apex class is a template or blueprint from which Apex objects are created. Classes consist of other classes, user-defined methods, variables, exception types, and static initialization code." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_classes.htm">ApexClass</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an Apex class. An Apex class <span id="d311135e190-d311312e14-d311333e101" class="ph"><a name="d311135e190-d311312e14-d311333e101"></a>is a template or blueprint from which Apex objects are created. Classes consist of other classes, user-defined methods, variables, exception types, and static initialization code</span>.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a Visualforce component." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_component.htm">ApexComponent</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a Visualforce component.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a Visualforce page." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_pages.htm">ApexPage</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a Visualforce page.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an Apex trigger. A trigger is Apex code that executes before or after specific data manipulation language (DML) events occur, such as before object records are inserted into the database, or after records have been deleted." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_triggers.htm">ApexTrigger</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an Apex trigger. A trigger <span id="d311135e229-d311386e14-d311407e80" class="ph"><a name="d311135e229-d311386e14-d311407e80"></a>is Apex code that executes before or after specific data manipulation language (DML) events occur, such as before object records are inserted into the database, or after records have been deleted.</span></td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the app menu or the Salesforce mobile navigation menu." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_appmenu.htm">AppMenu</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the app menu or the Salesforce mobile navigation menu.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_approvalprocess.htm">ApprovalProcess</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes
+<p class="p">(See description.)</p>
+</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with an approval process. An approval process automates how records are approved in Salesforce. An approval process specifies each step of approval, including who to request approval from and what to do at each point of the process.
+<p class="p">Use the wildcard (*) symbol to retrieve all approval processes for all objects. You can’t use it to retrieve a subset of approval processes; syntax such as <samp class="codeph nolang">Lead.*</samp> is not supported.</p>
+</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with an article type." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_articletype.htm">ArticleType</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with an article type.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents assignment rules that allow you to automatically route cases to the appropriate users or queues. You can access rules metadata for all applicable objects, for a specific object, or for a specific rule on a specific object." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_assignmentrule.htm">AssignmentRules</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents assignment rules that allow you to automatically route cases to the appropriate users or queues. You can access rules metadata for all applicable objects, for a specific object, or for a specific rule on a specific object.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an authentication provider (or auth provider) in your organization. An auth provider enables users to log in to your Salesforce organization using their login credentials from an external service provider such as Facebook© or Janrain©.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_authproviders.htm">AuthProvider</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an authentication provider (or auth provider) in your organization. An auth provider enables users to log in to your Salesforce organization using their login credentials from an external service provider such as Facebook© or Janrain©.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a Lightning definition bundle. A bundle contains a Lightning definition and all its related resources. The definition can be a component, application, event, interface, or a tokens collection." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_auradefinitionbundle.htm">AuraDefinitionBundle</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a Lightning definition bundle. A bundle contains a Lightning definition and all its related resources. The definition can be a component, application, event, interface, or a tokens collection.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an auto-response rule that sets conditions for sending automatic email responses to lead or case submissions based on the attributes of the submitted record. You can access rules metadata for all applicable objects, for a specific object, or for a specific rule on a specific object." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_autoresponserules.htm">AutoResponseRules</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an auto-response rule that sets conditions for sending automatic email responses to lead or case submissions based on the attributes of the submitted record. You can access rules metadata for all applicable objects, for a specific object, or for a specific rule on a specific object.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="This component is removed as of API version 33.0 and is available in earlier versions only. Use SharingBaseRule instead. Represents the base container for criteria-based and owner-based sharing rules." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_basesharingrule.htm">BaseSharingRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description"><span id="d311135e341-d311576e13" class="ph"><a name="d311135e341-d311576e13"></a>This component is removed as of API version 33.0 and is available in earlier versions only.</span> Use <a class="xref" title="Represents sharing rule settings such as access level and to whom access is granted." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingbaserule.htm">SharingBaseRule</a>instead. Represents the base container for criteria-based and owner-based sharing rules.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a definition of an Einstein Bot configuration that can have one or more versions. Only one version can be active. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_bot.htm#meta_bot">Bot</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a definition of an Einstein Bot configuration that can have one or more versions. Only one version can be active.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the configuration details for a specific Einstein Bot version, including dialogs, intents, entities, and slots. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_botversion.htm">BotVersion</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the configuration details for a specific Einstein Bot version, including dialogs, intents, entities, and slots.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the definition of a set of branding properties for a community, as defined in the Branding Panel in Community Builder. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_brandingset.htm#meta_brandingset">BrandingSet</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the definition of a set of branding properties for a community, as defined in the Branding Panel in Community Builder.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata used to manage settings for business hours and holidays in entitlements, entitlement templates, campaigns, and cases. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_businesshourssettings.htm">BusinessHoursSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata used to manage settings for business hours and holidays in entitlements, entitlement templates, campaigns, and cases.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="The BusinessProcess metadata type enables you to display different picklist values for users based on their profile.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_businessprocess.htm">BusinessProcess</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">(See description.)</td>
+<td class="entry" headers="d324846e102" data-title="Description">The BusinessProcess metadata type enables you to display different picklist values for users based on their profile.
+<p class="p">Supports wildcard (*) only if a <a class="xref" title="Represents the metadata associated with a record type. Record types let you offer different business processes, picklist values, and page layouts to different users. Use this metadata type to create, update, or delete record type definitions for a custom object." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_recordtype.htm">RecordType</a> is specified.</p>
+</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the Call Center definition used to integrate Salesforce with a third-party computer-telephony integration (CTI) system." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_callcenter.htm">CallCenter</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the Call Center definition used to integrate Salesforce with a third-party computer-telephony integration (CTI) system.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_casesettings.htm">CaseSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s case settings, such as the default case owner, which case-related features are enabled, and which email templates are used for various case activities.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_casesubjectparticle.htm#casesubjectparticle">CaseSubjectParticle</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the Social Business Rules custom format for the <strong class="ph uicontrol">Case Subject</strong> field on cases created from inbound social posts.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a certificate used for digital signatures which verify that requests are coming from your org. Certificates are used for either authenticated single sign-on with an external website, or when using your org as an identity provider. This type extends the MetadataWithContent metadata type and inherits its content and fullName fields." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_certificate.htm">Certificate</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a certificate used for digital signatures which verify that requests are coming from your org. Certificates are used for either authenticated single sign-on with an external website, or when using your org as an identity provider.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata used to manage settings for Chatter Answers." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_chatteranswerssettings.htm">ChatterAnswersSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata used to manage settings for Chatter Answers.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata used to describe a Rich Publisher App that’s integrated with the Chatter publisher." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_chatterextensions.htm#meta_chatterextensions">ChatterExtension</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata used to describe a Rich Publisher App that’s integrated with the Chatter publisher.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a data service that adds and updates data in standard objects. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_cleandataservice.htm">CleanDataService</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a data service that adds and updates data in standard objects.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_cmsconnectsource.htm#topic-title">CMSConnectSource</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the connection information for external content management systems that feed content to Communities.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents global settings that affect multiple features in your organization.s" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_companyprofilesettings.htm">CompanySettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents global settings that affect multiple features in your organization.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a zone that contains Ideas or Chatter Answers objects. Zones are shared by the Ideas, Answers, and Chatter Answers features, allowing you to view and create zones from those locations.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_community.htm">Community (Zone)</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a zone that contains Ideas or Chatter Answers objects. Zones are shared by the Ideas, Answers, and Chatter Answers features, allowing you to view and create zones from those locations.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the definition of a community template. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_communitytemplatedefinition.htm">CommunityTemplateDefinition</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the definition of a community template.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the definition of a community theme.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_communitythemedefinition.htm">CommunityThemeDefinition</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the definition of a community theme.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a compact layout. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_compactlayout.htm">CompactLayout</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a compact layout.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_connectedapp.htm">ConnectedApp</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a connected app configuration. A connected app integrates an application with Salesforce using APIs. Connected apps use standard SAML and OAuth protocols to authenticate, provide single sign-on, and provide tokens for use with Salesforce APIs. In addition to standard OAuth capabilities, connected apps allow Salesforce admins to set various security policies and have explicit control over who can use the corresponding apps.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata for creating an asset file. Asset files enable a Salesforce file to be used for org setup and configuration purposes. This type extends the MetadataWithContent metadata type and inherits its content and fullName fields." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_contentasset.htm">ContentAsset</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata for creating an asset file.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents contract settings. For more information, see “Set Up Contracts” in the Salesforce online help." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_contractsettings.htm">ContractSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents contract settings.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_corswhitelistorigin.htm">CorsWhitelistOrigin</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an origin in the CORS whitelist.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="This component is removed as of API version 33.0 and is available in earlier versions only. Use SharingRules instead. Represents a criteria-based sharing rule. CriteriaBasedSharingRule enables you to share records based on specific criteria." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_cbsrule.htm">CriteriaBasedSharingRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">This component is removed as of API version 33.0 and is available in earlier versions only. Use <a class="xref" title="Represents the base container for sharing rules, which can be criteria-based, ownership-based, or territory-based. SharingRules enables you to share records with a set of users, using rules that specify the access level for the target user group." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingrules.htm">SharingRules</a> instead. Represents a criteria-based sharing rule. CriteriaBasedSharingRule enables you to share records based on specific criteria. It contains metadata for the following criteria-based sharing rules: Accounts, Campaigns, Cases, Contacts, Custom Objects, Leads, and Opportunities.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="CustomApplication represents a custom or standard application. In API version 29.0 and earlier, CustomApplication represents only a custom application. An application is a list of tab references, with a description and a logo. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customapplication.htm">CustomApplication</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">CustomApplication represents a custom or standard application. In API version 29.0 and earlier, CustomApplication represents only a custom application. An application is a list of tab references, with a description and a logo.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a custom console component (Visualforce page) assigned to a CustomApplication that is marked as a Salesforce console. Custom console components extend the capabilities of Salesforce console apps. See “Customize a Console with Custom Components in Salesforce Classic” in the Salesforce online help." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customapplicationcomponent.htm">CustomApplicationComponent</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom console component (Visualforce page) assigned to a <a class="xref" title="CustomApplication represents a custom or standard application. In API version 29.0 and earlier, CustomApplication represents only a custom application. An application is a list of tab references, with a description and a logo. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customapplication.htm">CustomApplication</a> that is marked as a Salesforce console. Custom console components extend the capabilities of Salesforce console apps.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a custom feed filter that limits the feed view to feeds from the Cases object. The custom feed filter shows only feed items that satisfy the criteria specified in the CustomFeedFilter definition.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customfeedfilter.htm">CustomFeedFilter</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom feed filter that limits the feed view to feeds from the Cases object. The custom feed filter shows only feed items that satisfy the criteria specified in the CustomFeedFilter definition.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a field. Use this metadata type to create, update, or delete custom field definitions on standard, custom, and external objects or standard field definitions on standard objects. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customfield.htm">CustomField</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a field. Use this metadata type to create, update, or delete custom field definitions on standard, custom, and external objects or standard field definitions on standard objects.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customlabels.htm#customLabel">CustomLabel</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom label that can be localized and used in different languages, countries, and currencies. Use this type instead of CustomLabels if you want to retrieve custom labels by name.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a custom metadata type." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadatatypes.htm#meta_custommetadatatypes">Custom Metadata Types (CustomObject)</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a custom metadata type.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a record of a custom metadata type." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custommetadata.htm#meta_custommetadata">CustomMetadata</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a record of a custom metadata type.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="The CustomLabels metadata type allows you to create custom labels that can be localized for use in different languages, countries, and currencies." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customlabels.htm">CustomLabels</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">The CustomLabels metadata type allows you to create custom labels that can be localized for use in different languages, countries, and currencies.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a custom object that stores data unique to your organization or an external object that maps to data stored outside your org.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/customobject.htm">CustomObject</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">(See description.)</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom object that stores data unique to your organization or an external object that maps to data stored outside your org.
+<p class="p">You can also use this metadata type to work with customizations of standard objects, such as Accounts. It contains the following types: Action Overrides, Business Processes, Custom Fields, Field Sets, List Views, Named Filters (Lookup Filters), Picklists (including Dependent Picklists), Record Types, Search Layouts, Sharing Reasons, Sharing Recalculations, Validation Rules, Weblinks, and Field Types.</p>
+<p class="p">Supports wildcard (*) for Field Sets and Record Types, but not for other components.</p>
+</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="This metadata type allows you to translate custom objects for a variety of languages." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_customobjecttranslation.htm">CustomObjectTranslation</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">This metadata type allows you to translate custom objects for a variety of languages.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a custom link defined in a home page component. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/custompageweblink.htm">CustomPageWebLink</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom link defined in a home page component.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a permission that grants access to a custom feature. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_custompermission.htm">CustomPermission</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a permission that grants access to a custom feature.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a Salesforce site. Create public websites and applications that are directly integrated with your Salesforce organization, but don't require users to log in with a username and password." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sites.htm">CustomSite</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a Salesforce site. Create public websites and applications that are directly integrated with your Salesforce organization, but don't require users to log in with a username and password.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a custom tab. Custom tabs let you display custom object data or other web content in Salesforce. When you add a custom tab to an app in Salesforce Classic, it displays as a tab. When you add a custom tab to an app in Lightning Experience, it displays as an item in the app’s navigation bar. When a tab displays a custom object, the tab name is the same as the custom object name; for page, s-control, or URL tabs, the name is arbitrary." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_tab.htm">CustomTab</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom tab. Custom tabs let you display custom object data or other web content in Salesforce. When you add a custom tab to an app in Salesforce Classic, it displays as a tab. When you add a custom tab to an app in Lightning Experience, it displays as an item in the app’s navigation bar. When a tab displays a custom object, the tab name is the same as the custom object name; for page, s-control, or URL tabs, the name is arbitrary.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a dashboard. Dashboards are visual representations of data that allow you to see key metrics and performance at a glance." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_dashboard.htm">Dashboard</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a dashboard. Dashboards are visual representations of data that allow you to see key metrics and performance at a glance.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a data category group." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_datacategorygroup.htm">DataCategoryGroup</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a data category group.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_delegategroup.htm">DelegateGroup</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a group of users who have the same administrative privileges. These groups are different from public groups used for sharing.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a Document. All documents must be in a document folder, such as sampleFolder/TestDocument." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_document.htm">Document</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a Document. All documents must be in a document folder, such as <span class="ph filepath">sampleFolder/TestDocument</span>.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a rule that specifies how duplicate records in an object are detected. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_duplicaterule.htm#meta_duplicaterule">DuplicateRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a rule that specifies how duplicate records in an object are detected.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an Analytics custom map chart. Custom maps are user-defined maps that are uploaded to Analytics and are used just as standard maps are. Custom maps are accessed in Analytics from the list of maps available with the map chart type." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_eclairgeodata.htm#meta_eclairgeodata">EclairGeoData</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an Analytics custom map chart. Custom maps are user-defined maps that are uploaded to Analytics and are used just as standard maps are. Custom maps are accessed in Analytics from the list of maps available with the map chart type.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_emailservicesfunction.htm#topic-title">EmailServicesFunction</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an email service.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an email template." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_emailtemplate.htm">EmailTemplate</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an email template.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the branding for each Snap-ins deployment. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_embeddedservicebranding.htm#meta_embeddedservicebranding">EmbeddedServiceBranding</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the branding for each Snap-ins deployment.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a setup node for creating a Snap-ins deployment. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_embeddedserviceconfig.htm#meta_embeddedserviceconfig">EmbeddedServiceConfig</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a setup node for creating a Snap-ins deployment.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a setup node for creating a Snap-ins Chat Live Agent deployment. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_embeddedserviceliveagent.htm#meta_embeddedserviceliveagent">EmbeddedServiceLiveAgent</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a setup node for creating a Snap-ins Chat Live Agent deployment.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_entitlementprocess.htm">EntitlementProcess</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the settings for an entitlement process.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_entitlementsettings.htm">EntitlementSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s entitlement settings.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an entitlement template. Entitlement templates are predefined terms of customer support that you can quickly add to products. For example, you can create entitlement templates for Web or phone support so that users can easily add entitlements to products offered to customers." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_entitlementtemplate.htm">EntitlementTemplate</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an entitlement template. Entitlement templates are predefined terms of customer support that you can quickly add to products. For example, you can create entitlement templates for Web or phone support so that users can easily add entitlements to products offered to customers.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents how an event instance maps to a target payload. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_eventdelivery.htm">EventDelivery</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents how an event instance maps to a target payload.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a subscription to an event type. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_eventsubscription.htm">EventSubscription</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a subscription to an event type.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_externalserviceregistration.htm#topic-title">ExternalServiceRegistration</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the External Service configuration for an org.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_externaldatasource.htm#ExternalDataSource">ExternalDataSource</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with an external data source. Create external data sources to manage connection details for integration with data and content that are stored outside your Salesforce org.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a boolean feature parameter in a packaging org that has access to the Feature Management App (FMA). Feature parameters let you drive app behavior and track activation metrics in subscriber orgs that install your package. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_featureparameterboolean.htm#meta_featureparameterboolean">FeatureParameterBoolean</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a boolean feature parameter in a packaging org that has access to the Feature Management App (FMA). Feature parameters let you drive app behavior and track activation metrics in subscriber orgs that install your package.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a date feature parameter in a packaging org that has access to the Feature Management App (FMA). Feature parameters let you drive app behavior and track activation metrics in subscriber orgs that install your package. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_featureparameterdate.htm#meta_featureparameterdate">FeatureParameterDate</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a date feature parameter in a packaging org that has access to the Feature Management App (FMA). Feature parameters let you drive app behavior and track activation metrics in subscriber orgs that install your package.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an integer feature parameter in a packaging org that has access to the Feature Management App (FMA). Feature parameters let you drive app behavior and track activation metrics in subscriber orgs that install your package. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_featureparameterinteger.htm#meta_featureparameterinteger">FeatureParameterInteger</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an integer feature parameter in a packaging org that has access to the Feature Management App (FMA). Feature parameters let you drive app behavior and track activation metrics in subscriber orgs that install your package.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a field set. A field set is a grouping of fields. For example, you could have a field set that contains fields describing a user's first name, middle name, last name, and business title." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_fieldset.htm">FieldSet</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a field set. A field set is a grouping of fields. For example, you could have a field set that contains fields describing a user's first name, middle name, last name, and business title.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the security settings for uploading and downloading files. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_fileuploadanddownloadsecuritysettings.htm">FileUploadAndDownloadSecuritySettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the security settings for uploading and downloading files.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_flexipage.htm">FlexiPage</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a Lightning page. A Lightning page represents a customizable screen made up of regions containing Lightning components.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a flow. With Flow, you can create an application that navigates users through a series of screens to query and update records in the database. You can also execute logic and provide branching capability based on user input to build dynamic applications." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_visual_workflow.htm">Flow</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a flow. With Flow, you can create an application that navigates users through a series of screens to query and update records in the database. You can also execute logic and provide branching capability based on user input to build dynamic applications.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the flow definition’s description and active flow version number." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_flowdefinition.htm">FlowDefinition</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the flow definition’s description and active flow version number.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a folder. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_folder.htm">Folder</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a folder. A folder can contain documents, email templates, reports, or dashboards. You must specify the folder type (Document, EmailTemplate, Report, or Dashboard) to retrieve or deploy.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_foldershare.htm">FolderShare</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the settings for enhanced analytics folder sharing. Users can control access to reports or dashboards by giving others Viewer, Editor or Manager access to the folder that contains the report or dashboard.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_forecastingsettings.htm">ForecastingSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the Collaborative Forecasts settings options.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata for a global picklist value set, which is the set of shared values that custom picklist fields can use. A global value set isn't a field itself. (In contrast, the custom picklist fields that are based on a global picklist are of type ValueSet.) This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_globalvalueset.htm">GlobalValueSet</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata for a global picklist value set, which is the set of shared values that custom picklist fields can use. A global value set isn't a field itself. (In contrast, the custom picklist fields that are based on a global picklist are of type ValueSet.)</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Contains details for a global value set translation. Global value sets are lists of values that can be shared by multiple custom picklist fields, optionally across objects.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_globalvaluesettranslation.htm#meta_globalvaluesettranslations">GlobalValueSetTranslation</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Contains details for a global value set translation. Global value sets are lists of values that can be shared by multiple custom picklist fields, optionally across objects.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the definition of a value used in a global picklist. Custom picklist fields can inherit the picklist value set from a global picklist. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_globalpicklistvalue.htm#meta_globalpicklistvalue">GlobalPicklistValue</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the definition of a value used in a global picklist. Custom picklist fields can inherit the picklist value set from a global picklist. This type extends the <a class="xref" title="This is the base class for all metadata types. You cannot edit this object. A component is an instance of a metadata type." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/metadata.htm">Metadata</a> metadata type and inherits its <span class="keyword parmname">fullName</span> field.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a set of public groups, which can have users, roles, and other groups." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_group.htm">Group</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a set of public groups, which can have users, roles, and other groups.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a home page component. You can customize the Home tab in Salesforce Classic to include components such as sidebar links, a company logo, a dashboard snapshot, or custom components that you create. Use to create, update, or delete home page component definitions." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_homepagecomponent.htm">HomePageComponent</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a home page component. You can customize the Home tab in Salesforce Classic to include components such as sidebar links, a company logo, a dashboard snapshot, or custom components that you create. Use to create, update, or delete home page component definitions.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a home page layout. You can customize home page layouts and assign the layouts to users based on their user profile." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_homepagelayouts.htm">HomePageLayout</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a home page layout. You can customize home page layouts and assign the layouts to users based on their user profile.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata used to manage settings for Ideas." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_ideassettings.htm">IdeasSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata used to manage settings for Ideas.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an index defined within a custom big object. Use this metadata type to define the composite primary key (index) for a custom big object.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_index.htm">Index</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an index defined within a custom big object. Use this metadata type to define the composite primary key (index) for a custom big object.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_installedpackage.htm#meta_installedpackage">InstalledPackage</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a package to be installed or uninstalled. Deploying a newer version of a currently installed package upgrades the package.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_keywordlist.htm">KeywordList</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a list of keywords used in community moderation. This keyword list is a type of moderation criteria that defines offensive language or inappropriate content that you don’t want in your community.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata used to manage settings for Salesforce Knowledge." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_knowledgesettings.htm">KnowledgeSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata used to manage settings for Salesforce Knowledge.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a page layout. For more information, see “Page Layouts” in the Salesforce online help." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_layouts.htm">Layout</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a page layout.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents formatting options for the letterhead in an email template. A letterhead defines the logo, page color, and text settings for your HTML email templates. Use letterheads to ensure a consistent look and feel in your company’s emails." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_letterhead.htm">Letterhead</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents formatting options for the letterhead in an email template. A letterhead defines the logo, page color, and text settings for your HTML email templates. Use letterheads to ensure a consistent look and feel in your company’s emails.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Reserved for future use." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_lightningcomponentbundle.htm">LightningComponentBundle</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Reserved for future use.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="ListView allows you to see a filtered list of records, such as contacts, accounts, or custom objects." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_listview.htm">ListView</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">ListView allows you to see a filtered list of records, such as contacts, accounts, or custom objects.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_liveagentsettings.htm">LiveAgentSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s Live Agent settings, such as whether or not Live Agent is enabled.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatagentconfig.htm">LiveChatAgentConfig</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the configuration of an organization’s Live Agent deployment, such as how many chats can be assigned to an agent and whether or not chat sounds are enabled.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatbutton.htm">LiveChatButton</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a Live Agent deployment’s settings for the button that customers click to chat with an agent and the chat window, such as the label that appears on the button and the pre-chat form that appears before a live chat begins.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatdeployment.htm">LiveChatDeployment</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the configuration settings for a specific Live Agent deployment, such as the branding image for the deployment and whether or not chat transcripts are automatically saved.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a rule for masking or deleting data of a specified pattern. Written as a regular expression (regex)." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_livechatsensitivedatarule.htm">LiveChatSensitiveDataRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a rule for masking or deleting data of a specified pattern. Written as a regular expression (regex). This object is available in API version 35.0 and later.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_managedtopics.htm">ManagedTopics</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents navigational and featured topics managed in a community.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a matching rule that is used to identify duplicate records. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_matchingrule.htm#meta_matchingrule">MatchingRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a matching rule that is used to identify duplicate records.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="This is the base class for all metadata types. You cannot edit this object. A component is an instance of a metadata type." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/metadata.htm">Metadata</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">This is the base class for all metadata types. You cannot edit this object. A component is an instance of a metadata type.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="MetadataWithContent is the base type for all metadata types that contain content, such as documents or email templates. It extends Metadata. You cannot edit this object." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_metadatawithcontent.htm">MetadataWithContent</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">MetadataWithContent is the base type for all metadata types that contain content, such as documents or email templates.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_milestonetype.htm">MilestoneType</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the name and description of a milestone, which you can use in an entitlement process to track important steps in cases.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an Einstein Intent Set. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_mldomain.htm#meta_mldomain">MlDomain (Beta)</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an Einstein Intent Set.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_mobilesettings.htm">MobileSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s mobile settings.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a rule used in your community to moderate member-generated content.Each rule specifies the member-generated content the rule applies to, the criteria to enforce the rule on, and the moderation action to take. Moderation rules help protect your community from spammers, bots, and offensive or inappropriate content. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_moderationrule.htm">ModerationRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a rule used in your community to moderate member-generated content.Each rule specifies the member-generated content the rule applies to, the criteria to enforce the rule on, and the moderation action to take. Moderation rules help protect your community from spammers, bots, and offensive or inappropriate content.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a named credential, which specifies the URL of a callout endpoint and its required authentication parameters in one definition. A named credential can be specified as an endpoint to simplify the setup of authenticated callouts." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_namedcredential.htm">NamedCredential</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a named credential, which specifies the URL of a callout endpoint and its required authentication parameters in one definition. A named credential can be specified as an endpoint to simplify the setup of authenticated callouts.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a lookup filter. This metadata type is used to create, update, or delete lookup filter definitions. This component has been removed as of API version 30.0 and is only available in previous API versions. The metadata associated with a lookup filter is now represented by the lookupFilter field in the CustomField component." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/namedfilter.htm">NamedFilter</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">
+<p class="p">This component has been removed as of API version 30.0 and is only provided for backward compatibility. The metadata associated with a lookup filter is now represented by the <span class="keyword parmname">lookupFilter</span> field in the CustomField component.</p>
+<p>Represents the metadata associated with a lookup filter. This metadata type is used to create, update, or delete lookup filter definitions. This component has been removed as of API version 30.0 and is only available in previous API versions. <span id="d311135e1598-d313645e18" class="ph"><a name="d311135e1598-d313645e18"></a>The metadata associated with a lookup filter is now represented by the <span class="keyword parmname">lookupFilter</span> field in the CustomField component.</span></p></td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_namesettings.htm#topic-title">NameSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Enables or disables middle name and suffix attributes for the following person objects: Contact, Lead, Person Account, and User.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a community. Communities are branded spaces for your employees, customers, and partners to connect. You can customize and create communities to meet your business needs, then transition seamlessly between them. Use the Network component for Salesforce Communities. If you want to create zones that contain Chatter Answers and Ideas, use the Community (Zone) component." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_network.htm">Network</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a community. Communities are branded spaces for your employees, customers, and partners to connect. You can customize and create communities to meet your business needs, then transition seamlessly between them. Use the Network component for Salesforce Communities. If you want to create zones that contain Chatter Answers and Ideas, use the Community (Zone) component.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the branding and color scheme applied to a community. (Salesforce Communities are represented by the Network component.)" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_networkbranding.htm#meta_networkbranding">NetworkBranding</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the branding and color scheme applied to a community.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_opportunityssettings.htm">OpportunitySettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents organization preferences for features such as automatic opportunity updates and similar-opportunity filters.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_ordersettings.htm">OrderSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents order settings.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type">OrgPreferenceSettings</td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the unique org preference settings in a Salesforce org.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an ownership-based sharing rule. OwnerSharingRule enables you to share records owned by a set of users with another set, using rules that specify the access level of the target user group. This component is removed as of API version 33.0 and is available in earlier versions only." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_ownersharingrule.htm">OwnerSharingRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an ownership-based sharing rule. OwnerSharingRule enables you to share records owned by a set of users with another set, using rules that specify the access level of the target user group. This component is removed as of API version 33.0 and is available in earlier versions only. It contains metadata for the following specific owner-sharing rules: Accounts, Campaigns, Cases, Contacts, Custom Objects, Leads, Account Territory and Opportunities.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Specifies which metadata components to retrieve as part of a retrieve() call or defines a package of components." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_package.htm">Package</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Specifies which metadata components to retrieve as part of a <a class="xref" title="The retrieve() call retrieves XML file representations of components in an organization." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_retrieve.htm"><samp class="codeph nolang">retrieve()</samp></a> call or defines a package of components.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents Path records.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_pathassistant.htm#meta_pathassistant">PathAssistant</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents Path records.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the Path preference setting. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_pathassistantsettings.htm#meta_pathassistantsettings">PathAssistantSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the Path preference setting.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a set of permissions that's used to grant additional access to one or more users without changing their profile or reassigning profiles. You can use permission sets to grant access but not to deny access." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_permissionset.htm">PermissionSet</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a set of permissions that's used to grant additional access to one or more users without changing their profile or reassigning profiles. You can use permission sets to grant access but not to deny access.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an organization’s Adoption Manager setting, which enables or disables the Adoption Manager tool. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_personaljourneysettings.htm#meta_personaljourneysettings">PersonalJourneySettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s Adoption Manager setting, which enables or disables the Adoption Manager tool.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Deprecated. Represents a picklist (or dependent picklist) definition for a custom field in a custom object or a custom or standard field in a standard object, such as an account." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_picklist.htm">Picklist (Including Dependent Picklist)</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description"><strong class="ph b">Deprecated.</strong> Represents a picklist (or dependent picklist) definition for a custom field in a custom object or a custom or standard field in a standard object, such as an account.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a partition in the Platform Cache. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_platformcachepartition.htm">PlatformCachePartition</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a partition in the Platform Cache.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="The Portal metadata type represents a partner portal or Customer Portal." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_portal.htm">Portal</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">The Portal metadata type represents a partner portal or Customer Portal.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with an approval post template for Approvals in Chatter. With approval post templates, you can customize the information included in approval request posts that appear in Chatter feeds. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_posttemplate.htm">PostTemplate</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with an approval post template for Approvals in Chatter. With approval post templates, you can customize the information included in approval request posts that appear in Chatter feeds.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_productsettings.htm">ProductSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents organization preferences for quantity schedules, revenue schedules, and active flag interaction with prices.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a user profile. A profile defines a user’s permission to perform different functions within Salesforce. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_profile.htm">Profile</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a user profile. A profile defines a user’s permission to perform different functions within Salesforce.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an override of an ActionOverride by a user profile. You can use it to override an ActionOverride on a standard Home tab or object record page in Lightning Experience. When a user logs in with a profile, a matching ProfileActionOverride assignment takes precedence over existing overrides for the Home tab or record page specified in ActionOverride. You can access ProfileActionOverride only by accessing its encompassing CustomApplication or Profile. Available in API version 39.0 and later." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_profileactionoverride.htm#meta_profileactionoverride">ProfileActionOverride</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an override of an ActionOverride by a user profile. You can use it to override an ActionOverride on a standard Home tab or object record page in Lightning Experience. When a user logs in with a profile, a matching ProfileActionOverride assignment takes precedence over existing overrides for the Home tab or record page specified in ActionOverride.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a profile’s password policies. Profile password policies override org-wide password policies for that profile’s users. Use ProfilePasswordPolicy to retrieve password policies for a given profile. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_profilepasswordpolicy.htm#meta_profilepasswordpolicy">ProfilePasswordPolicy</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a profile’s password policies. Profile password policies override org-wide password policies for that profile’s users. Use ProfilePasswordPolicy to retrieve password policies for a given profile.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a profile’s session settings. Use ProfileSessionSetting to retrieve the session settings for a given profile. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_profilesessionsetting.htm#meta_profilesessionsetting">ProfileSessionSetting</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a profile’s session settings. Use ProfileSessionSetting to retrieve the session settings for a given profile.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a holding area for items before they are processed." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_queue.htm">Queue</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a holding area for items before they are processed.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_quickaction.htm">QuickAction</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a specified create or update quick action for an object that then becomes available in the Chatter publisher. <span id="d311135e1899-d314257e46" class="ph"><a name="d311135e1899-d314257e46"></a>For example, you can create an action that, on the detail page of an account, allows a user to create a contact related to that account from the Chatter feed on that page.</span>QuickAction can be created on objects that allow custom fields.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_quotessettings.htm">QuoteSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Enables or disables Quotes, which show proposed prices for products and services.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a record type. Record types let you offer different business processes, picklist values, and page layouts to different users. Use this metadata type to create, update, or delete record type definitions for a custom object." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_recordtype.htm">RecordType</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a record type. Record types let you offer different business processes, picklist values, and page layouts to different users. Use this metadata type to create, update, or delete record type definitions for a custom object.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a remote site setting. Before any Visualforce page, Apex callout, or JavaScript code using XmlHttpRequest in an s-control or custom button can call an external site, that site must be registered in the Remote Site Settings page, or the call fails." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_remotesitesetting.htm">RemoteSiteSetting</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a remote site setting. Before any Visualforce page, Apex callout, or JavaScript code using XmlHttpRequest in an s-control or custom button can call an external site, that site must be registered in the Remote Site Settings page, or the call fails.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a custom report. This metadata type only supports custom reports; standard reports are not supported." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_report.htm">Report</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom report.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a custom report type. Custom report types allow you to build a framework from which users can create and customize reports. For more information, see “Set Up a Custom Report Type” in the Salesforce online help." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_reporttype.htm">ReportType</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a custom report type. <span id="d311135e1965-d314392e14" class="ph"><a name="d311135e1965-d314392e14"></a>Custom report types allow you to build a framework from which users can create and customize reports.</span>Custom report types allow you to build a framework from which users can create and customize reports.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a role in your organization." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_role.htm">Role</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a role in your organization.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_samlssoconfig.htm">SamlSsoConfig</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a SAML Single Sign-On configuration.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Deprecated. Represents an Scontrol component, corresponding to an s-control in the Salesforce user interface." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_scontrol.htm">Scontrol</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Deprecated. Represents an Scontrol component, corresponding to an s-control in the Salesforce user interface.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with the Search Layouts for an object. You can customize which fields to display for users in search results, search filter fields, lookup dialogs, and recent record lists on tab home pages." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_searchlayouts.htm">SearchLayouts</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with the Search Layouts for an object. You can customize which fields to display for users in search results, search filter fields, lookup dialogs, and recent record lists on tab home pages.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an org's search settings." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_searchsettings.htm#meta_searchsettings">SearchSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an org's search settings.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_securitysettings.htm#SecuritySettings-0D286E71">SecuritySettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Not Applicable</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an organization’s security settings. Security settings define trusted IP ranges for network access, password and login requirements, and session expiration and security settings.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents sharing rule settings such as access level and to whom access is granted." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingbaserule.htm">SharingBaseRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents sharing rule settings such as access level and to whom access is granted.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents an Apex sharing reason, which is used to indicate why sharing was implemented for a custom object. Apex managed sharing allows developers to use Apex to programmatically share custom objects. When you use Apex managed sharing to share a custom object, only users with the “Modify All Data” permission can add or change the sharing on the custom object's record, and the sharing access is maintained across record owner changes. For more information, see “Sharing Settings” in the Salesforce online help." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_apexsharingreason.htm">SharingReason</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an Apex sharing reason, which is used to indicate why sharing was implemented for a custom object.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents Apex classes that recalculate the Apex managed sharing for a specific custom object." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_apexsharingrecalculation.htm">SharingRecalculation</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents Apex classes that recalculate the Apex managed sharing for a specific custom object.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the base container for sharing rules, which can be criteria-based, ownership-based, or territory-based. SharingRules enables you to share records with a set of users, using rules that specify the access level for the target user group." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingrules.htm">SharingRules</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the base container for sharing rules, which can be criteria-based, ownership-based, or territory-based. SharingRules enables you to share records with a set of users, using rules that specify the access level for the target user group.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sharingset.htm">SharingSet</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a sharing set. A sharing set defines an access mapping that grants portal or community users access to objects that are associated with their accounts or contacts.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a site for deployment." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_sitedotcom.htm">SiteDotCom</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a site for deployment.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_skills.htm">Skill</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the settings for a skill used for field service or to route chats to agents in Live Agent, such as the name of the skill and which agents the skills are assigned to.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_socialcustomerservicesettings.htm#socialcustomerservicesettings">SocialCustomerServiceSettings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the Social Business Rules custom format for the <strong class="ph uicontrol">Case Subject</strong> field on cases created from inbound social posts.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the set of values in a standard picklist field. This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_standardvalueset.htm#meta_standardvalueset">StandardValueSet</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the set of values in a standard picklist field. This type extends the <a class="xref" title="This is the base class for all metadata types. You cannot edit this object. A component is an instance of a metadata type." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/metadata.htm">Metadata</a> metadata type and inherits its <span class="keyword parmname">fullName</span> field.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Contains details for a standard picklist translation. It returns a translated standard value set.This type extends the Metadata metadata type and inherits its fullName field." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_standardvaluesettranslation.htm#meta_standardvaluesettranslations">StandardValueSetTranslation</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Contains details for a standard picklist translation. It returns a translated standard value set.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a static resource file, often a code library in a ZIP file. Static resources allow you to upload content that you can reference in a Visualforce page, including archives (such as .zip and .jar files), images, style sheets, JavaScript, and other files." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_staticresource.htm">StaticResource</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a static resource file, often a code library in a ZIP file. Static resources allow you to upload content that you can reference in a Visualforce page, including archives (such as .zip and .jar files), images, style sheets, JavaScript, and other files.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a set of synonym groups, which are groups of words or phrases that are treated as equivalent in users’ searches. You can define synonym groups to optimize search results for acronyms, variations of product names, and other terminology unique to your organization." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_synonymdictionary.htm">SynonymDictionary</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a set of synonym groups, which are groups of words or phrases that are treated as equivalent in users’ searches. You can define synonym groups to optimize search results for acronyms, variations of product names, and other terminology unique to your organization.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a territory in your organization." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory.htm">Territory</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a territory in your organization.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2.htm#topic-title">Territory2</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a sales territory in Territory Management 2.0.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2model.htm#topic-title">Territory2Model</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a territory model in Territory Management 2.0.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2rule.htm#topic-title">Territory2Rule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a territory assignment rule associated with an object, such as Account, in Territory Management 2.0.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2settings.htm#topic-title">Territory2Settings</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata for the default settings for Territory Management 2.0 users to access and modify records associated with sales territories. The standard record access settings apply to accounts and opportunities. If your Salesforce org uses <kbd class="ph userinput">Private</kbd> default internal access for contacts or cases, you can also set access for those records.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_territory2type.htm#topic-title">Territory2Type</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata for a category of territories in Territory Management 2.0. Every Territory2 must have a Territory2Type.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the ability to assign topics to objects or to remove topic assignments." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_topicsforobjects.htm#meta_topicsforobjects">TopicsForObjects</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the ability to assign topics to objects or to remove topic assignments.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_transactionsecurity.htm#topic-title">TransactionSecurityPolicy</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a transaction security policy definition. Transaction Security policies give you a way to look through events in your organization and specify actions to take when certain combinations occur.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="This metadata type allows you to work with translations for various supported languages. The ability to translate component labels is part of the Translation Workbench. For more information, see “Enable and Disable the Translation Workbench” in the Salesforce online help." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_translations.htm">Translations</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">This metadata type allows you to work with translations for various supported languages.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a validation rule, which is used to verify that the data a user enters in a record is valid and can be saved. A validation rule contains a formula or expression that evaluates the data in one or more fields and returns a value of true or false. Validation rules also include an error message that your client application can display to the user when the rule returns a value of true due to invalid data." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_validationformulas.htm">ValidationRule</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a validation rule, which is used to verify that the data a user enters in a record is valid and can be saved. A validation rule contains a formula or expression that evaluates the data in one or more fields and returns a value of <samp class="codeph java">true</samp> or <samp class="codeph java">false</samp>. Validation rules also include an error message that your client application can display to the user when the rule returns a value of <samp class="codeph java">true</samp> due to invalid data.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_waveapplication.htm#topic-title">WaveApplication</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the Analytics application.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_wavedashboard.htm#topic-title">WaveDashboard</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the WaveDashboard object in the Analytics application.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_wavedataflow.htm#topic-title">WaveDataflow</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the WaveDataflow object in the Analytics application.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_wavedataset.htm#topic-title">WaveDataset</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the WaveDataset object in the Analytics application.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_wavelens.htm#topic-title">WaveLens</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the WaveLens object in the Analytics application.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_wavetemplatebundle.htm#topic-title">WaveTemplateBundle</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents an Analytics template bundle, which can be used to create Analytics apps. A bundle contains an Analytics template definition and all its related resources.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_wavexmd.htm#topic-title">WaveXmd</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the WaveXmd object in the Analytics application.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents a custom button or link defined in a custom object." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_weblink.htm">WebLink</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">No</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents a custom button or link defined in a custom object.</td>
+</tr>
+<tr>
+<td class="entry" headers="d324846e96" data-title="Metadata Type"><a class="xref" title="Represents the metadata associated with a workflow rule. A workflow rule sets workflow actions into motion when its designated conditions are met. You can configure workflow actions to execute immediately when a record meets the conditions in your workflow rule, or set time triggers that execute the workflow actions on a specific day. Use this metadata type to create, update, or delete workflow rule definitions." href="https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_workflow.htm">Workflow</a></td>
+<td class=" text-center" headers="d324846e99" data-title="Allows Wildcard (*)?">Yes</td>
+<td class="entry" headers="d324846e102" data-title="Description">Represents the metadata associated with a workflow rule. A workflow rule sets workflow actions into motion when its designated conditions are met. You can configure workflow actions to execute immediately when a record meets the conditions in your workflow rule, or set time triggers that execute the workflow actions on a specific day. Use this metadata type to create, update, or delete workflow rule definitions.</td>
+</tr>
+</tbody>
+</table>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/metadata-types" rel="tag">Metadata Types</a>, <a href="/tag/metatype" rel="tag">Metatype</a>, <a href="/tag/salesforce" rel="tag">salesforce</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2018/05/24/supervised-learning-and-unsupervised-learning.html" rel="prev">监督学习(supervised learning)和非监督学习(unsupervised learning)</a><br>【下篇】<a href="/2018/05/30/annual-global-change-and-configuration-management-process-training-and-certification.html" rel="next">Annual Global Change and Configuration Management Process Training and Certification</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2021/04/13/salesforce-visualforce-apex-actionfunction.html">Salesforce VisualForce 使用apex:actionFunction调用后台方法</a></li><li> · <a href="/2019/02/25/how-to-call-salesforce-api-from-lightning-component.html">How to Call Salesforce API from Lightning Component</a></li><li> · <a href="/2018/12/04/apex-highlight-userdefinelang-for-notepad-plus.html">apex highlight userDefineLang for notepad++</a></li><li> · <a href="/2018/11/15/salesforce-15-18-id.html">详解 Salesforce 15 和 18 位的ID</a></li><li> · <a href="/2018/11/15/salesforce-test-class.html">Salesforce Test class注意事项</a></li><li> · <a href="/2018/10/17/salesforce-milestone-clock-is-not-running.html">salesforce Milestone clock is not running</a></li><li> · <a href="/2018/09/19/salesforce-apex-traced-the-number-of-query.html">salesforce apex traced the number of query</a></li><li> · <a href="/2018/07/05/salesforce-antscript-profile.html">salesforce antscript无法拉取完整的profile</a></li><li> · <a href="/2018/06/25/salesforce-lightning-report-get-url-parameters.html">salesforce lightning  report取URL参数</a></li><li> · <a href="/2018/06/25/salesforce-test-class-seealldata.html">salesforce test class用现有数据测试</a></li><li> · <a href="/2018/06/21/salesforce-report-get-url-parameters.html">salesforce report get url parameters</a></li><li> · <a href="/2018/06/21/salesforce-display-trigger-error.html">salesforce display trigger error</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2018年05月29日发表在<a href="/category/salesforce" rel="category tag">Salesforce</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2018/05/29/salesforce-metadata-types.html" rel="bookmark" title="本文固定链接 /2018/05/29/salesforce-metadata-types.html">salesforce Metadata Types | Bruce's Blog</a><a href="#" onclick="copy_code('/2018/05/29/salesforce-metadata-types.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2018/05/29/salesforce-metadata-types.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4966" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="39cc7c84f8"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="9"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.076 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:18 -->

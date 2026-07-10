@@ -1,0 +1,751 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>android集成微信分享 | Bruce's Blog</title> 
+<meta name="description" content="在APP中集成微信的分享功能,官方的说明是在太简洁了.....几乎没法用....">
+<meta name="keywords" content="android集成,android集成微信分享,微信分享">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2017 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="4" class="pad"> </td><td><a href="/2017/12/01" aria-label="2017年12月1日 发布的文章">1</a></td><td><a href="/2017/12/02" aria-label="2017年12月2日 发布的文章">2</a></td><td>3</td>
+	</tr>
+	<tr>
+		<td>4</td><td><a href="/2017/12/05" aria-label="2017年12月5日 发布的文章">5</a></td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+	</tr>
+	<tr>
+		<td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td>
+	</tr>
+	<tr>
+		<td><a href="/2017/12/18" aria-label="2017年12月18日 发布的文章">18</a></td><td><a href="/2017/12/19" aria-label="2017年12月19日 发布的文章">19</a></td><td>20</td><td><a href="/2017/12/21" aria-label="2017年12月21日 发布的文章">21</a></td><td><a href="/2017/12/22" aria-label="2017年12月22日 发布的文章">22</a></td><td>23</td><td><a href="/2017/12/24" aria-label="2017年12月24日 发布的文章">24</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2017/12/25" aria-label="2017年12月25日 发布的文章">25</a></td><td><a href="/2017/12/26" aria-label="2017年12月26日 发布的文章">26</a></td><td>27</td><td><a href="/2017/12/28" aria-label="2017年12月28日 发布的文章">28</a></td><td><a href="/2017/12/29" aria-label="2017年12月29日 发布的文章">29</a></td><td>30</td><td>31</td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2017/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2018/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#6f26e8;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#2fa78a;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#ce0549;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#cf39a9;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#e4b8c6;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#4cb933;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#3a2ef9;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#f8732b;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#4d2c0d;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#b5429d;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#9ebe89;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#cfe331;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#b28280;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#d4329c;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#1abb06;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#17309b;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#752e39;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#2033c8;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#46907f;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#292180;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#5aaed1;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#a8ae98;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#3efef8;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#cbe987;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#6e518b;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#a5ee56;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#ba0b24;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#63efaf;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#8313d9;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#f2579d;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#292039;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#eac39e;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#458a26;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#263357;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#25a11;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#eef1ff;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#3e2c3e;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#58a062;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#43295e;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#6f3d93;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#c919ba;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#6ba089;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#335ecc;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#660c09;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#90465a;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/android" rel="category tag">Android</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">android集成微信分享</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2017-12-29 14:41</span>
+			<span class="category">  <a href="/category/android" rel="category tag">Android</a></span>
+			<span class="article_comment"><a href="/2017/12/29/android-weixin.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>900</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div>
+<p>在APP中集成微信的分享功能,官方的说明是在太简洁了.....几乎没法用....</p>
+<p>不过一开始按照官方文档去做没问题</p>
+<h3>1.注册你的APP</h3>
+<p>登录 <a href="https://link.jianshu.com/?t=https://open.weixin.qq.com/" target="_blank" rel="nofollow noopener">微信开放平台</a> 把你的开发者信息填上,这些就不上图了,都是中文字,应该看得懂<br>
+然后进入 <strong>管理中心</strong> 点击创建++移动应用++</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill"></div>
+<div class="image-view" data-width="1078" data-height="391"><img decoding="async" class="" src="//upload-images.jianshu.io/upload_images/2423047-935b8840bf14a2fa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" data-original-src="//upload-images.jianshu.io/upload_images/2423047-935b8840bf14a2fa.png" data-original-width="1078" data-original-height="391" data-original-format="image/jpeg" data-original-filesize="34820"></div>
+</div>
+<div class="image-caption">创建移动应用</div>
+</div>
+<p>把你的应用信息填上,有些项目不知道怎么填随便填就行了,但是注意: <strong>应用的包名和签名不能随便填!!</strong></p>
+<ul>
+<li>包名就是你的应用的包名例如: fucker.idiot.asshole.wanker</li>
+</ul>
+<h4>怎么获取签名?</h4>
+<p>先下载微信提供的一些工具</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill"></div>
+<div class="image-view" data-width="1093" data-height="653"><img decoding="async" class="" src="//upload-images.jianshu.io/upload_images/2423047-3b64bf9c1395510d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" data-original-src="//upload-images.jianshu.io/upload_images/2423047-3b64bf9c1395510d.png" data-original-width="1093" data-original-height="653" data-original-format="image/jpeg" data-original-filesize="81694"></div>
+</div>
+<div class="image-caption">工具</div>
+</div>
+<p>首先将你的app安装在手机或者模拟器上,</p>
+<p>由于平时我们调试软件都是使用debug的签名生成应用,所以我们要特别注意如果使用了debug的签名,等到APP正式发布的时候,微信的分享就不能用了.<br>
+所以我们要使用release的签名文件<br>
+怎么让我们debug的时候也使用release的签名文件呢?</p>
+<p>打开应用Module的build.gradle文件 添加这样一份代码:</p>
+<pre class="hljs lsl"><code class="lsl">android {
+    signingConfigs{
+        debug{  &lt;span class=&quot;hljs-comment&quot;&gt;//这里配置的就是debug的签名配置了&lt;/span&gt;
+            storeFile file(&lt;span class=&quot;hljs-string&quot;&gt;&quot;C:&lt;span class=&quot;hljs-subst&quot;&gt;\\&lt;/span&gt;Users&lt;span class=&quot;hljs-subst&quot;&gt;\\&lt;/span&gt;Administrator&lt;span class=&quot;hljs-subst&quot;&gt;\\&lt;/span&gt;.android&lt;span class=&quot;hljs-subst&quot;&gt;\\&lt;/span&gt;asd&quot;&lt;/span&gt;)   &lt;span class=&quot;hljs-comment&quot;&gt;//这个文件是我的,改成你自己的release签名文件&lt;/span&gt;
+            storePassword &lt;span class=&quot;hljs-string&quot;&gt;&quot;asd123456&quot;&lt;/span&gt;   &lt;span class=&quot;hljs-comment&quot;&gt;//密码改成自己的&lt;/span&gt;
+            keyAlias &lt;span class=&quot;hljs-string&quot;&gt;&quot;asd&quot;&lt;/span&gt;              &lt;span class=&quot;hljs-comment&quot;&gt;//再改成你自己的&lt;/span&gt;
+            keyPassword &lt;span class=&quot;hljs-string&quot;&gt;&quot;asd123456&quot;&lt;/span&gt;     &lt;span class=&quot;hljs-comment&quot;&gt;//再改成你自己的&lt;/span&gt;
+        }
+    }
+}
+</code></pre>
+<p>再使用工具包中的软件便可以获取到应用的签名了,</p>
+<p>填上应用的包名,然后"Get Signature"</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill"></div>
+<div class="image-view" data-width="768" data-height="1280"><img decoding="async" class="" src="//upload-images.jianshu.io/upload_images/2423047-de8ea84fbf376918.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" data-original-src="//upload-images.jianshu.io/upload_images/2423047-de8ea84fbf376918.png" data-original-width="768" data-original-height="1280" data-original-format="image/jpeg" data-original-filesize="70528"></div>
+</div>
+<div class="image-caption">获取签名</div>
+</div>
+<p>绿色的字就是签名</p>
+<p>最后等待审核,可能要一两天把...</p>
+<p>通过审核是这样的</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill"></div>
+<div class="image-view" data-width="1074" data-height="668"><img decoding="async" class="" src="//upload-images.jianshu.io/upload_images/2423047-34fc11c050946f1b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" data-original-src="//upload-images.jianshu.io/upload_images/2423047-34fc11c050946f1b.png" data-original-width="1074" data-original-height="668" data-original-format="image/jpeg" data-original-filesize="48684"></div>
+</div>
+<div class="image-caption">通过审核</div>
+</div>
+<p>当然要把 AppID 和 AppSecret 记录下来,在代码中需要使用</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill"></div>
+<div class="image-view" data-width="1002" data-height="172"><img decoding="async" class="" src="//upload-images.jianshu.io/upload_images/2423047-75ac9df1ca6722bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" data-original-src="//upload-images.jianshu.io/upload_images/2423047-75ac9df1ca6722bc.png" data-original-width="1002" data-original-height="172" data-original-format="image/jpeg" data-original-filesize="14486"></div>
+</div>
+<div class="image-caption">appid</div>
+</div>
+<p>++注意如果临时改变了签名或者包名,当时还不能生效(也就是你APP用不了微信的功能了),可能得等个一天才能生效!!!!血的教训!!++</p>
+<hr>
+<h3>2.添加依赖包</h3>
+<p>之前下载获取签名工具的时候就已经下载下来了</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill"></div>
+<div class="image-view" data-width="731" data-height="509"><img decoding="async" class="" src="//upload-images.jianshu.io/upload_images/2423047-1ac0a32f9f78d194.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" data-original-src="//upload-images.jianshu.io/upload_images/2423047-1ac0a32f9f78d194.png" data-original-width="731" data-original-height="509" data-original-format="image/jpeg" data-original-filesize="81275"></div>
+</div>
+<div class="image-caption">依赖包</div>
+</div>
+<p>放入AS项目的libs文件夹中</p>
+<p>添加依赖</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill"></div>
+<div class="image-view" data-width="840" data-height="917"><img decoding="async" class="" src="//upload-images.jianshu.io/upload_images/2423047-0ed93cbb5d68f675.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" data-original-src="//upload-images.jianshu.io/upload_images/2423047-0ed93cbb5d68f675.png" data-original-width="840" data-original-height="917" data-original-format="image/jpeg" data-original-filesize="131294"></div>
+</div>
+<div class="image-caption">添加依赖</div>
+</div>
+<hr>
+<h3>3.向微信sdk注册你的应用</h3>
+<p>在我自己写的学习demo中,注册是在一个单例模式的类中注册的,只有在第一次使用的时候才会注册,免得提早注册了浪费资源</p>
+<p>当然你也可以在application或者activity的oncrete中注册,随你!</p>
+<pre class="hljs processing"><code class="processing">&lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;String&lt;/span&gt; APP_ID = &lt;span class=&quot;hljs-string&quot;&gt;&quot;12312313212313213213&quot;&lt;/span&gt;;    &lt;span class=&quot;hljs-comment&quot;&gt;//这个APP_ID就是注册APP的时候生成的&lt;/span&gt;
+
+&lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;String&lt;/span&gt; APP_SECRET = &lt;span class=&quot;hljs-string&quot;&gt;&quot;12312312313212313213213&quot;&lt;/span&gt;;
+
+&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; IWXAPI api;      &lt;span class=&quot;hljs-comment&quot;&gt;//这个对象是专门用来向微信发送数据的一个重要接口,使用强引用持有,所有的信息发送都是基于这个对象的&lt;/span&gt;
+
+&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; registerWeChat(Context context) {   &lt;span class=&quot;hljs-comment&quot;&gt;//向微信注册app&lt;/span&gt;
+    api = WXAPIFactory.createWXAPI(context, APP_ID, &lt;span class=&quot;hljs-keyword&quot;&gt;true&lt;/span&gt;);  
+    api.registerApp(APP_ID);        
+}
+
+</code></pre>
+<hr>
+<h3>4.发送图片或文字,给朋友或者朋友圈</h3>
+<p>因为发文字,图片,或者链接都是类同的程序,所以在这只举一个发送图片的例子</p>
+<pre class="hljs lasso"><code class="lasso">&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-literal&quot;&gt;void&lt;/span&gt; sharePicByFile(File picFile, &lt;span class=&quot;hljs-built_in&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;hljs-built_in&quot;&gt;tag&lt;/span&gt;) {
+    &lt;span class=&quot;hljs-keyword&quot;&gt;if&lt;/span&gt; (!picFile.exists()) {&lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt;;}
+    Bitmap pic = BitmapFactory.decodeFile(picFile.toString());
+    
+    WXImageObject imageObject = &lt;span class=&quot;hljs-literal&quot;&gt;new&lt;/span&gt; WXImageObject(pic);
+    &lt;span class=&quot;hljs-comment&quot;&gt;//这个构造方法中自动把传入的bitmap转化为2进制数据,或者你直接传入byte[]也行&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//注意传入的数据不能大于10M,开发文档上写的&lt;/span&gt;
+    
+    WXMediaMessage msg = &lt;span class=&quot;hljs-literal&quot;&gt;new&lt;/span&gt; WXMediaMessage();  &lt;span class=&quot;hljs-comment&quot;&gt;//这个对象是用来包裹发送信息的对象&lt;/span&gt;
+    msg.mediaObject = imageObject;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//msg.mediaObject实际上是个IMediaObject对象,&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//它有很多实现类,每一种实现类对应一种发送的信息,&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//比如WXTextObject对应发送的信息是文字,想要发送文字直接传入WXTextObject对象就行&lt;/span&gt;
+    
+    
+
+    Bitmap thumbBitmap = Bitmap.createScaledBitmap(pic, &lt;span class=&quot;hljs-number&quot;&gt;150&lt;/span&gt;, &lt;span class=&quot;hljs-number&quot;&gt;150&lt;/span&gt;, &lt;span class=&quot;hljs-literal&quot;&gt;true&lt;/span&gt;);
+    
+    msg.thumbData = bitmap2ByteArray(thumbBitmap);  
+    &lt;span class=&quot;hljs-comment&quot;&gt;//在这设置缩略图&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//官方文档介绍这个bitmap不能超过32kb&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//如果一个像素是8bit的话换算成正方形的bitmap则边长不超过181像素,边长设置成150是比较保险的&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//或者使用msg.setThumbImage(thumbBitmap);省去自己转换二进制数据的过程&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//如果超过32kb则抛异常&lt;/span&gt;
+
+    SendMessageToWX.Req req = &lt;span class=&quot;hljs-literal&quot;&gt;new&lt;/span&gt; SendMessageToWX.Req();    &lt;span class=&quot;hljs-comment&quot;&gt;//创建一个请求对象&lt;/span&gt;
+    req.message = msg;  &lt;span class=&quot;hljs-comment&quot;&gt;//把msg放入请求对象中&lt;/span&gt;
+    req.scene = SendMessageToWX.Req.WXSceneTimeline;    &lt;span class=&quot;hljs-comment&quot;&gt;//设置发送到朋友圈&lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;//req.scene = SendMessageToWX.Req.WXSceneSession;   //设置发送给朋友&lt;/span&gt;
+    req.transaction = &lt;span class=&quot;hljs-built_in&quot;&gt;tag&lt;/span&gt;;  &lt;span class=&quot;hljs-comment&quot;&gt;//这个tag要唯一,用于在回调中分辨是哪个分享请求&lt;/span&gt;
+    &lt;span class=&quot;hljs-built_in&quot;&gt;boolean&lt;/span&gt; b = api.sendReq(req);   &lt;span class=&quot;hljs-comment&quot;&gt;//如果调用成功微信,会返回true&lt;/span&gt;
+}
+</code></pre>
+<p>调用这个方法之后会自动打开微信的界面,可以发送你要分享的信息了!</p>
+<hr>
+<h3>5.分享后的回调</h3>
+<p>微信只能回调指定包下的指定Activity!!!</p>
+<p>所以一定要按照我下面的例子来写</p>
+<h4>(1)创建包</h4>
+<p>在注册的包名下面创建一个叫"wxapi"的包</p>
+<pre class="hljs css"><code class="css">&lt;span class=&quot;hljs-selector-tag&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;hljs-selector-tag&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;hljs-selector-class&quot;&gt;.zhouyijin&lt;/span&gt;&lt;span class=&quot;hljs-selector-class&quot;&gt;.zyj&lt;/span&gt;&lt;span class=&quot;hljs-selector-class&quot;&gt;.fakeshanbay&lt;/span&gt;&lt;span class=&quot;hljs-selector-class&quot;&gt;.wxapi&lt;/span&gt;;
+</code></pre>
+<h4>(2)创建指定名字的Activity</h4>
+<p>创建一个Acitivty,必须是这个名字!#### (3)</p>
+<pre class="hljs scala"><code class="scala">public &lt;span class=&quot;hljs-class&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;WXEntryActivity&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;AppCompatActivity&lt;/span&gt; &lt;/span&gt;{}
+</code></pre>
+<p>并在manifest文件中注册!!!</p>
+<pre class="hljs groovy"><code class="groovy">&amp;lt;activity &lt;span class=&quot;hljs-string&quot;&gt;android:&lt;/span&gt;name=&lt;span class=&quot;hljs-string&quot;&gt;&quot;.wxapi.WXEntryActivity&quot;&lt;/span&gt;
+&lt;span class=&quot;hljs-symbol&quot;&gt;    android:&lt;/span&gt;launchMode=&lt;span class=&quot;hljs-string&quot;&gt;&quot;singleTop&quot;&lt;/span&gt;
+&lt;span class=&quot;hljs-symbol&quot;&gt;    android:&lt;/span&gt;exported=&lt;span class=&quot;hljs-string&quot;&gt;&quot;true&quot;&lt;/span&gt;&lt;span class=&quot;hljs-regexp&quot;&gt;/&amp;gt;   /&lt;/span&gt;/注意这个属性一定是&lt;span class=&quot;hljs-literal&quot;&gt;true&lt;/span&gt;,不然微信不能调用
+</code></pre>
+<h4>(3)处理回调</h4>
+<p>微信会把数据包装在Intent中传入这个"WXEntryActivity"中</p>
+<p>我们不需要自己处理Intent,</p>
+<p>只需要在这个activity中调用api.handleIntent(Intent intent, IWXAPIEventHandler i),<br>
+这个方法会自动调用 IWXAPIEventHandler 对象的 onResp(BaseResp resp) 方法<br>
+我们只需要把处理回调的逻辑写进onResp(BaseResp resp) 方法中即可!</p>
+<p>为了方便,我们使WXEntryActivity实现IWXAPIEventHandler的方法</p>
+<pre class="hljs groovy"><code class="groovy">&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-class&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;WXEntryActivity&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;AppCompatActivity&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;IWXAPIEventHandler&lt;/span&gt; {&lt;/span&gt;
+
+    &lt;span class=&quot;hljs-meta&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; onCreate(Bundle savedInstanceState) {
+        &lt;span class=&quot;hljs-keyword&quot;&gt;super&lt;/span&gt;.onCreate(savedInstanceState);
+        setContentView(R.layout.entry);
+        WeChatModule.getInstance().api.handleIntent(getIntent(), &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;); &lt;span class=&quot;hljs-comment&quot;&gt;//处理微信传回的Intent,当然你也可以在别的地方处理&lt;/span&gt;
+    }
+    
+    &lt;span class=&quot;hljs-meta&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; onResp(BaseResp resp) { &lt;span class=&quot;hljs-comment&quot;&gt;//在这个方法中处理微信传回的数据&lt;/span&gt;
+        &lt;span class=&quot;hljs-comment&quot;&gt;//形参resp 有下面两个个属性比较重要&lt;/span&gt;
+        &lt;span class=&quot;hljs-comment&quot;&gt;//1.resp.errCode&lt;/span&gt;
+        &lt;span class=&quot;hljs-comment&quot;&gt;//2.resp.transaction则是在分享数据的时候手动指定的字符创,用来分辨是那次分享(参照4.中req.transaction)&lt;/span&gt;
+        &lt;span class=&quot;hljs-keyword&quot;&gt;switch&lt;/span&gt; (resp.errCode) { &lt;span class=&quot;hljs-comment&quot;&gt;//根据需要的情况进行处理&lt;/span&gt;
+            &lt;span class=&quot;hljs-keyword&quot;&gt;case&lt;/span&gt; BaseResp.ErrCode.&lt;span class=&quot;hljs-string&quot;&gt;ERR_OK:&lt;/span&gt;
+                &lt;span class=&quot;hljs-comment&quot;&gt;//正确返回&lt;/span&gt;
+                &lt;span class=&quot;hljs-keyword&quot;&gt;break&lt;/span&gt;;
+            &lt;span class=&quot;hljs-keyword&quot;&gt;case&lt;/span&gt; BaseResp.ErrCode.&lt;span class=&quot;hljs-string&quot;&gt;ERR_USER_CANCEL:&lt;/span&gt;
+                &lt;span class=&quot;hljs-comment&quot;&gt;//用户取消&lt;/span&gt;
+                &lt;span class=&quot;hljs-keyword&quot;&gt;break&lt;/span&gt;;
+            &lt;span class=&quot;hljs-keyword&quot;&gt;case&lt;/span&gt; BaseResp.ErrCode.&lt;span class=&quot;hljs-string&quot;&gt;ERR_AUTH_DENIED:&lt;/span&gt;
+                &lt;span class=&quot;hljs-comment&quot;&gt;//认证被否决&lt;/span&gt;
+                &lt;span class=&quot;hljs-keyword&quot;&gt;break&lt;/span&gt;;
+            &lt;span class=&quot;hljs-keyword&quot;&gt;case&lt;/span&gt; BaseResp.ErrCode.&lt;span class=&quot;hljs-string&quot;&gt;ERR_SENT_FAILED:&lt;/span&gt;
+                &lt;span class=&quot;hljs-comment&quot;&gt;//发送失败&lt;/span&gt;
+                &lt;span class=&quot;hljs-keyword&quot;&gt;break&lt;/span&gt;;    
+            &lt;span class=&quot;hljs-keyword&quot;&gt;case&lt;/span&gt; BaseResp.ErrCode.&lt;span class=&quot;hljs-string&quot;&gt;ERR_UNSUPPORT:&lt;/span&gt;
+                /不支持错误
+                &lt;span class=&quot;hljs-keyword&quot;&gt;break&lt;/span&gt;;    
+            &lt;span class=&quot;hljs-keyword&quot;&gt;case&lt;/span&gt; BaseResp.ErrCode.&lt;span class=&quot;hljs-string&quot;&gt;ERR_COMM:&lt;/span&gt;
+                &lt;span class=&quot;hljs-comment&quot;&gt;//一般错误&lt;/span&gt;
+                &lt;span class=&quot;hljs-keyword&quot;&gt;break&lt;/span&gt;;       
+&lt;span class=&quot;hljs-symbol&quot;&gt;            default:&lt;/span&gt;
+                &lt;span class=&quot;hljs-comment&quot;&gt;//其他不可名状的情况&lt;/span&gt;
+                &lt;span class=&quot;hljs-keyword&quot;&gt;break&lt;/span&gt;;
+        }
+    }
+    
+    &lt;span class=&quot;hljs-meta&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; onReq(BaseReq req) {
+        &lt;span class=&quot;hljs-comment&quot;&gt;//......这里是用来处理接收的请求,暂不做讨论&lt;/span&gt;
+    }
+    
+}
+</code></pre>
+<p><strong>这里需要提醒下,因为微信只能回调这个Activity,如果不想把业务逻辑写在这个Activity中,那么可以把具体逻辑再转移到别的Activity中处理,如下:</strong></p>
+<pre class="hljs aspectj"><code class="aspectj">&lt;span class=&quot;hljs-meta&quot;&gt;@Override&lt;/span&gt;
+&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;onResp&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(BaseResp resp)&lt;/span&gt; &lt;/span&gt;{
+    Intent intent = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; Intent(&lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt;, xxx.class);
+    intent.putExtra(&lt;span class=&quot;hljs-string&quot;&gt;&quot;errCode&quot;&lt;/span&gt;, resp.errCode);
+    intent.putExtra(&lt;span class=&quot;hljs-string&quot;&gt;&quot;errStr&quot;&lt;/span&gt;, resp.transaction);
+    startActivity(intent); 
+    finish();
+}
+</code></pre>
+<hr>
+<p>我宝贵的半天时间就浪费在这了,看过给个赞好吗</p>
+</div>
+<pre></pre>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/android%E9%9B%86%E6%88%90" rel="tag">android集成</a>, <a href="/tag/android%E9%9B%86%E6%88%90%E5%BE%AE%E4%BF%A1%E5%88%86%E4%BA%AB" rel="tag">android集成微信分享</a>, <a href="/tag/%E5%BE%AE%E4%BF%A1%E5%88%86%E4%BA%AB" rel="tag">微信分享</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2017/12/29/progammer-of-35-yeas-age.html" rel="prev">程序员：35岁以后的人生</a><br>【下篇】<a href="/2018/01/02/formdiy-net.html" rel="next">FormDiy.NET自定义表单框架（一）：目标</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2022/02/07/untiy-build-for-android12.html">记录untiy适配android12</a></li><li> · <a href="/2021/08/29/unity-sqlite-android.html">【Unity】SQLite发布到Android</a></li><li> · <a href="/2021/08/20/unity3d-android.html">unity3D导出模块给android使用</a></li><li> · <a href="/2020/04/13/xposed1.html">XPosed模块开发：XPosed入门与登陆劫持演示</a></li><li> · <a href="/2019/11/15/android-studio.html">Android studio 运行模拟器出现dev/kvm is not found问题</a></li><li> · <a href="/2017/12/02/android-take-photo-permission.html">android拍照功能之权限和Android版本问题</a></li><li> · <a href="/2017/11/21/android-androidconfigchanges.html">解决android 安卓中横屏、竖屏切换 应用崩溃问题</a></li><li> · <a href="/2017/11/15/searchview-edittext-focusable.html">解决searchview自动获取焦点问题</a></li><li> · <a href="/2017/11/15/listview-textview-click-fail.html">解决listView中textview超链接导致listitem点击事件失效问题</a></li><li> · <a href="/2017/11/13/android%E4%B8%ADlinearlayout%E7%9A%84%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6%E5%A6%82%E4%BD%95%E5%8C%85%E5%90%AB%E5%86%85%E9%83%A8%E7%9A%84%E5%AD%90%E6%8E%A7%E4%BB%B6%EF%BC%9F.html">Android中LinearLayout的点击事件如何包含内部的子控件？</a></li><li> · <a href="/2017/11/09/%E5%85%B3%E4%BA%8Efragment-%E4%B8%8D%E5%93%8D%E5%BA%94onactivityresult%E7%9A%84%E6%83%85%E5%86%B5%E5%88%86%E6%9E%90.html">关于Fragment 不响应onActivityResult的情况分析</a></li><li> · <a href="/2017/10/18/setvisibility.html">setVisibility无效</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2017年12月29日发表在<a href="/category/android" rel="category tag">Android</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2017/12/29/android-weixin.html" rel="bookmark" title="本文固定链接 /2017/12/29/android-weixin.html">android集成微信分享 | Bruce's Blog</a><a href="#" onclick="copy_code('/2017/12/29/android-weixin.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/12/29/android-weixin.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4595" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="8f184b1710"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="203"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.064 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:31 -->

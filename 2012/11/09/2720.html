@@ -1,0 +1,886 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>SQL中那些可能你不知道的事 | Bruce's Blog</title> 
+<meta name="description" content="SQL中的随机">
+<meta name="keywords" content="MySQL,Soundex,SQL S">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 11 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td>1</td><td><a href="/2012/11/02" aria-label="2012年11月2日 发布的文章">2</a></td><td><a href="/2012/11/03" aria-label="2012年11月3日 发布的文章">3</a></td><td>4</td>
+	</tr>
+	<tr>
+		<td>5</td><td><a href="/2012/11/06" aria-label="2012年11月6日 发布的文章">6</a></td><td>7</td><td>8</td><td><a href="/2012/11/09" aria-label="2012年11月9日 发布的文章">9</a></td><td><a href="/2012/11/10" aria-label="2012年11月10日 发布的文章">10</a></td><td>11</td>
+	</tr>
+	<tr>
+		<td><a href="/2012/11/12" aria-label="2012年11月12日 发布的文章">12</a></td><td>13</td><td>14</td><td><a href="/2012/11/15" aria-label="2012年11月15日 发布的文章">15</a></td><td>16</td><td>17</td><td>18</td>
+	</tr>
+	<tr>
+		<td><a href="/2012/11/19" aria-label="2012年11月19日 发布的文章">19</a></td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td><a href="/2012/11/25" aria-label="2012年11月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/11/26" aria-label="2012年11月26日 发布的文章">26</a></td><td>27</td><td><a href="/2012/11/28" aria-label="2012年11月28日 发布的文章">28</a></td><td><a href="/2012/11/29" aria-label="2012年11月29日 发布的文章">29</a></td><td>30</td>
+		<td class="pad" colspan="2"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/10">« 10 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/12">12 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#b02cc0;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#de0c3a;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#f3aeee;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#2577ed;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#f9bec7;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#4e5cf9;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#613b30;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#226f4a;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#41e786;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#586f1a;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#e7b5e7;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#1b171c;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#fd5260;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#efcbf1;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#25e2fb;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#941869;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#8af0d;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#7a7ea9;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#e6570d;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#bb7a38;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#b9e349;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#2dc40f;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#9a2e82;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#229384;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#81dc;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#44af4c;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#2319ea;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#e2c35d;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#a441df;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#771fba;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#bea0d2;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#4fea62;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#6c0a92;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#b5ab7f;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#c22518;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#b9fe39;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#c45e97;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#fbf4f;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#c7fa85;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#92b09d;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#1ce6d1;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#a8ecea;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#70edf6;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#926341;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#343431;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/mysql" rel="category tag">MySQL</a>, <a href="/category/sql-server" rel="category tag">SQL Server</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">SQL中那些可能你不知道的事</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-11-09 11:44</span>
+			<span class="category">  <a href="/category/mysql" rel="category tag">MySQL</a>, <a href="/category/sql-server" rel="category tag">SQL Server</a></span>
+			<span class="article_comment"><a href="/2012/11/09/2720.html#comments">评论(1)</a></span>
+			 <span class="article_view grayline">阅读(<span>3,205</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<h1></h1>
+<h2><a href="#a">SQL中的随机</a></h2>
+<h2><a href="#b">日期与时间</a></h2>
+<h2><a href="#c">根据笔划排序</a></h2>
+<h2><a href="#d">Soundex</a></h2>
+<h2><a href="#e">保存特殊类型（img/mp3）</a></h2>
+<h2><a href="#f">不算格式化的格式化</a></h2>
+<h2><a href="#g">聚合函数用在多列</a></h2>
+<h2><a href="#h">关于自增列</a></h2>
+<h2><a href="http://www.cnblogs.com/Wayou/archive/2012/10/24/sql_to_know.html#i">HAVING or WHERE</a></h2>
+<h2><a href="http://www.cnblogs.com/Wayou/archive/2012/10/24/sql_to_know.html#j">结果集中重复的行</a></h2>
+<h2><a href="http://www.cnblogs.com/Wayou/archive/2012/10/24/sql_to_know.html#k">用选择来填充</a></h2>
+<h2><a href="http://www.cnblogs.com/Wayou/archive/2012/10/24/sql_to_know.html#l">重命名表</a></h2>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>本文不是SQL教程，只是关于T-SQL的一点小结及吐槽。</p>
+<p> </p>
+<p>对于SQL入门的学习，推荐一本32开大小的小巧书目《<span class="wp_keywordlink_affiliate"><a href="/tag/sql-s" title="View all posts in SQL S" target="_blank">SQL S</a></span>erver编程必知必会》，对于每个知识点介绍得很简单但很到位，如果你不想阅读那些动辄四五百页的大作的话，这本书完全够用。另外一本进阶的书目 《The Art of SQL》很出名，那是我打算看的但还没有看。</p>
+<p> </p>
+<p>这里讨论和所有例子都基于微软对SQL的一个实现版本T-SQL。表是基于manage sutio自带的Northwind数据库。</p>
+<p> </p>
+<p>对于初学者来说，只知道SQL不知道T-SQL，T-SQL是什么，感觉像方言。对头，它就是个方言。</p>
+<p> </p>
+<p>SQL的全称是结构化查询语言Structured Query Language，专门设计来与数据进行通信，就好比HTML被设计来展示网页。它不是一种专利语言,不属于哪个公司，好比你无法说出HTML是微软的， 还是IBM的。有专门的标准委员会来制定SQL语言的标准及对它进行维护。而我们真正使用的，是各个数据库管理软件对它的一个实现。就是说SQL是标准， 其他人在遵守这一标准的前提下给出自己的一个实现版本。微软的数据库产品所实现的版本就叫Transact-SQL，简称T-SQL，Oracle的是 PL/SQL等。当然，各个DBMS版本间会新增自己的一些特性，这也是为什么Oracle下写的SQL脚本可能在<span class="wp_keywordlink_affiliate"><a href="/tag/sql-s" title="View all posts in SQL S" target="_blank">SQL S</a></span>erver上不兼容的原因，但大部分语句都是可以在各平台移植的。</p>
+<p> </p>
+<h2><a name="a"></a>SQL中的随机</h2>
+<p>SQL中，大部分查询都是通过SELECT语句返回，最熟悉的莫过于从一张表中进行查询返回结果，但其实还有一些返回是可以通过启用函数的，比如GETDATE（）。</p>
+<p> </p>
+<p>GETDATE（）方法返回当前系统时间，准确说是你的数据库服务器的时间。如果有人问程序员What’s the time? 那我想《程序员装逼指南》（如果有这本书的话）会告诉你，程序员才不会带表或者看手机呢，他会优雅地输入SELECT GETDATE（）;</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419310593.jpg" alt=""></p>
+<p> </p>
+<p>只是在单独使用诸如GETDATE()，RAND()等函数时表忘了加上SELECT .</p>
+<p> </p>
+<p>上面提到RAND()方法，它默认生成的是0到1且后面拖了一长串精度的浮点数。同时它也可以接收一个种子值，如果指定了种子值，居然每次产生的随机数都是一样的！真的是坑爹的随机函数.</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419313465.jpg" alt=""></p>
+<p> </p>
+<p>但其实很多时候我们需要让这个产生的随机数更符合我们的需要一点，比如只想要一个0到10之间的随机数，这时候可以联想到CEILING()和 FLOOR()这两个函数，前者返回大于等于给定参数的最小整数，后者相反，返回小于等于给定参数的最大整数。有点绕口，比如CEILING(0.3)， 那么比0.3大的整数就是1，2，3….最小的是1，返回1.  而FLOOR(1.5)呢，对头，返回1.</p>
+<p> </p>
+<p>接着上面的思路，要返回0到10之间的一个随机数，我们需要做的就是把RAND()返回的数先乘以10，这样返回的就是几点几的一个数，再用CEILING()或者FLOOR()就可以只取到一个整数部分的数字。</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419315315.jpg" alt=""></p>
+<p> </p>
+<p>用CEILING()还是FLOOR(), 抑或两者没有区别。必需有区别，用CEILING()你永远得不到0这个数，而且FLOOR()又永远得不到10这个数。</p>
+<p> </p>
+<p>还有种方法就是使用字符串处理函数LEFT()或者RIGHT()，将RAND()返回的数同样乘10后用LEFT()取左边一位就是我们想要的了，RIGHT()同理。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419321034.jpg" alt=""></p>
+<p> </p>
+<p>想到这里，甚至可以用SUBSTRING(),它接收三个参数，第一个是字符串，所以首先我们需要把RAND()返回的数通过CONVERT()转成字符型，第二参数是要取的子字符串的开始位置，第三个参数为子字符串长度。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419322781.jpg" alt=""></p>
+<p> </p>
+<p>除非你真的是闲的，否则没有必需用这种方法来做，这里只是提供一种思路，说明科学的道路其实很宽阔的。</p>
+<p> </p>
+<p>至于要返回1到100，10到100随机数等的情况，相信通过各位码农的智慧也是完全可能的了，这里就不赘述鸟。</p>
+<p> </p>
+<p>SQL主要功能不是返回数字，更多是返回表中的行。同样，也可以实现从表中返回随机抽取的数据行。</p>
+<p> </p>
+<p>通过NEWID（）这个方法用如下语句轻松实现。</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419332072.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>NEWID（）是个什么样的函数，可以实验一把来看看：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419340339.jpg" alt=""></p>
+<p> </p>
+<p>返回一串字符类似于GUID，唯一的标识。每次运行返回的都是一个不同的值。在上面的例子中，从ORDERS表中取三条数据，数据是通过NEWID（）产生的值到表中取到的，当然就是随机的了。</p>
+<p> </p>
+<p>其实，SQL SERVER有个专门从大量数据中返回随机样本的函数TABLESAMPLE(),通过参数可以指定返回多少条随机样本数据或者百分之几的数据：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419354934.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>但诡异的是，居然提示语法错误。这有点让人摸不着北。后来发现，TABLESAMPLE() 是SQL SERVER 2005 新增的内容，而Northwind数据库又是2005版本以前自带的一个样本数据库，所以它只能兼容级别为80，也就是说在这个数据库上能执行2000或 更老的SQL SERVER所以支持的命令但无法执行更新的命令。像SQL SERVER 2005之后的版本中都用Adventureworks数据库代替了Northwind的。于是转到Adventureworks数据库进行尝试。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419370354.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>果然是兼容性的问题，那么能不能在老版本SQL SERVER中创建的数据库上执行呢，其实还是可以的，只要把数据库的兼容性改到更高即可：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419374328.jpg" alt=""></p>
+<p> </p>
+<p>需要说明的是TABLESAMPLE()每次返回的结果数目是不一样的，在给定的参数上下跳动，所以如果表本身的数据量很小的话，比如只有两三百条，使用此命令一行结果也没有返回是很正常的。</p>
+<p> </p>
+<h2><a name="b"></a>日期与时间</h2>
+<p>GETDATE()可以方便地获得时间日期，DATEPART（）则会返回指定的日期的某部分，比如只想要一条完事日期信息中的月分，星期等：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419392434.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>但我们看到返回的星期其实不够人性化，贴心的显示应该是星期几而不是本周的第几天，这时就可以用DATENAME()了，它返回的是日期的名字。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419400716.jpg" alt=""></p>
+<p> </p>
+<p>其实更人性化一点的显示应该是这样的，如果在中国，应该返回星期一，十月！</p>
+<p>运行Sp_helplanguage可以看到SQL SERVER中保存了各种语言对日期时间的显示设置。当然中文的习惯称呼也可以在里面找到。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419403625.jpg" alt=""></p>
+<p> </p>
+<p>再看我们数据库当前的语言环境：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419410964.jpg" alt=""></p>
+<p> </p>
+<p>当前语言环境是英语，所以返回的是英文的日期相关名称，那思路应该就是把默认语言环境改成中文。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419422122.jpg" alt=""></p>
+<p> </p>
+<p>可以看到，现在系统默认语言已经设置成了简体中文，NOW，就是见证奇迹的时刻。</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419464590.jpg" alt=""></p>
+<p> </p>
+<p>繁体中文：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419472079.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>一个有意思的事情是，让你看一下日语情况下的所有星期：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419474256.jpg" alt=""></p>
+<p> </p>
+<p>是不是很有意思，华夏博大精深的五行在日本那里成了星期。如果我不是这么晚研究SQL这么入神，我也不知道今天是火什么日。</p>
+<p> </p>
+<p>对于上面所执行的语句，我不得不多说几句，首先行1设置系统默认语言为日本儿语，行2行3定义了两个变量一个保存当前日期，另一个用作下面循环输出 星期时的计数器，在对这两个变量进行初始化时有个技巧，一般是用SET来进行变量初始化，但一次只能初始化一个，而SELECT语句里可以初始化多个变 量。以前我甚至不知道SELECT可以进行变量初始化！！行6开始循环函数，每输出一次后把日期加一天并且计数器加一，这里日期加一天又用了个默默无闻的 函数DATEADD()，你可以指定一个数加到一个日期上的哪部分，这里是加一天。</p>
+<p> </p>
+<p>还有个常见的问题就是，很多时候我们只希望返回日期中的时间，或者日期中的日期不带时间。</p>
+<p>实现的方法很多，但基本上都是先把日期转换成字符后操作。对于字符你就可以用LEFT()或者RIGHT()抑或者SUBSTR()来取一个日期数据中的任何部分了。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419484595.jpg" alt=""></p>
+<p> </p>
+<p>对于实现这个功能，一个印度阿三给出了如下的解法：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419494717.jpg" alt=""></p>
+<p>注意，上面那样需要SQL SERVER 2008及以上。</p>
+<p>无可否认，印度阿三的实力就是那样让人肃然起敬。如果你很不幸的干上了程序员这一行，终有一天你会感叹既生我，何生印度阿三。</p>
+<p> </p>
+<p>其实对于一个日期中想取天，月等，有直接的函数可用：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419500477.jpg" alt=""></p>
+<p> </p>
+<p>其实这三个函数就是DATEPART()的简化而以，因为你完全可以用DATEPART()来完成。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419502541.jpg" alt=""></p>
+<p> </p>
+<p>只是DATEPART()更灵活，能取到的部分更多。</p>
+<p> </p>
+<p> </p>
+<h2><a name="c"></a>根据笔划排序</h2>
+<p>如果你注意到了SQL SERVER里面有个collation属性的话，这个功能实现起来不那么难。并且对于中文环境的开发者来说，这样的功能可能会时不时的碰到。</p>
+<p> </p>
+<p>右击任何一个数据库，查看其属性，你会发现在选项里可以看到collation这个属性并且可以进行设置。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419520427.jpg" alt=""></p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419521462.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>Collation所规定的就是一种字符集的排序规则。这个东西通常是被很多开发人员忽略而不知的。在这里所以设定的值会应用到所选数据库的默认排 序规则上。通常对于一种语言比如中文，不止一种规则，通过点开下拉列表你可以看到里面分得很细，包括简体繁体，香港大陆台湾新加坡等，其中 带’stroke’就是涉及笔划的。</p>
+<p> </p>
+<p>除了通过上面的属性窗口可以了解到collation外，还可以通过SELECT * FROM   Fn_helpcollations(); 查看数据库服务器所支持的字符集。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102419540285.jpg" alt=""></p>
+<p> </p>
+<p>如你看到的这个Chinese_PRC_CS_AI_WS，前面CHINESES_PRC(中国大陆)当然是指国家地区了，而后面跟的后缀，也有其基体的含义，可以从SQL Server的帮助文档中了解到，这里不说开了。正是后面这些后缀对排序起了很大的作用。</p>
+<p> </p>
+<p>如果你只是临时想在检索结果中对列以笔划排序，可以在SELECT语句后通过COLLATE指定相应的collation（为了演示临时建了个表并插入了中文数据）：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420040443.jpg" alt=""></p>
+<p> </p>
+<p>在我的映像中笔划顺序貌似是横竖撇捺折，这里看来我碰到了点认知上的疑惑。</p>
+<p> </p>
+<p>同样，你在列表中可以看到带‘pingyin’的，那就是以拼音排序。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420053232.jpg" alt=""></p>
+<p> </p>
+<p>以拼音排序的结果：</p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420070688.jpg" alt=""></p>
+<p> </p>
+<h2><a name="d"></a><span class="wp_keywordlink_affiliate"><a href="/tag/soundex" title="View all posts in Soundex" target="_blank">Soundex</a></span></h2>
+<p>我也是在想系统地学习一下SQL然后看了本儿书后才发现原来还有这么个神奇的函数。</p>
+<p>SOUNDEX将字符转换成表示其发音的字母与数字的组合，所以用它进行字符串的匹配是基于字符串的读音而不是字符本身，够强大吧。其实SOUNDEX并不属于SQL里的概念，但T-SQL提供了对它的支持。下面来做个实验。</p>
+<p> </p>
+<p>在Categories表中CategoryName最后列有个seafood，我在其后面添加了四列，按照英语音标习惯这些读音都和seafood差不多，看是否能通过soundex把它们检索出来。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420075364.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>执行下面的名句后及结果如图：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420083620.jpg" alt=""></p>
+<p> </p>
+<p>可以看到，检索出了3行新增用来实验的数据，效果还是非常令人满意的。</p>
+<p> </p>
+<p>从这里似乎可以窥见到语音搜索的端倪了：当你点击谷歌搜索框旁边的话筒，它把你的声音编码成文本返回服务器然后通过上面类似的方法进行数据检索。这就是语音搜索。</p>
+<p> </p>
+<p>当然，这只是一种猜想，具体算法当然要复杂得多。只是从这里可以看出，任何你需要的一个小功能都可以从一些不起眼但已经存在的函数上来做文章。还有前面提到的汉字排序问题，如果你不知道这些知识点，面对一些需要真的就无从下手。</p>
+<p> </p>
+<h2><a name="e"></a>保存特殊类型（img/mp3）</h2>
+<p> </p>
+<p>基本上我们在SQL SERVER中碰到和操作的都是文本，数字等类型的数据，但图片也是经常要面对的一种文件类型，比如我们需要保存用户的头像。</p>
+<p>对于图片，可以保存在数据库，那就是保存它们的文本编码形式，而不是文件本身。比如用户上传了一张图片，其实从前端传送到服务器的过程中也是以文本编码的形式，SQL SERVER也确实提供了image这种格式来方便保存图片到数据库。</p>
+<p>另外一种方案就是保存路径。比如前端用户上传了图片，服务器指定图片保存到某个文件夹下，并且对图片进行一个统一有序的命名，然后将这个图片的路径和重命名后的信息可在到数据库表中，以后使用是通过查找相应的表获得路径及文件名，然后去调用真正的文件。</p>
+<p>不说说第二种方案是更加合理的，试想谁也不可能把mp3甚至视频文件编码保存到数据库表中的一列，那是怎样的一个表！</p>
+<p> </p>
+<h2><a name="f"></a>不算格式化的格式化</h2>
+<p> </p>
+<p>对检索出的结果一般是时间日期金钱等需要进行一些格式化操作以符合阅读习惯。这里不打算讲开了。</p>
+<p>一般，搜索出的id我们习惯要加上编号方便阅读，比如XXXX号，No.XXX ，但你如果尝试通过这样的语句直接加上想要显示的字符串时：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420102081.jpg" alt=""></p>
+<p> </p>
+<p>会出错，OrderId不是串，一个不是串的元素想跟一个串连接当然会出错，需要将不是串的OrderId转换成串后方可进行上述操作。刚好有个STR()可以用来完成需要。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420111755.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>但STR（）也不是一个长久之计，因为碰到日期时，它就无法转换了。日期还需要转换嘛，兴许你会认为日期本来就是字符串了，那我们可以先看一下：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420132095.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p>所以以日期不是字符串，日期是一种专门的格式。看着像字符串而以。这就叫长得像也是错。</p>
+<p>对于日期我们可以使用比较万能的CONVERT（）来进行转换。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420134561.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>或者你会问，在SQL里加字符串整理好我们需要的数据没必需，完全可以在应用程序中格式化，怎么加都行，但SQL是专门设计来处理数据的，它对这些 操作的执行效率非常高，如果你一开始就把数据整理好再送到应用程序便可直接使用，将会使你的程序性能有较大提高（这也是SQL必知必会一书中的观点）.</p>
+<p> </p>
+<h2><a name="g"></a>聚合函数用在多列</h2>
+<p>你可以猜想一下 SELECT SUM(c1*c2) 的结果是什么。或者你还没有这样的概念，SUM就是对一列的数据进行求和嘛。AVG（）也是对于一列求平均。但其实聚合函数是可以用在多列上的。</p>
+<p>就比如上面的SELECT SUM(c1*c2)，先是把c1列和c2列对应的每行相乘，最后再把每行的乘积相加。</p>
+<p> </p>
+<p>请看下面这个测试用列：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420141793.jpg" alt=""></p>
+<p> </p>
+<h2><a name="h"></a>关于自增列</h2>
+<p>对于自增列，我们知道一般用来当表的主键，并且它的值被指定为按给定的种子值自动递增下去，在你向表中插入一行数据后，它自动增加，确定的说它会去 找还没有被使用的数中最小的数来做为自己的值。但是我们对表中数据进行了删除某行的操作后，比如我们有5条数据，有一列ID它的值是从1到5由SQL SERVER生成的，我们执行delete将ID为5的行删除，但我们再次插入数据时，ID是6而不会是5. 虽然5已经被删了但5已经被使用过了，所以新插入的行不再取5而从5后面一个开始。</p>
+<p> </p>
+<p>那我非要接着之前的序号开始插入行呢，答案是不行的。曾经我也思考过这个问题，相信很多人开始也寻求过这个问题的答案，都无功而返。</p>
+<p> </p>
+<p>后来想了一下把问题想通了，这样的设计是很合理的。 接着上面的情境，假如我们删除了ID为2的行呢，如果仅仅为了保持ID这个序号值的连续性，那2后面所有行都要自动将自己的ID减一，然后我们插入的数据 呢再接着最后一行的ID（现在变为4）插入。那可以想象，这是个多么耗费资源而又没有任何意义的事情。变更了一行就要变更所有行，如果数据量大，那我们仅 仅是做一个插入操作就要等半天。更不用说在高访问量的服务器上怎么办了。</p>
+<h2><a name="i"></a>HAVING or WHERE</h2>
+<p>HAVING or WHERE:其实这两个关键字的功能是一样的，甚至语法也完全一样，唯一不同的是前者对分组进行过滤。后者对行进行过滤，也是我们用得最多的，似乎忽略了 HAVING的存在。何时用HAVING，当你需要在分组内进行过滤时就需要它，因为WHERE其实是没有分组的概念的。</p>
+<p> </p>
+<p>究其根本，WHERE 是先过滤，再分组，HAVING先分组，再过滤。</p>
+<p> </p>
+<h2><a name="j"></a>结果集中重复的行</h2>
+<p>UNION完成多条WHERE语句相同的功能，结果集都已经自动去除了重复的行，如果需要返回全部的行，需要使用UNION ALLl 。</p>
+<p>对于上面这句话，我们一点点来看。</p>
+<p>比如对于Orders表,先看一下里面有什么：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420151128.jpg" alt=""></p>
+<p> </p>
+<p>现在我们想返回Orderid=10249的那条数据和所有OrderId小于 10252的数据。</p>
+<p> </p>
+<p>很明显可以用两条带WHERE的语句来完成。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420153787.jpg" alt=""></p>
+<p> </p>
+<p>通过UNION可以把上面两条独立的SELECT语句组合起来，但组合前请先注意一下，上面一个返回了1行数据，另一个返回了4行数据。</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420161288.jpg" alt=""></p>
+<p> </p>
+<p>组合后返回了相同的数据，只是OrderId为10249那行因为重复被自动去除了。如果确实需要保留完整的查询结果不希望去掉重复行，可以用UNION ALL, 此时为原汁原味的把两个SELECT语句返回的结果相连接，真的是1加1等于二。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420163629.jpg" alt=""></p>
+<p> </p>
+<p>注意到我在后面一条SELECT语句使用了ORDER BY，看似它是属于第二条SELECT 语句的，只对第二条语句检索出来的结果进行排序，其实不是，它对连接后的整体进行排序。</p>
+<p> </p>
+<p>如果你使用WHERE，则无法做到保留重复行。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420170448.jpg" alt=""></p>
+<p> </p>
+<h2><a name="k"></a>用选择来填充</h2>
+<p>用CREATE TALBE 创建一张表后，为了插入数据，你不得不写一大堆SQL语句。当然，除了这种手动写INSERT 语句来填充表的情况外，还有更加便捷的方式，可以把另一张表的数据全部或者有选择地返回然后填充到新表。当然，前提是两张表的结构要一样，不然相应字段对 应不上如何填充。</p>
+<p>下面拿NorthWind中的Region表为列，我们新建一张结构跟他一样的表，并插入一些数据先。</p>
+<p>但先看一下Region表是个什么情况先：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420183927.jpg" alt=""></p>
+<p> </p>
+<p>之所以选它就是因为简单，除了一个自增的主键列，只包含一列数据格式为文本的列。</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420190378.jpg" alt=""></p>
+<p> </p>
+<p> </p>
+<p>下面我们就用这张RegionNew表中的数据来填充原来的Region表，确切地说是往Region表中再插入一些数据。先看INSERT INTO语句。</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420192447.jpg" alt=""></p>
+<p> </p>
+<p>但如你所见，出错了。原因是原来的Region表中的RegionDescription列允许空值，而我们新建的表中有一行的对应列为空值。这就是前面 提到的，两张表的结构必需要一致才能进行这样的导入操作，这里的一致不是说表名列名完全一样，列名其实可以不一样，只顺序对的就行，一致是指两张表列数相 同并且相应列保存的数据类型要一致。</p>
+<p>把RegionNew表中的NULL改后再执行一下，如果如下 ：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420195918.jpg" alt=""></p>
+<p> </p>
+<p>数据已经插入了。在新建RegionNew这张表时，你也看到了我并没有让ID列自动从1开始，而是通过SET IDENTITY_INSERT语句来让我可以手动编写ID列的值。不那样的话RegionNew表中的ID列就会是1，2，3，这将会在你进行导入到 Region表时发生冲突，因为这些数字已经在Region中使用过了。</p>
+<p> </p>
+<p>INSERT SELECT是用一张表填充另一张表，派生出一个SELECT的变种语法SELECT INTO. 使用此语句时目标表可以不存在，INTO后只需指定一个表名，系统会自动创建，当然，也可以跟一张已经存在的表，已经存在的表同样需要满足相应列的要求。</p>
+<p> </p>
+<p>现在把更新后的Region表选择出来导入到一张新表中，在进行这个操作前这张表并不存在。</p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420204133.jpg" alt=""></p>
+<p> </p>
+<p>执行完上述语句后在数据库中新建了一张名为Mew的喵星表，并且拥有了Region表的全部数据。同时你可以加上WHERE等过滤语句来选择性地导入数据：</p>
+<p> </p>
+<p> </p>
+<p><img decoding="async" src="http://pic002.cnblogs.com/images/2012/431064/2012102420212564.jpg" alt=""></p>
+<p> </p>
+<p>再发散一下，你还可以在SELECT时指定多张其他表这样就可以从多个不同来源把数据汇总到一张表上，这个功能确实是很赞的。在你需要一些临时表备份表进行分析时非常有用。</p>
+<p>到这里，你可以把SELECT INTO理解为导出，而INSERT SELECT 视为一种导出操作。</p>
+<p> </p>
+<h2><a name="l"></a>重命名表</h2>
+<p>系统提供了一个存储过程来实现对表重命名 EXEC SP_RENAME ‘oldtablename’,’newtablename’; 重命名还不简单嘛，直接点击表就可以了，但命令是用在编程当中的，所以在写SQL脚本时会非常有用。</p>
+<h2>可以参考的文章：</h2>
+<p>SQL Server Collations</p>
+<p>http://sqlserverlearner.com/sql-server-link/sql-server-collations</p>
+<p> </p>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/mysql" rel="tag">MySQL</a>, <a href="/tag/soundex" rel="tag">Soundex</a>, <a href="/tag/sql-s" rel="tag">SQL S</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/11/09/sql%E5%90%84%E7%A7%8D%E5%88%86%E9%A1%B5%E6%96%B9%E6%B3%95%E6%B1%87%E6%80%BB.html" rel="prev">SQL各种分页方法汇总</a><br>【下篇】<a href="/2012/11/10/js-auto-loading-content.html" rel="next">滚动条到最下面时自动加载内容</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2025/09/10/springboot-duckdb.html">springboot集成duckdb</a></li><li> · <a href="/2025/08/20/mysql-aes.html">MYSQL AES解密</a></li><li> · <a href="/2024/08/15/docker-backup-mysql-crontab-script.html">docker定时任务Mysql脚本</a></li><li> · <a href="/2024/07/04/docker-mysql8.html">docker安装mysql8注意事项</a></li><li> · <a href="/2024/06/27/net8-mysql-ssl-error.html">.NET8 Mysql SSL error</a></li><li> · <a href="/2023/07/04/backup-docker-mysql.html">定时备份docker中的mysql</a></li><li> · <a href="/2022/11/23/docker-compose-mysql.html">docker-compose通过容器名连接mysql</a></li><li> · <a href="/2022/11/03/unity3d-mysql-error-the-given-key-was-not-present-in-the-dictionary.html">unity3d mysql error: The given key was not present in the dictionary.</a></li><li> · <a href="/2022/07/19/mysql-charset.html">MySQL 批量修改数据表编码及字符集</a></li><li> · <a href="/2022/06/02/your-database-must-use-read-committed-as-the-default-isolation-level.html">Your database must use ‘READ-COMMITTED’ as the default isolation level.</a></li><li> · <a href="/2022/05/25/mysql-innodb.html">MySQL-InnoDB存储引擎</a></li><li> · <a href="/2022/05/23/mysql-to-clickhouse.html">将数据从mysql迁移到clickhouse</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年11月09日发表在<a href="/category/mysql" rel="category tag">MySQL</a>, <a href="/category/sql-server" rel="category tag">SQL Server</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/11/09/2720.html" rel="bookmark" title="本文固定链接 /2012/11/09/2720.html">SQL中那些可能你不知道的事 | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/11/09/2720.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/11/09/2720.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2720" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="df5432bd0e"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="99"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.065 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:48:53 -->

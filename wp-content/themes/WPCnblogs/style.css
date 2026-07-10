@@ -1,0 +1,169 @@
+/* 
+	Theme Name: WPCnblogs
+	Theme URL: http://www.menruan.com/
+	Description: 获得更多主题<a href="http://www.menruan.com/">wordpress主题站</a>。
+	Author: 不祥
+	Author URI: http://www.menruan.com/
+	Version: 1.0
+*/
+
+@import url("/wp-content/themes/WPCnblogs/css.css");
+
+html,body {
+	color:#000;
+	background:#FFF;
+}
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td,figure {
+	margin:0;
+	padding:0;
+}
+
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+
+fieldset,img {
+	border:0;
+}
+
+li {
+	list-style:none;
+}
+
+caption,th {
+	text-align:left;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-size:100%;
+	font-weight:normal;
+}
+
+input,button,textarea,select,option {
+	font-family:inherit;
+	font-size:inherit;
+	font-style:inherit;
+	font-weight:inherit;
+}
+
+input,button,textarea,select {
+	*font-size:100%;
+}
+
+.clear {
+	clear:both;
+}
+
+.l_s {
+    height: 20px;
+}
+
+.r_l_1 {
+	height:1px;
+	font-size:0;
+	line-height:0;
+	border-left:2px solid #CCC;
+	border-right:1px solid #CCC;
+}
+.r_l_2 {
+	height:1px;
+	font-size:0;
+	line-height:0;
+	border-left:2px solid #CCC;
+	border-right:1px solid #CCC;
+	margin:0 1px;
+}
+.r_l_3 {
+	margin:0 2px;
+	height:0px;
+	font-size:0;
+	line-height:0;
+	border-bottom:1px solid #CCC;
+}
+
+.r_b_1 {
+	height:1px;
+	font-size:0;
+	line-height:0;
+	border-left:2px solid #E6E6E6;
+	border-right:1px solid #E6E6E6;
+}
+.r_b_2 {
+	height:1px;
+	font-size:0;
+	line-height:0;
+	border-left:2px solid #E6E6E6;
+	border-right:1px solid #E6E6E6;
+	margin:0 1px;
+}
+.r_b_3 {
+	margin:0 1px;
+	height:0px;
+	font-size:0;
+	line-height:0;
+	border-bottom:1px solid #E6E6E6;
+}
+.h_r_1 {
+	height:1px;
+	font-size:0;
+	line-height:0;
+	border-left:2px solid #D8DFEA;
+	border-right:1px solid #D8DFEA;
+}
+.h_r_2 {
+	height:1px;
+	font-size:0;
+	line-height:0;
+	border-left:2px solid #D8DFEA;
+	border-right:1px solid #D8DFEA;
+	margin:0 1px;
+}
+.h_r_3 {
+	margin:0 1px;
+	height:0px;
+	font-size:0;
+	line-height:0;
+	border-bottom:1px solid #D8DFEA;
+}
+.context_b {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CCCCCC;
+    font-size: 13px;
+    height: 50px;
+    line-height: 23px;
+    padding: 10px;
+    position: relative;
+
+}
+.context_b a {
+    color: #0196E3;
+}
+b {
+    background: url("/wp-content/themes/WPCnblogs/images/yuan.gif") no-repeat scroll 0 0 transparent;
+    font-size: 0;
+    height: 5px;
+    position: absolute;
+    width: 5px;
+}
+.lt {
+    background-position: left top;
+    left: -1px;
+    top: -1px;
+}
+.rt {
+    background-position: right top;
+    right: -1px;
+    top: -1px;
+}
+.lb {
+    background-position: left bottom;
+    bottom: -1px;
+    left: -1px;
+}
+.rb {
+    background-position: right bottom;
+    bottom: -1px;
+    right: -1px;
+}

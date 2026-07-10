@@ -1,0 +1,1066 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>C#浅拷贝与深拷贝 | Bruce's Blog</title> 
+<meta name="description" content="你必须掌握的C#基础系列之C#浅拷贝与深拷贝">
+<meta name="keywords" content="C#基础,浅拷贝与深拷贝">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2011 年 12 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="3" class="pad"> </td><td><a href="/2011/12/01" aria-label="2011年12月1日 发布的文章">1</a></td><td><a href="/2011/12/02" aria-label="2011年12月2日 发布的文章">2</a></td><td><a href="/2011/12/03" aria-label="2011年12月3日 发布的文章">3</a></td><td><a href="/2011/12/04" aria-label="2011年12月4日 发布的文章">4</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/05" aria-label="2011年12月5日 发布的文章">5</a></td><td><a href="/2011/12/06" aria-label="2011年12月6日 发布的文章">6</a></td><td><a href="/2011/12/07" aria-label="2011年12月7日 发布的文章">7</a></td><td><a href="/2011/12/08" aria-label="2011年12月8日 发布的文章">8</a></td><td><a href="/2011/12/09" aria-label="2011年12月9日 发布的文章">9</a></td><td><a href="/2011/12/10" aria-label="2011年12月10日 发布的文章">10</a></td><td><a href="/2011/12/11" aria-label="2011年12月11日 发布的文章">11</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/12" aria-label="2011年12月12日 发布的文章">12</a></td><td><a href="/2011/12/13" aria-label="2011年12月13日 发布的文章">13</a></td><td><a href="/2011/12/14" aria-label="2011年12月14日 发布的文章">14</a></td><td><a href="/2011/12/15" aria-label="2011年12月15日 发布的文章">15</a></td><td><a href="/2011/12/16" aria-label="2011年12月16日 发布的文章">16</a></td><td><a href="/2011/12/17" aria-label="2011年12月17日 发布的文章">17</a></td><td><a href="/2011/12/18" aria-label="2011年12月18日 发布的文章">18</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/19" aria-label="2011年12月19日 发布的文章">19</a></td><td><a href="/2011/12/20" aria-label="2011年12月20日 发布的文章">20</a></td><td><a href="/2011/12/21" aria-label="2011年12月21日 发布的文章">21</a></td><td><a href="/2011/12/22" aria-label="2011年12月22日 发布的文章">22</a></td><td><a href="/2011/12/23" aria-label="2011年12月23日 发布的文章">23</a></td><td><a href="/2011/12/24" aria-label="2011年12月24日 发布的文章">24</a></td><td><a href="/2011/12/25" aria-label="2011年12月25日 发布的文章">25</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2011/12/26" aria-label="2011年12月26日 发布的文章">26</a></td><td><a href="/2011/12/27" aria-label="2011年12月27日 发布的文章">27</a></td><td><a href="/2011/12/28" aria-label="2011年12月28日 发布的文章">28</a></td><td><a href="/2011/12/29" aria-label="2011年12月29日 发布的文章">29</a></td><td><a href="/2011/12/30" aria-label="2011年12月30日 发布的文章">30</a></td><td><a href="/2011/12/31" aria-label="2011年12月31日 发布的文章">31</a></td>
+		<td class="pad" colspan="1"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2011/11">« 11 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/01">1 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#354ea4;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#ea1d61;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#61ea29;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#4f6beb;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#61e0d0;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#a7f089;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#c38079;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#9a22ec;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#9a857;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#42dcf1;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#a45c4c;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#edc3bd;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#58f2c5;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#6ff642;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#76aeba;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#64a9d8;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#82bcf6;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#f9533f;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#fc1a7c;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#92405f;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#641602;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#e31a6f;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#1b5bde;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#c48b33;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#7c027e;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#22cb28;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#9e9c2a;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#731768;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#71b1f0;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#7d3599;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#3ad558;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#d66a8d;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#26ce1a;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#b944f7;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#17eebd;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#ad27d8;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#8e0c1f;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#5a4d33;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#c4fac;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#fcdfc9;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#919d8e;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#6e3597;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#20073d;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#8ee670;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#be8470;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/net" rel="category tag">.NET</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">C#浅拷贝与深拷贝</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2011-12-06 22:52</span>
+			<span class="category">  <a href="/category/net" rel="category tag">.NET</a></span>
+			<span class="article_comment"><a href="/2011/12/06/611.html#comments">评论(3)</a></span>
+			 <span class="article_view grayline">阅读(<span>6,323</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<pre><strong>你必须掌握的C#基础系列之C#浅拷贝与深拷贝</strong></pre>
+<pre><strong>我们先来看看百度的说法：</strong></pre>
+<pre>C# 支持两种类型：“值类型”和“引用类型”。</pre>
+<pre>值类型（Value Type)（如 char、int 和 float）、枚举类型和结构类型。</pre>
+<pre>引用类型(Reference Type) 包括类 (Class) 类型、接口类型、委托类型和数组类型。</pre>
+<pre><strong>如何来划分它们？</strong></pre>
+<pre>以它们在计算机内存中如何分配来划分</pre>
+<pre>值类型与引用类型的区别?</pre>
+<pre>1,值类型的变量直接包含其数据，</pre>
+<pre>2,引用类型的变量则存储对象引用。</pre>
+<pre>对于引用类型，两个变量可能引用同一个对象，因此对一个变量的操作可能影响另一个变量所引用的对象。对于值类型，每个变量都有自己的数据副本，对一个变量的操作不可能影响另一个变量。</pre>
+<pre>值类型隐式继承自System.ValueType  所以不能显示让一个结构继承一个类，C#不支持多继承</pre>
+<pre>堆栈(stack)是一种先进先出的数据结构，在内存中，变量会被分配在堆栈上来进行操作。</pre>
+<pre>堆(heap)是用于为类型实例(对象)分配空间的内存区域，在堆上创建一个对象，</pre>
+<pre>会将对象的地址传给堆栈上的变量(反过来叫变量指向此对象，或者变量引用此对象)。</pre>
+<pre><strong>关于对象克隆的所设计到知识点</strong></pre>
+<pre>浅拷贝：是指将对象中的所有字段逐字复杂到一个新对象</pre>
+<pre>对值类型字段只是简单的拷贝一个副本到目标对象，改变目标对象中值类型字段的值不会反映到原始对象中，因为拷贝的是副本</pre>
+<pre>对引用型字段则是指拷贝他的一个引用到目标对象。改变目标对象中引用类型字段的值它将反映到原始对象中，因为拷贝的是指向堆是上的一个地址</pre>
+<pre>深拷贝：深拷贝与浅拷贝不同的是对于引用字段的处理，深拷贝将会在新对象中创建一个新的对象和</pre>
+<pre>原始对象中对应字段相同（内容相同）的字段，也就是说这个引用和原始对象的引用是不同， 我们改变新</pre>
+<pre>对象中这个字段的时候是不会影响到原始对象中对应字段的内容。</pre>
+<pre><strong>浅复制：</strong> 实现浅复制需要使用Object类的MemberwiseClone方法用于创建一个浅表副本</pre>
+<pre><strong>深复制：</strong> 须实现 ICloneable接口中的Clone方法，且需要需要克隆的对象加上[Serializable]特性</pre>
+<ol class="linenums">
+<li class="L0">
+<pre><span class="kwd">class</span><span class="pln"> </span><span class="typ">DrawBase</span><span class="pun">:</span><span class="typ">System</span><span class="pun">.</span><span class="typ">Object</span><span class="pln"> </span><span class="pun">,</span><span class="pln"> </span><span class="typ">ICloneable</span></pre>
+</li>
+<li class="L2">
+<pre><span class="pun">{</span></pre>
+</li>
+<li class="L4">
+<pre><span class="kwd">        public</span><span class="pln"> </span><span class="kwd">string</span><span class="pln"> name </span><span class="pun">=</span><span class="pln"> </span><span class="str">"jmj"</span><span class="pun">;</span></pre>
+</li>
+<li class="L6">
+<pre><span class="kwd">        public</span><span class="pln"> </span><span class="typ">DrawBase</span><span class="pun">()</span></pre>
+</li>
+<li class="L8">
+<pre><span class="pun">        {</span></pre>
+</li>
+<li class="L9">
+<pre><span class="pln">         </span><span class="Apple-style-span" style="color: #666600;">}</span></pre>
+</li>
+<li class="L1">
+<pre><span class="pln">         </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">object</span><span class="pln"> </span><span class="typ">Clone</span><span class="pun">()</span></pre>
+</li>
+<li class="L4">
+<pre><span class="pun">        {        </span></pre>
+</li>
+<li class="L6">
+<pre><span class="kwd">                return</span><span class="pln"> </span><span class="kwd">this</span><span class="pln"> </span><span class="kwd">as</span><span class="pln"> </span><span class="kwd">object</span><span class="pun">;</span><span class="pln">      </span><span class="com">//引用同一个对象         </span></pre>
+</li>
+<li class="L8">
+<pre><span class="kwd">                return</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="typ">MemberwiseClone</span><span class="pun">();</span><span class="pln"> </span><span class="com">//浅复制</span></pre>
+</li>
+<li class="L0">
+<pre><span class="kwd">                return</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">DrawBase</span><span class="pun">()</span><span class="pln"> </span><span class="kwd">as</span><span class="pln"> </span><span class="kwd">object</span><span class="pun">;</span><span class="com">//深复制</span></pre>
+</li>
+<li class="L2">
+<pre><span class="pun">        }</span></pre>
+</li>
+<li class="L4">
+<pre><span class="pun">}</span></pre>
+</li>
+<li class="L6">
+<pre><span class="kwd">class</span><span class="pln"> </span><span class="typ">Program</span></pre>
+</li>
+<li class="L8">
+<pre><span class="pun">{</span></pre>
+</li>
+<li class="L0">
+<pre><span class="kwd">        static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> </span><span class="typ">Main</span><span class="pun">(</span><span class="kwd">string</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span></pre>
+</li>
+<li class="L2">
+<pre><span class="pun">        {</span></pre>
+</li>
+<li class="L3">
+<pre><span class="pln">                </span><span class="typ">DrawBase</span><span class="pln"> rect </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">DrawBase</span><span class="pun">();</span></pre>
+</li>
+<li class="L6">
+<pre><span class="typ">                Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="pln">rect</span><span class="pun">.</span><span class="pln">name</span><span class="pun">);</span></pre>
+</li>
+<li class="L8">
+<pre><span class="typ">                DrawBase</span><span class="pln"> line </span><span class="pun">=</span><span class="pln"> rect</span><span class="pun">.</span><span class="typ">Clone</span><span class="pun">()</span><span class="pln"> </span><span class="kwd">as</span><span class="pln"> </span><span class="typ">DrawBase</span><span class="pun">;</span></pre>
+</li>
+<li class="L0">
+<pre><span class="pln">                line</span><span class="pun">.</span><span class="pln">name </span><span class="pun">=</span><span class="pln"> </span><span class="str">"a9fs3"</span><span class="pun">;</span></pre>
+</li>
+<li class="L2">
+<pre><span class="typ">                Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="pln">rect</span><span class="pun">.</span><span class="pln">name</span><span class="pun">);</span></pre>
+</li>
+<li class="L4">
+<pre><span class="typ">                DrawBase</span><span class="pln"> ploy </span><span class="pun">=</span><span class="pln"> line</span><span class="pun">.</span><span class="typ">Clone</span><span class="pun">()</span><span class="pln"> </span><span class="kwd">as</span><span class="pln"> </span><span class="typ">DrawBase</span><span class="pun">;        </span></pre>
+</li>
+<li class="L6">
+<pre><span class="pln">                ploy</span><span class="pun">.</span><span class="pln">name </span><span class="pun">=</span><span class="pln"> </span><span class="str">"lj"</span><span class="pun">;</span></pre>
+</li>
+<li class="L7">
+<pre><span class="pln">                </span><span class="typ">Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="pln">rect</span><span class="pun">.</span><span class="pln">name</span><span class="pun">);</span></pre>
+</li>
+<li class="L0">
+<pre><span class="typ">                Console</span><span class="pun">.</span><span class="typ">WriteLine</span><span class="pun">(</span><span class="kwd">object</span><span class="pun">.</span><span class="typ">ReferenceEquals</span><span class="pun">(</span><span class="pln">line</span><span class="pun">,</span><span class="pln"> ploy</span><span class="pun">));</span></pre>
+</li>
+<li class="L2">
+<pre><span class="typ">                Console</span><span class="pun">.</span><span class="typ">ReadLine</span><span class="pun">();</span></pre>
+</li>
+<li class="L4">
+<pre><span class="pun">        }</span></pre>
+</li>
+<li class="L6">
+<pre><span class="pun">}</span></pre>
+</li>
+</ol>
+<pre>运行结果：</pre>
+<pre>return this as object;      //引用同一个对象</pre>
+<pre>输出：jmj</pre>
+<pre>a9fs3</pre>
+<pre>lj</pre>
+<pre>True</pre>
+<pre>return this.MemberwiseClone(); //浅复制</pre>
+<pre>return new DrawBase() as object;//深复制</pre>
+<pre>输出均为: jmj</pre>
+<pre>jmj</pre>
+<pre>jmj</pre>
+<pre>False</pre>
+<pre><strong>解释：</strong></pre>
+<pre>return this as object 方法总是引用同一个对象，因此相应的堆内存上的值会改变！</pre>
+<pre>后两种方法都是对对象的复制，区别在于复制的类别不同：深复制会复制整个填充的对象，包括该对象中其他引用类型和值类型的值；而浅复制只复制了一个对象中所有引用，它没有值的复制，通过引用它们的其他对象的引用来共享它！</pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">也许会有人这样解释C# 中浅拷贝与深拷贝区别：</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">        </span><span style="word-wrap: break-word; color: #ff0000; font-size: medium;">浅拷贝是对引用类型拷贝地址，对值类型直接进行拷贝。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">不能说它完全错误，但至少还不够严谨。比如：string 类型咋说？</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">其实，我们可以通过实践来寻找答案。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">首先，定义以下类型：</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">int 、string 、enum 、struct 、class 、int[ ] 、string[ ]</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;">代码如下：</pre>
+<table style="table-layout: fixed; word-wrap: break-word; margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; border-collapse: collapse; border-color: #c0c0c0; width: 699px; border-width: 0px; border-style: none; padding: 0px;" cellspacing="0">
+<tbody>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #008000;">//</span><span style="color: #008000;">枚举</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">enum</span> myEnum</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    { _1 = <span style="color: #ff00ff;">1</span>, _2 = <span style="color: #ff00ff;">2</span> }</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #008000;">//</span><span style="color: #008000;">结构体</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">struct</span> myStruct</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    {</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> _int;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> myStruct(<span style="color: #0000ff;">int</span> i)</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        { _int = i; }</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    }</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #008000;">//</span><span style="color: #008000;">类</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #0000ff;">class</span> myClass</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    {</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span> _string;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> myClass(<span style="color: #0000ff;">string</span> s)</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        { _string = s; }</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    }</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #008000;">//</span><span style="color: #008000;">ICloneable：创建作为当前实例副本的新对象。</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #0000ff;">class</span> DemoClass : ICloneable</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    {</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> _int = <span style="color: #ff00ff;">1</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span> _string = <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> myEnum _enum = myEnum._1;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> myStruct _struct = <span style="color: #0000ff;">new</span> myStruct(<span style="color: #ff00ff;">1</span>);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> myClass _class = <span style="color: #0000ff;">new</span> myClass(<span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span>);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #008000;">//</span><span style="color: #008000;">数组</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span>[] arrInt = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[] { <span style="color: #ff00ff;">1</span> };</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">string</span>[] arrString = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">string</span>[] { <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span> };</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #008000;">//</span><span style="color: #008000;">返回此实例副本的新对象</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">object</span> Clone()</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        {</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">            <span style="color: #008000;">//</span><span style="color: #008000;">MemberwiseClone：返回当前对象的浅表副本(它是Object对象的基方法)</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">            <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.MemberwiseClone();</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        }</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    }</td>
+</tr>
+</tbody>
+</table>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">注意：</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><strong>ICloneable 接口</strong>：支持克隆，即用与现有实例相同的值创建类的新实例。</pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><strong>MemberwiseClone 方法</strong>：创建当前 System.Object 的浅表副本。</pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">接下来，构建<strong>实例A</strong> ，并对<strong>实例A</strong> 克隆产生一个<strong>实例B</strong>。<br style="clear: both;">然后，改变<strong>实例B</strong> 的值，并观察<strong>实例A</strong> 的值会不会被改变。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;">代码如下：</pre>
+<table style="table-layout: fixed; word-wrap: break-word; margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; border-collapse: collapse; border-color: #c0c0c0; width: 699px; border-width: 0px; border-style: none; padding: 0px;" cellspacing="0">
+<tbody>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #0000ff;">class</span> <span class="wp_keywordlink_affiliate"><a href="/tag/%E6%B5%85%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D" title="View all posts in 浅拷贝与深拷贝" target="_blank">浅拷贝与深拷贝</a></span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">{</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span>[] args)</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    {</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        DemoClass A = <span style="color: #0000ff;">new</span> DemoClass();</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        <span style="color: #008000;">//</span><span style="color: #008000;">创建实例A的副本</span><span style="color: #008000;"> </span><span style="color: #008000;">--&gt;</span><span style="color: #008000;"> </span><span style="color: #008000;">新对象实例B</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        DemoClass B = (DemoClass)A.Clone();</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        B._int = <span style="color: #ff00ff;">2</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> </span><span style="color: #800000;">int</span><span style="color: #800000;"> </span><span style="color: #800000;">\t\t</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">A:{0}</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">B:{1}</span><span style="color: #800000;">"</span>, A._int, B._int);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        B._string = <span style="color: #800000;">"</span><span style="color: #800000;">2</span><span style="color: #800000;">"</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> </span><span style="color: #800000;">string</span><span style="color: #800000;"> </span><span style="color: #800000;">\t</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">A:{0}</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">B:{1}</span><span style="color: #800000;">"</span>, A._string, B._string);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        B._enum = myEnum._2;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> </span><span style="color: #800000;">enum</span><span style="color: #800000;"> </span><span style="color: #800000;">\t\t</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">A:{0}</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">B:{1}</span><span style="color: #800000;">"</span>, (<span style="color: #0000ff;">int</span>)A._enum, (<span style="color: #0000ff;">int</span>)B._enum);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        B._struct._int = <span style="color: #ff00ff;">2</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> </span><span style="color: #800000;">struct</span><span style="color: #800000;"> </span><span style="color: #800000;">\t</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">A:{0}</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">B:{1}</span><span style="color: #800000;">"</span>, <br style="clear: both;">                          A._struct._int, B._struct._int);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        B._class._string = <span style="color: #800000;">"</span><span style="color: #800000;">2</span><span style="color: #800000;">"</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> </span><span style="color: #800000;">class</span><span style="color: #800000;"> </span><span style="color: #800000;">\t\t</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">A:{0}</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">B:{1}</span><span style="color: #800000;">"</span>, <br style="clear: both;">                          A._class._string, B._class._string);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        B.arrInt[<span style="color: #ff00ff;">0</span>] = <span style="color: #ff00ff;">2</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> </span><span style="color: #800000;">intArray</span><span style="color: #800000;"> </span><span style="color: #800000;">\t</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">A:{0}</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">B:{1}</span><span style="color: #800000;">"</span>, <br style="clear: both;">                          A.arrInt[<span style="color: #ff00ff;">0</span>], B.arrInt[<span style="color: #ff00ff;">0</span>]);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        B.arrString[<span style="color: #ff00ff;">0</span>] = <span style="color: #800000;">"</span><span style="color: #800000;">2</span><span style="color: #800000;">"</span>;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;"> </span><span style="color: #800000;">stringArray</span><span style="color: #800000;"> </span><span style="color: #800000;">\t</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">A:{0}</span><span style="color: #800000;"> </span><span style="color: #800000;"> </span><span style="color: #800000;">B:{1}</span><span style="color: #800000;">"</span>, <br style="clear: both;">                          A.arrString[<span style="color: #ff00ff;">0</span>], B.arrString[<span style="color: #ff00ff;">0</span>]);</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">        Console.ReadKey();</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">    }</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">}</td>
+</tr>
+</tbody>
+</table>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;">结果如下：</pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><a style="color: #2e9ce9; text-decoration: none;" href="http://images.cnblogs.com/cnblogs_com/xugang/WindowsLiveWriter/C_12E7C/2010-09-08_221736_2.png"><img fetchpriority="high" decoding="async" style="border-style: initial; border-color: initial; display: inline; margin: 5px;" title="2010-09-08_221736" src="/wp-content/uploads/2011/12/84f1_2010-09-08_221736_thumb.png" alt="2010-09-08_221736" width="512" height="227" border="0"></a></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">从最后的输出结果，我们得知：</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><strong><span style="word-wrap: break-word; font-size: small;">对于内部的Class 对象和数组，则Copy 一份地址。[ 改变B 时，A也被改变了 ]</span></strong></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><strong><span style="word-wrap: break-word; font-size: small;">而对于其它内置的int / string / enum / struct / object 类型，则Copy 一份值。</span></strong></pre>
+<fieldset style="font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;">
+<legend>有一位网友说：</legend>
+<pre>string 类型虽然是引用类型，但是很多情况下.Net 把string 做值类型来处理，我觉得string 应该也是按照值类型处理的。</pre>
+</fieldset>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">这说明他对string 类型还不够了解。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">可以肯定的是：string 一定是引用类型。那它为什么是深拷贝呢？</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">如果你看一下string 类型的源代码就知道了：</span></pre>
+<table style="table-layout: fixed; word-wrap: break-word; margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; border-collapse: collapse; border-color: #c0c0c0; width: 971px; border-width: 0px; border-style: none; padding: 0px;" cellspacing="0">
+<tbody>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #008000;">//</span><span style="color: #008000;">表示空字符串。此字段为只读。</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">readonly</span> <span style="color: #0000ff;">string</span> Empty;</td>
+</tr>
+</tbody>
+</table>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; color: #ff0000; font-size: small;">答案就在于 string 是 readonly 的，当改变 string 类型的数据值时，将重新分配了内存地址。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">下面引用一段网友的代码：</span><a style="color: #2e9ce9; text-decoration: none;" href="http://www.cnblogs.com/mrlen/"><span style="word-wrap: break-word; font-size: small;">Vseen[ Aloner ]</span></a><span style="word-wrap: break-word; font-size: small;"> 的个人陋见：</span></pre>
+<table style="table-layout: fixed; word-wrap: break-word; margin-top: 0px; margin-right: auto; margin-bottom: 0px; margin-left: auto; border-collapse: collapse; border-color: #c0c0c0; width: 971px; border-width: 0px; border-style: none; padding: 0px;" cellspacing="0">
+<tbody>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Student</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">{</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #008000;">   //</span><span style="color: #008000;"> </span><span style="color: #008000;">这里用“字段”，其实应当是属性。</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #0000ff;">   public</span> <span style="color: #0000ff;">string</span> Name;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #0000ff;">   public</span> <span style="color: #0000ff;">int</span> Age;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #008000;">   //</span><span style="color: #008000;">自定义类</span><span style="color: #008000;"> </span><span style="color: #008000;">Classroom</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #0000ff;">   public</span> Classroom Class;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">}</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">浅拷贝：Student A 浅拷贝出 Student B，Name和Age拥有新的内存地址，但引用了同一个 Classroom。</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">深拷贝：Student A 浅拷贝出 Student B，Name和Age拥有新的内存地址，并且A.Classroom 的内存地址不等于 B.Classroom。</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">其实俗点讲，有点像：</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">object</span> Clone()</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">{</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">   Student B = <span style="color: #0000ff;">new</span> Student();</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">   B.Name = <span style="color: #0000ff;">this</span>.Name;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">   B.Age = <span style="color: #0000ff;">this</span>.Age;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #008000;">   //</span><span style="color: #008000;">浅拷贝</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">   B.Class = <span style="color: #0000ff;">this</span>.Class;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;"><span style="color: #008000;">   //</span><span style="color: #008000;">深拷贝</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">   B.Class = <span style="color: #0000ff;">new</span> Classromm();</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">   B.Class.Name = <span style="color: #0000ff;">this</span>.Class.Name;</td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">   B.Class.Teacher = <span style="color: #0000ff;">this</span>.Class.Teacher;<br style="clear: both;"><span style="color: #008000;">   //</span><span style="color: #008000;">根据情况，对</span><span style="color: #008000;">Teacher 进行判定要进行的是深拷贝，还是浅拷贝。</span></td>
+</tr>
+<tr>
+<td style="font-size: 10pt; border-collapse: collapse; border-width: 1px; border-color: #c0c0c0; border-style: solid; padding: 3px;">}</td>
+</tr>
+</tbody>
+</table>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">浅拷贝：给对象拷贝一份新的对象。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">浅拷贝的定义 —— 只对值类型（或string）类型分配新的内存地址。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><br style="clear: both;"><span style="word-wrap: break-word; font-size: small;">深拷贝：给对象拷贝一份全新的对象。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">深拷贝的定义 —— 对值类型分配新的内存地址，引用类型、以及引用类型的内部字段分配的新的地址。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">我是这么定义的：浅拷贝，换汤不换药。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><strong><span style="word-wrap: break-word; color: #ff0000; font-size: small;">注意：</span></strong></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">1、在 .NET 程序中，应该避免使用 ICloneable 接口。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">      因为通过该接口无法判断究竟是浅拷贝还是深拷贝，这会造成误解或误用。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;">2、深拷贝应该复制该对象本身及通过该对象所能到达的完整的对象图，浅拷贝只复制对象本身（就是该对象所表示的在堆中的一块连续地址中的内容）。</span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;"><strong><span style="word-wrap: break-word; color: #ff0000;">个人愚见：</span></strong></span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;"><span style="word-wrap: break-word; font-size: small;"><strong>Clone ：</strong>深层拷贝，拷贝到了指针指向的内存块的值。</span></span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; background-color: #ffffff; line-height: 4px;"><span style="word-wrap: break-word; font-size: small;"> </span></pre>
+<pre style="word-wrap: break-word; margin-top: 5px; margin-right: auto; margin-bottom: 5px; margin-left: auto; font-family: 'ms shell dlg'; font-size: 14px; line-height: 28px; background-color: #ffffff;"><span style="word-wrap: break-word; font-size: small;"><strong>浅拷贝：</strong>仅仅拷贝了指针的内容。（只是给一个对象多起了个名字，所以，当改变拷贝的某个属性的时候，原对象的对应属性亦会改变）。</span></pre>
+<pre><strong>-------------------------------------------------------------------------</strong></pre>
+<pre><strong>写在最后：</strong></pre>
+<pre>你是怎么理解的呢，给大家分享一下吧！</pre>
+<pre>有什么不懂，说出来，也许别人的理解会让你豁然开朗哟！</pre>
+<pre></pre>
+<pre></pre>
+<pre></pre>
+<pre></pre>
+<pre>^_^数据库之家，分享快乐！写日志，送Q币，火热进行中！<a href="/http/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B9%8B%E5%AE%B6%E5%BE%81%E7%A8%BF%E5%85%B3q%E5%B8%81%EF%BC%8C%E5%8F%AA%E8%A6%81%E4%BD%A0%E6%95%A2%E5%86%99%EF%BC%8C%E6%88%91%E5%B0%B1%E6%95%A2%E9%80%81%EF%BC%81">点击查看</a></pre>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/c%E5%9F%BA%E7%A1%80" rel="tag">C#基础</a>, <a href="/tag/%E6%B5%85%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D" rel="tag">浅拷贝与深拷贝</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2011/12/06/%E4%BD%A0%E6%9C%89%E9%87%8D%E6%9E%84%E7%9A%84%E5%8B%87%E6%B0%94%E4%B9%88%EF%BC%9F.html" rel="prev">你有重构的勇气么？</a><br>【下篇】<a href="/2011/12/07/ml%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F.html" rel="next">ML是什么意思？</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2024/09/24/the-instance-of-entity-type-customer-cannot-be-tracked-because-another-instance-with-the-same-key-value-for-id-is-already-being-tracked.html">The instance of entity type ‘Customer’ cannot be tracked because another instance with the same key value for {‘Id’} is already being tracked.</a></li><li> · <a href="/2024/09/24/net8-ip-2-region.html">.NET8实时更新nginx ip地址归属地</a></li><li> · <a href="/2024/09/12/fix-net-blazor-child-component-not-refresh.html">解决.NET Blazor子组件不刷新问题</a></li><li> · <a href="/2024/09/10/net8-microsoft-aspnetcore.html">.NET8如何在普通类库中引用 Microsoft.AspNetCore</a></li><li> · <a href="/2024/06/27/net8-mysql-ssl-error.html">.NET8 Mysql SSL error</a></li><li> · <a href="/2024/06/25/asp-net-core-razor-unicode.html">ASP.NET Core MVC的Razor视图渲染中文乱码的问题</a></li><li> · <a href="/2022/02/23/netcore-life-circle.html">.NETCORE 依赖注入服务生命周期</a></li><li> · <a href="/2022/02/16/asp-net-zero-mysql.html">asp.net zero改mysql</a></li><li> · <a href="/2022/02/16/net5.html">.NET5面试汇总</a></li><li> · <a href="/2021/05/26/convert-zero-datetime.html">.Net连接Mysql数据库的Convert Zero Datetime日期问题</a></li><li> · <a href="/2020/09/30/vue-message-notification.html">vue使用element-ui中的Message 、MessageBox 、Notification</a></li><li> · <a href="/2020/09/30/asp-net-core-filter-aop.html">Asp.Net Core Filter 深入浅出的那些事-AOP</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2011年12月06日发表在<a href="/category/net" rel="category tag">.NET</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2011/12/06/611.html" rel="bookmark" title="本文固定链接 /2011/12/06/611.html">C#浅拷贝与深拷贝 | Bruce's Blog</a><a href="#" onclick="copy_code('/2011/12/06/611.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+<!-- 引用 -->	
+	<div class="tab_comment">
+		<h2 id="comments">C#浅拷贝与深拷贝：目前有3 条留言</h2>	
+	</div>
+	<ol class="commentlist">   <li class="comment even thread-even depth-1" id="comment-29">
+   <div id="div-comment-29">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/bad047c402607412c7c1d552e7d94d64e8902068667eba8d7af7e3919f2f7300?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/bad047c402607412c7c1d552e7d94d64e8902068667eba8d7af7e3919f2f7300?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" decoding="async">			</div>
+			<strong><a href="http://longle.cnblogs.com/" class="url" rel="ugc external nofollow">longle.cnblogs.com</a></strong> :
+			<span class="datetime">2011年12月06日下午 11:25</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2011/12/06/611.html?replytocom=29#respond" data-commentid="29" data-postid="611" data-belowelement="div-comment-29" data-respondelement="respond" data-replyto="回复给 longle.cnblogs.com" aria-label="回复给 longle.cnblogs.com">回复</a></span>
+		</div>
+				<p>浅拷贝是拷贝指针，深拷贝是拷贝指针指向的数据。</p>
+<p>不知道对不？</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment byuser comment-author-admin bypostauthor odd alt depth-2" id="comment-30">
+   <div id="div-comment-30">
+      		<div class="comment-author">
+			<div id="avatar">
+				      			 <img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=48&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy" decoding="async"> 
+							</div>
+			<strong>数据库之家</strong> :
+			<span class="datetime">2011年12月06日下午 11:25</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2011/12/06/611.html?replytocom=30#respond" data-commentid="30" data-postid="611" data-belowelement="div-comment-30" data-respondelement="respond" data-replyto="回复给 数据库之家" aria-label="回复给 数据库之家">回复</a></span>
+		</div>
+				<p>浅拷贝就是成员数据之间的一一赋值：把值赋给一一赋给要拷贝的值。但是可能会有这样的情况：对象还包含资源，这里的资源可以值堆资源，或者一个文件。。当值拷贝的时候，两个对象就有用共同的资源，同时对资源可以访问，这样就会出问题。深拷贝就是用来解决这样的问题的，它把资源也赋值一次，使对象拥有不同的资源，但资源的内容是一样的。对于堆资源来说，就是在开辟一片堆内存，把原来的内容拷贝。<br>
+如果你拷贝的对象中引用了某个外部的内容（比如分配在堆上的数据），那么在拷贝这个对象的时候，让新旧两个对象指向同一个外部的内容，就是浅拷贝；如果在拷贝这个对象的时候为新对象制作了外部对象的独立拷贝，就是深拷贝<br>
+引用和指针的语义是相似的，引用是不可改变的指针，指针是可以改变的引用。其实都是实现了引用语义。<br>
+深拷贝和浅拷贝的区别是在对象状态中包含其它对象的引用的时候，当拷贝一个对象时，如果需要拷贝这个对象引用的对象，则是深拷贝，否则是浅拷贝。</p>
+	<div class="clear"></div>
+  </div>
+<ul class="children">
+   <li class="comment even depth-3" id="comment-31">
+   <div id="div-comment-31">
+      		<div class="comment-author">
+			<div id="avatar">
+				<img alt="" src="https://secure.gravatar.com/avatar/bad047c402607412c7c1d552e7d94d64e8902068667eba8d7af7e3919f2f7300?s=32&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/bad047c402607412c7c1d552e7d94d64e8902068667eba8d7af7e3919f2f7300?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy" decoding="async">			</div>
+			<strong><a href="http://longle.cnblogs.com/" class="url" rel="ugc external nofollow">longle.cnblogs.com</a></strong> :
+			<span class="datetime">2011年12月06日下午 11:26</span>
+			<span class="reply"><a rel="nofollow" class="comment-reply-link" href="/2011/12/06/611.html?replytocom=31#respond" data-commentid="31" data-postid="611" data-belowelement="div-comment-31" data-respondelement="respond" data-replyto="回复给 longle.cnblogs.com" aria-label="回复给 longle.cnblogs.com">回复</a></span>
+		</div>
+				<p>哦~ 💡</p>
+	<div class="clear"></div>
+  </div>
+</li></ul><!-- .children -->
+</li></ul><!-- .children -->
+</li></ol>
+
+	<div class="navigation_c">
+		<div class="previous"></div>
+	</div>
+
+ 		<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2011/12/06/611.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="611" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="56e5d72d05"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="123"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.138 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:50:18 -->

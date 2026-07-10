@@ -1,0 +1,723 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>运维工程师必须掌握的基础技能有哪些？ | Bruce's Blog</title> 
+<meta name="description" content="作者：Tanky Woo">
+<meta name="keywords" content="Linux,SRE,工程师,运维">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2016 年 11 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="1" class="pad"> </td><td><a href="/2016/11/01" aria-label="2016年11月1日 发布的文章">1</a></td><td>2</td><td><a href="/2016/11/03" aria-label="2016年11月3日 发布的文章">3</a></td><td>4</td><td><a href="/2016/11/05" aria-label="2016年11月5日 发布的文章">5</a></td><td><a href="/2016/11/06" aria-label="2016年11月6日 发布的文章">6</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2016/11/07" aria-label="2016年11月7日 发布的文章">7</a></td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td>
+	</tr>
+	<tr>
+		<td><a href="/2016/11/14" aria-label="2016年11月14日 发布的文章">14</a></td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td>
+	</tr>
+	<tr>
+		<td><a href="/2016/11/21" aria-label="2016年11月21日 发布的文章">21</a></td><td><a href="/2016/11/22" aria-label="2016年11月22日 发布的文章">22</a></td><td><a href="/2016/11/23" aria-label="2016年11月23日 发布的文章">23</a></td><td><a href="/2016/11/24" aria-label="2016年11月24日 发布的文章">24</a></td><td>25</td><td>26</td><td>27</td>
+	</tr>
+	<tr>
+		<td>28</td><td><a href="/2016/11/29" aria-label="2016年11月29日 发布的文章">29</a></td><td><a href="/2016/11/30" aria-label="2016年11月30日 发布的文章">30</a></td>
+		<td class="pad" colspan="4"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2016/10">« 10 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2016/12">12 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#76a5c2;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#91459c;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#894521;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#b7c148;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#e68b11;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#ae655a;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#d5ddc6;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#bfe86;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#1316b3;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#7295ea;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#6aaebe;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#211f1e;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#232c2e;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#de4ca0;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#f1543c;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#369f8d;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#ec5b95;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#bb16d4;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#7c3858;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#2ff985;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#7665a5;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#f47c5b;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#3919a2;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#9be80;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#e1fc98;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#7185;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#a6abbb;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#ddff3a;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#2d3867;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#f89688;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#ad3a46;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#747f0c;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#b451cd;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#59653b;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#573b9a;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#e59d60;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#2e6c89;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#101048;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#7f86f5;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#b86327;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#71a577;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#9957a9;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#8de1ad;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#2cb79a;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#33509;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/devops" rel="category tag">DevOps</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">运维工程师必须掌握的基础技能有哪些？</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2016-11-22 13:30</span>
+			<span class="category">  <a href="/category/devops" rel="category tag">DevOps</a></span>
+			<span class="article_comment"><a href="/2016/11/22/%E8%BF%90%E7%BB%B4%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%8A%80%E8%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>1,338</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<div>作者：Tanky Woo<br>
+链接：www。zhihu。com/question/23665108/answer/25299881<br>
+来源：知乎<br>
+著作权归作者所有，转载请联系作者获得授权。
+<p><i>最后更新：2015-08-27</i></p>
+<p>这个问题挺好的，回答这个问题也是对自身的审查，看看自己还欠缺哪些。（所以我估计得好好思考下，也许下一刻我就会突然惊醒，发现我还是战⑤渣）</p>
+<p>首先限定在<b><span class="wp_keywordlink_affiliate"><a href="/tag/linux-2" title="View all posts in Linux" target="_blank">Linux</a></span><span class="wp_keywordlink_affiliate"><a href="/tag/%E8%BF%90%E7%BB%B4" title="View all posts in 运维" target="_blank">运维</a></span><span class="wp_keywordlink_affiliate"><a href="/tag/%E5%B7%A5%E7%A8%8B%E5%B8%88" title="View all posts in 工程师" target="_blank">工程师</a></span></b>上</p>
+<p>回答仅代表我想到，不代表我都会 🙁</p>
+<p><b>技能</b>：</p>
+<p>1. <span class="wp_keywordlink_affiliate"><a href="/tag/linux-2" title="View all posts in Linux" target="_blank">Linux</a></span>基础</p>
+<p>包括对Linux整体的理解/使用和基本命令：</p>
+<ul>
+<li>了解Linux FHS : <a class=" wrap external" href="//link.zhihu.com/?target=http%3A//www.pathname.com/fhs/" target="_blank" rel="nofollow noreferrer">Filesystem Hierarchy Standard<i class="icon-external"></i></a>，国人写的这本书不错 <a class=" wrap external" href="//link.zhihu.com/?target=http%3A//book.douban.com/subject/3592797/" target="_blank" rel="nofollow noreferrer">Linux系统架构与目录解析 (豆瓣)<i class="icon-external"></i></a></li>
+<li>入门Linux：<a class=" wrap external" href="//link.zhihu.com/?target=http%3A//book.douban.com/subject/4889838/" target="_blank" rel="nofollow noreferrer">鸟哥的Linux私房菜.基础学习篇（第三版） (豆瓣)<i class="icon-external"></i></a> 个人认为鸟哥的这本书是一本非常好的入门书</li>
+<li>基本操作命令：Google，如Linux command cheat sheet</li>
+<li>熟悉至少一个内置编辑器: vi, nano</li>
+<li>至少熟悉一个发行版(或系列)，建议作为服务器常用的如Centos, Debian, Ubuntu，可以了解多个常用发行版</li>
+<li>个人使用/开发尽量在Linux上，比如我前期选择了 Gentoo <a class=" wrap external" href="//link.zhihu.com/?target=https%3A//www.gentoo.org/" target="_blank" rel="nofollow noreferrer">Welcome – Gentoo Linux<i class="icon-external"></i></a> ，非常Cool的一个Linux发行版，配合官方的 Handbook <a class=" wrap external" href="//link.zhihu.com/?target=https%3A//wiki.gentoo.org/wiki/Handbook%3AMain_Page" target="_blank" rel="nofollow noreferrer">Handbook:Main Page<i class="icon-external"></i></a>，可以学到很多东西</li>
+</ul>
+<p>2. <span class="wp_keywordlink_affiliate"><a href="/tag/%E8%BF%90%E7%BB%B4" title="View all posts in 运维" target="_blank">运维</a></span>的命令：</p>
+<p><span class="wp_keywordlink_affiliate"><a href="/tag/%E8%BF%90%E7%BB%B4" title="View all posts in 运维" target="_blank">运维</a></span>相关的工具(命令)，了解它能解决很多问题。</p>
+<p>前几天刚回答了一个问题：<a class="internal" href="http://www.zhihu.com/question/23564190/answer/25114341">如何才能更深入的学习linux？</a></p>
+<p>里面的图在这里也可以用到：</p>
+<p><noscript>&amp;amp;lt;img src="https://pic3.zhimg.com/b3c020e713fb94ddadb18f19be52a8ca_b.jpg" data-rawwidth="754" data-rawheight="472" class="origin_image zh-lightbox-thumb" width="754" data-original="https://pic3.zhimg.com/b3c020e713fb94ddadb18f19be52a8ca_r.jpg"&amp;amp;gt;可以对着图对学习了解这些命令 （&amp;amp;amp;lt;strike&amp;amp;amp;gt;抱歉图片的原始来源我没有搜到，如果有朋友知道，麻烦告诉我，谢谢&amp;amp;amp;lt;/strike&amp;amp;amp;gt; 感谢 </noscript><img decoding="async" class="origin_image zh-lightbox-thumb lazy" src="https://pic3.zhimg.com/b3c020e713fb94ddadb18f19be52a8ca_b.jpg" width="754" data-rawwidth="754" data-rawheight="472" data-original="https://pic3.zhimg.com/b3c020e713fb94ddadb18f19be52a8ca_r.jpg" data-actualsrc="https://pic3.zhimg.com/b3c020e713fb94ddadb18f19be52a8ca_b.jpg" data-lazyloaded="">可以对着图对学习了解这些命令 （&lt;strike&gt;抱歉图片的原始来源我没有搜到，如果有朋友知道，麻烦告诉我，谢谢&lt;/strike&gt; 感谢 <a class="member_mention" href="//www.zhihu.com/people/b03822b63453256bcbc31d3466be572a" data-hash="b03822b63453256bcbc31d3466be572a" data-editable="true" data-title="@jeremy yang" data-tip="p$b$b03822b63453256bcbc31d3466be572a" data-hovercard="p$b$b03822b63453256bcbc31d3466be572a">@jeremy yang</a> 的提示，已经搜到来源 <a class=" external" href="//link.zhihu.com/?target=http%3A//www.brendangregg.com/linuxperf.html" target="_blank" rel="nofollow noreferrer"><span class="invisible">http://www.</span><span class="visible">brendangregg.com/linuxp</span><span class="invisible">erf.html</span><i class="icon-external"></i></a><a class=" external" href="//link.zhihu.com/?target=http%3A//www.slideshare.net/brendangregg/linux-performance-analysis-and-tools" target="_blank" rel="nofollow noreferrer"><span class="invisible">http://www.</span><span class="visible">slideshare.net/brendang</span><span class="invisible">regg/linux-performance-analysis-and-tools</span><i class="icon-external"></i></a>）。</p>
+<p>另外我个人也会对平时用到的这些工具做一个整理和记录，总结到我的个人维基上：<a class=" wrap external" href="//link.zhihu.com/?target=http%3A//wiki.tankywoo.com/%23tool" target="_blank" rel="nofollow noreferrer">Wiki · Tanky Woo<i class="icon-external"></i></a></p>
+<p>3. 基础服务：</p>
+<ul>
+<li>LAMP或LNMP ：Apache/Nginx，MySQL，PHP/Python/Perl <a class=" wrap external" href="//link.zhihu.com/?target=http%3A//en.wikipedia.org/wiki/LAMP_%28software_bundle%29" target="_blank" rel="nofollow noreferrer">LAMP (software bundle)<i class="icon-external"></i></a></li>
+<li>FTP</li>
+<li>DNS</li>
+<li>SAMBA</li>
+<li>EMAIL</li>
+<li>NTP</li>
+<li>DHCP</li>
+<li>...</li>
+</ul>
+<p>可以本地搭建练练手</p>
+<p>这里推荐鸟哥另外一本书 服务器架设篇： <a class=" wrap external" href="//link.zhihu.com/?target=http%3A//book.douban.com/subject/10794788/" target="_blank" rel="nofollow noreferrer">鸟哥的Linux私房菜 (豆瓣)<i class="icon-external"></i></a></p>
+<p>4. 运维平台工具:</p>
+<p>也在这个问题 <a class="internal" href="http://www.zhihu.com/question/23564190/answer/25114341">如何才能更深入的学习linux？</a> 里提到了：</p>
+<ul>
+<li>Nagios</li>
+<li>Puppet</li>
+<li>Zabbix</li>
+<li>Cacti</li>
+<li>SaltStack</li>
+<li>....</li>
+</ul>
+<p>可以选择性的折腾下，因为这个涉及到业务，没有实际环境，很难去理解他们的功能和特点。</p>
+<p>5. 脚本:</p>
+<ul>
+<li>必备：Shell</li>
+<li>额外：Python，Perl...</li>
+</ul>
+<p>6. 底层:</p>
+<ul>
+<li>Linux C，内核</li>
+</ul>
+<p>7. 网络:</p>
+<p><b>网络是非常重要的一块</b></p>
+<ul>
+<li>把《TCP/IP协议详解》多看几遍，理解。</li>
+<li>熟练使用tcpdump等抓包工具</li>
+</ul>
+<p>8. 安全:</p>
+<ul>
+<li>防火墙配置，如 iptables, ipset</li>
+</ul>
+<p>9. 硬件：</p>
+<ul>
+<li>接口类型</li>
+<li>查看硬件信息</li>
+<li>知道各类型服务器，如塔式、机架式、刀片式</li>
+</ul>
+<p>10. 其它：</p>
+<p>了解更多特定技能要求的方式：</p>
+<p><i>Google搜"Linux运维<span class="wp_keywordlink_affiliate"><a href="/tag/%E5%B7%A5%E7%A8%8B%E5%B8%88" title="View all posts in 工程师" target="_blank">工程师</a></span> 招聘"，看看他们的需求。</i></p>
+<p>最后推荐一本书：Unix/Linux系统管理技术手册 <a class=" wrap external" href="//link.zhihu.com/?target=http%3A//book.douban.com/subject/10747453/" target="_blank" rel="nofollow noreferrer">UNIX/Linux 系统管理技术手册 (豆瓣)<i class="icon-external"></i></a></p>
+<p><b><i>后续想到再做补充</i></b></p>
+<p><b>素养/处理方式</b>：</p>
+<p>除了技能，我觉得素养(态度)也可以谈谈</p>
+<p>这个正好看到右边相关问题：<a class="internal" href="http://www.zhihu.com/question/19637382">运维工程师需要具备哪些性格特质？</a></p>
+<p>1. 安全</p>
+<p>运维人员的权限很大，所以一定要保证帐号/私钥的安全。</p>
+<ul>
+<li>最好使用加密工具存储。比如truecrypt，1password</li>
+<li>基于本地存储。切勿用网盘，也不建议用lastpass等</li>
+<li>ssh私钥添加密码</li>
+</ul>
+<p>以上任何一点都很重要，否则弄丢了，风险会非常大。</p>
+<p>2. 责任心</p>
+<p>如上面那个帖子里 <a class="member_mention" href="//www.zhihu.com/people/06892f54490a7c0db8fa98ec9cae48d7" data-hash="06892f54490a7c0db8fa98ec9cae48d7" data-editable="true" data-title="@山大" data-tip="p$b$06892f54490a7c0db8fa98ec9cae48d7" data-hovercard="p$b$06892f54490a7c0db8fa98ec9cae48d7">@山大</a> 提到的 <b>Owner 意识</b></p>
+<ul>
+<li>遇到报警，第一时间处理，而不要等着他人去处理</li>
+<li>如果无法处理，应该第一时间让同事协助帮忙，而不要禁止报警，让问题掩盖</li>
+</ul>
+<p>3. 细心</p>
+<p>你的任何一个操作，都可能造成系统的损坏、业务出问题。所以敲命令时一定要细心、再三确认。你敲的再快，也就节省那么一点时间，出了问题才是大事。</p>
+<p>4. 推进/改善</p>
+<p>如果代码有问题，导致系统开销很大，比如负载，io等。应该第一时间和开发部门确认，要求优化代码。</p>
+<p>5. 进取心/不断学习</p>
+<p>运维的知识范围很广，要不断学习。遇到问题，做好分析记录，事后还可以在部门内分享交流。</p>
+<p>这也是我为什么热衷于写技术博客和维基的原因，好记性不如烂笔头。记录整理的过程也是一个思考升华的过程。</p>
+<p>再给一个干货，我们公司（知道创宇）的技能表：<a class=" external" href="//link.zhihu.com/?target=http%3A//blog.knownsec.com/Knownsec_RD_Checklist/v3.0.html" target="_blank" rel="nofollow noreferrer"><span class="invisible">http://</span><span class="visible">blog.knownsec.com/Known</span><span class="invisible">sec_RD_Checklist/v3.0.html</span><i class="icon-external"></i></a>，里面的技能点非常全面，也包含了运维相关</p>
+<p>欢迎评论补充</p>
+<p>其它的一些回答都非常棒，强烈建议也看看！</p></div>
+<div></div>
+<div></div>
+<div>
+<div>作者：唐浩然<br>
+链接：https://www.zhihu.com/question/23665108/answer/25456248<br>
+来源：知乎<br>
+著作权归作者所有，转载请联系作者获得授权。
+<div>创宇的<a class="internal" href="http://www.zhihu.com/people/tanky-woo">Tanky Woo</a>兄弟已经概括的很好很全面了， 下面根据工作常用内容再补充细化一下，分两个层面吧，从技能上，以及意识上写一写（高手见笑）：<br>
+<b><u> l 技能篇 </u></b><br>
+<b> 一、 基础工具（操作流）：</b>
+<ol>
+<li>vi ，这个是必须的，因为服务器的运维多用远程登录，没有GUI。一些对服务器资源占用要求严格的公司会在安装时就要求最小化安装，然后再按需安装业务程序的依赖软件。这种情况默认桌面环境甚至Xserver是不安装的。不会用vi,会很痛苦。vi较常用的：查找，精确复制粘贴，精准定位至要编辑的行，表达式作字符串替换。</li>
+<li>熟悉windows与linux之间相连接的工具。（Secure CRT, vnc, rdesktop,winscp），提到上面几个工具是因为你有可能在你的同事或者客户的windows机器上连linux server</li>
+<li>此条多是照搬rhct的内容: 懂fdisk/parted分区工具,管理swap,管理用户，查看主机配置（主机型号，cpu型号，物理内存数量（比如看到有16条单根8G的内存）,如果是代客户运维，这些东西与客户采购与系统扩容联系紧密，扯远了），lvm管理，文件系统管理，网络配置管理/多网卡绑定，各发行版上 二进制/源代码包的安装，软件包依赖关系解决，查看系统当前负载（内存占用top 10进程列表，cpu占用top10进程列表，IO负载），熟悉常用系统日志的查看方法</li>
+<li>服务器配置安装部分：熟悉最常用 的ftp,http,nfs,samba,dns,dhcp,mail的一般配置方法。</li>
+<li>熟悉系统常用中间件/数据库的安装（tomcat,jboss,was,oracle），可以不熟悉它们的配置</li>
+<li>理解“环境变量”及其作用，能写shell script ,知道一点expect/sed/awk, 会使工作有效率</li>
+</ol>
+<p><b> 二、 进阶篇（分析流）</b></p>
+<ol>
+<li>熟悉HA集群以及负载均衡(lvs)集群的配置</li>
+<li>熟悉多路径（multipath）的配置和管理，熟悉san/nas的概念与区别</li>
+<li>熟悉各发行版二进制包的制作过程与二进制包的安装原理或过程</li>
+<li>分析系统性能瓶颈点（IO/memory/cpu,常用工具，top命令中shift组合键的特殊用法，Sar/vmstat/iostat/ipcs）</li>
+<li>理解Xwindow大致原理，用ssh或 定义DISPLAY 作x server的任意跳转</li>
+<li>熟悉PXE+kickstat作无人值守的批量部署</li>
+<li>熟悉以源代码方式安装硬件驱动</li>
+</ol>
+<p><b> 三、 深入进阶篇</b></p>
+<ol>
+<li>分析部分程序不能运行或没有按预想结果运行的原因，strace对程序运行跟踪，查看系统调用的过程，</li>
+<li>较深入的系统瓶颈点分析（swap使用频率，硬件驱动的中断请求在各core的分布，高手见笑，我只用过这两个）</li>
+<li>熟悉kdump的大致原理，nmi的大致原理，分析系统crash时dump出的文件。（如果能看到dump文件的话，里面记录的还是比较清晰的，日志会记录到crash时每个core上运行的进程正在执行的系统调用，有遇到过:几次系统总是在某个系统调用发生时crash,后来百度了资料，才知道这个系统调用存在bug,最后单升级kernel就好了。 现在让我很蛋疼的是很多时候机器hang掉，不会产生kdump文件，尽管设置了内核的oops/nmi相关参数,如果有高手碰巧看到，希望能请教一下）</li>
+</ol>
+<p><b><u></u></b></p>
+<p>l B，意识篇<br>
+1) <b>安全意识</b>：关于这个，有创宇的兄弟在，不敢班门弄斧<br>
+2) <b>磨刀意识</b>：关于任何操作配置，最好先搞明白操作或配置的原理，然后再去操作。应一句话叫做“磨刀不误砍柴功”，而且对于类似的操作可以举一反三。<br>
+3) <b>计划意识</b>：复杂的变更操作比如多台主机以及牵涉到san存储，最好先作 操作计划，写计划文档，详细致每条命令，然后请高手帮忙审核。 这样能最大程度使整个操作过程安全。如果是重要的客户业务系统，操作最好有回退方案，而一旦变更失败，客户可以在短时间内将业务回退。<br>
+4) <b>记录分享意识</b>：遇到自己认为较特殊的案例时，记得要写 案例过程及分析的文档。也方便自己以后翻看，或者和其他兄弟分享，作知识的传播以便于大家以后都能少走弯路。<br>
+5) <b>监控意识</b>：运维来说，监控是非常重要的，监控是发现系统各种异常的眼睛，所以运维应该和监控紧密配合。<br>
+6) <b>业务意识：</b>尽量了解维护的各主机上业务类型，以及各主机业务之间的关联性。因为任何维护工作都是为主机能提供业务服务的，当某业务中断，能最快的知道与此业务相关的主机群，从而缩小故障排查范围，最快定位故障。</p>
+</div>
+</div>
+<div>作者：今何在<br>
+链接：https://www.zhihu.com/question/23665108/answer/25290837<br>
+来源：知乎<br>
+著作权归作者所有，转载请联系作者获得授权。
+<div>谢邀，问题很好，。楼上那位已经回答的很全面了，我补充一点点：<br>
+1.关于运维工程师<br>
+百度百科给出的说法是运维工程师，集合网络、系统、开发工作于一身的“复合性人才”。<br>
+实际上也差不多<br>
+随着IT信息系统的发展，运维岗位进一步细分<br>
+A.根据面向对象的不同有：<br>
+基础运维 应用运维 系统运维 虚拟化运维 存储运维 linux运维 网络运维/IDC运维<br>
+B.根据职业发展层次的不同阶段又有：<br>
+桌面运维--&gt;系统运维---&gt;开发型运维---&gt;系统架构师
+<p>所以必须掌握的基础技能也有大概的几个方向：路由交换/系统平台/脚本开发/系统架构/信息安全<br>
+分别由浅入深，类比一些认证所代表的知识层次(在这里证书不代表能力，只是作为一个参照物)：<br>
+路由交换：<br>
+参照cisco的基准 CCNA--&gt;CCNP--&gt;CCIE<br>
+系统平台：<br>
+WIN参照微软 MCTS--&gt;MCSE/MCITP Linux参照redhat RHCE---&gt;RHCA<br>
+虚拟化有商业上的思杰/VMware 开源有openstack/cloudstack<br>
+脚本开发：bashshell /powershell / VB /python/Ruby / C /c++ / Go #开发语言我就列出看到过有运维人在用的，偶尔看到有BT用lisp。。。<br>
+信息安全：ISO27001你得知道是什么。乌云得经常去逛逛。<br>
+------------------<br>
+对于软件的使用，得仁得智，我个人是拥抱开源的，商业化产品过于追逐利益。<br>
+运维工程师 是从一个呆逼进化为苦逼再成长为牛逼的过程（请宽恕我的用词），前提在于你要能忍能干能拼，还要具有敏锐的嗅觉感知前方潮流变化。<br>
+不要过于在意商业产品的部署和企业方面的技术认证，这玩意变化太快。<br>
+关键是通过前期的广泛吸收打好基础，进而找到今后要走的路，从而抓住一个方向深入。最终要成为一个方面的专家而不是什么都会什么都不精通的普工！<br>
+虽然操不着系统架构师的心，但也要有尽量靠齐的大局观和视角。以项目来促进成长，以压力为动力继续前行~！做一个有价值，有成就，有原则，有妹子的四有运维工程师！！</p>
+<p>《海量运维》这本书里面整理了一个大概的运维体系框架，我很喜欢，借用一下：<br>
+<img decoding="async" class="origin_image zh-lightbox-thumb" src="https://pic2.zhimg.com/925ccab165932116e6366226c4677121_b.jpg" width="957" data-rawwidth="957" data-rawheight="715" data-original="https://pic2.zhimg.com/925ccab165932116e6366226c4677121_r.jpg"><br>
+相关书籍：<br>
+路由交换：<br>
+《TCP/IP协议》 第三卷 | cisco教材<br>
+linux：<br>
+（鸟哥 全套） | Linuxshell脚本攻略 | 深入理解linux内核 | linux内核完全注释<br>
+win：<br>
+教材/白皮书/google<br>
+服务部署：<br>
+构建高性能WEB站点 |高性能网站建设指南 -steve souders | puppet实战 | 大话存储 2 |Mysql 性能调优与架构设计 - 简朝阳<br>
+信息安全：<br>
+Web前端黑客技术揭秘 | 白帽子讲web安全 |<br>
+脚本开发：<br>
+深入理解计算机系统 | 编写可读代码的艺术 | Python核心编程 | 笨办法学Python<br>
+启发思路：<br>
+淘宝十年 | 海量运维 |大数据时代 | 思科九年 |我这一代京东人</p></div>
+</div>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/linux-2" rel="tag">Linux</a>, <a href="/tag/sre" rel="tag">SRE</a>, <a href="/tag/%E5%B7%A5%E7%A8%8B%E5%B8%88" rel="tag">工程师</a>, <a href="/tag/%E8%BF%90%E7%BB%B4" rel="tag">运维</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2016/11/21/%E5%88%9B%E4%B8%9A36%E6%9D%A1%E5%86%9B%E8%A7%84-txt%E4%B8%8B%E8%BD%BD.html" rel="prev">创业36条军规.txt下载</a><br>【下篇】<a href="/2016/11/22/%E4%BA%92%E8%81%94%E7%BD%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%94%BB%E9%98%B2%E7%A7%98%E7%AC%88%E9%99%88%E5%BD%AC%E8%91%97-pdf-%E6%89%AB%E6%8F%8F%E7%89%8847m.html" rel="next">互联网服务器攻防秘笈(陈彬著) PDF 扫描版[47M]</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li><li> · <a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li><li> · <a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li><li> · <a href="/2025/07/02/k8s-ingress-non-pod-service.html">利用k8s ingress访问非POD服务</a></li><li> · <a href="/2025/06/25/vault-sidecar-pemission-denied.html">解决vault sidecar认证失败的问题</a></li><li> · <a href="/2025/06/06/docker-fastapi.html">Docker 快速部署 FastAPI 项目</a></li><li> · <a href="/2025/03/19/nginx-service.html">nginx开机启动脚本 nginx.service</a></li><li> · <a href="/2025/03/15/codium-server.html">codium-server.service</a></li><li> · <a href="/2025/03/04/hoppscotch-crack.html">修改hoppscotch支持必须登陆指定用户才可以使用</a></li><li> · <a href="/2025/02/28/single-server-rolling-hot-upgrade.html">单台服务器应用不中断服务热部署滚动更新方案</a></li><li> · <a href="/2025/02/19/linux-swap.html">linux开启swap</a></li><li> · <a href="/2025/02/19/dockerhub.html">Docker 镜像加速列表（20250216已更新）</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2016年11月22日发表在<a href="/category/devops" rel="category tag">DevOps</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2016/11/22/%E8%BF%90%E7%BB%B4%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%8A%80%E8%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F.html" rel="bookmark" title="本文固定链接 /2016/11/22/%e8%bf%90%e7%bb%b4%e5%b7%a5%e7%a8%8b%e5%b8%88%e5%bf%85%e9%a1%bb%e6%8e%8c%e6%8f%a1%e7%9a%84%e5%9f%ba%e7%a1%80%e6%8a%80%e8%83%bd%e6%9c%89%e5%93%aa%e4%ba%9b%ef%bc%9f.html">运维工程师必须掌握的基础技能有哪些？ | Bruce's Blog</a><a href="#" onclick="copy_code('/2016/11/22/%e8%bf%90%e7%bb%b4%e5%b7%a5%e7%a8%8b%e5%b8%88%e5%bf%85%e9%a1%bb%e6%8e%8c%e6%8f%a1%e7%9a%84%e5%9f%ba%e7%a1%80%e6%8a%80%e8%83%bd%e6%9c%89%e5%93%aa%e4%ba%9b%ef%bc%9f.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2016/11/22/%E8%BF%90%E7%BB%B4%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%8A%80%E8%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="4062" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="49ec0546f7"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="229"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.066 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:47:54 -->

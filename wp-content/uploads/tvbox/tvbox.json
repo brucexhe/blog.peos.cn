@@ -1,0 +1,33 @@
+{
+  "spider":"http://ftp6284928.host108.abeiyun.cn/jar/tvbox.txt;md5;a4bf71ea71185b7815d3e94d591a7c51",
+  "wallpaper":"http://www.kf666888.cn/api/tvbox/img",
+  "lives":[{
+    "name":"live",
+    "type":0,
+    "url":"http://ftp6284928.host108.abeiyun.cn/live/live.txt",
+    "playerType":1,
+    "ua":"okhttp/3.12.13",
+    "epg":"http://epg.112114.xyz/?ch={name}&date={date}",
+    "logo":"https://epg.112114.xyz/logo/{name}.png"
+  }],
+  "sites":[
+    {"key":"csp_WoGG","name":"玩偶哥","type":3,"api":"csp_WoGG","searchable":1,"quickSearch":1,"filterable":1,"ext":"http://ftp6284928.host108.abeiyun.cn/json/token.txt+4k|fhd|auto$$$http://tvfan.xxooo.cf/"},
+  ],
+  "parses":[
+    {"name":"Web聚合","type":3,"url":"Web"}
+  ],
+  "rules":[
+    {"host":"*","rule":["default.365yg.com"]} 
+  ],
+  "flags":["youku","优酷","优酷视频","qq","腾讯","腾讯视频","iqiyi","qiyi","奇艺","爱奇艺","m1905","xigua","letv","leshi","乐视","sohu","搜狐","搜狐视频","tudou","pptv","mgtv","芒果","imgo","芒果TV","bilibili","哔哩","哔哩哔哩","B站","renrenmi","wasu","ltnb","rx","SLYS4k","BYGA","BYGB","luanzi","dxzy","QEYSS","aliyun","AliS","122","chuangying","CL4K","xfyun","wuduzy","xmm","xigua","m1905","funshion"],
+  "ijk":[
+    {"group":"软解码","options":[
+      {"category":4,"name":"opensles","value":"0"}
+      
+    ]},
+    {"group":"硬解码","options":[
+      {"category":4,"name":"opensles","value":"0"} 
+    ]}
+  ],
+  "ads":["wan.51img1.com"]
+}

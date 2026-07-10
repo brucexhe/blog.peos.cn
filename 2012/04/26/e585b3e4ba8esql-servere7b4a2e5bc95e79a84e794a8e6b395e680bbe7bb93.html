@@ -1,0 +1,765 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn" xml:lang="cn">
+<head profile="http://gmpg.org/xfn/11"><meta charset="UTF-8">
+	<title>关于SQL SERVER索引的用法总结 | Bruce's Blog</title> 
+<meta name="description" content="1.1.1 摘要">
+<meta name="keywords" content="SQL Server,SQL SERVER索引用法,索引">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/wp-content/themes/WPCnblogs/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/wp-content/themes/WPCnblogs/style.css">
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.4.2/jquery.min.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/js/custom.js" ></script>
+	<script type="text/javascript" src="/wp-content/themes/WPCnblogs/comments-ajax.js"></script>
+    <link rel="stylesheet" id="enlighterjs-css" href="/wp-content/plugins/enlighter/static/enlighterjs.min.css" type="text/css" media="all">	
+<style id="global-styles-inline-css" type="text/css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="hd_info">
+		<div id="top-link">
+			<a title="收藏本站" href="#">收藏本站(ctrl+D)</a> | 
+			<a title="关于本站" target="_blank" href="/about/">关于本站</a>
+		</div>
+    </div>
+    <div id="header">  
+		<p class="h_r_3"></p><p class="h_r_2"></p><p class="h_r_1"></p>
+		<div id="header_block">
+			<div id="logo">
+				<h1><a href="/index.php" title="Bruce's Blog">
+				<img src="/wp-content/themes/WPCnblogs/images/logo.gif" alt="Code changes the world."></a>
+				</h1>
+			</div> 
+			<div class="clear"></div>
+		</div> 
+        <p class="h_r_1"></p><p class="h_r_2"></p><p class="h_r_3"></p>        
+    </div><!-- #header -->
+
+	<div id="nav_wrapper">
+        <div id="nav_block">
+			<ul>
+				<li class="current_page_item"><a href="/">首页</a></li>
+			    <li id="menu-item-3991" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3991"><a href="/category/net">编程开发</a></li>
+<li id="menu-item-3992" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-3992"><a href="/category/sql-server">数据库</a></li>
+<li id="menu-item-3997" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3997"><a href="/category/jsjqureycss">前端之美</a></li>
+<li id="menu-item-3995" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3995"><a href="/category/systemarchitecture">架构师之路</a></li>
+<li id="menu-item-4064" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4064"><a href="/category/safe">安全</a></li>
+<li id="menu-item-5980" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-5980"><a href="/category/bigdata">大数据</a></li>
+<li id="menu-item-4066" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4066"><a href="/category/devops">DevOps</a></li>
+<li id="menu-item-4065" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4065"><a href="/category/test">测试</a></li>
+<li id="menu-item-3998" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3998"><a href="/category/subject">专题</a></li>
+<li id="menu-item-3994" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3994"><a href="/category/download">软件下载</a></li>
+<li id="menu-item-3996" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3996"><a href="/category/resourceshare">资源下载</a></li>
+<li id="menu-item-3993" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3993"><a href="/category/news">新闻资讯</a></li>
+<li id="menu-item-4013" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4013"><a href="/category/manager">每天一句管理学</a></li>
+<li id="menu-item-4014" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-4014"><a href="/category/startup">创业之路</a></li>
+<li id="menu-item-3988" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-3988"><a href="/category/haha">程序员笑话</a></li>
+            </ul>
+		</div>
+    </div>
+    <div class="clear"></div>
+</div><!-- #nav -->
+
+
+<div id="side_nav"> 
+	<div id="cate_title_block">   
+		<div id="cate_title_title"><div class="cate_title">分类</div></div>
+		<ul id="cate_item">
+				<li class="cat-item cat-item-10"><a href="/category/net">.NET</a> (452)
+</li>
+	<li class="cat-item cat-item-6"><a href="/category/access">Access</a> (11)
+</li>
+	<li class="cat-item cat-item-2559"><a href="/category/ai-2">AI</a> (4)
+</li>
+	<li class="cat-item cat-item-13"><a href="/category/android">Android</a> (29)
+</li>
+	<li class="cat-item cat-item-2231"><a href="/category/angular">Angular</a> (2)
+</li>
+	<li class="cat-item cat-item-15"><a href="/category/cc">C/C++</a> (10)
+</li>
+	<li class="cat-item cat-item-1621"><a href="/category/crack">Crack</a> (11)
+</li>
+	<li class="cat-item cat-item-9"><a href="/category/dba">DBA</a> (5)
+</li>
+	<li class="cat-item cat-item-1709"><a href="/category/devops">DevOps</a> (77)
+</li>
+	<li class="cat-item cat-item-2171"><a href="/category/docker">Docker</a> (58)
+</li>
+	<li class="cat-item cat-item-1689"><a href="/category/download">Download</a> (23)
+</li>
+	<li class="cat-item cat-item-1620"><a href="/category/dump">Dump</a> (1)
+</li>
+	<li class="cat-item cat-item-2363"><a href="/category/game">Game</a> (3)
+</li>
+	<li class="cat-item cat-item-1688"><a href="/category/haha">Haha</a> (6)
+</li>
+	<li class="cat-item cat-item-1700"><a href="/category/ios">IOS</a> (1)
+</li>
+	<li class="cat-item cat-item-1885"><a href="/category/java">JAVA</a> (35)
+</li>
+	<li class="cat-item cat-item-2274"><a href="/category/k8s">k8s</a> (21)
+</li>
+	<li class="cat-item cat-item-12"><a href="/category/linux">LINUX</a> (104)
+</li>
+	<li class="cat-item cat-item-1719"><a href="/category/log">log</a> (2)
+</li>
+	<li class="cat-item cat-item-2195"><a href="/category/mac">MAC</a> (4)
+</li>
+	<li class="cat-item cat-item-1690"><a href="/category/manager">Manager</a> (7)
+</li>
+	<li class="cat-item cat-item-1060"><a href="/category/mongodb">MongoDB</a> (5)
+</li>
+	<li class="cat-item cat-item-1668"><a href="/category/mq">MQ</a> (8)
+</li>
+	<li class="cat-item cat-item-4"><a href="/category/mysql">MySQL</a> (114)
+</li>
+	<li class="cat-item cat-item-424"><a href="/category/news">News</a> (129)
+</li>
+	<li class="cat-item cat-item-1059"><a href="/category/nosql">NoSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-5"><a href="/category/oracle">Oracle</a> (46)
+</li>
+	<li class="cat-item cat-item-1"><a href="/category/%E5%85%B6%E5%AE%83">Others</a> (358)
+</li>
+	<li class="cat-item cat-item-2172"><a href="/category/pcf">PCF</a> (1)
+</li>
+	<li class="cat-item cat-item-16"><a href="/category/phototshop">Phototshop</a> (9)
+</li>
+	<li class="cat-item cat-item-11"><a href="/category/php">PHP</a> (37)
+</li>
+	<li class="cat-item cat-item-1058"><a href="/category/postgresql">PostgreSQL</a> (3)
+</li>
+	<li class="cat-item cat-item-1062"><a href="/category/python">Python</a> (21)
+</li>
+	<li class="cat-item cat-item-1057"><a href="/category/redis">Redis</a> (11)
+</li>
+	<li class="cat-item cat-item-24"><a href="/category/resourceshare">ResourceShare</a> (101)
+</li>
+	<li class="cat-item cat-item-2022"><a href="/category/salesforce">Salesforce</a> (31)
+</li>
+	<li class="cat-item cat-item-3"><a href="/category/sql-server">SQL Server</a> (271)
+</li>
+	<li class="cat-item cat-item-7"><a href="/category/sqlite">SQLite</a> (14)
+</li>
+	<li class="cat-item cat-item-1691"><a href="/category/startup">Startup</a> (5)
+</li>
+	<li class="cat-item cat-item-652"><a href="/category/subject">Subject</a> (2)
+</li>
+	<li class="cat-item cat-item-2287"><a href="/category/unity3d">Unity3D</a> (22)
+</li>
+	<li class="cat-item cat-item-1529"><a href="/category/wordpress">Wordpress</a> (12)
+</li>
+	<li class="cat-item cat-item-2178"><a href="/category/cloud">云计算</a> (10)
+</li>
+	<li class="cat-item cat-item-1833"><a href="/category/ai">人工智能</a> (4)
+</li>
+	<li class="cat-item cat-item-2180"><a href="/category/dcs">分布式</a> (5)
+</li>
+	<li class="cat-item cat-item-14"><a href="/category/jsjqureycss">前端</a> (133)
+</li>
+	<li class="cat-item cat-item-1886"><a href="/category/blockchain">区块链</a> (3)
+</li>
+	<li class="cat-item cat-item-2721"><a href="/category/esp32">单片机</a> (1)
+</li>
+	<li class="cat-item cat-item-1877"><a href="/category/bigdata">大数据</a> (29)
+</li>
+	<li class="cat-item cat-item-1708"><a href="/category/safe">安全</a> (8)
+</li>
+	<li class="cat-item cat-item-2177"><a href="/category/microservice">微服务</a> (16)
+</li>
+	<li class="cat-item cat-item-1428"><a href="/category/test">测试</a> (3)
+</li>
+	<li class="cat-item cat-item-1659"><a href="/category/systemarchitecture">系统架构</a> (43)
+</li>
+	<li class="cat-item cat-item-2369"><a href="/category/synology">群晖</a> (20)
+</li>
+		</ul>
+	<div class="cate_bottom"></div>
+</div>
+
+<div class="l_s"></div>
+<p class="r_l_3"></p><p class="r_l_2"></p><p class="r_l_1"></p>
+
+<div class="w_l">
+	<h4>链接</h4>
+	<ul>
+		<li>· <a href="https://www.1bangong.com/" title="共享办公室" target="_blank">共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都共享办公室" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.1bangong.com/" title="成都办公室出租" target="_blank">成都办公室出租</a></li>
+<li>· <a href="https://chengduxiezilou.cn/" title="成都写字楼出租" target="_blank">成都写字楼出租</a></li>
+<li>· <a href="https://www.yqbg.cn/" title="成都共享办公室" target="_blank">成都共享办公室</a></li>
+	</ul>
+</div> 
+<p class="r_l_1"></p><p class="r_l_2"></p><p class="r_l_3"></p>
+
+</div><!-- #left sidebar -->
+
+<div id="side_right">
+	<div id="blogger_search">
+		
+<form method="get" id="searchform" action="/">
+	<input type="text" tabindex="3" value="搜索" class="input_blogger_search" name="s" id="s" onfocus="if (this.value == '搜索') {this.value = '';}" onblur="if (this.value == '') {this.value = '搜索';}">
+	<input type="button" value="找找看" class="search_btn" id="searchsubmit">
+</form>
+	</div>
+
+	<div class="w_r">
+		<div id="calendar_wrap">
+			<table id="wp-calendar" class="wp-calendar-table">
+	<caption>2012 年 4 月</caption>
+	<thead>
+	<tr>
+		<th scope="col" aria-label="星期一">一</th>
+		<th scope="col" aria-label="星期二">二</th>
+		<th scope="col" aria-label="星期三">三</th>
+		<th scope="col" aria-label="星期四">四</th>
+		<th scope="col" aria-label="星期五">五</th>
+		<th scope="col" aria-label="星期六">六</th>
+		<th scope="col" aria-label="星期日">日</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td colspan="6" class="pad"> </td><td>1</td>
+	</tr>
+	<tr>
+		<td>2</td><td><a href="/2012/04/03" aria-label="2012年4月3日 发布的文章">3</a></td><td><a href="/2012/04/04" aria-label="2012年4月4日 发布的文章">4</a></td><td><a href="/2012/04/05" aria-label="2012年4月5日 发布的文章">5</a></td><td>6</td><td><a href="/2012/04/07" aria-label="2012年4月7日 发布的文章">7</a></td><td><a href="/2012/04/08" aria-label="2012年4月8日 发布的文章">8</a></td>
+	</tr>
+	<tr>
+		<td><a href="/2012/04/09" aria-label="2012年4月9日 发布的文章">9</a></td><td>10</td><td>11</td><td>12</td><td><a href="/2012/04/13" aria-label="2012年4月13日 发布的文章">13</a></td><td>14</td><td><a href="/2012/04/15" aria-label="2012年4月15日 发布的文章">15</a></td>
+	</tr>
+	<tr>
+		<td>16</td><td><a href="/2012/04/17" aria-label="2012年4月17日 发布的文章">17</a></td><td><a href="/2012/04/18" aria-label="2012年4月18日 发布的文章">18</a></td><td>19</td><td><a href="/2012/04/20" aria-label="2012年4月20日 发布的文章">20</a></td><td>21</td><td>22</td>
+	</tr>
+	<tr>
+		<td>23</td><td><a href="/2012/04/24" aria-label="2012年4月24日 发布的文章">24</a></td><td><a href="/2012/04/25" aria-label="2012年4月25日 发布的文章">25</a></td><td><a href="/2012/04/26" aria-label="2012年4月26日 发布的文章">26</a></td><td>27</td><td><a href="/2012/04/28" aria-label="2012年4月28日 发布的文章">28</a></td><td>29</td>
+	</tr>
+	<tr>
+		<td>30</td>
+		<td class="pad" colspan="6"> </td>
+	</tr>
+	</tbody>
+	</table><nav aria-label="上个月及下个月" class="wp-calendar-nav">
+		<span class="wp-calendar-nav-prev"><a href="/2012/03">« 3 月</a></span>
+		<span class="pad"> </span>
+		<span class="wp-calendar-nav-next"><a href="/2012/05">5 月 »</a></span>
+	</nav>		</div>
+	</div>
+	
+	<div class="w_r">
+		<h4>近期文章</h4>
+		<ul>
+				<li><a href="/2026/03/31/cloud-function-python-sftp.html">在腾讯云函数中使用python打SFTP问题</a></li>
+	<li><a href="/2026/03/27/esp32.html">手握几十个ESP32的板子，我感觉我现在强得可怕！</a></li>
+	<li><a href="/2026/03/27/vscode-terminal-cmder.html">vscode修改终端terminal为Cmder</a></li>
+	<li><a href="/2025/12/11/svh-ios-saferi.html">一个神奇的svh：解决iOS saferi高度问题</a></li>
+	<li><a href="/2025/12/09/tonghuazhen-flac.html">陈一发儿-《童话镇》FLAC无损下载</a></li>
+	<li><a href="/2025/11/10/docker-insepct-logtail.html">docker insepct logtail</a></li>
+	<li><a href="/2025/11/06/wx-short-url-link.html">微信小程序开发中，通过API生成的体验版短链接，打开跳转到的是生产版</a></li>
+	<li><a href="/2025/10/17/confluence-chinese-error.html">解决confluence文件预览问题，中文乱码问题</a></li>
+	<li><a href="/2025/10/15/confluence-6-13-upgrade-to-confluence-7-19.html">confluence 6.13升级到confluence 7.19</a></li>
+	<li><a href="/2025/10/09/sharding-jdbc.html">Sharding-JDBC‌</a></li>
+		</ul>
+	</div>
+
+	<div class="w_r">
+		<h4>热门标签</h4>
+		<div id="tag-cloud"><a href="/tag/net-2" class="tag-cloud-link tag-link-19 tag-link-position-1" style="color:#940d72;font-size: 12px;;">.net</a>
+<a href="/tag/720p" class="tag-cloud-link tag-link-1053 tag-link-position-2" style="color:#1ce4c0;font-size: 12px;;">720p</a>
+<a href="/tag/1080p" class="tag-cloud-link tag-link-986 tag-link-position-3" style="color:#5ce4dc;font-size: 12px;;">1080P</a>
+<a href="/tag/android" class="tag-cloud-link tag-link-1541 tag-link-position-4" style="color:#2ad752;font-size: 12px;;">Android</a>
+<a href="/tag/asp-net" class="tag-cloud-link tag-link-31 tag-link-position-5" style="color:#4e96ab;font-size: 12px;;">asp.net</a>
+<a href="/tag/bt" class="tag-cloud-link tag-link-988 tag-link-position-6" style="color:#60e66f;font-size: 12px;;">BT</a>
+<a href="/tag/c" class="tag-cloud-link tag-link-30 tag-link-position-7" style="color:#7a8b6f;font-size: 12px;;">c#</a>
+<a href="/tag/c%E5%A7%94%E6%89%98%E4%B8%8E%E4%BA%8B%E4%BB%B6" class="tag-cloud-link tag-link-87 tag-link-position-8" style="color:#1c03ec;font-size: 12px;;">C#委托与事件</a>
+<a href="/tag/centos" class="tag-cloud-link tag-link-1165 tag-link-position-9" style="color:#5cfe33;font-size: 12px;;">centos</a>
+<a href="/tag/clash" class="tag-cloud-link tag-link-2344 tag-link-position-10" style="color:#ee2dc8;font-size: 12px;;">clash</a>
+<a href="/tag/css" class="tag-cloud-link tag-link-1070 tag-link-position-11" style="color:#5e2780;font-size: 12px;;">CSS</a>
+<a href="/tag/datagridview" class="tag-cloud-link tag-link-25 tag-link-position-12" style="color:#8e49b9;font-size: 12px;;">datagridview</a>
+<a href="/tag/docker" class="tag-cloud-link tag-link-1982 tag-link-position-13" style="color:#561549;font-size: 12px;;">docker</a>
+<a href="/tag/entity-framework" class="tag-cloud-link tag-link-389 tag-link-position-14" style="color:#9ba99c;font-size: 12px;;">Entity Framework</a>
+<a href="/tag/hadoop" class="tag-cloud-link tag-link-1883 tag-link-position-15" style="color:#840f63;font-size: 12px;;">Hadoop</a>
+<a href="/tag/jquery" class="tag-cloud-link tag-link-39 tag-link-position-16" style="color:#34fc9b;font-size: 12px;;">JQuery</a>
+<a href="/tag/js" class="tag-cloud-link tag-link-1108 tag-link-position-17" style="color:#d52106;font-size: 12px;;">JS</a>
+<a href="/tag/k8s" class="tag-cloud-link tag-link-2186 tag-link-position-18" style="color:#cc0f05;font-size: 12px;;">k8s</a>
+<a href="/tag/linq" class="tag-cloud-link tag-link-29 tag-link-position-19" style="color:#aa99ba;font-size: 12px;;">LINQ</a>
+<a href="/tag/linq2db" class="tag-cloud-link tag-link-1764 tag-link-position-20" style="color:#6553ad;font-size: 12px;;">linq2db</a>
+<a href="/tag/linqtodb" class="tag-cloud-link tag-link-1763 tag-link-position-21" style="color:#a5e6ac;font-size: 12px;;">LinqToDB</a>
+<a href="/tag/linux-2" class="tag-cloud-link tag-link-200 tag-link-position-22" style="color:#4f7225;font-size: 12px;;">Linux</a>
+<a href="/tag/mvc" class="tag-cloud-link tag-link-945 tag-link-position-23" style="color:#a333bf;font-size: 12px;;">MVC</a>
+<a href="/tag/mysql" class="tag-cloud-link tag-link-1537 tag-link-position-24" style="color:#dc344c;font-size: 12px;;">MySQL</a>
+<a href="/tag/nginx" class="tag-cloud-link tag-link-1168 tag-link-position-25" style="color:#ad6056;font-size: 12px;;">nginx</a>
+<a href="/tag/oracle" class="tag-cloud-link tag-link-1538 tag-link-position-26" style="color:#c6627f;font-size: 12px;;">Oracle</a>
+<a href="/tag/python" class="tag-cloud-link tag-link-1544 tag-link-position-27" style="color:#25afca;font-size: 12px;;">Python</a>
+<a href="/tag/redis" class="tag-cloud-link tag-link-1542 tag-link-position-28" style="color:#f88667;font-size: 12px;;">Redis</a>
+<a href="/tag/remoting" class="tag-cloud-link tag-link-141 tag-link-position-29" style="color:#3e6991;font-size: 12px;;">Remoting</a>
+<a href="/tag/salesforce" class="tag-cloud-link tag-link-2021 tag-link-position-30" style="color:#6a11c7;font-size: 12px;;">salesforce</a>
+<a href="/tag/springboot" class="tag-cloud-link tag-link-2308 tag-link-position-31" style="color:#f6d29f;font-size: 12px;;">springboot</a>
+<a href="/tag/sql" class="tag-cloud-link tag-link-20 tag-link-position-32" style="color:#188878;font-size: 12px;;">sql</a>
+<a href="/tag/sql-server" class="tag-cloud-link tag-link-1536 tag-link-position-33" style="color:#803aee;font-size: 12px;;">SQL Server</a>
+<a href="/tag/sql%E4%BC%98%E5%8C%96" class="tag-cloud-link tag-link-168 tag-link-position-34" style="color:#d9dbf;font-size: 12px;;">SQL优化</a>
+<a href="/tag/unity" class="tag-cloud-link tag-link-2289 tag-link-position-35" style="color:#3e32ce;font-size: 12px;;">Unity</a>
+<a href="/tag/vs2010" class="tag-cloud-link tag-link-962 tag-link-position-36" style="color:#3ad3fe;font-size: 12px;;">VS2010</a>
+<a href="/tag/vue" class="tag-cloud-link tag-link-2247 tag-link-position-37" style="color:#dd657;font-size: 12px;;">vue</a>
+<a href="/tag/wordpress" class="tag-cloud-link tag-link-79 tag-link-position-38" style="color:#2cf07b;font-size: 12px;;">WordPress</a>
+<a href="/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-2124 tag-link-position-39" style="color:#e5c4f9;font-size: 12px;;">小程序</a>
+<a href="/tag/%E6%94%B9%E5%96%84%E6%82%A8%E7%9A%84c%E7%A8%8B%E5%BA%8F" class="tag-cloud-link tag-link-694 tag-link-position-40" style="color:#74f9b5;font-size: 12px;;">改善您的C#程序</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E4%BA%91" class="tag-cloud-link tag-link-1397 tag-link-position-41" style="color:#1b49d7;font-size: 12px;;">百度云</a>
+<a href="/tag/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98" class="tag-cloud-link tag-link-1411 tag-link-position-42" style="color:#a7a085;font-size: 12px;;">百度网盘</a>
+<a href="/tag/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%AC%91%E8%AF%9D" class="tag-cloud-link tag-link-58 tag-link-position-43" style="color:#fbb374;font-size: 12px;;">程序员笑话</a>
+<a href="/tag/%E7%B4%A2%E5%BC%95" class="tag-cloud-link tag-link-441 tag-link-position-44" style="color:#465c98;font-size: 12px;;">索引</a>
+<a href="/tag/%E7%BE%A4%E6%99%96" class="tag-cloud-link tag-link-2023 tag-link-position-45" style="color:#e5bace;font-size: 12px;;">群晖</a></div>
+	</div>
+ 
+	
+	<div class="w_r">
+		<h4>新人福利，免费薅羊毛</h4>
+					</div>
+	
+
+</div>
+<link rel="stylesheet" type="text/css" href="/wp-content/plugins/google-syntax/google-code-prettify/prettify.css">
+<style>
+.pay{display:flex;justify-content: center;margin: 20px 0;}
+.pay .wxpay{width:160px;margin-right:30px;border-radius:10px;}
+.pay .alipay{width:160px;border-radius:10px;}
+.pay_title{font-size: 20px;font-weight: bold;text-align: center;margin-top:20px;}
+</style>
+<div id="content">
+	
+	<div id="map">
+		<div class="browse">现在位置:   
+			<a title="返回首页" href="/">首页</a> ＞ <a href="/category/sql-server" rel="category tag">SQL Server</a> ＞ 正文</div>
+		<div id="feed"><a href="/feed" title="RSS">RSS</a></div>	
+	</div>
+    
+    <a href="https://www.1bangong.com/?from=post" title="共享办公室出租" target="_blank"><img alt="共享办公室出租" height="150px" width="100%" src="https://oss.yqbg.cn/brand/1bangong.com.jpg"></a>
+
+	<div class="entry_box_s">
+		<div class="entry_title">关于SQL SERVER索引的用法总结</div>
+		<div class="archive_info">
+			<span class="postdate_icon"> 2012-04-26 19:15</span>
+			<span class="category">  <a href="/category/sql-server" rel="category tag">SQL Server</a></span>
+			<span class="article_comment"><a href="/2012/04/26/%E5%85%B3%E4%BA%8Esql-server%E7%B4%A2%E5%BC%95%E7%9A%84%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93.html#respond">暂无评论</a></span>
+			 <span class="article_view grayline">阅读(<span>3,640</span>)</span>			<span class="edit"></span>
+		</div>
+		<div class="entry markdown-body">
+			<div id="entry">
+				<div style="float:right;">
+				<!--ad here-->
+				</div>
+				<p>1.1.1 摘要</p>
+<div id="cnblogs_post_body">
+<p>如果说要对数据库进行优化，我们主要可以通过以下五种方法，对数据库系统进行优化。</p>
+<p>1. 计算机硬件调优</p>
+<p>2. 应用程序调优</p>
+<p>3. 数据库<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%B4%A2%E5%BC%95" title="View all posts in 索引" target="_blank">索引</a></span>优化</p>
+<p>4. SQL语句优化</p>
+<p>5. 事务处理调优</p>
+<p>在本篇博文中，我们将想大家讲述数据库中<span class="wp_keywordlink_affiliate"><a href="/tag/%E7%B4%A2%E5%BC%95" title="View all posts in 索引" target="_blank">索引</a></span>类型和使用场合，本文以<span class="wp_keywordlink_affiliate"><a href="/tag/sql-server" title="View all posts in SQL Server" target="_blank">SQL Server</a></span>为例，对于其他技术平台的朋友也是有参考价值的，只要替换相对应的代码就行了！</p>
+<p><span class="wp_keywordlink_affiliate"><a href="/tag/%E7%B4%A2%E5%BC%95" title="View all posts in 索引" target="_blank">索引</a></span>使数据库引擎执行速度更快，有针对性的数据检索，而不是简单地整表扫描（Full table scan）。</p>
+<p>为了使用有效的索引，我们必须对索引的构成有所了解，而且我们知道在数据表中添加索引必然需要创建和维护索引表，所以我们要全局地衡量添加索引是否能提高数据库系统的查询性能。</p>
+<h2>本文目录</h2>
+<ul>
+<li>介绍数据库中的文件和文件组</li>
+<li>页和区</li>
+<li>介绍索引的基本结构</li>
+<li>介绍索引的两个基本类型</li>
+<li>聚集索引</li>
+<li>非聚集索引</li>
+<li>堆表的非聚集索引</li>
+<li>聚集表的非聚集索引</li>
+<li>索引的有效性</li>
+</ul>
+<h1>1.1.2 正文</h1>
+<p>在物理层面上，数据库有数据文件组成，而这些数据文件可以组成文件组，然后存储在磁盘上。每个文件包含许多区，每个区的大小为64K由八个物理上连续的页组成（一个页8K），我们知道<strong>页是</strong><strong><span class="wp_keywordlink_affiliate"><a href="/tag/sql-server" title="View all posts in SQL Server" target="_blank">SQL Server</a></span></strong><strong>数据库中的数据存储的基本单位</strong>。为数据库中的数据文件（.mdf 或 .ndf）分配的磁盘空间可以从逻辑上划分成页（从0到n连续编号）。</p>
+<p>页中存储的类型有：<strong>数据</strong>，<strong>索引</strong>和<strong>溢出</strong>。</p>
+<h2 id="lb1">文件和文件组</h2>
+<p>在<span class="wp_keywordlink_affiliate"><a href="/tag/sql-server" title="View all posts in SQL Server" target="_blank">SQL Server</a></span>中，通过文件组这个逻辑对象对存放数据的文件进行管理。</p>
+<p><img fetchpriority="high" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index3" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252205523326.png" alt="index3" width="662" height="447" border="0"></p>
+<p align="center">图1数据库文件组织</p>
+<p>在顶层是我们的数据库，由于数据库是由一个或多个文件组组成，而文件组是由一个或多个文件组成的​​<strong>逻辑组</strong>，所以我们可以把文件组分散到不同的磁盘中，使用户数据尽可能跨越多个设备，多个I/O 运转，避免 I/O 竞争，从而均衡I/O负载，克服访问瓶颈。</p>
+<h2 id="lb2">区和页</h2>
+<p>如图2所示，文件是由区组成的，而区由八个物理上连续的页组成，由于区的大小为64K，所以每当增加一个区文件就增加64K。</p>
+<p><img decoding="async" style="border-width: 0px; display: block; float: none; margin-left: auto; margin-right: auto;" title="index4" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204222347336553.png" alt="index4" width="606" height="296" border="0"></p>
+<p align="center">图2文件组成</p>
+<p>页中保存的数据类型有：表数据、索引数据、溢出数据、分配映射、页空闲空间、索引分配等，具体如下图所示：</p>
+<div align="left">
+<table border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+<td valign="top" width="257">页类型</td>
+<td valign="top" width="257">内容</td>
+</tr>
+<tr>
+<td valign="top" width="257">Data</td>
+<td valign="top" width="257">当 text in row 设置为 ON 时，包含除 text、 ntext、image、nvarchar(max)、varchar(max)、varbinary(max) 和 xml 数据之外的所有数据的数据行。</td>
+</tr>
+<tr>
+<td valign="top" width="257">Index</td>
+<td valign="top" width="257">索引条目。</td>
+</tr>
+<tr>
+<td valign="top" width="257">Text/Image</td>
+<td valign="top" width="257">大 型对象数据类型：text 、 ntext、image、nvarchar(max)、varchar(max)、varbinary(max) 和 xml 数据。数据行超过 8 KB 时为可变长度数据类型列：varchar 、nvarchar、varbinary 和 sql_variant</td>
+</tr>
+<tr>
+<td valign="top" width="257">Global Allocation Map、Shared Global Allocation Map</td>
+<td valign="top" width="257">有关区是否分配的信息。</td>
+</tr>
+<tr>
+<td valign="top" width="257">Page Free Space</td>
+<td valign="top" width="257">有关页分配和页的可用空间的信息。</td>
+</tr>
+<tr>
+<td valign="top" width="257">Index Allocation Map</td>
+<td valign="top" width="257">有关每个分配单元中表或索引所使用的区的信息。</td>
+</tr>
+<tr>
+<td valign="top" width="257">Bulk Changed Map</td>
+<td valign="top" width="257">有关每个分配单元中自最后一条 BACKUP LOG 语句之后的大容量操作所修改的区的信息。</td>
+</tr>
+<tr>
+<td valign="top" width="257">Differential Changed Map</td>
+<td valign="top" width="257">有关每个分配单元中自最后一条 BACKUP DATABASE 语句之后更改的区的信息。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p align="center">表1页中保存的数据类型</p>
+<p>在数据页上，数据行紧接着页头（标头）按顺序放置；页头包含标识值，如页码或对象数据的对象ID；数据行持有实际的数据；最后，页的末尾是行偏移表，对于页中的每一行，每个行偏移表都包含一个条目，每个条目记录对应行的第一个字节与<strong>页头</strong>的距离，行偏移表中的条目的顺序与页中行的顺序相反。</p>
+<p><img decoding="async" style="border-width: 0px; display: block; float: none; margin-left: auto; margin-right: auto;" title="index11" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204222347346303.png" alt="index11" width="273" height="243" border="0"></p>
+<p align="center">图3数据页</p>
+<h2 id="lb3">索引的基本结构</h2>
+<p>“索引（Index）提供查询的速度”这是对索引的最基本的解释，接下来我们将通过介绍索引的组成，让大家对索引有更深入的理解。</p>
+<p>索 引是数据库中的一个独特的结构，由于它保存数据库信息，那么我们就需要给它分配磁盘空间和维护索引表。创建索引并不会改变表中的数据，它只是创建了一个新 的数据结构指向数据表；打个比方，平时我们使用字典查字时，首先我们要知道查询单词起始字母，然后翻到目录页，接着查找单词具体在哪一页，这时我们目录就 是索引表，而目录项就是索引了。</p>
+<p>当然，索引比字典目录更为复杂，因为数据库必须处理插入，删除和更新等操作，这些操作将导致索引发生变化。</p>
+<p><strong>叶节点</strong></p>
+<p>假 设我们磁盘上的数据是物理有序的，那么数据库在进行插入，删除和更新操作时，必然会导致数据发生变化，如果我们要保存数据的连续和有序，那么我们就需要移 动数据的物理位置，这将增大磁盘的I/O，使得整个数据库运行非常缓慢；使用索引的主要目的是使数据逻辑有序，使数据独立于物理有序存储。</p>
+<p>为了实现数据逻辑有序，索引使用双向链表的数据结构来保持数据逻辑顺序，如果要在两个节点中插入一个新的节点只需修改节点的前驱和后继，而且无需修改新节点的物理位置。</p>
+<p>双向链表（Doubly linked list）也叫双链表，是链表的一种，它的每个数据结点中都有两个指针，分别指向直接后继和直接前驱。所以，从双向链表中的任意一个结点开始，都可以很方便地访问它的前驱结点和后继结点。</p>
+<p>理论上说，从双向链表中删除一个元素操作的时间复杂度是O(1)，如果希望删除一个具体有给定关键字的元素，那么最坏的情况下的时间复杂度为O(n)。</p>
+<p>在删除的过程中，我们只需要将要删除的节点的前节点和后节点相连，然后将要删除的节点的前节点和后节点置为null即可。</p>
+<pre class="code"><span style="color: gray;">//</span>伪代码
+node<span style="color: gray;">.</span>prev<span style="color: gray;">.</span>next<span style="color: gray;">=</span>node<span style="color: gray;">.</span>next<span style="color: gray;">; </span>node<span style="color: gray;">.</span>next<span style="color: gray;">.</span>prev<span style="color: gray;">=</span>node<span style="color: gray;">.</span>prev<span style="color: gray;">; </span>node<span style="color: gray;">.</span>prev<span style="color: gray;">=</span>node<span style="color: gray;">.</span>next<span style="color: gray;">=null; </span></pre>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; display: block; float: none; margin-left: auto; margin-right: auto;" title="index6" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204222347367340.png" alt="index6" width="500" height="394" border="0"></p>
+<p align="center">图4索引的叶节点和相应的表数据</p>
+<p>如上图4所示，索引叶节点包含索引值和相应的RID（ROWID），而且叶节点通过双向链表有序地连接起来；同时我们主要到数据表不同于索引叶节点，表中的数据无序存储，它们不全是存储在同一表块中，而且块之间不存在连接。</p>
+<p>总的来说，索引保存着具体数据的物理地址值。</p>
+<h2 id="lb4">索引的类型</h2>
+<p>我们知道索引的类型有两种：<strong>聚集索引</strong>和<strong>非聚集索引</strong>。</p>
+<p><strong>聚集索引</strong>：物理存储按照索引排序。</p>
+<p><strong>非聚集索引</strong>：物理存储不按照索引排序。</p>
+<h2 id="lb5">聚集索引</h2>
+<p><strong>聚集索引</strong>的数据页是物理有序地存储，数据页是聚集索引的叶节点，数据页之间通过双向链表的形式连接起来，而且实际的数据都存储在数据页中。当我们给表添加索引后，表中的数据将根据索引进行排序。</p>
+<p>假设我们有一个表T_Pet，它包含四个字段分别是：animal，name，sex和age，而且使用animal作为索引列，具体SQL代码如下：</p>
+<pre class="code"><span style="color: green;">----------------------------------------------------------- ---- Create T_Pet table in tempdb. ----------------------------------------------------------- </span><span style="color: blue;">USE </span>tempdb
+
+<span style="color: blue;">CREATE TABLE </span>T_Pet
+<span style="color: gray;">( </span>animal    <span style="color: blue;">VARCHAR</span><span style="color: gray;">(</span>20<span style="color: gray;">), </span>[name]    <span style="color: blue;">VARCHAR</span><span style="color: gray;">(</span>20<span style="color: gray;">), </span>sex        <span style="color: blue;">CHAR</span><span style="color: gray;">(</span>1<span style="color: gray;">), </span>age        <span style="color: blue;">INT </span><span style="color: gray;">) </span><span style="color: blue;">CREATE UNIQUE CLUSTERED INDEX </span>T_PetonAnimal1_ClterIdx <span style="color: blue;">ON </span>T_Pet <span style="color: gray;">(</span>animal<span style="color: gray;">)</span></pre>
+<p> </p>
+<pre class="code"><span style="color: green;">----------------------------------------------------------- ---- Insert data into data table. ----------------------------------------------------------- </span><span style="color: blue;">DECLARE </span>@i <span style="color: blue;">int SET </span>@i<span style="color: gray;">=</span>0
+<span style="color: blue;">WHILE</span><span style="color: gray;">(</span>@i<span style="color: gray;">&lt;</span>1000000<span style="color: gray;">) </span><span style="color: blue;">BEGIN INSERT INTO </span>T_Pet <span style="color: gray;">( </span>animal<span style="color: gray;">, </span>[name]<span style="color: gray;">, </span>sex<span style="color: gray;">, </span>age
+    <span style="color: gray;">) </span><span style="color: blue;">SELECT </span>[dbo]<span style="color: gray;">.</span>random_string<span style="color: gray;">(</span>11<span style="color: gray;">) </span>animal<span style="color: gray;">, </span>[dbo]<span style="color: gray;">.</span>random_string<span style="color: gray;">(</span>11<span style="color: gray;">) </span>[name]<span style="color: gray;">, </span><span style="color: red;">'F' </span>sex<span style="color: gray;">, </span><span style="color: magenta;">cast</span><span style="color: gray;">(</span><span style="color: magenta;">floor</span><span style="color: gray;">(</span><span style="color: magenta;">rand</span><span style="color: gray;">()*</span>5<span style="color: gray;">) </span><span style="color: blue;">as int</span><span style="color: gray;">) </span>age    
+
+    <span style="color: blue;">SET </span>@i<span style="color: gray;">=</span>@i<span style="color: gray;">+</span>1
+
+<span style="color: blue;">END INSERT INTO </span>T_Pet <span style="color: blue;">VALUES</span><span style="color: gray;">(</span><span style="color: red;">'Aardark'</span><span style="color: gray;">, </span><span style="color: red;">'Hello'</span><span style="color: gray;">, </span><span style="color: red;">'F'</span><span style="color: gray;">, </span>1<span style="color: gray;">) </span><span style="color: blue;">INSERT INTO </span>T_Pet <span style="color: blue;">VALUES</span><span style="color: gray;">(</span><span style="color: red;">'Cat'</span><span style="color: gray;">, </span><span style="color: red;">'Kitty'</span><span style="color: gray;">, </span><span style="color: red;">'F'</span><span style="color: gray;">, </span>2<span style="color: gray;">) </span><span style="color: blue;">INSERT INTO </span>T_Pet <span style="color: blue;">VALUES</span><span style="color: gray;">(</span><span style="color: red;">'Horse'</span><span style="color: gray;">, </span><span style="color: red;">'Ma'</span><span style="color: gray;">, </span><span style="color: red;">'F'</span><span style="color: gray;">, </span>1<span style="color: gray;">) </span><span style="color: blue;">INSERT INTO </span>T_Pet <span style="color: blue;">VALUES</span><span style="color: gray;">(</span><span style="color: red;">'Turtles'</span><span style="color: gray;">, </span><span style="color: red;">'SiSi'</span><span style="color: gray;">, </span><span style="color: red;">'F'</span><span style="color: gray;">, </span>4<span style="color: gray;">) </span><span style="color: blue;">INSERT INTO </span>T_Pet <span style="color: blue;">VALUES</span><span style="color: gray;">(</span><span style="color: red;">'Dog'</span><span style="color: gray;">, </span><span style="color: red;">'Tomma'</span><span style="color: gray;">, </span><span style="color: red;">'F'</span><span style="color: gray;">, </span>2<span style="color: gray;">) </span><span style="color: blue;">INSERT INTO </span>T_Pet <span style="color: blue;">VALUES</span><span style="color: gray;">(</span><span style="color: red;">'Donkey'</span><span style="color: gray;">, </span><span style="color: red;">'YoYo'</span><span style="color: gray;">, </span><span style="color: red;">'F'</span><span style="color: gray;">, </span>3<span style="color: gray;">)</span></pre>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index7" src="http://images.cnblogs.com/cnblogs_com/rush/201204/20120425220558366.png" alt="index7" width="509" height="445" border="0"></p>
+<p align="center">图5聚集索引</p>
+<p>如上图5所示，从左往右的第一和第二层是索引页，第三层是数据页（叶节点），数据页之间通过双向链表连接起来，而且数据页中的数据根据索引排序；假 设，我们要查找名字（name）为Xnnbqba的动物Ifcey，这里我们以animal作为表的索引，所以数据库首先根据索引查找，当找到索引值 animal = ‘Ifcey时，接着查找该索引的数据页（叶节点）获取具体数据。具体的查询语句如下：</p>
+<pre class="code"><span style="color: blue;">SET STATISTICS PROFILE ON SET STATISTICS TIME ON SELECT </span>animal<span style="color: gray;">, </span>[name]<span style="color: gray;">, </span>sex<span style="color: gray;">, </span>age
+<span style="color: blue;">FROM </span>T_Pet
+<span style="color: blue;">WHERE </span>animal <span style="color: gray;">= </span><span style="color: red;">'Ifcey' </span><span style="color: blue;">SET STATISTICS PROFILE OFF SET STATISTICS TIME OFF</span></pre>
+<p>当我们执行完SQL查询计划时，把鼠标指针放到“聚集索引查找”上，这时会出现如下图信息，我们可以查看到一个重要的信息Logical Operation——Clustered Index Seek，SQL查询是直接根据聚集索引获取记录，查询速度最快。</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index12" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206023794.png" alt="index12" width="533" height="360" border="0"></p>
+<p align="center">图6查询计划</p>
+<p>从下图查询结果，我们发现查询步骤只有2步，首先通过Clustered Index Seek快速地找到索引Ifcey，接着查询索引的叶节点（数据页）获取数据。</p>
+<p>查询执行时间：CPU 时间= 0 毫秒，占用时间= 1 毫秒。</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index13" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206049008.png" alt="index13" width="605" height="207" border="0"></p>
+<p align="center">图7查询结果</p>
+<p>现在我们把表中的索引删除，重新执行查询计划，这时我们可以发现Logical Operation已经变为Table Scan，由于表中有100万行数据，这时查询速度就相当缓慢。</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index15" src="http://images.cnblogs.com/cnblogs_com/rush/201204/20120425220608484.png" alt="index15" width="574" height="362" border="0"></p>
+<p align="center">图8查询计划</p>
+<p>从下图查询结果，我们发现查询步骤变成3步了，首先通过Table Scan查找animal = ‘Ifcey’，在执行查询的时候，SQL Server会自动分析SQL语句，而且它估计我们这次查询比较耗时，所以数据库进行并发操作加快查询的速度。</p>
+<p>查询执行时间：CPU 时间= 329 毫秒，占用时间= 182 毫秒。</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index14" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206093714.png" alt="index14" width="720" height="210" border="0"></p>
+<p align="center">图9查询结果</p>
+<p>通过上面的有聚集索引和没有的对比，我们发现了查询性能的差异，如果使用索引数据库首先查找索引，而不是漫无目的的全表遍历。</p>
+<h2 id="lb6">非聚集索引</h2>
+<p>在没有聚集索引的情况下，表中的数据页是通过堆(Heap)形式进行存储，堆是不含聚集索引的表；SQL Server中的堆存储是把新的数据行存储到最后一个页中。</p>
+<p><strong>非聚集索引</strong>是物理存储不按照索引排序，非聚集索引的叶节点（Index leaf pages）包含着指向具体数据行的<strong>指针</strong>或<strong>聚集索引</strong>，数据页之间没有连接是相对独立的页。</p>
+<p>假设我们有一个表T_Pet，它包含四个字段分别是：animal，name，sex和age，而且使用animal作为非索引列，具体SQL代码如下：</p>
+<pre class="code"><span style="color: green;">----------------------------------------------------------- ---- Create T_Pet table in tempdb with NONCLUSTERED INDEX. ----------------------------------------------------------- </span><span style="color: blue;">USE </span>tempdb
+
+<span style="color: blue;">CREATE TABLE </span>T_Pet
+<span style="color: gray;">( </span>animal    <span style="color: blue;">VARCHAR</span><span style="color: gray;">(</span>20<span style="color: gray;">), </span>[name]    <span style="color: blue;">VARCHAR</span><span style="color: gray;">(</span>20<span style="color: gray;">), </span>sex        <span style="color: blue;">CHAR</span><span style="color: gray;">(</span>1<span style="color: gray;">), </span>age        <span style="color: blue;">INT </span><span style="color: gray;">) </span><span style="color: blue;">CREATE UNIQUE NONCLUSTERED INDEX </span>T_PetonAnimal1_NonClterIdx <span style="color: blue;">ON </span>T_Pet <span style="color: gray;">(</span>animal<span style="color: gray;">)</span></pre>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index8" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206133554.png" alt="index8" width="483" height="509" border="0"></p>
+<p align="center">图10非聚集索引</p>
+<p>接着我们要查询表中animal = ‘Cat’的宠物信息，具体的SQL代码如下：</p>
+<pre class="code"><span style="color: blue;">SET STATISTICS PROFILE ON SET STATISTICS TIME ON SELECT </span>animal<span style="color: gray;">, </span>[name]<span style="color: gray;">, </span>sex<span style="color: gray;">, </span>age
+<span style="color: blue;">FROM </span>T_Pet
+<span style="color: blue;">WHERE </span>animal <span style="color: gray;">= </span><span style="color: red;">'Cat' </span><span style="color: blue;">SET STATISTICS PROFILE OFF SET STATISTICS TIME OFF </span></pre>
+<p>如下图所示，我们发现查询计划的最右边有两个步骤：RID和索引查找。由于这两种查找方式相对于聚集索引查找要慢（Clustered Index Seek）。</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index17" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206165869.png" alt="index17" width="602" height="349" border="0"></p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index16" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206216397.png" alt="index16" width="598" height="307" border="0"></p>
+<p align="center">图11查询计划</p>
+<p>首先SQL Server查找索引值，然后根据RID查找数据行，直到找到符合查询条件的结果。</p>
+<p>查询执行时间：CPU 时间= 0 毫秒，占用时间= 1 毫秒</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index18" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206256727.png" alt="index18" width="908" height="209" border="0"></p>
+<p align="center">图12查询结果</p>
+<h2 id="lb7">堆表非聚集索引</h2>
+<p>由于堆是不含聚集索引的表，所以非聚集索引的叶节点将包含指向具体数据行的指针。</p>
+<p>以前面的T_Pet表为例，假设T_Pet使用animal列作为非聚集索引，那么它的堆表非聚集索引结构如下图所示：</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index9" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206289076.png" alt="index9" width="640" height="479" border="0"></p>
+<p align="center">图13堆表非聚集索引</p>
+<p>通过上图，我们发现非聚集索引通过双向链表连接，而且叶节点包含指向具体数据行的指针。</p>
+<p>如果我们要查找animal = ‘Dog’的信息，首先我们遍历第一层索引，然后数据库判断Dog属于Cat范围的索引，接着遍历第二层索引，然后找到Dog索引获取其中的保存的指针信息，根据指针信息获取相应数据页中的数据，接下来我们将通过具体的例子说明。</p>
+<p>现在我们创建表employees，然后给该表添加<strong>堆表非聚集索引</strong>，具体SQL代码如下：</p>
+<pre class="code"><span style="color: blue;">USE </span>tempdb
+
+<span style="color: green;">---- Creates a sample table. </span><span style="color: blue;">CREATE TABLE </span>employees <span style="color: gray;">( </span>employee_id   <span style="color: blue;">NUMERIC </span><span style="color: gray;">NOT NULL, </span>first_name    <span style="color: blue;">VARCHAR</span><span style="color: gray;">(</span>1000<span style="color: gray;">) NOT NULL, </span>last_name     <span style="color: blue;">VARCHAR</span><span style="color: gray;">(</span>900<span style="color: gray;">) NOT NULL, </span>date_of_birth <span style="color: blue;">DATETIME </span><span style="color: gray;">, </span>phone_number  <span style="color: blue;">VARCHAR</span><span style="color: gray;">(</span>1000<span style="color: gray;">) NOT NULL, </span>junk          <span style="color: blue;">CHAR</span><span style="color: gray;">(</span>1000<span style="color: gray;">) , </span><span style="color: blue;">CONSTRAINT </span>employees_pk <span style="color: blue;">PRIMARY KEY NONCLUSTERED </span><span style="color: gray;">(</span>employee_id<span style="color: gray;">) ); </span>GO</pre>
+<p>现在我们查找employee_id = 29976的员工信息。</p>
+<pre class="code"><span style="color: blue;">SELECT </span><span style="color: gray;">* </span><span style="color: blue;">FROM </span>employees
+<span style="color: blue;">WHERE </span>employee_id <span style="color: gray;">= </span>29976</pre>
+<p>查询计划如下图所示：</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index19" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206301716.png" alt="index19" width="553" height="252" border="0"></p>
+<p align="center">图14查询计划</p>
+<p>首先，查找索引值employee_id = ‘29976’的索引，然后根据RID查找符合条件的数据行；所以说，堆表索引的查询效率不如聚集表，接下来我们将介绍聚集表的非聚集索引。</p>
+<h2 id="lb8">聚集表非聚集索引</h2>
+<p>当表上存在聚集索引时，任何非聚集索引的叶节点不再是包含指针值，而是包含聚集索引的索引值。</p>
+<p>以前面的T_Pet表为例，假设T_Pet使用animal列作为非聚集索引，那么它的索引表非聚集索引结构如下图所示：</p>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index10" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206336506.png" alt="index10" width="640" height="387" border="0"></p>
+<p align="center">图15索引表非聚集索引</p>
+<p>通过上图，我们发现非聚集索引通过双向链表连接，而且叶节点包含索引表的索引值。</p>
+<p>如果我们要查找animal = ‘Dog’的信息，首先我们遍历第一层索引，然后数据库判断Dog属于Cat范围的索引，接着遍历第二层索引，然后找到Dog索引获取其中的保存的索引值，然后根据索引值获取相应数据页中的数据。</p>
+<p>接下来我们修改之前的employees表，首先我们删除之前的堆表非聚集索引，然后增加索引表的非聚集索引，具体SQL代码如下：</p>
+<pre class="code"><span style="color: blue;">ALTER TABLE </span>employees
+    <span style="color: blue;">DROP CONSTRAINT </span>employees_pk
+
+<span style="color: blue;">ALTER TABLE </span>employees 
+    <span style="color: blue;">ADD CONSTRAINT </span>employees_pk <span style="color: blue;">PRIMARY KEY CLUSTERED </span><span style="color: gray;">(</span>employee_id<span style="color: gray;">) </span>GO 
+
+<span style="color: blue;">SELECT </span><span style="color: gray;">* </span><span style="color: blue;">FROM </span>employees
+<span style="color: blue;">WHERE </span>employee_id<span style="color: gray;">=</span>29976</pre>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index20" src="http://images.cnblogs.com/cnblogs_com/rush/201204/20120425220634750.png" alt="index20" width="514" height="216" border="0"></p>
+<p align="center">图16查询计划</p>
+<h2 id="lb9">索引的有效性</h2>
+<p>SQL Server每执行一个查询，首先要检查该查询是否存在执行计划，如果没有，则要生成一个执行计划，那么什么是执行计划呢？简单来说，它能帮助SQL Server制定一个最优的查询计划。（关于查询计划请参考这里）</p>
+<p>下面我们将通过具体的例子说明SQL Server中索引的使用，首先我们定义一个表testIndex，它包含三个字段testIndex，bitValue和filler，具体的SQL代码如下：</p>
+<pre class="code"><span style="color: green;">----------------------------------------------------------- ---- Index Usefulness sample ----------------------------------------------------------- </span><span style="color: blue;">CREATE TABLE </span>testIndex
+<span style="color: gray;">( </span>testIndex <span style="color: blue;">int identity</span><span style="color: gray;">(</span>1<span style="color: gray;">,</span>1<span style="color: gray;">) </span><span style="color: blue;">constraint </span>PKtestIndex <span style="color: blue;">primary key</span><span style="color: gray;">, </span>bitValue <span style="color: blue;">bit</span><span style="color: gray;">, </span>filler <span style="color: blue;">char</span><span style="color: gray;">(</span>2000<span style="color: gray;">) not null </span><span style="color: blue;">default </span><span style="color: gray;">(</span><span style="color: magenta;">replicate</span><span style="color: gray;">(</span><span style="color: red;">'A'</span><span style="color: gray;">,</span>2000<span style="color: gray;">)) ) </span><span style="color: blue;">CREATE INDEX </span>XtestIndex_bitValue <span style="color: blue;">on </span>testIndex<span style="color: gray;">(</span>bitValue<span style="color: gray;">) </span>GO
+
+<span style="color: blue;">INSERT INTO </span>testIndex<span style="color: gray;">(</span>bitValue<span style="color: gray;">) </span><span style="color: blue;">VALUES </span><span style="color: gray;">(</span>0<span style="color: gray;">) </span>GO 20000 <span style="color: green;">--runs current batch 20000 times. </span><span style="color: blue;">INSERT INTO </span>testIndex<span style="color: gray;">(</span>bitValue<span style="color: gray;">) </span><span style="color: blue;">VALUES </span><span style="color: gray;">(</span>1<span style="color: gray;">) </span>GO 10 <span style="color: green;">--puts 10 rows into table with value 1</span></pre>
+<p>接着我们查询表中bitValue = 0的数据行，而且表中bitValue = 0的数据有2000行。</p>
+<pre class="code"><span style="color: blue;">SELECT </span><span style="color: gray;">* </span><span style="color: blue;">FROM </span>testIndex
+<span style="color: blue;">WHERE </span>bitValue <span style="color: gray;">= </span>0</pre>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index21" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206359769.png" alt="index21" width="446" height="197" border="0"></p>
+<p align="center">图17查询计划</p>
+<p>现在我们查询bitValue = 1的数据行。</p>
+<pre class="code"><span style="color: blue;">SELECT </span><span style="color: gray;">* </span><span style="color: blue;">FROM </span>testIndex
+<span style="color: blue;">WHERE </span>bitValue <span style="color: gray;">= </span>1</pre>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index22" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206362409.png" alt="index22" width="552" height="263" border="0"></p>
+<p align="center">图18查询计划</p>
+<p>现在我们注意到对同一个表不同数据查询，居然执行截然不同的查询计划，这究竟是什么原因导致的呢？</p>
+<p>我们可以通过使用DBCC SHOW_STATISTICS查看到表中索引的详细使用情况，具体SQL代码如下：</p>
+<pre class="code"><span style="color: blue;">UPDATE STATISTICS </span>dbo<span style="color: gray;">.</span>testIndex
+<span style="color: blue;">DBCC </span>SHOW_STATISTICS<span style="color: gray;">(</span><span style="color: red;">'dbo.testIndex'</span><span style="color: gray;">, </span><span style="color: red;">'XtestIndex_bitValue'</span><span style="color: gray;">) </span><span style="color: blue;">WITH HISTOGRAM </span></pre>
+<p><img loading="lazy" decoding="async" style="border-width: 0px; border-style: none; border-color: -moz-use-text-color; display: block; float: none; margin-left: auto; margin-right: auto;" title="index23" src="http://images.cnblogs.com/cnblogs_com/rush/201204/201204252206373904.png" alt="index23" width="582" height="112" border="0"></p>
+<p align="center">图19直方图</p>
+<p>通过上面的直方图，我们知道SQL Server估计bitValue = 0数据行行有约19989行，而bitValue = 1估计约21；SQL Server优化器根据数据量估算值，采取不同的执行计划，从而到达最优的查询性能，由于bitValue = 0数据量大，SQL Server只能提供扫描聚集索引获取相应数据行，而bitValue = 1实际数据行只有10行，SQL Server首先通过键查找bitValue = 1的数据行，然后嵌套循环联接到聚集索引获得余下数据行。</p>
+<h1>总结</h1>
+<p>实例代码下载</p>
+<p>系列博文导航</p>
+<ul>
+<li>Deadlock的一些总结</li>
+<li>SQL Transcation的一些总结</li>
+<li>SQL Join的一些总结</li>
+</ul>
+<p>参考</p>
+<ul>
+<li>http://msdn.microsoft.com/zh-cn/library/ms180978(v=sql.90).aspx</li>
+<li>http://msdn.microsoft.com/zh-cn/library/ms190969.aspx</li>
+<li>http://msdn.microsoft.com/zh-cn/library/ms189051(v=sql.105).aspx</li>
+<li>http://www.amazon.com/Pro-Server-2005-Thomas-Rizzo/dp/1590594770</li>
+</ul>
+</div>
+								<div class="clear"></div>
+				<!-- Baidu inner-ad BEGIN -->
+				<div>
+					<!--ad here-->
+				</div>
+				<!-- Baidu inner-ad end -->
+			</div>
+			<div class="clear"></div>
+		</div>
+		<h3 class="pay_title">============ 欢迎各位老板打赏~ ===========</h3>
+		<div class="pay">
+			<img class="wxpay" src="/wp-content/themes/WPCnblogs/images/wxpay.png">
+			<img class="alipay" src="/wp-content/themes/WPCnblogs/images/alipay.png">
+		</div>
+		
+		<!-- end: entry -->
+		<div class="archive_tags">
+			<span class="content_tag">关键字: <a href="/tag/sql-server" rel="tag">SQL Server</a>, <a href="/tag/sql-server%E7%B4%A2%E5%BC%95%E7%94%A8%E6%B3%95" rel="tag">SQL SERVER索引用法</a>, <a href="/tag/%E7%B4%A2%E5%BC%95" rel="tag">索引</a></span>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div class="prevnextblock">
+			【上篇】<a href="/2012/04/26/sql-server-2012%E6%B8%85%E9%99%A4%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8E%86%E5%8F%B2.html" rel="prev">SQL Server 2012清除连接过的服务器历史</a><br>【下篇】<a href="/2012/04/26/sql-server%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E6%9F%A5%E8%AF%A2%E5%AE%89%E5%85%A8%E6%80%A7.html" rel="next">SQL SERVER性能优化和查询安全性</a>		</div>
+		
+		<div class="clear"></div>
+		<div class="relates">
+			<h4>与本文相关的文章</h4>
+			<ul>
+<li> · <a href="/2022/04/12/mysql-index.html">mysql关于索引那些事儿</a></li><li> · <a href="/2020/05/08/log-or-data.html">数据库先写日志还是先写数据？</a></li><li> · <a href="/2017/09/14/sql-server-auto-backup.html">SQL Server数据库定时自动备份并自动删除旧的备份</a></li><li> · <a href="/2017/01/06/sql-server-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0.html">SQL Server 字符串函数</a></li><li> · <a href="/2016/11/01/%E8%A7%A3%E5%86%B3the-underlying-provider-failed-on-open.html">解决The underlying provider failed on Open</a></li><li> · <a href="/2016/09/12/%E9%80%9A%E8%BF%87vs-2015svn%E4%B8%BAsql-server%E6%8F%90%E4%BE%9B%E6%95%B0%E6%8D%AE%E5%BA%93%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86.html">通过VS 2015+SVN为SQL Server提供数据库版本管理</a></li><li> · <a href="/2016/06/02/%E9%80%9A%E8%BF%87sqlserver%E6%97%A5%E5%BF%97%E6%81%A2%E5%A4%8D%E8%AF%AF%E5%88%A0%E9%99%A4%E7%9A%84%E6%95%B0%E6%8D%AE.html">通过sqlserver日志恢复误删除的数据</a></li><li> · <a href="/2016/04/19/sql-server-demo.html">SQL Server表分区完整示例DEMO</a></li><li> · <a href="/2015/04/04/sql-server-%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98.html">sql server *= 兼容问题</a></li><li> · <a href="/2013/09/27/sql-server-business-level-dirty-read.html">SQL Server 中的事务与事务隔离级别以及脏读</a></li><li> · <a href="/2013/09/21/sql-server%E4%B8%AD%E6%97%A5%E5%BF%97%E7%9A%84%E7%9A%84%E4%BD%9C%E7%94%A8.html">SQL Server中日志的的作用</a></li><li> · <a href="/2013/05/21/sql-server-%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E4%B9%8B%E5%88%86%E6%9E%90%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%94%81.html">SQL SERVER 查询性能优化之分析事务与锁</a></li></ul>		</div> 
+		
+		<div class="clear"></div>		
+		<div class="authorbio">
+			<div class="author_pic">
+				<img alt="" src="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=78&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/3153dd85c6cdc491c0fb24ae5ca7d9f8635fa1891c191cbc57d0f28124dda41b?s=156&amp;d=mm&amp;r=g 2x" class="avatar avatar-78 photo" height="78" width="78" loading="lazy" decoding="async">			</div>
+			<div class="author_text">
+				<span class="post_author">该日志由 Bruce 于2012年04月26日发表在<a href="/category/sql-server" rel="category tag">SQL Server</a>分类下</span>
+				<p class="spostinfo">本文版权归Bruce's Blog所有，转载引用请完整注明以下信息：<br>
+					本文作者：Bruce<br>
+					本文地址：<a href="/2012/04/26/%E5%85%B3%E4%BA%8Esql-server%E7%B4%A2%E5%BC%95%E7%9A%84%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93.html" rel="bookmark" title="本文固定链接 /2012/04/26/%e5%85%b3%e4%ba%8esql-server%e7%b4%a2%e5%bc%95%e7%9a%84%e7%94%a8%e6%b3%95%e6%80%bb%e7%bb%93.html">关于SQL SERVER索引的用法总结 | Bruce's Blog</a><a href="#" onclick="copy_code('/2012/04/26/%e5%85%b3%e4%ba%8esql-server%e7%b4%a2%e5%bc%95%e7%9a%84%e7%94%a8%e6%b3%95%e6%80%bb%e7%bb%93.html'); return false;"></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+	</div>
+	<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/2012/04/26/%E5%85%B3%E4%BA%8Esql-server%E7%B4%A2%E5%BC%95%E7%9A%84%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93.html#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+				<span class="set_avatar"><a title="去申请一个自己的Gravatar全球通用头像" target="_blank" href="http://en.gravatar.com/">留言无头像?</a></span>
+		<form action="/wp-comments-post.php" method="post" id="commentform">
+				<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1">
+			<label for="author">昵称 <span class="req">*</span></label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2">
+			<label for="email">邮箱 <span class="req">*</span></label>
+		</p>
+		<p style="display:none;">
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3">
+			<label for="url">网址</label>
+		</p>
+	</div>
+            <div class="clear"></div>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="/wp-includes/images/smilies/icon_question.gif" alt=""></a>
+<a href="javascript:grin(':razz:')"><img src="/wp-includes/images/smilies/icon_razz.gif" alt=""></a>
+<a href="javascript:grin(':sad:')"><img src="/wp-includes/images/smilies/icon_sad.gif" alt=""></a>
+<a href="javascript:grin(':evil:')"><img src="/wp-includes/images/smilies/icon_evil.gif" alt=""></a>
+<a href="javascript:grin(':!:')"><img src="/wp-includes/images/smilies/icon_exclaim.gif" alt=""></a>
+<a href="javascript:grin(':smile:')"><img src="/wp-includes/images/smilies/icon_smile.gif" alt=""></a>
+<a href="javascript:grin(':oops:')"><img src="/wp-includes/images/smilies/icon_redface.gif" alt=""></a>
+<a href="javascript:grin(':grin:')"><img src="/wp-includes/images/smilies/icon_biggrin.gif" alt=""></a>
+<a href="javascript:grin(':eek:')"><img src="/wp-includes/images/smilies/icon_surprised.gif" alt=""></a>
+<a href="javascript:grin(':shock:')"><img src="/wp-includes/images/smilies/icon_eek.gif" alt=""></a>
+<a href="javascript:grin(':???:')"><img src="/wp-includes/images/smilies/icon_confused.gif" alt=""></a>
+<a href="javascript:grin(':cool:')"><img src="/wp-includes/images/smilies/icon_cool.gif" alt=""></a>
+<a href="javascript:grin(':lol:')"><img src="/wp-includes/images/smilies/icon_lol.gif" alt=""></a>
+<a href="javascript:grin(':mad:')"><img src="/wp-includes/images/smilies/icon_mad.gif" alt=""></a>
+<a href="javascript:grin(':twisted:')"><img src="/wp-includes/images/smilies/icon_twisted.gif" alt=""></a>
+<a href="javascript:grin(':roll:')"><img src="/wp-includes/images/smilies/icon_rolleyes.gif" alt=""></a>
+<a href="javascript:grin(':wink:')"><img src="/wp-includes/images/smilies/icon_wink.gif" alt=""></a>
+<a href="javascript:grin(':idea:')"><img src="/wp-includes/images/smilies/icon_idea.gif" alt=""></a>
+<a href="javascript:grin(':arrow:')"><img src="/wp-includes/images/smilies/icon_arrow.gif" alt=""></a>
+<a href="javascript:grin(':neutral:')"><img src="/wp-includes/images/smilies/icon_neutral.gif" alt=""></a>
+<a href="javascript:grin(':cry:')"><img src="/wp-includes/images/smilies/icon_cry.gif" alt=""></a>
+<a href="javascript:grin(':mrgreen:')"><img src="/wp-includes/images/smilies/icon_mrgreen.gif" alt=""></a>
+<br>		</p>
+		<div class="submitted">
+			<input class="submit" name="submit" type="submit" tabindex="5" value="提交留言">
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写">
+			<input type="hidden" name="comment_post_ID" value="2167" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+		</div>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="184970ca0a"></p><p style="display: none !important;"><label>Δ<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="113"><script>document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );</script></p>    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+ 	</div><!-- #content -->
+
+<!-- #content -->
+
+<div id="footer">
+	Copyright © 2008-2026 <a href="/" title="数据库之家">Bruce's Blog</a>(Bruce's Blog)  保留所有权利.
+			<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6b91a602d26fc3f4c8645fba387ea352";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	</div>
+<div class="clear"></div>
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/WPCnblogs/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script defer type="text/javascript" src="/wp-content/plugins/akismet/_inc/akismet-frontend.js?ver=1670305055" id="akismet-frontend-js"></script>
+<script type='text/javascript' src='/wp-content/plugins/enlighter/static/enlighterjs.min.js' id='enlighterjs-js'></script>
+<script type='text/javascript' id='enlighterjs-js-after'>
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":true,"theme":"classic","language":"generic","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+</script>
+<div class="toolbar">
+   <a href="javascript:scroll(0,0)" id="top" class="toolbar-item toolbar-item-top"></a>
+</div>
+</body>
+</html><!-- Dynamic page generated in 0.070 seconds. --><!-- Cached page generated by WP-Super-Cache on 2026-07-10 20:49:17 -->
